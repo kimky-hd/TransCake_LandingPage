@@ -848,333 +848,312 @@
             </div>
         </section>
 
-        <!-- How It Works: The iPhone Mockup Timeline -->
-        <section class="py-24 px-4 md:px-8 max-w-[1400px] mx-auto bg-white relative overflow-hidden">
-            <!-- Header -->
-            <div class="text-center max-w-3xl mx-auto mb-20 relative z-10">
-                <span
-                    class="inline-block px-4 py-1.5 rounded-full bg-orange-100 text-[#FF6D00] text-xs font-bold uppercase tracking-widest mb-6">
-                    Bắt đầu dễ dàng
-                </span>
-                <h2 class="text-3xl md:text-5xl font-bold text-[#6200EE] leading-tight">
-                    Sẵn sàng cho chuyến đi đầu tiên chỉ trong 4 bước.
-                </h2>
-            </div>
+        <!-- How It Works: Cinematic 3D iPhone Narrative -->
+        <section id="how-it-works-cinematic" class="relative bg-white" style="height: 500vh;">
+            <!-- Sticky Viewport -->
+            <div class="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
 
-            <!-- Timeline Container -->
-            <div class="relative w-full mx-auto">
-                <!-- Glowing Dashed Line -->
-                <!-- Desktop Horizontal Line -->
-                <div
-                    class="hidden md:block absolute top-[200px] left-[10%] right-[10%] h-[2px] border-t-2 border-dashed border-[#6200EE]/30 z-0 drop-shadow-[0_0_8px_rgba(98,0,238,0.5)]">
-                </div>
-                <!-- Mobile Vertical Line -->
-                <div
-                    class="block md:hidden absolute top-[40px] bottom-[40px] left-[44px] w-[2px] border-l-2 border-dashed border-[#6200EE]/30 z-0 drop-shadow-[0_0_8px_rgba(98,0,238,0.5)]">
+                <!-- Background 3D Perspective Grid -->
+                <div class="absolute inset-0 opacity-[0.03] pointer-events-none"
+                    style="background-image: radial-gradient(#6200EE 2px, transparent 2px); background-size: 60px 60px; perspective: 1000px; transform: rotateX(60deg) translateY(-20%);">
                 </div>
 
-                <!-- 4 Steps Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-6 relative z-10">
+                <!-- Storyteller Container -->
+                <div class="relative w-full max-w-7xl mx-auto px-6 h-full flex items-center">
 
-                    <!-- Step 1 -->
-                    <div
-                        class="relative flex md:flex-col items-start md:items-center text-left md:text-center group px-4 md:px-0">
-                        <!-- Background Watermark Number -->
-                        <div
-                            class="absolute -top-6 -left-2 md:top-6 md:left-1/2 md:-translate-x-1/2 text-[100px] md:text-[180px] font-black text-slate-50 select-none z-[-1] leading-none transition-transform duration-500 group-hover:scale-110">
-                            1</div>
-
-                        <!-- iPhone Mockup Box -->
-                        <div
-                            class="w-20 h-40 md:w-[220px] md:h-[420px] bg-slate-50 rounded-[1rem] md:rounded-[2.5rem] border-[4px] md:border-[8px] border-slate-800 shadow-xl mb-0 md:mb-10 flex-shrink-0 relative ml-2 md:ml-0 z-10 transition-transform duration-500 group-hover:-translate-y-4 overflow-hidden">
-                            <!-- Notch -->
-                            <div
-                                class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-2 md:h-4 bg-slate-800 rounded-b-md md:rounded-b-xl z-20">
-                            </div>
-
-                            <!-- Internal UI: Profile + Checkmark -->
-                            <div
-                                class="w-full h-full flex flex-col items-center justify-center p-2 md:p-6 relative bg-white">
-                                <div
-                                    class="w-8 h-8 md:w-20 md:h-20 rounded-full bg-slate-100 flex items-center justify-center mb-2 md:mb-6 mt-2 md:mt-4">
-                                    <span
-                                        class="material-symbols-outlined text-slate-300 text-lg md:text-4xl">person</span>
-                                </div>
-                                <div class="w-12 md:w-28 h-1 md:h-2.5 bg-slate-200 rounded-full mb-1.5 md:mb-3"></div>
-                                <div class="w-8 md:w-16 h-1 md:h-2 bg-slate-100 rounded-full mb-4 md:mb-10"></div>
-
-                                <!-- Form lines -->
-                                <div class="w-full space-y-1 md:space-y-3 px-1 md:px-2">
-                                    <div class="w-full h-1 md:h-2 bg-slate-50 rounded-full border border-slate-100">
-                                    </div>
-                                    <div class="w-full h-1 md:h-2 bg-slate-50 rounded-full border border-slate-100">
-                                    </div>
-                                    <div
-                                        class="w-full h-3 md:h-8 bg-[#6200EE]/10 rounded-md md:rounded-xl border border-[#6200EE]/20 mt-2 md:mt-6">
-                                    </div>
-                                </div>
-
-                                <!-- Huge Green Check Overlay -->
-                                <div
-                                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 md:w-24 md:h-24 bg-green-500/20 backdrop-blur-sm rounded-full flex items-center justify-center scale-0 transition-transform duration-500 group-hover:scale-100">
-                                    <div
-                                        class="w-6 h-6 md:w-16 md:h-16 bg-green-500 rounded-full flex items-center justify-center shadow-lg text-white">
-                                        <span
-                                            class="material-symbols-outlined text-sm md:text-3xl font-bold">check</span>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- Left Side: Narratives (Overlaying) -->
+                    <div class="relative z-20 w-full md:w-1/2 pointer-events-none">
+                        <!-- Step 1 Text -->
+                        <div id="narrative-1"
+                            class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
+                            <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
+                                01</span>
+                            <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Tải ứng dụng &
+                                <span class="text-[#6200EE]">Xác thực eKYC.</span></h3>
+                            <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Mở cổng an toàn. Đăng
+                                ký và hoàn tất xác thực danh tính bằng CCCD trong 30 giây để đảm bảo cộng đồng di chuyển
+                                tin cậy.</p>
                         </div>
-
-                        <!-- Content -->
-                        <div class="ml-6 md:ml-0 flex-1 pt-0 md:pt-0 max-w-[280px]">
-                            <h3 class="text-lg md:text-xl font-bold text-[#6200EE] mb-2 md:mb-4">1. Tải ứng dụng<br
-                                    class="hidden md:block" /> & Xác thực</h3>
-                            <p class="text-sm text-slate-600 font-medium leading-relaxed">Đăng ký tài khoản nhanh chóng.
-                                Hoàn tất quy trình eKYC bằng căn cước công dân để đảm bảo nền tảng di chuyển an toàn
-                                tuyệt đối.</p>
+                        <!-- Step 2 Text -->
+                        <div id="narrative-2"
+                            class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
+                            <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
+                                02</span>
+                            <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Đặt chuyến &
+                                <span class="text-[#6200EE]">Chọn tần số.</span></h3>
+                            <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Nhập điểm đến và lọc
+                                các thẻ sở thích (Âm nhạc, Công nghệ) để hệ thống ghép bạn với "Soulmate" phù hợp nhất.
+                            </p>
+                        </div>
+                        <!-- Step 3 Text -->
+                        <div id="narrative-3"
+                            class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
+                            <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
+                                03</span>
+                            <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Tận hưởng
+                                <span class="text-[#6200EE]">Hành trình.</span></h3>
+                            <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Theo dõi GPS thời
+                                gian thực và trải nghiệm kết nối thú vị với những người bạn mới cùng lộ trình.</p>
+                        </div>
+                        <!-- Step 4 Text -->
+                        <div id="narrative-4"
+                            class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
+                            <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
+                                04</span>
+                            <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Thanh toán &
+                                <span class="text-[#6200EE]">Đánh giá.</span></h3>
+                            <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Tự động tất toán minh
+                                bạch. Chấm điểm uy tín để cùng xây dựng văn hóa di chuyển văn minh của Transcake.</p>
                         </div>
                     </div>
 
-                    <!-- Step 2 -->
-                    <div
-                        class="relative flex md:flex-col items-start md:items-center text-left md:text-center group px-4 md:px-0">
-                        <div
-                            class="absolute -top-6 -left-2 md:top-6 md:left-1/2 md:-translate-x-1/2 text-[100px] md:text-[180px] font-black text-slate-50 select-none z-[-1] leading-none transition-transform duration-500 group-hover:scale-110">
-                            2</div>
+                    <!-- Right Side: 3D Camera Focus -->
+                    <div class="relative flex-1 h-full flex items-center justify-center perspective-[2000px]">
 
-                        <!-- iPhone Mockup Box -->
-                        <div
-                            class="w-20 h-40 md:w-[220px] md:h-[420px] bg-slate-50 rounded-[1rem] md:rounded-[2.5rem] border-[4px] md:border-[8px] border-slate-800 shadow-xl mb-0 md:mb-10 flex-shrink-0 relative ml-2 md:ml-0 z-10 transition-transform duration-500 group-hover:-translate-y-4 overflow-hidden">
-                            <!-- Notch -->
+                        <!-- The 3D Phone Scaffold -->
+                        <div id="hero-phone-scaffold"
+                            class="relative w-[280px] md:w-[320px] aspect-[9/19] preserve-3d transition-transform duration-100 ease-linear">
+
+                            <!-- Phone Shadow -->
                             <div
-                                class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-2 md:h-4 bg-slate-800 rounded-b-md md:rounded-b-xl z-20">
+                                class="absolute inset-0 bg-black/20 blur-3xl rounded-[3rem] translate-y-20 scale-90 -z-10">
                             </div>
 
-                            <!-- Internal UI: Search & Tags -->
+                            <!-- iPhone Pro Frame (CSS Rendered) -->
                             <div
-                                class="w-full h-full flex flex-col items-center justify-start p-2 md:p-5 pt-6 md:pt-12 relative bg-white">
-                                <!-- Map placeholder -->
-                                <div
-                                    class="w-full h-1/3 bg-slate-100 rounded-lg md:rounded-2xl mb-2 md:mb-4 relative overflow-hidden">
-                                    <div class="absolute inset-0 opacity-[0.2]"
-                                        style="background-image: linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px); background-size: 8px 8px;">
-                                    </div>
+                                class="absolute inset-0 bg-slate-900 rounded-[3rem] p-3 border-[6px] border-slate-800 shadow-2xl overflow-hidden preserve-3d">
+                                <!-- Screen -->
+                                <div class="w-full h-full bg-white rounded-[2.2rem] overflow-hidden relative">
                                     <div
-                                        class="absolute bottom-2 left-1/2 -translate-x-1/2 w-2 h-2 md:w-4 md:h-4 bg-blue-500 rounded-full border-2 border-white shadow-sm">
+                                        class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-slate-900 rounded-b-2xl z-50">
                                     </div>
-                                </div>
 
-                                <!-- Search bar -->
-                                <div
-                                    class="w-full h-4 md:h-10 bg-slate-50 border border-slate-200 rounded-md md:rounded-xl mb-3 md:mb-6 flex items-center px-1.5 md:px-3 shadow-inner">
-                                    <div
-                                        class="w-1 md:w-2 h-1 md:h-2 rounded-full border md:border-2 border-slate-400 mr-1 md:mr-2">
-                                    </div>
-                                    <div class="w-10 md:w-20 h-0.5 md:h-1.5 bg-slate-200 rounded-full"></div>
-                                </div>
-
-                                <!-- Tags grid -->
-                                <div class="w-full">
-                                    <div class="w-12 md:w-24 h-0.5 md:h-1.5 bg-slate-200 rounded-full mb-1.5 md:mb-3">
-                                    </div>
-                                    <div class="flex flex-wrap gap-1 md:gap-2">
-                                        <div
-                                            class="px-1.5 py-0.5 md:px-3 md:py-1.5 bg-purple-50 rounded-md md:rounded-lg border border-purple-100 transition-colors duration-300 group-hover:bg-[#6200EE] group-hover:border-[#6200EE]">
+                                    <!-- Internal App UI Components (Dynamic) -->
+                                    <div id="phone-ui-screen"
+                                        class="w-full h-full relative transition-all duration-500">
+                                        <!-- Step 1 UI -->
+                                        <div id="ui-1"
+                                            class="absolute inset-0 flex flex-col items-center bg-white p-6 pt-16 transition-opacity duration-500">
                                             <div
-                                                class="w-4 md:w-10 h-0.5 md:h-1 bg-purple-300 rounded-full transition-colors duration-300 group-hover:bg-white/50">
+                                                class="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mb-10">
+                                                <span
+                                                    class="material-symbols-outlined text-4xl text-slate-300">person_check</span>
+                                            </div>
+                                            <div class="w-full space-y-4">
+                                                <div class="w-full h-3 bg-slate-50 rounded-full"></div>
+                                                <div class="w-2/3 h-3 bg-slate-50 rounded-full"></div>
+                                                <div
+                                                    class="w-full h-12 bg-[#6200EE] rounded-2xl flex items-center justify-center mt-10">
+                                                    <div class="w-20 h-2 bg-white/30 rounded-full"></div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div
-                                            class="px-1.5 py-0.5 md:px-3 md:py-1.5 bg-orange-50 rounded-md md:rounded-lg border border-orange-100 transition-colors duration-300 group-hover:bg-[#FF6D00] group-hover:border-[#FF6D00]">
+                                        <!-- Step 2 UI -->
+                                        <div id="ui-2"
+                                            class="absolute inset-0 flex flex-col items-center bg-white p-6 pt-16 opacity-0 transition-opacity duration-500">
                                             <div
-                                                class="w-3 md:w-8 h-0.5 md:h-1 bg-orange-300 rounded-full transition-colors duration-300 group-hover:bg-white/50">
+                                                class="w-full h-32 bg-slate-50 rounded-3xl mb-6 relative overflow-hidden">
+                                                <div class="absolute inset-0 opacity-[0.2]"
+                                                    style="background-image: linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px); background-size: 8px 8px;">
+                                                </div>
+                                            </div>
+                                            <div class="w-full h-10 bg-slate-50 rounded-xl mb-4"></div>
+                                            <div class="flex gap-2 w-full">
+                                                <div class="flex-1 h-8 bg-purple-50 rounded-lg"></div>
+                                                <div class="flex-1 h-8 bg-orange-50 rounded-lg"></div>
                                             </div>
                                         </div>
-                                        <div
-                                            class="px-1.5 py-0.5 md:px-3 md:py-1.5 bg-slate-50 rounded-md md:rounded-lg border border-slate-100">
-                                            <div class="w-6 md:w-12 h-0.5 md:h-1 bg-slate-300 rounded-full"></div>
+                                        <!-- Step 3 UI -->
+                                        <div id="ui-3"
+                                            class="absolute inset-0 flex flex-col items-center bg-white opacity-0 transition-opacity duration-500">
+                                            <div class="w-full h-full relative overflow-hidden">
+                                                <div class="absolute inset-0 opacity-[0.05]"
+                                                    style="background-image: linear-gradient(#6200ee 1px, transparent 1px), linear-gradient(90deg, #6200ee 1px, transparent 1px); background-size: 20px 20px;">
+                                                </div>
+                                                <!-- Animated Dot -->
+                                                <div
+                                                    class="absolute top-[20%] left-[20%] w-3 h-3 bg-[#6200EE] rounded-full shadow-lg">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Step 4 UI -->
+                                        <div id="ui-4"
+                                            class="absolute inset-0 flex flex-col items-center bg-[#6200EE] p-6 pt-16 opacity-0 transition-opacity duration-500">
+                                            <div
+                                                class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center mb-6">
+                                                <span
+                                                    class="material-symbols-outlined text-3xl text-white">verified</span>
+                                            </div>
+                                            <div class="w-full h-2 bg-white/20 rounded-full mb-2"></div>
+                                            <div class="w-1/2 h-2 bg-white/10 rounded-full"></div>
                                         </div>
                                     </div>
-
-                                    <!-- Matching Button -->
-                                    <div
-                                        class="w-full h-4 md:h-10 bg-[#6200EE] rounded-md md:rounded-xl mt-3 md:mt-6 opacity-50 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center">
-                                        <div class="w-6 md:w-16 h-0.5 md:h-1.5 bg-white/50 rounded-full"></div>
-                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Content -->
-                        <div class="ml-6 md:ml-0 flex-1 pt-0 md:pt-0 max-w-[280px]">
-                            <h3 class="text-lg md:text-xl font-bold text-[#6200EE] mb-2 md:mb-4">2. Đặt chuyến<br
-                                    class="hidden md:block" /> & Chọn tần số</h3>
-                            <p class="text-sm text-slate-600 font-medium leading-relaxed">Nhập điểm đến để xem trước giá
-                                cước minh bạch. Chọn các thẻ sở thích cá nhân để thuật toán ghép bạn với người đồng hành
-                                phù hợp.</p>
-                        </div>
-                    </div>
+                            <!-- 3D Floating Elements (Z-Space) -->
 
-                    <!-- Step 3 -->
-                    <div
-                        class="relative flex md:flex-col items-start md:items-center text-left md:text-center group px-4 md:px-0">
-                        <div
-                            class="absolute -top-6 -left-2 md:top-6 md:left-1/2 md:-translate-x-1/2 text-[100px] md:text-[180px] font-black text-slate-50 select-none z-[-1] leading-none transition-transform duration-500 group-hover:scale-110">
-                            3</div>
-
-                        <!-- iPhone Mockup Box -->
-                        <div
-                            class="w-20 h-40 md:w-[220px] md:h-[420px] bg-slate-50 rounded-[1rem] md:rounded-[2.5rem] border-[4px] md:border-[8px] border-slate-800 shadow-xl mb-0 md:mb-10 flex-shrink-0 relative ml-2 md:ml-0 z-10 transition-transform duration-500 group-hover:-translate-y-4 overflow-hidden bg-slate-100">
-                            <!-- Notch -->
-                            <div
-                                class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-2 md:h-4 bg-slate-800 rounded-b-md md:rounded-b-xl z-20">
-                            </div>
-
-                            <!-- Internal UI: Map & Avatars -->
-                            <div class="w-full h-full relative overflow-hidden">
-                                <!-- Map Background Grid -->
-                                <div class="absolute inset-0 opacity-[0.2] md:opacity-[0.1]"
-                                    style="background-image: linear-gradient(#6200ee 1px, transparent 1px), linear-gradient(90deg, #6200ee 1px, transparent 1px); background-size: 24px 24px;">
-                                </div>
-
-                                <!-- Route Line -->
-                                <svg class="w-[150%] h-[80%] absolute top-[10%] left-[-25%]" viewBox="0 0 100 100"
+                            <!-- Floating Route (Step 3) -->
+                            <div id="float-route"
+                                class="absolute inset-0 pointer-events-none opacity-0 translate-z-[120px]">
+                                <svg class="w-[200%] h-[100%] absolute top-0 left-[-50%]" viewBox="0 0 100 100"
                                     preserveAspectRatio="none">
-                                    <path d="M 20 80 Q 40 40 60 50 T 90 20" fill="none" stroke="#6200EE"
-                                        stroke-width="4" stroke-dasharray="6" stroke-linecap="round"
-                                        class="opacity-30 md:opacity-50"></path>
-                                    <path d="M 20 80 Q 40 40 60 50 T 90 20" fill="none" class="stroke-[#6200EE]"
-                                        stroke-width="4" stroke-linecap="round" stroke-dasharray="200"
-                                        stroke-dashoffset="200">
-                                        <animate attributeName="stroke-dashoffset" from="200" to="0" dur="3s"
-                                            fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1" begin="0s"
-                                            repeatCount="indefinite" />
+                                    <path id="route-path-3d" d="M 10 90 Q 30 10 50 50 T 90 10" fill="none"
+                                        stroke="#6200EE" stroke-width="2" stroke-dasharray="4" class="opacity-20">
                                     </path>
                                 </svg>
-
-                                <!-- Avatars -->
-                                <div
-                                    class="absolute top-[40%] left-[30%] w-3 h-3 md:w-8 md:h-8 bg-[#6200EE] rounded-full border-2 md:border-4 border-white shadow-lg flex items-center justify-center overflow-hidden z-10">
-                                    <div class="w-1.5 md:w-4 h-1.5 md:h-4 bg-white/30 rounded-full"></div>
-                                </div>
-                                <div
-                                    class="absolute top-[32%] left-[65%] w-3 h-3 md:w-8 md:h-8 bg-orange-500 rounded-full border-2 md:border-4 border-white shadow-lg flex items-center justify-center overflow-hidden z-10 scale-0 transition-transform duration-500 group-hover:scale-100 delay-300">
-                                    <div class="w-1.5 md:w-4 h-1.5 md:h-4 bg-white/30 rounded-full"></div>
-                                </div>
-
-                                <!-- Bottom Card -->
-                                <div
-                                    class="absolute bottom-1 md:bottom-2 left-1 md:left-2 right-1 md:right-2 h-1/4 bg-white rounded-lg md:rounded-2xl p-1.5 md:p-4 shadow-lg flex flex-col justify-between">
-                                    <div class="flex items-center gap-1 md:gap-3">
-                                        <div class="w-4 h-4 md:w-10 md:h-10 bg-slate-100 rounded-full"></div>
-                                        <div class="flex-1">
-                                            <div class="w-3/4 h-1 md:h-2 bg-slate-200 rounded-full mb-1"></div>
-                                            <div class="w-1/2 h-0.5 md:h-1.5 bg-slate-100 rounded-full"></div>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="w-full h-1 md:h-2 bg-[#6200EE]/10 rounded-full mt-1 md:mt-0 relative overflow-hidden">
-                                        <div class="absolute top-0 left-0 h-full bg-[#6200EE] w-[70%]"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Content -->
-                        <div class="ml-6 md:ml-0 flex-1 pt-0 md:pt-0 max-w-[280px]">
-                            <h3 class="text-lg md:text-xl font-bold text-[#6200EE] mb-2 md:mb-4">3. Tận hưởng<br
-                                    class="hidden md:block" /> hành trình</h3>
-                            <p class="text-sm text-slate-600 font-medium leading-relaxed">Trải nghiệm chuyến đi an toàn
-                                với hệ thống cảnh báo lệch lộ trình tự động. Thoải mái chia sẻ và kết nối với những
-                                người bạn mới.</p>
-                        </div>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div
-                        class="relative flex md:flex-col items-start md:items-center text-left md:text-center group px-4 md:px-0">
-                        <div
-                            class="absolute -top-6 -left-2 md:top-6 md:left-1/2 md:-translate-x-1/2 text-[100px] md:text-[180px] font-black text-slate-50 select-none z-[-1] leading-none transition-transform duration-500 group-hover:scale-110">
-                            4</div>
-
-                        <!-- iPhone Mockup Box -->
-                        <div
-                            class="w-20 h-40 md:w-[220px] md:h-[420px] bg-slate-50 rounded-[1rem] md:rounded-[2.5rem] border-[4px] md:border-[8px] border-slate-800 shadow-xl mb-0 md:mb-10 flex-shrink-0 relative ml-2 md:ml-0 z-10 transition-transform duration-500 group-hover:-translate-y-4 overflow-hidden bg-[#6200ee]">
-                            <!-- Notch -->
-                            <div
-                                class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-2 md:h-4 bg-slate-800 rounded-b-md md:rounded-b-xl z-20">
                             </div>
 
-                            <!-- Internal UI: Rating & Receipt -->
-                            <div
-                                class="w-full h-full flex flex-col items-center justify-center p-2 md:p-4 pt-4 md:pt-10">
-                                <!-- Receipt -->
-                                <div
-                                    class="w-full bg-white rounded-t-md md:rounded-t-xl rounded-b-sm md:rounded-b-sm p-2 md:p-5 relative shadow-lg transform transition-transform duration-500 group-hover:-translate-y-2">
-                                    <div class="absolute -bottom-1 md:-bottom-2 left-0 right-0 h-1 md:h-2"
-                                        style="background-image: radial-gradient(circle at 4px 0, transparent 4px, white 5px); background-size: 8px 10px; background-repeat: repeat-x;">
-                                    </div>
-
-                                    <div
-                                        class="w-12 md:w-24 h-1 md:h-2 bg-[#6200EE]/20 rounded-full mx-auto mb-2 md:mb-6">
-                                    </div>
-
-                                    <!-- Items -->
-                                    <div class="w-full space-y-1.5 md:space-y-4 mb-2 md:mb-4">
-                                        <div class="flex justify-between items-center">
-                                            <div class="w-1/2 h-0.5 md:h-1.5 bg-slate-200 rounded-full"></div>
-                                            <div class="w-1/4 h-1 md:h-2 bg-slate-800 rounded-full"></div>
-                                        </div>
-                                        <div class="flex justify-between items-center">
-                                            <div class="w-1/3 h-0.5 md:h-1.5 bg-slate-200 rounded-full"></div>
-                                            <div class="w-1/5 h-0.5 md:h-1.5 bg-slate-400 rounded-full"></div>
-                                        </div>
-                                    </div>
-
-                                    <div class="w-full border-t border-dashed border-slate-300 my-1.5 md:my-4"></div>
-
-                                    <div
-                                        class="flex justify-between items-center bg-[#FF6D00]/10 p-1 md:p-2 rounded-md">
-                                        <div class="w-1/3 h-0.5 md:h-1.5 bg-[#FF6D00]/60 rounded-full"></div>
-                                        <div class="w-8 md:w-16 h-1 md:h-2 bg-[#FF6D00] rounded-full"></div>
+                            <!-- Floating CCCD (Step 1) -->
+                            <div id="float-cccd"
+                                class="absolute top-[20%] -left-20 w-48 h-28 bg-white rounded-xl shadow-2xl border border-slate-100 p-4 opacity-0 z-50 translate-z-[100px]">
+                                <div class="flex gap-3 mb-4">
+                                    <div class="w-10 h-10 bg-slate-200 rounded"></div>
+                                    <div class="flex-1 space-y-2">
+                                        <div class="w-full h-2 bg-slate-200"></div>
+                                        <div class="w-1/2 h-2 bg-slate-100"></div>
                                     </div>
                                 </div>
+                                <div class="w-full h-3 flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-green-500 text-sm">verified</span>
+                                    <span class="text-[8px] font-bold text-slate-400">IDENTITY VERIFIED</span>
+                                </div>
+                            </div>
 
-                                <!-- Rating Stars -->
+                            <!-- Orbiting Vibe Tags (Step 2) -->
+                            <div id="float-tags-container"
+                                class="absolute inset-0 pointer-events-none opacity-0 translate-z-[150px]">
                                 <div
-                                    class="w-[90%] bg-white/20 backdrop-blur-md rounded-md md:rounded-xl mt-3 md:mt-6 p-1.5 md:p-3 flex justify-center gap-1 md:gap-2 border border-white/30 transform transition-transform duration-500 delay-100 group-hover:-translate-y-2">
-                                    <span
-                                        class="material-symbols-outlined text-[10px] md:text-xl text-yellow-400 font-bold"
+                                    class="absolute top-10 -right-10 px-4 py-2 bg-[#6200EE] text-white rounded-full font-bold shadow-lg shadow-[#6200EE]/30">
+                                    MUSIC</div>
+                                <div
+                                    class="absolute bottom-40 -left-16 px-4 py-2 bg-orange-500 text-white rounded-full font-bold shadow-lg shadow-orange-500/30">
+                                    TECH</div>
+                                <div
+                                    class="absolute top-1/2 -right-20 px-4 py-2 bg-blue-500 text-white rounded-full font-bold shadow-lg shadow-blue-500/30">
+                                    GAMING</div>
+                            </div>
+
+                            <!-- Floating Receipt (Step 4) -->
+                            <div id="float-receipt"
+                                class="absolute top-[10%] left-1/2 -translate-x-1/2 w-64 bg-white rounded-2xl shadow-2xl p-6 opacity-0 translate-z-[200px]">
+                                <div class="w-full border-b border-dashed border-slate-200 pb-4 mb-4">
+                                    <h4 class="text-xs font-black uppercase tracking-widest text-[#6200EE]">Hóa đơn
+                                        chuyến đi</h4>
+                                </div>
+                                <div class="flex justify-between items-center mb-6">
+                                    <span class="text-sm font-bold text-slate-500">Tổng cộng</span>
+                                    <span class="text-2xl font-black text-slate-900">120.000đ</span>
+                                </div>
+                                <div class="flex justify-center gap-1 text-yellow-400">
+                                    <span class="material-symbols-outlined"
                                         style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span
-                                        class="material-symbols-outlined text-[10px] md:text-xl text-yellow-400 font-bold"
+                                    <span class="material-symbols-outlined"
                                         style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span
-                                        class="material-symbols-outlined text-[10px] md:text-xl text-yellow-400 font-bold"
+                                    <span class="material-symbols-outlined"
                                         style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span
-                                        class="material-symbols-outlined text-[10px] md:text-xl text-yellow-400 font-bold"
+                                    <span class="material-symbols-outlined"
                                         style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span
-                                        class="material-symbols-outlined text-[10px] md:text-xl text-yellow-400 font-bold"
+                                    <span class="material-symbols-outlined"
                                         style="font-variation-settings: 'FILL' 1;">star</span>
                                 </div>
                             </div>
+
                         </div>
 
-                        <!-- Content -->
-                        <div class="ml-6 md:ml-0 flex-1 pt-0 md:pt-0 max-w-[280px]">
-                            <h3 class="text-lg md:text-xl font-bold text-[#6200EE] mb-2 md:mb-4">4. Thanh toán<br
-                                    class="hidden md:block" /> & Đánh giá</h3>
-                            <p class="text-sm text-slate-600 font-medium leading-relaxed">Thanh toán đúng mức giá đã
-                                niêm yết ban đầu. Chấm điểm uy tín hai chiều để góp phần xây dựng cộng đồng Transcake
-                                văn minh.</p>
-                        </div>
                     </div>
 
                 </div>
             </div>
+
+            <!-- Cinematic Animation Script -->
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+                    const container = document.getElementById('how-it-works-cinematic');
+                    const scaffold = document.getElementById('hero-phone-scaffold');
+
+                    // Narratives
+                    const narratives = [
+                        document.getElementById('narrative-1'),
+                        document.getElementById('narrative-2'),
+                        document.getElementById('narrative-3'),
+                        document.getElementById('narrative-4')
+                    ];
+
+                    // Internal UIs
+                    const uis = [
+                        document.getElementById('ui-1'),
+                        document.getElementById('ui-2'),
+                        document.getElementById('ui-3'),
+                        document.getElementById('ui-4')
+                    ];
+
+                    // Floating Elms
+                    const cccd = document.getElementById('float-cccd');
+                    const tags = document.getElementById('float-tags-container');
+                    const route = document.getElementById('float-route');
+                    const receipt = document.getElementById('float-receipt');
+
+                    // Main Cinematic Timeline
+                    const tl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: container,
+                            start: "top top",
+                            end: "bottom bottom",
+                            scrub: 1,
+                        }
+                    });
+
+                    // Initial State Setup
+                    gsap.set(narratives, { opacity: 0, y: 50 });
+                    gsap.set(uis.slice(1), { opacity: 0 });
+                    gsap.set(scaffold, { rotateY: 0, rotateX: 0, scale: 0.85 });
+
+                    // PHASE 1: eKYC (0% - 25%)
+                    tl.to(narratives[0], { opacity: 1, y: 0, duration: 2 }, "phase1")
+                        .to(scaffold, { rotateY: 20, rotateX: 5, duration: 2, scale: 1 }, "phase1")
+                        .to(cccd, { opacity: 1, x: 20, z: 250, duration: 1.5, rotateY: -10 }, "phase1+=0.5")
+                        .to(uis[0], { opacity: 1, duration: 1 }, "phase1");
+
+                    // Transition 1-2
+                    tl.to(narratives[0], { opacity: 0, y: -50, duration: 1 }, "t12")
+                        .to(cccd, { opacity: 0, z: 500, scale: 0.2, duration: 1 }, "t12")
+                        .to(uis[0], { opacity: 0, duration: 0.5 }, "t12")
+                        .to(uis[1], { opacity: 1, duration: 0.5 }, "t12+=0.5");
+
+                    // PHASE 2: Vibe Matching (25% - 50%)
+                    tl.to(narratives[1], { opacity: 1, y: 0, duration: 2 }, "phase2")
+                        .to(scaffold, { rotateY: -20, rotateX: 10, duration: 2 }, "phase2")
+                        .to(tags, { opacity: 1, z: 200, duration: 1.5 }, "phase2")
+                        .from(tags.querySelectorAll('div'), { z: 400, opacity: 0, stagger: 0.2, duration: 1 }, "phase2+=0.5");
+
+                    // Transition 2-3
+                    tl.to(narratives[1], { opacity: 0, y: -50, duration: 1 }, "t23")
+                        .to(tags, { opacity: 0, z: -500, duration: 1 }, "t23")
+                        .to(uis[1], { opacity: 0, duration: 0.5 }, "t23")
+                        .to(uis[2], { opacity: 1, duration: 0.5 }, "t23+=0.5");
+
+                    // PHASE 3: Journey (50% - 75%)
+                    tl.to(narratives[2], { opacity: 1, y: 0, duration: 2 }, "phase3")
+                        .to(scaffold, { rotateY: 45, rotateX: -15, scale: 1.2, duration: 2 }, "phase3")
+                        .to(route, { opacity: 1, z: 150, duration: 1.5 }, "phase3")
+                        .fromTo("#route-path-3d", { strokeDasharray: 200, strokeDashoffset: 200 }, { strokeDashoffset: 0, duration: 2 }, "phase3");
+
+                    // Transition 3-4
+                    tl.to(narratives[2], { opacity: 0, y: -50, duration: 1 }, "t34")
+                        .to(route, { opacity: 0, scale: 1.5, duration: 1 }, "t34")
+                        .to(uis[2], { opacity: 0, duration: 0.5 }, "t34")
+                        .to(uis[3], { opacity: 1, duration: 0.5 }, "t34+=0.5");
+
+                    // PHASE 4: Success/Payment (75% - 100%)
+                    tl.to(narratives[3], { opacity: 1, y: 0, duration: 2 }, "phase4")
+                        .to(scaffold, { rotateY: 0, rotateX: 0, scale: 0.9, duration: 2 }, "phase4")
+                        .to(receipt, { opacity: 1, y: -30, z: 300, rotateX: -10, duration: 1.5 }, "phase4+=0.5");
+
+                });
+            </script>
         </section>
 
         <!-- Deep Dive 1: Connection -->
