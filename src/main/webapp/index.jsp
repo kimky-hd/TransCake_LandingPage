@@ -174,12 +174,12 @@
                         chúng tôi</a>
                     <a class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors" href="#">Tính
                         năng</a>
-                    <a class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors" href="#">An
-                        toàn</a>
+                    <a class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors" href="#">Hướng
+                        dẫn</a>
                     <a class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors" href="#">Bảng
                         giá</a>
-                    <a class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors" href="#">Trở
-                        thành Đối tác</a>
+                    <a class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
+                        href="#">Contact us</a>
                 </div>
                 <button
                     class="bg-accent text-white px-6 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40">
@@ -869,7 +869,8 @@
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 01</span>
                             <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Tải ứng dụng &
-                                <span class="text-[#6200EE]">Xác thực eKYC.</span></h3>
+                                <span class="text-[#6200EE]">Xác thực eKYC.</span>
+                            </h3>
                             <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Mở cổng an toàn. Đăng
                                 ký và hoàn tất xác thực danh tính bằng CCCD trong 30 giây để đảm bảo cộng đồng di chuyển
                                 tin cậy.</p>
@@ -880,7 +881,8 @@
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 02</span>
                             <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Đặt chuyến &
-                                <span class="text-[#6200EE]">Chọn tần số.</span></h3>
+                                <span class="text-[#6200EE]">Chọn tần số.</span>
+                            </h3>
                             <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Nhập điểm đến và lọc
                                 các thẻ sở thích (Âm nhạc, Công nghệ) để hệ thống ghép bạn với "Soulmate" phù hợp nhất.
                             </p>
@@ -891,7 +893,8 @@
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 03</span>
                             <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Tận hưởng
-                                <span class="text-[#6200EE]">Hành trình.</span></h3>
+                                <span class="text-[#6200EE]">Hành trình.</span>
+                            </h3>
                             <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Theo dõi GPS thời
                                 gian thực và trải nghiệm kết nối thú vị với những người bạn mới cùng lộ trình.</p>
                         </div>
@@ -901,7 +904,8 @@
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 04</span>
                             <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Thanh toán &
-                                <span class="text-[#6200EE]">Đánh giá.</span></h3>
+                                <span class="text-[#6200EE]">Đánh giá.</span>
+                            </h3>
                             <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Tự động tất toán minh
                                 bạch. Chấm điểm uy tín để cùng xây dựng văn hóa di chuyển văn minh của Transcake.</p>
                         </div>
@@ -1152,6 +1156,229 @@
                         .to(scaffold, { rotateY: 0, rotateX: 0, scale: 0.9, duration: 2 }, "phase4")
                         .to(receipt, { opacity: 1, y: -30, z: 300, rotateX: -10, duration: 1.5 }, "phase4+=0.5");
 
+                });
+            </script>
+        </section>
+
+        <!-- Pricing & Plans Section -->
+        <section class="py-24 px-4 md:px-8 max-w-[1200px] mx-auto bg-white relative">
+            <!-- Header -->
+            <div class="text-center max-w-3xl mx-auto mb-16 relative z-10">
+                <span
+                    class="inline-block text-[#FF6D00] text-xs font-bold uppercase tracking-widest mb-4 bg-orange-50 px-3 py-1 rounded-full">
+                    Minh bạch chi phí
+                </span>
+                <h2 class="text-3xl md:text-5xl font-black text-[#6200EE] leading-tight mb-8">
+                    Lựa chọn hành trình theo cách của bạn.
+                </h2>
+
+                <!-- Toggle Switch -->
+                <div class="flex items-center justify-center gap-4 text-sm font-semibold select-none">
+                    <span class="text-slate-900" id="label-monthly">Gói Tháng</span>
+                    <button id="billing-toggle"
+                        class="w-14 h-8 bg-slate-200 rounded-full relative transition-colors duration-300 focus:outline-none">
+                        <div id="toggle-circle"
+                            class="w-6 h-6 bg-white rounded-full absolute top-1 left-1 shadow-md transition-transform duration-300">
+                        </div>
+                    </button>
+                    <span class="text-slate-500" id="label-yearly">Gói Năm <span
+                            class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full ml-1">Tiết kiệm
+                            30%</span></span>
+                </div>
+            </div>
+
+            <!-- Passenger Pricing (B2C) -->
+            <div class="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto mb-20 relative z-10">
+
+                <!-- Basic Plan -->
+                <div
+                    class="bg-white border border-slate-200 rounded-[2rem] p-8 md:p-10 flex flex-col hover:shadow-xl transition-shadow duration-300 self-center">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Gói Basic</h3>
+                    <p class="text-slate-500 text-sm mb-6 h-10">Dành cho nhu cầu di chuyển cơ bản.</p>
+                    <div class="text-4xl font-black text-slate-900 mb-8 pb-8 border-b border-slate-100">
+                        0 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-1">
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
+                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            <span class="text-slate-700 font-medium">Đặt xe nhanh chóng, trả đúng giá cước gốc.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
+                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            <span class="text-slate-700 font-medium">Không phí nền tảng ẩn.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
+                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            <span class="text-slate-700 font-medium">Thanh toán trực tiếp cho tài xế.</span>
+                        </li>
+                    </ul>
+                    <a href="#"
+                        class="block w-full text-center py-4 rounded-xl border-2 border-slate-200 text-slate-700 font-bold hover:bg-slate-50 hover:border-slate-300 transition-all">
+                        Trải nghiệm miễn phí
+                    </a>
+                </div>
+
+                <!-- Pro Plan -->
+                <div
+                    class="bg-white border-2 border-[#FF6D00] rounded-[2rem] p-8 md:p-10 flex flex-col relative shadow-[0_20px_50px_rgba(98,0,238,0.15)] md:scale-105 z-10">
+                    <div
+                        class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FF6D00] text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
+                        Phổ biến nhất
+                    </div>
+                    <h3 class="text-2xl font-bold text-[#6200EE] mb-2">Transcake Pro</h3>
+                    <p class="text-slate-500 text-sm mb-6 h-10">Dành cho trải nghiệm cá nhân hóa tối đa.</p>
+                    <div
+                        class="text-4xl font-black text-[#6200EE] mb-8 pb-8 border-b border-slate-100 flex items-baseline gap-1 relative overflow-hidden h-[90px]">
+                        <!-- Monthly Price -->
+                        <div id="price-pro-monthly"
+                            class="absolute top-0 left-0 transition-transform duration-500 ease-in-out">
+                            49.000 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
+                        </div>
+                        <!-- Yearly Price -->
+                        <div id="price-pro-yearly"
+                            class="absolute top-[100%] left-0 transition-transform duration-500 ease-in-out opacity-0">
+                            449.000 <span class="text-lg text-slate-500 font-medium">VNĐ / năm</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-4 mb-10 flex-1">
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
+                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            <span class="text-slate-700 font-medium">Toàn bộ đặc quyền của gói Basic.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
+                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            <span class="text-slate-700 font-medium">Ưu tiên ghép chuyến nhanh nhất.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
+                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            <span class="text-slate-700 font-medium">Vibe Matching: Chọn tài xế cùng sở thích.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
+                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            <span class="text-slate-700 font-medium">Bộ lọc an toàn: Chỉ đi cùng tài xế nữ.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
+                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                            <span class="text-slate-700 font-medium">Trải nghiệm ứng dụng không quảng cáo.</span>
+                        </li>
+                    </ul>
+                    <a href="#"
+                        class="block w-full text-center py-4 rounded-xl bg-[#FF6D00] text-white font-bold hover:bg-[#E65C00] shadow-xl shadow-orange-500/20 transition-all hover:-translate-y-1">
+                        Nâng cấp Pro ngay
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Driver Commission Banner (B2B/Partners) -->
+            <div
+                class="max-w-4xl mx-auto rounded-3xl p-8 md:p-10 relative overflow-hidden backdrop-blur-xl bg-purple-50/80 border border-purple-100 shadow-[0_10px_30px_rgba(98,0,238,0.05)] text-left">
+                <!-- Watermark -->
+                <span
+                    class="material-symbols-outlined absolute right-0 bottom-0 text-[200px] text-[#6200EE]/5 -z-10 translate-x-1/4 translate-y-1/4 select-none"
+                    style="font-variation-settings: 'FILL' 1;">shield</span>
+
+                <h3 class="text-2xl md:text-3xl font-bold text-[#6200EE] mb-8 max-w-2xl">
+                    Dành cho Đối tác Tài xế: Tối đa thu nhập, An tâm cầm lái.
+                </h3>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <!-- Xe Máy -->
+                    <div class="bg-white/60 p-6 rounded-2xl border border-white">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="material-symbols-outlined text-[#FF6D00] text-2xl">two_wheeler</span>
+                            <h4 class="font-bold text-slate-800 text-lg">Xe máy</h4>
+                        </div>
+                        <p class="text-slate-600 font-medium mb-3">
+                            Chiết khấu siêu thấp chỉ <strong>15%</strong><br>
+                            <span class="text-sm text-slate-500">(Tối thiểu 3.000 VNĐ/chuyến)</span>
+                        </p>
+                        <p class="text-xs text-slate-500 flex items-start gap-1">
+                            <span class="material-symbols-outlined text-green-500 text-[14px]">security</span>
+                            Đã bao gồm 1.000 VNĐ trích quỹ bảo hiểm phương tiện.
+                        </p>
+                    </div>
+
+                    <!-- Ô Tô -->
+                    <div class="bg-white/60 p-6 rounded-2xl border border-white">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="material-symbols-outlined text-[#FF6D00] text-2xl">directions_car</span>
+                            <h4 class="font-bold text-slate-800 text-lg">Ô tô</h4>
+                        </div>
+                        <p class="text-slate-600 font-medium mb-3">
+                            Chiết khấu ưu đãi chỉ <strong>10%</strong><br>
+                            <span class="text-sm text-slate-500">(Tối thiểu 10.000 VNĐ/chuyến)</span>
+                        </p>
+                        <p class="text-xs text-slate-500 flex items-start gap-1">
+                            <span class="material-symbols-outlined text-green-500 text-[14px]">security</span>
+                            Đã bao gồm 2.000 VNĐ trích quỹ bảo hiểm phương tiện.
+                        </p>
+                    </div>
+                </div>
+
+                <a href="#"
+                    class="inline-flex items-center gap-2 text-[#FF6D00] font-bold hover:text-[#E65C00] transition-colors group">
+                    Xem chi tiết chính sách Tài xế
+                    <span
+                        class="material-symbols-outlined transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const toggleBtn = document.getElementById('billing-toggle');
+                    const toggleCircle = document.getElementById('toggle-circle');
+                    const labelMonthly = document.getElementById('label-monthly');
+                    const labelYearly = document.getElementById('label-yearly');
+
+                    const priceMonthly = document.getElementById('price-pro-monthly');
+                    const priceYearly = document.getElementById('price-pro-yearly');
+
+                    let isYearly = false;
+
+                    toggleBtn.addEventListener('click', () => {
+                        isYearly = !isYearly;
+
+                        if (isYearly) {
+                            toggleCircle.style.transform = 'translateX(24px)';
+                            toggleBtn.classList.remove('bg-slate-200');
+                            toggleBtn.classList.add('bg-[#6200EE]');
+
+                            labelMonthly.classList.remove('text-slate-900');
+                            labelMonthly.classList.add('text-slate-500');
+                            labelYearly.classList.remove('text-slate-500');
+                            labelYearly.classList.add('text-slate-900');
+
+                            priceMonthly.style.transform = 'translateY(-100%)';
+                            priceMonthly.style.opacity = '0';
+
+                            priceYearly.style.transform = 'translateY(-100%)';
+                            priceYearly.style.opacity = '1';
+                        } else {
+                            toggleCircle.style.transform = 'translateX(0)';
+                            toggleBtn.classList.remove('bg-[#6200EE]');
+                            toggleBtn.classList.add('bg-slate-200');
+
+                            labelMonthly.classList.remove('text-slate-500');
+                            labelMonthly.classList.add('text-slate-900');
+                            labelYearly.classList.remove('text-slate-900');
+                            labelYearly.classList.add('text-slate-500');
+
+                            priceMonthly.style.transform = 'translateY(0)';
+                            priceMonthly.style.opacity = '1';
+
+                            priceYearly.style.transform = 'translateY(0)';
+                            priceYearly.style.opacity = '0';
+                        }
+                    });
                 });
             </script>
         </section>
