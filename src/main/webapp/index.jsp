@@ -618,6 +618,236 @@
             </div>
         </section>
 
+        <!-- Core Features: Bento Box Grid -->
+        <section class="py-24 bg-[#F3F4F6]">
+            <div class="max-w-7xl mx-auto px-4 md:px-8">
+                <!-- Header -->
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="block text-[#FF6D00] text-sm font-bold uppercase tracking-widest mb-4">Khám phá
+                        Transcake</span>
+                    <h2
+                        class="text-3xl md:text-4xl lg:text-5xl font-black text-[#6200EE] leading-tight font-['Playfair_Display']">
+                        Công nghệ lõi định hình lại cách bạn di chuyển.</h2>
+                </div>
+
+                <!-- Grid -->
+                <!-- Use a grid with 3 columns on desktop -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+
+                    <!-- Card 1: Professional Ride-Hailing (Large, span 2) -->
+                    <div
+                        class="bg-white rounded-[24px] shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-shadow duration-500 overflow-hidden md:col-span-2 flex flex-col md:flex-row group">
+                        <!-- Visual (60%) -->
+                        <div
+                            class="w-full md:w-[60%] bg-gradient-to-br from-slate-50 to-slate-100 p-8 flex items-center justify-center relative overflow-hidden min-h-[300px]">
+                            <!-- Subtle map background -->
+                            <div class="absolute inset-0 opacity-[0.03]"
+                                style="background-image: radial-gradient(#6200EE 2px, transparent 2px); background-size: 24px 24px;">
+                            </div>
+
+                            <!-- Phone Mockup UI -->
+                            <div
+                                class="relative w-full max-w-[320px] bg-white rounded-2xl shadow-xl border border-slate-100 p-6 transform transition-transform duration-500 group-hover:-translate-y-2 group-hover:shadow-2xl z-10">
+                                <div class="flex items-start justify-between mb-6">
+                                    <div class="flex-1 relative">
+                                        <!-- Timeline line -->
+                                        <div
+                                            class="absolute left-[7px] top-[14px] bottom-[14px] w-[2px] border-l-2 border-dashed border-slate-300">
+                                        </div>
+
+                                        <div class="flex items-center gap-4 mb-6 relative bg-white z-10 h-6">
+                                            <div
+                                                class="w-4 h-4 shadow-sm rounded-full bg-[#6200EE] border-2 border-white flex-shrink-0">
+                                            </div>
+                                            <p class="text-sm font-bold text-slate-800">Điểm đón</p>
+                                        </div>
+                                        <div class="flex items-center gap-4 relative bg-white z-10 h-6">
+                                            <div
+                                                class="w-4 h-4 shadow-sm rounded-full bg-[#FF6D00] border-2 border-white flex-shrink-0">
+                                            </div>
+                                            <p class="text-sm font-bold text-slate-800">Điểm đến</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    class="bg-slate-50 px-4 py-3 border-t border-slate-100 flex flex-col -mx-6 -mb-6 mt-4 rounded-b-2xl items-center text-center">
+                                    <span
+                                        class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Cước
+                                        phí hợp lý</span>
+                                    <span
+                                        class="text-3xl font-black text-[#6200EE] font-mono tracking-tight">150.000<span
+                                            class="text-lg">đ</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Text (40%) -->
+                        <div
+                            class="w-full md:w-[40%] p-8 flex flex-col justify-center border-t md:border-t-0 md:border-l border-slate-100">
+                            <h3 class="text-2xl font-bold text-slate-900 mb-4 font-['Playfair_Display']">Đặt xe chuyên
+                                nghiệp & Giá cước minh bạch</h3>
+                            <p class="text-slate-600 leading-[1.7] font-medium text-[15px]">Trải nghiệm dịch vụ vận tải
+                                chất lượng cao. Giá cước được chuẩn hóa và niêm yết rõ ràng trước mỗi chuyến đi, không
+                                phí ẩn, không tăng giá bất hợp lý.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Vibe Matching Engine (Square) -->
+                    <div
+                        class="bg-white rounded-[24px] shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-shadow duration-500 overflow-hidden lg:col-span-1 flex flex-col group">
+                        <!-- Visual (60%) -->
+                        <div
+                            class="flex-1 bg-gradient-to-tr from-purple-50 to-white p-6 flex flex-col items-center justify-center relative overflow-hidden min-h-[260px]">
+                            <!-- Floating tags -->
+                            <span
+                                class="absolute top-8 left-6 bg-white px-3 py-1.5 rounded-full text-[10px] font-bold text-[#6200EE] shadow-md border border-purple-50 z-20 animate-[bounce_4s_infinite]">Âm
+                                nhạc</span>
+                            <span
+                                class="absolute bottom-10 right-6 bg-white px-3 py-1.5 rounded-full text-[10px] font-bold text-[#FF6D00] shadow-md border border-orange-50 z-20 animate-[bounce_5s_infinite]">Công
+                                nghệ</span>
+                            <span
+                                class="absolute top-1/2 -right-4 bg-white px-3 py-1.5 rounded-full text-[10px] font-bold text-slate-700 shadow-md border border-slate-100 z-20 animate-[bounce_4.5s_infinite]">Thể
+                                thao</span>
+
+                            <!-- Avatars -->
+                            <div
+                                class="flex items-center justify-center w-full z-10 transform transition-transform group-hover:scale-105 duration-500">
+                                <div
+                                    class="w-20 h-20 rounded-full border-4 border-white shadow-lg z-10 bg-slate-200 overflow-hidden relative">
+                                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150"
+                                        class="w-full h-full object-cover grayscale-[20%]" alt="User 1" />
+                                </div>
+                                <div
+                                    class="w-12 h-1 bg-gradient-to-r from-[#6200EE] to-[#FF6D00] -mx-4 z-0 opacity-80 mix-blend-multiply">
+                                </div>
+                                <div
+                                    class="w-20 h-20 rounded-full border-4 border-white shadow-lg z-10 bg-slate-200 overflow-hidden relative">
+                                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150"
+                                        class="w-full h-full object-cover grayscale-[20%]" alt="User 2" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Text (40%) -->
+                        <div class="p-8 border-t border-slate-50 bg-white md:min-h-[220px]">
+                            <h3 class="text-xl font-bold text-slate-900 mb-3 font-['Playfair_Display']">Ghép chuyến cùng
+                                tần số</h3>
+                            <p class="text-[14px] text-slate-600 font-medium leading-[1.7]">Thuật toán thông minh tự
+                                động gợi ý tài xế hoặc hành khách có chung sở thích. Biến những cuốc xe nhàm chán thành
+                                cuộc trò chuyện thú vị.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Zenly Map & Social (Square) -->
+                    <div
+                        class="bg-white rounded-[24px] shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-shadow duration-500 overflow-hidden lg:col-span-1 flex flex-col group">
+                        <!-- Visual (60%) -->
+                        <div
+                            class="flex-1 bg-slate-50 flex items-center justify-center relative overflow-hidden min-h-[260px]">
+                            <!-- Map Background snippet -->
+                            <div
+                                class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800')] bg-cover bg-center opacity-[0.2] saturate-50 mix-blend-multiply">
+                            </div>
+                            <div class="absolute inset-0 bg-blue-500/5 backdrop-blur-[2px]"></div>
+
+                            <div
+                                class="relative w-full max-w-[240px] z-10 transform transition-transform duration-500 group-hover:-translate-y-2">
+                                <!-- Ghost mode toggle -->
+                                <div
+                                    class="bg-white/80 backdrop-blur-md border border-white p-3 rounded-xl shadow-[0_8px_16px_rgba(0,0,0,0.06)] flex items-center justify-between mb-4">
+                                    <span class="text-xs font-bold text-slate-800">Cốt truyện ẩn danh</span>
+                                    <div
+                                        class="w-10 h-5 bg-slate-200 rounded-full relative shadow-inner cursor-pointer hover:bg-slate-300 transition-colors">
+                                        <div
+                                            class="w-5 h-5 bg-white rounded-full shadow-sm border border-slate-200 absolute left-0 top-0 transition-transform">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Map user bubble -->
+                                <div class="bg-white p-2.5 rounded-xl border border-slate-100 shadow-md">
+                                    <div
+                                        class="h-24 bg-slate-100/50 rounded-lg relative overflow-hidden flex items-center justify-center">
+                                        <!-- Animated pulse dot -->
+                                        <div
+                                            class="absolute w-10 h-10 bg-[#6200EE]/20 rounded-full top-[20px] left-[26px] animate-ping">
+                                        </div>
+                                        <div
+                                            class="absolute w-3.5 h-3.5 bg-[#6200EE] border-2 border-white rounded-full shadow-md top-[33px] left-[39px] z-10">
+                                        </div>
+
+                                        <!-- User Avatar Pin -->
+                                        <div
+                                            class="absolute w-10 h-10 rounded-full border-2 border-white overflow-hidden shadow-md bottom-3 right-5 bg-white z-20 transform hover:scale-110 transition-transform">
+                                            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=150"
+                                                class="w-full h-full object-cover" alt="User Map Pin" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Text (40%) -->
+                        <div class="p-8 border-t border-slate-50 bg-white md:min-h-[220px]">
+                            <h3 class="text-xl font-bold text-slate-900 mb-3 font-['Playfair_Display']">Bản đồ mạng xã
+                                hội trực tiếp</h3>
+                            <p class="text-[14px] text-slate-600 font-medium leading-[1.7]">Theo dõi hành trình của bạn
+                                bè theo thời gian thực. Cập nhật trạng thái chuyến đi và kết nối an toàn trong suốt lộ
+                                trình.</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Trust & Safety Engine (Wide, span 2) -->
+                    <div
+                        class="bg-white rounded-[24px] shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] transition-shadow duration-500 overflow-hidden md:col-span-2 flex flex-col md:flex-row group border border-slate-50">
+                        <!-- Text (40%) -->
+                        <div
+                            class="w-full md:w-[45%] p-8 flex flex-col justify-center border-b md:border-b-0 md:border-r border-slate-100 bg-white order-2 md:order-1">
+                            <h3 class="text-2xl font-bold text-slate-900 mb-4 font-['Playfair_Display']">Hạ tầng an toàn
+                                tuyệt đối</h3>
+                            <p class="text-slate-600 font-medium leading-[1.7] text-[15px]">Hệ thống bảo vệ nhiều lớp:
+                                100% người dùng bắt buộc xác thực thẻ căn cước và bằng lái xe. Tích hợp cảnh báo SOS tự
+                                động khi phương tiện đi lệch lộ trình.</p>
+                        </div>
+
+                        <!-- Visual (60%) -->
+                        <div
+                            class="w-full md:w-[55%] bg-gradient-to-tr from-emerald-50/70 to-green-50/30 p-8 flex items-center justify-center relative overflow-hidden order-1 md:order-2 min-h-[300px]">
+                            <div
+                                class="relative z-10 flex flex-col sm:flex-row gap-6 items-center w-full justify-center transform transition-transform duration-500 group-hover:scale-105">
+                                <!-- Trust Badge -->
+                                <div
+                                    class="bg-white rounded-[24px] p-6 flex flex-col items-center justify-center gap-3 shadow-[0_15px_30px_rgba(0,0,0,0.06)] border border-slate-100 w-48 relative overflow-hidden">
+                                    <div
+                                        class="w-16 h-16 bg-gradient-to-br from-[#6200EE] to-[#8C3AFF] rounded-full flex items-center justify-center text-white font-black text-2xl shadow-[0_0_20px_rgba(98,0,238,0.3)] relative z-10">
+                                        10
+                                        <div
+                                            class="absolute inset-0 rounded-full border-2 border-[#6200EE] animate-ping opacity-30">
+                                        </div>
+                                    </div>
+                                    <div class="text-center z-10">
+                                        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Trust
+                                            Point</p>
+                                        <p class="text-xl font-black text-slate-800 leading-none mt-1.5">10/10</p>
+                                    </div>
+                                </div>
+                                <!-- eKYC -->
+                                <div
+                                    class="bg-gradient-to-r from-emerald-500 to-green-500 rounded-[24px] p-6 flex flex-col justify-center items-center shadow-[0_15px_30px_rgba(16,185,129,0.2)] text-white w-48 relative overflow-hidden">
+                                    <div
+                                        class="absolute right-0 top-0 w-24 h-24 bg-white/10 rounded-full blur-xl mix-blend-overlay pointer-events-none">
+                                    </div>
+                                    <div
+                                        class="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm mb-4 border border-white/20">
+                                        <span class="material-symbols-outlined text-white text-3xl">how_to_reg</span>
+                                    </div>
+                                    <span class="font-bold text-sm tracking-wide">Đã xác thực eKYC</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
         <!-- The 4-Step Journey -->
         <section class="py-16 px-6 max-w-5xl mx-auto">
             <h2 class="text-2xl font-black text-center mb-16 text-slate-800">The 4-Step Journey</h2>
