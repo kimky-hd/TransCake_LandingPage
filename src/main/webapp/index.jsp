@@ -154,6 +154,25 @@
                     transform: translateY(-12px) scale(1.02);
                 }
             }
+
+            /* Active Link Glow */
+            .nav-link.active {
+                color: #6200EE !important;
+                text-shadow: 0 0 15px rgba(98, 0, 238, 0.4);
+                position: relative;
+            }
+
+            .nav-link.active::after {
+                content: '';
+                position: absolute;
+                bottom: -4px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: #6200EE;
+                box-shadow: 0 0 10px rgba(98, 0, 238, 0.6);
+                border-radius: 2px;
+            }
         </style>
     </head>
 
@@ -170,16 +189,16 @@
                     <span class="text-xl font-black tracking-tight text-primary">Transcake</span>
                 </div>
                 <div class="hidden lg:flex items-center gap-10">
-                    <a class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors" href="#">Về
-                        chúng tôi</a>
-                    <a class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors" href="#">Tính
-                        năng</a>
-                    <a class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors" href="#">Hướng
-                        dẫn</a>
-                    <a class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors" href="#">Bảng
-                        giá</a>
-                    <a class="text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
-                        href="#">Contact us</a>
+                    <a class="nav-link text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
+                        href="#about">Về chúng tôi</a>
+                    <a class="nav-link text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
+                        href="#features">Tính năng</a>
+                    <a class="nav-link text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
+                        href="#how-it-works">Hướng dẫn</a>
+                    <a class="nav-link text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
+                        href="#pricing">Bảng giá</a>
+                    <a class="nav-link text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
+                        href="#contact">Contact us</a>
                 </div>
                 <button
                     class="bg-accent text-white px-6 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40">
@@ -189,7 +208,8 @@
         </header>
 
         <!-- Hero Section -->
-        <section class="relative w-full min-h-screen flex items-center justify-center hero-bg overflow-hidden">
+        <section id="hero"
+            class="relative w-full min-h-screen flex items-center justify-center hero-bg overflow-hidden">
             <!-- Dark overlay -->
             <div
                 class="absolute inset-0 bg-gradient-to-b from-black/50 via-purple-950/30 to-black/60 pointer-events-none">
@@ -403,7 +423,7 @@
         </div>
 
         <!-- About Us: Editorial Collage -->
-        <section class="relative py-20 px-4 md:px-8 bg-[#fcfcfd] overflow-hidden">
+        <section id="about" class="relative py-20 px-4 md:px-8 bg-[#fcfcfd] overflow-hidden">
             <!-- Background Soft Glows -->
             <div
                 class="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px] pointer-events-none">
@@ -619,7 +639,7 @@
         </section>
 
         <!-- Core Features: Bento Box Grid -->
-        <section class="py-24 bg-[#F3F4F6]">
+        <section id="features" class="py-24 bg-[#F3F4F6]">
             <div class="max-w-7xl mx-auto px-4 md:px-8">
                 <!-- Header -->
                 <div class="text-center max-w-3xl mx-auto mb-16">
@@ -849,7 +869,7 @@
         </section>
 
         <!-- How It Works: Cinematic 3D iPhone Narrative -->
-        <section id="how-it-works-cinematic" class="relative bg-white" style="height: 500vh;">
+        <section id="how-it-works" class="relative bg-white" style="height: 500vh;">
             <!-- Sticky Viewport -->
             <div class="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
 
@@ -1161,226 +1181,230 @@
         </section>
 
         <!-- Pricing & Plans Section -->
-        <section class="py-24 px-4 md:px-8 max-w-[1200px] mx-auto bg-white relative">
-            <!-- Header -->
-            <div class="text-center max-w-3xl mx-auto mb-16 relative z-10">
-                <span
-                    class="inline-block text-[#FF6D00] text-xs font-bold uppercase tracking-widest mb-4 bg-orange-50 px-3 py-1 rounded-full">
-                    Minh bạch chi phí
-                </span>
-                <h2 class="text-3xl md:text-5xl font-black text-[#6200EE] leading-tight mb-8">
-                    Lựa chọn hành trình theo cách của bạn.
-                </h2>
-
-                <!-- Toggle Switch -->
-                <div class="flex items-center justify-center gap-4 text-sm font-semibold select-none">
-                    <span class="text-slate-900" id="label-monthly">Gói Tháng</span>
-                    <button id="billing-toggle"
-                        class="w-14 h-8 bg-slate-200 rounded-full relative transition-colors duration-300 focus:outline-none">
-                        <div id="toggle-circle"
-                            class="w-6 h-6 bg-white rounded-full absolute top-1 left-1 shadow-md transition-transform duration-300">
-                        </div>
-                    </button>
-                    <span class="text-slate-500" id="label-yearly">Gói Năm <span
-                            class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full ml-1">Tiết kiệm
-                            30%</span></span>
-                </div>
-            </div>
-
-            <!-- Passenger Pricing (B2C) -->
-            <div class="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto mb-20 relative z-10">
-
-                <!-- Basic Plan -->
-                <div
-                    class="bg-white border border-slate-200 rounded-[2rem] p-8 md:p-10 flex flex-col hover:shadow-xl transition-shadow duration-300 self-center">
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Gói Basic</h3>
-                    <p class="text-slate-500 text-sm mb-6 h-10">Dành cho nhu cầu di chuyển cơ bản.</p>
-                    <div class="text-4xl font-black text-slate-900 mb-8 pb-8 border-b border-slate-100">
-                        0 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
-                    </div>
-                    <ul class="space-y-4 mb-10 flex-1">
-                        <li class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
-                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                            <span class="text-slate-700 font-medium">Đặt xe nhanh chóng, trả đúng giá cước gốc.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
-                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                            <span class="text-slate-700 font-medium">Không phí nền tảng ẩn.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
-                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                            <span class="text-slate-700 font-medium">Thanh toán trực tiếp cho tài xế.</span>
-                        </li>
-                    </ul>
-                    <a href="#"
-                        class="block w-full text-center py-4 rounded-xl border-2 border-slate-200 text-slate-700 font-bold hover:bg-slate-50 hover:border-slate-300 transition-all">
-                        Trải nghiệm miễn phí
-                    </a>
-                </div>
-
-                <!-- Pro Plan -->
-                <div
-                    class="bg-white border-2 border-[#FF6D00] rounded-[2rem] p-8 md:p-10 flex flex-col relative shadow-[0_20px_50px_rgba(98,0,238,0.15)] md:scale-105 z-10">
-                    <div
-                        class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FF6D00] text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
-                        Phổ biến nhất
-                    </div>
-                    <h3 class="text-2xl font-bold text-[#6200EE] mb-2">Transcake Pro</h3>
-                    <p class="text-slate-500 text-sm mb-6 h-10">Dành cho trải nghiệm cá nhân hóa tối đa.</p>
-                    <div
-                        class="text-4xl font-black text-[#6200EE] mb-8 pb-8 border-b border-slate-100 flex items-baseline gap-1 relative overflow-hidden h-[90px]">
-                        <!-- Monthly Price -->
-                        <div id="price-pro-monthly"
-                            class="absolute top-0 left-0 transition-transform duration-500 ease-in-out">
-                            49.000 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
-                        </div>
-                        <!-- Yearly Price -->
-                        <div id="price-pro-yearly"
-                            class="absolute top-[100%] left-0 transition-transform duration-500 ease-in-out opacity-0">
-                            449.000 <span class="text-lg text-slate-500 font-medium">VNĐ / năm</span>
-                        </div>
-                    </div>
-                    <ul class="space-y-4 mb-10 flex-1">
-                        <li class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                            <span class="text-slate-700 font-medium">Toàn bộ đặc quyền của gói Basic.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                            <span class="text-slate-700 font-medium">Ưu tiên ghép chuyến nhanh nhất.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                            <span class="text-slate-700 font-medium">Vibe Matching: Chọn tài xế cùng sở thích.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                            <span class="text-slate-700 font-medium">Bộ lọc an toàn: Chỉ đi cùng tài xế nữ.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                            <span class="text-slate-700 font-medium">Trải nghiệm ứng dụng không quảng cáo.</span>
-                        </li>
-                    </ul>
-                    <a href="#"
-                        class="block w-full text-center py-4 rounded-xl bg-[#FF6D00] text-white font-bold hover:bg-[#E65C00] shadow-xl shadow-orange-500/20 transition-all hover:-translate-y-1">
-                        Nâng cấp Pro ngay
-                    </a>
-                </div>
-
-            </div>
-
-            <!-- Driver Commission Banner (B2B/Partners) -->
-            <div
-                class="max-w-4xl mx-auto rounded-3xl p-8 md:p-10 relative overflow-hidden backdrop-blur-xl bg-purple-50/80 border border-purple-100 shadow-[0_10px_30px_rgba(98,0,238,0.05)] text-left">
-                <!-- Watermark -->
-                <span
-                    class="material-symbols-outlined absolute right-0 bottom-0 text-[200px] text-[#6200EE]/5 -z-10 translate-x-1/4 translate-y-1/4 select-none"
-                    style="font-variation-settings: 'FILL' 1;">shield</span>
-
-                <h3 class="text-2xl md:text-3xl font-bold text-[#6200EE] mb-8 max-w-2xl">
-                    Dành cho Đối tác Tài xế: Tối đa thu nhập, An tâm cầm lái.
-                </h3>
-
-                <div class="grid md:grid-cols-2 gap-6 mb-8">
-                    <!-- Xe Máy -->
-                    <div class="bg-white/60 p-6 rounded-2xl border border-white">
-                        <div class="flex items-center gap-3 mb-3">
-                            <span class="material-symbols-outlined text-[#FF6D00] text-2xl">two_wheeler</span>
-                            <h4 class="font-bold text-slate-800 text-lg">Xe máy</h4>
-                        </div>
-                        <p class="text-slate-600 font-medium mb-3">
-                            Chiết khấu siêu thấp chỉ <strong>15%</strong><br>
-                            <span class="text-sm text-slate-500">(Tối thiểu 3.000 VNĐ/chuyến)</span>
-                        </p>
-                        <p class="text-xs text-slate-500 flex items-start gap-1">
-                            <span class="material-symbols-outlined text-green-500 text-[14px]">security</span>
-                            Đã bao gồm 1.000 VNĐ trích quỹ bảo hiểm phương tiện.
-                        </p>
-                    </div>
-
-                    <!-- Ô Tô -->
-                    <div class="bg-white/60 p-6 rounded-2xl border border-white">
-                        <div class="flex items-center gap-3 mb-3">
-                            <span class="material-symbols-outlined text-[#FF6D00] text-2xl">directions_car</span>
-                            <h4 class="font-bold text-slate-800 text-lg">Ô tô</h4>
-                        </div>
-                        <p class="text-slate-600 font-medium mb-3">
-                            Chiết khấu ưu đãi chỉ <strong>10%</strong><br>
-                            <span class="text-sm text-slate-500">(Tối thiểu 10.000 VNĐ/chuyến)</span>
-                        </p>
-                        <p class="text-xs text-slate-500 flex items-start gap-1">
-                            <span class="material-symbols-outlined text-green-500 text-[14px]">security</span>
-                            Đã bao gồm 2.000 VNĐ trích quỹ bảo hiểm phương tiện.
-                        </p>
-                    </div>
-                </div>
-
-                <a href="#"
-                    class="inline-flex items-center gap-2 text-[#FF6D00] font-bold hover:text-[#E65C00] transition-colors group">
-                    Xem chi tiết chính sách Tài xế
+        <section id="pricing" class="py-24 px-4 md:px-8 w-full bg-white relative">
+            <div class="max-w-[1200px] mx-auto">
+                <!-- Header -->
+                <div class="text-center max-w-3xl mx-auto mb-16 relative z-10">
                     <span
-                        class="material-symbols-outlined transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-            </div>
+                        class="inline-block text-[#FF6D00] text-xs font-bold uppercase tracking-widest mb-4 bg-orange-50 px-3 py-1 rounded-full">
+                        Minh bạch chi phí
+                    </span>
+                    <h2 class="text-3xl md:text-5xl font-black text-[#6200EE] leading-tight mb-8">
+                        Lựa chọn hành trình theo cách của bạn.
+                    </h2>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', () => {
-                    const toggleBtn = document.getElementById('billing-toggle');
-                    const toggleCircle = document.getElementById('toggle-circle');
-                    const labelMonthly = document.getElementById('label-monthly');
-                    const labelYearly = document.getElementById('label-yearly');
+                    <!-- Toggle Switch -->
+                    <div class="flex items-center justify-center gap-4 text-sm font-semibold select-none">
+                        <span class="text-slate-900" id="label-monthly">Gói Tháng</span>
+                        <button id="billing-toggle"
+                            class="w-14 h-8 bg-slate-200 rounded-full relative transition-colors duration-300 focus:outline-none">
+                            <div id="toggle-circle"
+                                class="w-6 h-6 bg-white rounded-full absolute top-1 left-1 shadow-md transition-transform duration-300">
+                            </div>
+                        </button>
+                        <span class="text-slate-500" id="label-yearly">Gói Năm <span
+                                class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full ml-1">Tiết kiệm
+                                30%</span></span>
+                    </div>
+                </div>
 
-                    const priceMonthly = document.getElementById('price-pro-monthly');
-                    const priceYearly = document.getElementById('price-pro-yearly');
+                <!-- Passenger Pricing (B2C) -->
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto mb-20 relative z-10">
 
-                    let isYearly = false;
+                    <!-- Basic Plan -->
+                    <div
+                        class="bg-white border border-slate-200 rounded-[2rem] p-8 md:p-10 flex flex-col hover:shadow-xl transition-shadow duration-300 self-center">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Gói Basic</h3>
+                        <p class="text-slate-500 text-sm mb-6 h-10">Dành cho nhu cầu di chuyển cơ bản.</p>
+                        <div class="text-4xl font-black text-slate-900 mb-8 pb-8 border-b border-slate-100">
+                            0 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
+                        </div>
+                        <ul class="space-y-4 mb-10 flex-1">
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
+                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="text-slate-700 font-medium">Đặt xe nhanh chóng, trả đúng giá cước
+                                    gốc.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
+                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="text-slate-700 font-medium">Không phí nền tảng ẩn.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
+                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="text-slate-700 font-medium">Thanh toán trực tiếp cho tài xế.</span>
+                            </li>
+                        </ul>
+                        <a href="#"
+                            class="block w-full text-center py-4 rounded-xl border-2 border-slate-200 text-slate-700 font-bold hover:bg-slate-50 hover:border-slate-300 transition-all">
+                            Trải nghiệm miễn phí
+                        </a>
+                    </div>
 
-                    toggleBtn.addEventListener('click', () => {
-                        isYearly = !isYearly;
+                    <!-- Pro Plan -->
+                    <div
+                        class="bg-white border-2 border-[#FF6D00] rounded-[2rem] p-8 md:p-10 flex flex-col relative shadow-[0_20px_50px_rgba(98,0,238,0.15)] md:scale-105 z-10">
+                        <div
+                            class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FF6D00] text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
+                            Phổ biến nhất
+                        </div>
+                        <h3 class="text-2xl font-bold text-[#6200EE] mb-2">Transcake Pro</h3>
+                        <p class="text-slate-500 text-sm mb-6 h-10">Dành cho trải nghiệm cá nhân hóa tối đa.</p>
+                        <div
+                            class="text-4xl font-black text-[#6200EE] mb-8 pb-8 border-b border-slate-100 flex items-baseline gap-1 relative overflow-hidden h-[90px]">
+                            <!-- Monthly Price -->
+                            <div id="price-pro-monthly"
+                                class="absolute top-0 left-0 transition-transform duration-500 ease-in-out">
+                                49.000 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
+                            </div>
+                            <!-- Yearly Price -->
+                            <div id="price-pro-yearly"
+                                class="absolute top-[100%] left-0 transition-transform duration-500 ease-in-out opacity-0">
+                                449.000 <span class="text-lg text-slate-500 font-medium">VNĐ / năm</span>
+                            </div>
+                        </div>
+                        <ul class="space-y-4 mb-10 flex-1">
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
+                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="text-slate-700 font-medium">Toàn bộ đặc quyền của gói Basic.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
+                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="text-slate-700 font-medium">Ưu tiên ghép chuyến nhanh nhất.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
+                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="text-slate-700 font-medium">Vibe Matching: Chọn tài xế cùng sở
+                                    thích.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
+                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="text-slate-700 font-medium">Bộ lọc an toàn: Chỉ đi cùng tài xế nữ.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
+                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="text-slate-700 font-medium">Trải nghiệm ứng dụng không quảng cáo.</span>
+                            </li>
+                        </ul>
+                        <a href="#"
+                            class="block w-full text-center py-4 rounded-xl bg-[#FF6D00] text-white font-bold hover:bg-[#E65C00] shadow-xl shadow-orange-500/20 transition-all hover:-translate-y-1">
+                            Nâng cấp Pro ngay
+                        </a>
+                    </div>
 
-                        if (isYearly) {
-                            toggleCircle.style.transform = 'translateX(24px)';
-                            toggleBtn.classList.remove('bg-slate-200');
-                            toggleBtn.classList.add('bg-[#6200EE]');
+                </div>
 
-                            labelMonthly.classList.remove('text-slate-900');
-                            labelMonthly.classList.add('text-slate-500');
-                            labelYearly.classList.remove('text-slate-500');
-                            labelYearly.classList.add('text-slate-900');
+                <!-- Driver Commission Banner (B2B/Partners) -->
+                <div
+                    class="max-w-4xl mx-auto rounded-3xl p-8 md:p-10 relative overflow-hidden backdrop-blur-xl bg-purple-50/80 border border-purple-100 shadow-[0_10px_30px_rgba(98,0,238,0.05)] text-left">
+                    <!-- Watermark -->
+                    <span
+                        class="material-symbols-outlined absolute right-0 bottom-0 text-[200px] text-[#6200EE]/5 -z-10 translate-x-1/4 translate-y-1/4 select-none"
+                        style="font-variation-settings: 'FILL' 1;">shield</span>
 
-                            priceMonthly.style.transform = 'translateY(-100%)';
-                            priceMonthly.style.opacity = '0';
+                    <h3 class="text-2xl md:text-3xl font-bold text-[#6200EE] mb-8 max-w-2xl">
+                        Dành cho Đối tác Tài xế: Tối đa thu nhập, An tâm cầm lái.
+                    </h3>
 
-                            priceYearly.style.transform = 'translateY(-100%)';
-                            priceYearly.style.opacity = '1';
-                        } else {
-                            toggleCircle.style.transform = 'translateX(0)';
-                            toggleBtn.classList.remove('bg-[#6200EE]');
-                            toggleBtn.classList.add('bg-slate-200');
+                    <div class="grid md:grid-cols-2 gap-6 mb-8">
+                        <!-- Xe Máy -->
+                        <div class="bg-white/60 p-6 rounded-2xl border border-white">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="material-symbols-outlined text-[#FF6D00] text-2xl">two_wheeler</span>
+                                <h4 class="font-bold text-slate-800 text-lg">Xe máy</h4>
+                            </div>
+                            <p class="text-slate-600 font-medium mb-3">
+                                Chiết khấu siêu thấp chỉ <strong>15%</strong><br>
+                                <span class="text-sm text-slate-500">(Tối thiểu 3.000 VNĐ/chuyến)</span>
+                            </p>
+                            <p class="text-xs text-slate-500 flex items-start gap-1">
+                                <span class="material-symbols-outlined text-green-500 text-[14px]">security</span>
+                                Đã bao gồm 1.000 VNĐ trích quỹ bảo hiểm phương tiện.
+                            </p>
+                        </div>
 
-                            labelMonthly.classList.remove('text-slate-500');
-                            labelMonthly.classList.add('text-slate-900');
-                            labelYearly.classList.remove('text-slate-900');
-                            labelYearly.classList.add('text-slate-500');
+                        <!-- Ô Tô -->
+                        <div class="bg-white/60 p-6 rounded-2xl border border-white">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="material-symbols-outlined text-[#FF6D00] text-2xl">directions_car</span>
+                                <h4 class="font-bold text-slate-800 text-lg">Ô tô</h4>
+                            </div>
+                            <p class="text-slate-600 font-medium mb-3">
+                                Chiết khấu ưu đãi chỉ <strong>10%</strong><br>
+                                <span class="text-sm text-slate-500">(Tối thiểu 10.000 VNĐ/chuyến)</span>
+                            </p>
+                            <p class="text-xs text-slate-500 flex items-start gap-1">
+                                <span class="material-symbols-outlined text-green-500 text-[14px]">security</span>
+                                Đã bao gồm 2.000 VNĐ trích quỹ bảo hiểm phương tiện.
+                            </p>
+                        </div>
+                    </div>
 
-                            priceMonthly.style.transform = 'translateY(0)';
-                            priceMonthly.style.opacity = '1';
+                    <a href="#"
+                        class="inline-flex items-center gap-2 text-[#FF6D00] font-bold hover:text-[#E65C00] transition-colors group">
+                        Xem chi tiết chính sách Tài xế
+                        <span
+                            class="material-symbols-outlined transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
 
-                            priceYearly.style.transform = 'translateY(0)';
-                            priceYearly.style.opacity = '0';
-                        }
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const toggleBtn = document.getElementById('billing-toggle');
+                        const toggleCircle = document.getElementById('toggle-circle');
+                        const labelMonthly = document.getElementById('label-monthly');
+                        const labelYearly = document.getElementById('label-yearly');
+
+                        const priceMonthly = document.getElementById('price-pro-monthly');
+                        const priceYearly = document.getElementById('price-pro-yearly');
+
+                        let isYearly = false;
+
+                        toggleBtn.addEventListener('click', () => {
+                            isYearly = !isYearly;
+
+                            if (isYearly) {
+                                toggleCircle.style.transform = 'translateX(24px)';
+                                toggleBtn.classList.remove('bg-slate-200');
+                                toggleBtn.classList.add('bg-[#6200EE]');
+
+                                labelMonthly.classList.remove('text-slate-900');
+                                labelMonthly.classList.add('text-slate-500');
+                                labelYearly.classList.remove('text-slate-500');
+                                labelYearly.classList.add('text-slate-900');
+
+                                priceMonthly.style.transform = 'translateY(-100%)';
+                                priceMonthly.style.opacity = '0';
+
+                                priceYearly.style.transform = 'translateY(-100%)';
+                                priceYearly.style.opacity = '1';
+                            } else {
+                                toggleCircle.style.transform = 'translateX(0)';
+                                toggleBtn.classList.remove('bg-[#6200EE]');
+                                toggleBtn.classList.add('bg-slate-200');
+
+                                labelMonthly.classList.remove('text-slate-500');
+                                labelMonthly.classList.add('text-slate-900');
+                                labelYearly.classList.remove('text-slate-900');
+                                labelYearly.classList.add('text-slate-500');
+
+                                priceMonthly.style.transform = 'translateY(0)';
+                                priceMonthly.style.opacity = '1';
+
+                                priceYearly.style.transform = 'translateY(0)';
+                                priceYearly.style.opacity = '0';
+                            }
+                        });
                     });
-                });
-            </script>
+                </script>
+            </div>
         </section>
 
         <!-- Deep Dive 1: Connection -->
@@ -1464,151 +1488,6 @@
                 </div>
             </div>
         </section>
-
-        <!-- Deep Dive 2: Safe Map -->
-        <section class="py-24 px-6 overflow-hidden max-w-7xl mx-auto">
-            <div class="flex flex-col-reverse md:flex-row items-center gap-16 md:gap-24">
-
-                <!-- Left: Text Content -->
-                <div class="flex-1 max-w-md md:text-right">
-                    <span class="text-primary font-bold text-sm tracking-widest uppercase mb-4 block">Deep Dive</span>
-                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-6 leading-tight">Xem thế giới của
-                        bạn
-                        di chuyển, an toàn.</h2>
-                    <p class="text-slate-600 text-lg leading-relaxed mb-8">Xem bản đồ thời gian thực nơi
-                        những người bạn
-                        đồng hành của bạn đang di chuyển trên chuyến đi chung. Chia sẻ vị trí lộ
-                        trình với người thân
-                        trên bản đồ.</p>
-                    <!-- Ghost Mode Toggle UI Mock -->
-                    <div
-                        class="inline-flex items-center gap-4 bg-white p-4 pr-6 rounded-2xl shadow-sm border border-slate-100 md:ml-auto">
-                        <!-- Toggle Switch Mock -->
-                        <div class="w-12 h-6 bg-primary rounded-full relative cursor-pointer">
-                            <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 right-0.5 shadow-sm"></div>
-                        </div>
-                        <span class="font-bold text-slate-700">Ghost Mode</span>
-                    </div>
-                </div>
-
-                <!-- Right: Phone with Map -->
-                <div class="flex-1 relative perspective-1000 min-h-[600px] w-full flex items-center justify-center">
-                    <div class="absolute w-[400px] h-[400px] bg-slate-200 blur-[100px] rounded-full"></div>
-
-                    <div class="relative w-[300px] preserve-3d">
-                        <div class="phone-frame h-[600px]">
-                            <div class="phone-notch"></div>
-                            <!-- UI App Screen -->
-                            <div class="w-full h-full bg-[#f4f7f6] relative">
-                                <!-- Header -->
-                                <div
-                                    class="pt-14 px-6 pb-4 bg-white/80 backdrop-blur-md absolute top-0 w-full z-10 border-b border-slate-100 text-center font-bold">
-                                    Live Friend Map
-                                </div>
-                                <!-- Map Route Mock (SVG line pointing from bottom left to top right, zigzag) -->
-                                <svg class="absolute inset-0 w-full h-full" overflow="visible">
-                                    <path fill="none" stroke="#6200EE" stroke-width="4" stroke-dasharray="8 8"
-                                        d="M80 400 L 150 300 L 250 200 L 200 100" />
-                                    <!-- Avatar Dots on Line -->
-                                    <circle cx="80" cy="400" r="8" fill="#6200EE" />
-                                    <circle cx="150" cy="300" r="8" fill="#6200EE" />
-                                    <circle cx="250" cy="200" r="8" fill="#FF6B00" />
-                                </svg>
-                                <!-- Avatar Overlays floating around map -->
-                                <div
-                                    class="absolute top-[80px] left-[180px] w-12 h-12 rounded-full border-2 border-white shadow-lg overflow-hidden tags-anim transform translate-z-10 bg-white">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" />
-                                </div>
-                                <div class="absolute top-[280px] left-[130px] w-10 h-10 rounded-full border-2 border-white shadow-lg overflow-hidden tags-anim transform translate-z-10 bg-white"
-                                    style="animation-delay: 1s;">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=100" />
-                                </div>
-                                <div class="absolute top-[180px] right-[20px] w-14 h-14 rounded-full border-4 border-accent shadow-xl overflow-hidden tags-anim transform translate-z-20 bg-white"
-                                    style="animation-delay: 0.5s;">
-                                    <img
-                                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" />
-                                </div>
-                                <!-- Bottom sheet -->
-                                <div
-                                    class="absolute bottom-0 inset-x-0 h-40 bg-white rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)] border-t border-slate-50 p-6">
-                                    <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-4"></div>
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 rounded-full bg-slate-100 overflow-hidden"><img
-                                                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" />
-                                        </div>
-                                        <div class="flex-1">
-                                            <h4 class="font-bold text-sm">Thao Rose</h4>
-                                            <p class="text-xs text-slate-500">Điểm đánh giá: 4.9</p>
-                                        </div>
-                                        <div
-                                            class="w-10 h-10 rounded-full bg-red-100 text-red-500 flex items-center justify-center">
-                                            <span class="material-symbols-outlined text-[18px]">sos</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Ghost Mode Floating Tag attached to phone -->
-                        <div class="absolute left-[-10px] bottom-[30%] bg-white p-3 pr-4 rounded-xl shadow-lg border border-slate-100 flex items-center gap-3 transform -translate-x-1/2 translate-z-20 tags-anim"
-                            style="animation-delay: 0.3s;">
-                            <span class="font-bold text-sm text-slate-700">Ghost Mode</span>
-                            <div class="w-8 h-4 bg-slate-200 rounded-full relative">
-                                <div class="w-3 h-3 bg-white rounded-full absolute top-[2px] left-[2px] shadow-sm">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Cost Sharing Highlights -->
-        <section class="py-24 px-6 max-w-5xl mx-auto text-center">
-            <!-- Floating highlight cards grid -->
-            <div class="flex flex-col md:flex-row justify-center items-center gap-8 mb-16 perspective-1000">
-                <!-- Profile Card -->
-                <div
-                    class="bg-white p-4 rounded-[2rem] shadow-lg border border-slate-100 flex items-center gap-4 transform rotate-12 hover:rotate-0 hover:scale-105 transition-transform preserve-3d duration-300">
-                    <div class="w-12 h-12 rounded-full bg-blue-100 overflow-hidden shrink-0"><img
-                            src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=100"
-                            class="w-full h-full object-cover" /></div>
-                    <div class="text-left">
-                        <h4 class="font-bold text-sm flex items-center gap-1">Profile Roommate <span
-                                class="material-symbols-outlined text-blue-500 text-[16px]">verified</span></h4>
-                        <p class="text-[10px] bg-blue-50 text-blue-600 font-bold px-2 py-0.5 rounded inline-block mt-1">
-                            Trust Point: 10</p>
-                    </div>
-                </div>
-                <!-- Central Text -->
-                <div class="max-w-xs mx-auto md:mx-0 order-first md:order-none z-10 px-4">
-                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 leading-tight">Real Cost
-                        Sharing,<br />Built on Trust.</h2>
-                </div>
-                <!-- Commission Card -->
-                <div
-                    class="bg-white p-6 rounded-[2rem] shadow-lg border border-slate-100 transform -rotate-12 hover:rotate-0 hover:scale-105 transition-transform preserve-3d duration-300 w-64 text-left relative">
-                    <div class="flex items-center gap-3 mb-4">
-                        <span class="text-4xl">💸</span>
-                        <div>
-                            <h3 class="text-3xl font-black text-primary">0%</h3>
-                            <p class="text-xs font-bold text-slate-500 uppercase">Platform Commission</p>
-                        </div>
-                    </div>
-                    <div class="h-px bg-slate-100 w-full my-3"></div>
-                    <div class="flex items-center justify-between text-[11px] font-bold text-slate-600">
-                        <span class="flex items-center gap-1"><span
-                                class="material-symbols-outlined text-[14px]">payments</span> Cash or Bank</span>
-                        <span class="material-symbols-outlined text-slate-300">swap_horiz</span>
-                        <span class="flex items-center gap-1">Direct Transfer <span
-                                class="material-symbols-outlined text-[14px]">account_balance</span></span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Testimonials -->
         <section class="py-12 px-6 max-w-6xl mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1746,7 +1625,7 @@
         </section>
 
         <!-- Footer -->
-        <footer class="bg-[#4615B2] pt-20 pb-10 px-6 text-white text-sm relative overflow-hidden">
+        <footer id="contact" class="bg-[#4615B2] pt-20 pb-10 px-6 text-white text-sm relative overflow-hidden">
             <!-- Decoration Star -->
             <div
                 class="absolute right-[10%] top-[40%] text-white/10 text-9xl font-black pointer-events-none transform rotate-12 select-none">
@@ -1818,6 +1697,54 @@
                 </div>
             </div>
         </footer>
+
+        <!-- Scroll Spy & Smooth Scroll Script -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const navLinks = document.querySelectorAll('.nav-link');
+                const sections = document.querySelectorAll('section[id], footer[id]');
+
+                // Smooth Scroll
+                navLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const targetId = link.getAttribute('href');
+                        const targetSection = document.querySelector(targetId);
+
+                        if (targetSection) {
+                            window.scrollTo({
+                                top: targetSection.offsetTop - 80, // Offset for fixed navbar
+                                behavior: 'smooth'
+                            });
+                        }
+                    });
+                });
+
+                // Scroll Spy
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '-20% 0px -70% 0px', // Adjust trigger point
+                    threshold: 0
+                };
+
+                const observerCallback = (entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const id = entry.target.getAttribute('id');
+                            navLinks.forEach(link => {
+                                link.classList.remove('active');
+                                if (link.getAttribute('href') === `#${id}`) {
+                                    link.classList.add('active');
+                                }
+                            });
+                        }
+                    });
+                };
+
+                const observer = new IntersectionObserver(observerCallback, observerOptions);
+                sections.forEach(section => observer.observe(section));
+            });
+        </script>
 
         <!-- Initialize Animation Engine Script -->
         <script src="${pageContext.request.contextPath}/assets/js/main.js"></script>
