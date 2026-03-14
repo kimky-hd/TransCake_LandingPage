@@ -848,49 +848,331 @@
             </div>
         </section>
 
-        <!-- The 4-Step Journey -->
-        <section class="py-16 px-6 max-w-5xl mx-auto">
-            <h2 class="text-2xl font-black text-center mb-16 text-slate-800">The 4-Step Journey</h2>
-            <div
-                class="relative flex flex-col md:flex-row justify-between items-center md:items-start text-center gap-10 md:gap-0">
-                <!-- Line -->
-                <div class="hidden md:block absolute top-[28px] left-[10%] right-[10%] h-1 bg-slate-200 z-0">
-                    <div class="h-full bg-primary w-1/2"></div>
+        <!-- How It Works: The iPhone Mockup Timeline -->
+        <section class="py-24 px-4 md:px-8 max-w-[1400px] mx-auto bg-white relative overflow-hidden">
+            <!-- Header -->
+            <div class="text-center max-w-3xl mx-auto mb-20 relative z-10">
+                <span
+                    class="inline-block px-4 py-1.5 rounded-full bg-orange-100 text-[#FF6D00] text-xs font-bold uppercase tracking-widest mb-6">
+                    Bắt đầu dễ dàng
+                </span>
+                <h2 class="text-3xl md:text-5xl font-bold text-[#6200EE] leading-tight">
+                    Sẵn sàng cho chuyến đi đầu tiên chỉ trong 4 bước.
+                </h2>
+            </div>
+
+            <!-- Timeline Container -->
+            <div class="relative w-full mx-auto">
+                <!-- Glowing Dashed Line -->
+                <!-- Desktop Horizontal Line -->
+                <div
+                    class="hidden md:block absolute top-[200px] left-[10%] right-[10%] h-[2px] border-t-2 border-dashed border-[#6200EE]/30 z-0 drop-shadow-[0_0_8px_rgba(98,0,238,0.5)]">
+                </div>
+                <!-- Mobile Vertical Line -->
+                <div
+                    class="block md:hidden absolute top-[40px] bottom-[40px] left-[44px] w-[2px] border-l-2 border-dashed border-[#6200EE]/30 z-0 drop-shadow-[0_0_8px_rgba(98,0,238,0.5)]">
                 </div>
 
-                <div class="relative z-10 flex flex-col items-center flex-1">
-                    <div
-                        class="w-14 h-14 bg-white border border-slate-200 rounded-full flex items-center justify-center mb-4 shadow-sm text-slate-600">
-                        <span class="material-symbols-outlined font-light">download</span>
-                    </div>
-                    <h4 class="font-bold text-sm text-slate-800 leading-tight">1. Tải & Đăng ký</h4>
-                </div>
+                <!-- 4 Steps Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-6 relative z-10">
 
-                <div class="relative z-10 flex flex-col items-center flex-1">
+                    <!-- Step 1 -->
                     <div
-                        class="w-14 h-14 bg-white border border-slate-200 rounded-full flex items-center justify-center mb-4 shadow-sm text-slate-600">
-                        <span class="material-symbols-outlined font-light">badge</span>
-                    </div>
-                    <h4 class="font-bold text-sm text-slate-800 leading-tight">2. Xác thực eKYC</h4>
-                </div>
+                        class="relative flex md:flex-col items-start md:items-center text-left md:text-center group px-4 md:px-0">
+                        <!-- Background Watermark Number -->
+                        <div
+                            class="absolute -top-6 -left-2 md:top-6 md:left-1/2 md:-translate-x-1/2 text-[100px] md:text-[180px] font-black text-slate-50 select-none z-[-1] leading-none transition-transform duration-500 group-hover:scale-110">
+                            1</div>
 
-                <div class="relative z-10 flex flex-col items-center flex-1">
-                    <div
-                        class="w-14 h-14 bg-primary text-white border border-primary rounded-full flex items-center justify-center mb-4 shadow-md shadow-primary/30">
-                        <span class="material-symbols-outlined font-light">search</span>
-                    </div>
-                    <h4 class="font-bold text-sm text-slate-800 leading-tight">3. Tìm chuyến <br /> cùng tần số
-                    </h4>
-                </div>
+                        <!-- iPhone Mockup Box -->
+                        <div
+                            class="w-20 h-40 md:w-[220px] md:h-[420px] bg-slate-50 rounded-[1rem] md:rounded-[2.5rem] border-[4px] md:border-[8px] border-slate-800 shadow-xl mb-0 md:mb-10 flex-shrink-0 relative ml-2 md:ml-0 z-10 transition-transform duration-500 group-hover:-translate-y-4 overflow-hidden">
+                            <!-- Notch -->
+                            <div
+                                class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-2 md:h-4 bg-slate-800 rounded-b-md md:rounded-b-xl z-20">
+                            </div>
 
-                <div class="relative z-10 flex flex-col items-center flex-1">
-                    <div
-                        class="w-14 h-14 bg-white border border-slate-200 rounded-full flex items-center justify-center mb-4 shadow-sm text-slate-600">
-                        <span class="material-symbols-outlined font-light">share</span>
+                            <!-- Internal UI: Profile + Checkmark -->
+                            <div
+                                class="w-full h-full flex flex-col items-center justify-center p-2 md:p-6 relative bg-white">
+                                <div
+                                    class="w-8 h-8 md:w-20 md:h-20 rounded-full bg-slate-100 flex items-center justify-center mb-2 md:mb-6 mt-2 md:mt-4">
+                                    <span
+                                        class="material-symbols-outlined text-slate-300 text-lg md:text-4xl">person</span>
+                                </div>
+                                <div class="w-12 md:w-28 h-1 md:h-2.5 bg-slate-200 rounded-full mb-1.5 md:mb-3"></div>
+                                <div class="w-8 md:w-16 h-1 md:h-2 bg-slate-100 rounded-full mb-4 md:mb-10"></div>
+
+                                <!-- Form lines -->
+                                <div class="w-full space-y-1 md:space-y-3 px-1 md:px-2">
+                                    <div class="w-full h-1 md:h-2 bg-slate-50 rounded-full border border-slate-100">
+                                    </div>
+                                    <div class="w-full h-1 md:h-2 bg-slate-50 rounded-full border border-slate-100">
+                                    </div>
+                                    <div
+                                        class="w-full h-3 md:h-8 bg-[#6200EE]/10 rounded-md md:rounded-xl border border-[#6200EE]/20 mt-2 md:mt-6">
+                                    </div>
+                                </div>
+
+                                <!-- Huge Green Check Overlay -->
+                                <div
+                                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 md:w-24 md:h-24 bg-green-500/20 backdrop-blur-sm rounded-full flex items-center justify-center scale-0 transition-transform duration-500 group-hover:scale-100">
+                                    <div
+                                        class="w-6 h-6 md:w-16 md:h-16 bg-green-500 rounded-full flex items-center justify-center shadow-lg text-white">
+                                        <span
+                                            class="material-symbols-outlined text-sm md:text-3xl font-bold">check</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="ml-6 md:ml-0 flex-1 pt-0 md:pt-0 max-w-[280px]">
+                            <h3 class="text-lg md:text-xl font-bold text-[#6200EE] mb-2 md:mb-4">1. Tải ứng dụng<br
+                                    class="hidden md:block" /> & Xác thực</h3>
+                            <p class="text-sm text-slate-600 font-medium leading-relaxed">Đăng ký tài khoản nhanh chóng.
+                                Hoàn tất quy trình eKYC bằng căn cước công dân để đảm bảo nền tảng di chuyển an toàn
+                                tuyệt đối.</p>
+                        </div>
                     </div>
-                    <h4 class="font-bold text-sm text-slate-800 leading-tight">4. Share chuyến xe, <br /> tiết
-                        kiệm chi
-                        phí</h4>
+
+                    <!-- Step 2 -->
+                    <div
+                        class="relative flex md:flex-col items-start md:items-center text-left md:text-center group px-4 md:px-0">
+                        <div
+                            class="absolute -top-6 -left-2 md:top-6 md:left-1/2 md:-translate-x-1/2 text-[100px] md:text-[180px] font-black text-slate-50 select-none z-[-1] leading-none transition-transform duration-500 group-hover:scale-110">
+                            2</div>
+
+                        <!-- iPhone Mockup Box -->
+                        <div
+                            class="w-20 h-40 md:w-[220px] md:h-[420px] bg-slate-50 rounded-[1rem] md:rounded-[2.5rem] border-[4px] md:border-[8px] border-slate-800 shadow-xl mb-0 md:mb-10 flex-shrink-0 relative ml-2 md:ml-0 z-10 transition-transform duration-500 group-hover:-translate-y-4 overflow-hidden">
+                            <!-- Notch -->
+                            <div
+                                class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-2 md:h-4 bg-slate-800 rounded-b-md md:rounded-b-xl z-20">
+                            </div>
+
+                            <!-- Internal UI: Search & Tags -->
+                            <div
+                                class="w-full h-full flex flex-col items-center justify-start p-2 md:p-5 pt-6 md:pt-12 relative bg-white">
+                                <!-- Map placeholder -->
+                                <div
+                                    class="w-full h-1/3 bg-slate-100 rounded-lg md:rounded-2xl mb-2 md:mb-4 relative overflow-hidden">
+                                    <div class="absolute inset-0 opacity-[0.2]"
+                                        style="background-image: linear-gradient(#cbd5e1 1px, transparent 1px), linear-gradient(90deg, #cbd5e1 1px, transparent 1px); background-size: 8px 8px;">
+                                    </div>
+                                    <div
+                                        class="absolute bottom-2 left-1/2 -translate-x-1/2 w-2 h-2 md:w-4 md:h-4 bg-blue-500 rounded-full border-2 border-white shadow-sm">
+                                    </div>
+                                </div>
+
+                                <!-- Search bar -->
+                                <div
+                                    class="w-full h-4 md:h-10 bg-slate-50 border border-slate-200 rounded-md md:rounded-xl mb-3 md:mb-6 flex items-center px-1.5 md:px-3 shadow-inner">
+                                    <div
+                                        class="w-1 md:w-2 h-1 md:h-2 rounded-full border md:border-2 border-slate-400 mr-1 md:mr-2">
+                                    </div>
+                                    <div class="w-10 md:w-20 h-0.5 md:h-1.5 bg-slate-200 rounded-full"></div>
+                                </div>
+
+                                <!-- Tags grid -->
+                                <div class="w-full">
+                                    <div class="w-12 md:w-24 h-0.5 md:h-1.5 bg-slate-200 rounded-full mb-1.5 md:mb-3">
+                                    </div>
+                                    <div class="flex flex-wrap gap-1 md:gap-2">
+                                        <div
+                                            class="px-1.5 py-0.5 md:px-3 md:py-1.5 bg-purple-50 rounded-md md:rounded-lg border border-purple-100 transition-colors duration-300 group-hover:bg-[#6200EE] group-hover:border-[#6200EE]">
+                                            <div
+                                                class="w-4 md:w-10 h-0.5 md:h-1 bg-purple-300 rounded-full transition-colors duration-300 group-hover:bg-white/50">
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="px-1.5 py-0.5 md:px-3 md:py-1.5 bg-orange-50 rounded-md md:rounded-lg border border-orange-100 transition-colors duration-300 group-hover:bg-[#FF6D00] group-hover:border-[#FF6D00]">
+                                            <div
+                                                class="w-3 md:w-8 h-0.5 md:h-1 bg-orange-300 rounded-full transition-colors duration-300 group-hover:bg-white/50">
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="px-1.5 py-0.5 md:px-3 md:py-1.5 bg-slate-50 rounded-md md:rounded-lg border border-slate-100">
+                                            <div class="w-6 md:w-12 h-0.5 md:h-1 bg-slate-300 rounded-full"></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Matching Button -->
+                                    <div
+                                        class="w-full h-4 md:h-10 bg-[#6200EE] rounded-md md:rounded-xl mt-3 md:mt-6 opacity-50 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center">
+                                        <div class="w-6 md:w-16 h-0.5 md:h-1.5 bg-white/50 rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="ml-6 md:ml-0 flex-1 pt-0 md:pt-0 max-w-[280px]">
+                            <h3 class="text-lg md:text-xl font-bold text-[#6200EE] mb-2 md:mb-4">2. Đặt chuyến<br
+                                    class="hidden md:block" /> & Chọn tần số</h3>
+                            <p class="text-sm text-slate-600 font-medium leading-relaxed">Nhập điểm đến để xem trước giá
+                                cước minh bạch. Chọn các thẻ sở thích cá nhân để thuật toán ghép bạn với người đồng hành
+                                phù hợp.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div
+                        class="relative flex md:flex-col items-start md:items-center text-left md:text-center group px-4 md:px-0">
+                        <div
+                            class="absolute -top-6 -left-2 md:top-6 md:left-1/2 md:-translate-x-1/2 text-[100px] md:text-[180px] font-black text-slate-50 select-none z-[-1] leading-none transition-transform duration-500 group-hover:scale-110">
+                            3</div>
+
+                        <!-- iPhone Mockup Box -->
+                        <div
+                            class="w-20 h-40 md:w-[220px] md:h-[420px] bg-slate-50 rounded-[1rem] md:rounded-[2.5rem] border-[4px] md:border-[8px] border-slate-800 shadow-xl mb-0 md:mb-10 flex-shrink-0 relative ml-2 md:ml-0 z-10 transition-transform duration-500 group-hover:-translate-y-4 overflow-hidden bg-slate-100">
+                            <!-- Notch -->
+                            <div
+                                class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-2 md:h-4 bg-slate-800 rounded-b-md md:rounded-b-xl z-20">
+                            </div>
+
+                            <!-- Internal UI: Map & Avatars -->
+                            <div class="w-full h-full relative overflow-hidden">
+                                <!-- Map Background Grid -->
+                                <div class="absolute inset-0 opacity-[0.2] md:opacity-[0.1]"
+                                    style="background-image: linear-gradient(#6200ee 1px, transparent 1px), linear-gradient(90deg, #6200ee 1px, transparent 1px); background-size: 24px 24px;">
+                                </div>
+
+                                <!-- Route Line -->
+                                <svg class="w-[150%] h-[80%] absolute top-[10%] left-[-25%]" viewBox="0 0 100 100"
+                                    preserveAspectRatio="none">
+                                    <path d="M 20 80 Q 40 40 60 50 T 90 20" fill="none" stroke="#6200EE"
+                                        stroke-width="4" stroke-dasharray="6" stroke-linecap="round"
+                                        class="opacity-30 md:opacity-50"></path>
+                                    <path d="M 20 80 Q 40 40 60 50 T 90 20" fill="none" class="stroke-[#6200EE]"
+                                        stroke-width="4" stroke-linecap="round" stroke-dasharray="200"
+                                        stroke-dashoffset="200">
+                                        <animate attributeName="stroke-dashoffset" from="200" to="0" dur="3s"
+                                            fill="freeze" calcMode="spline" keySplines="0.4 0 0.2 1" begin="0s"
+                                            repeatCount="indefinite" />
+                                    </path>
+                                </svg>
+
+                                <!-- Avatars -->
+                                <div
+                                    class="absolute top-[40%] left-[30%] w-3 h-3 md:w-8 md:h-8 bg-[#6200EE] rounded-full border-2 md:border-4 border-white shadow-lg flex items-center justify-center overflow-hidden z-10">
+                                    <div class="w-1.5 md:w-4 h-1.5 md:h-4 bg-white/30 rounded-full"></div>
+                                </div>
+                                <div
+                                    class="absolute top-[32%] left-[65%] w-3 h-3 md:w-8 md:h-8 bg-orange-500 rounded-full border-2 md:border-4 border-white shadow-lg flex items-center justify-center overflow-hidden z-10 scale-0 transition-transform duration-500 group-hover:scale-100 delay-300">
+                                    <div class="w-1.5 md:w-4 h-1.5 md:h-4 bg-white/30 rounded-full"></div>
+                                </div>
+
+                                <!-- Bottom Card -->
+                                <div
+                                    class="absolute bottom-1 md:bottom-2 left-1 md:left-2 right-1 md:right-2 h-1/4 bg-white rounded-lg md:rounded-2xl p-1.5 md:p-4 shadow-lg flex flex-col justify-between">
+                                    <div class="flex items-center gap-1 md:gap-3">
+                                        <div class="w-4 h-4 md:w-10 md:h-10 bg-slate-100 rounded-full"></div>
+                                        <div class="flex-1">
+                                            <div class="w-3/4 h-1 md:h-2 bg-slate-200 rounded-full mb-1"></div>
+                                            <div class="w-1/2 h-0.5 md:h-1.5 bg-slate-100 rounded-full"></div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="w-full h-1 md:h-2 bg-[#6200EE]/10 rounded-full mt-1 md:mt-0 relative overflow-hidden">
+                                        <div class="absolute top-0 left-0 h-full bg-[#6200EE] w-[70%]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="ml-6 md:ml-0 flex-1 pt-0 md:pt-0 max-w-[280px]">
+                            <h3 class="text-lg md:text-xl font-bold text-[#6200EE] mb-2 md:mb-4">3. Tận hưởng<br
+                                    class="hidden md:block" /> hành trình</h3>
+                            <p class="text-sm text-slate-600 font-medium leading-relaxed">Trải nghiệm chuyến đi an toàn
+                                với hệ thống cảnh báo lệch lộ trình tự động. Thoải mái chia sẻ và kết nối với những
+                                người bạn mới.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div
+                        class="relative flex md:flex-col items-start md:items-center text-left md:text-center group px-4 md:px-0">
+                        <div
+                            class="absolute -top-6 -left-2 md:top-6 md:left-1/2 md:-translate-x-1/2 text-[100px] md:text-[180px] font-black text-slate-50 select-none z-[-1] leading-none transition-transform duration-500 group-hover:scale-110">
+                            4</div>
+
+                        <!-- iPhone Mockup Box -->
+                        <div
+                            class="w-20 h-40 md:w-[220px] md:h-[420px] bg-slate-50 rounded-[1rem] md:rounded-[2.5rem] border-[4px] md:border-[8px] border-slate-800 shadow-xl mb-0 md:mb-10 flex-shrink-0 relative ml-2 md:ml-0 z-10 transition-transform duration-500 group-hover:-translate-y-4 overflow-hidden bg-[#6200ee]">
+                            <!-- Notch -->
+                            <div
+                                class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-2 md:h-4 bg-slate-800 rounded-b-md md:rounded-b-xl z-20">
+                            </div>
+
+                            <!-- Internal UI: Rating & Receipt -->
+                            <div
+                                class="w-full h-full flex flex-col items-center justify-center p-2 md:p-4 pt-4 md:pt-10">
+                                <!-- Receipt -->
+                                <div
+                                    class="w-full bg-white rounded-t-md md:rounded-t-xl rounded-b-sm md:rounded-b-sm p-2 md:p-5 relative shadow-lg transform transition-transform duration-500 group-hover:-translate-y-2">
+                                    <div class="absolute -bottom-1 md:-bottom-2 left-0 right-0 h-1 md:h-2"
+                                        style="background-image: radial-gradient(circle at 4px 0, transparent 4px, white 5px); background-size: 8px 10px; background-repeat: repeat-x;">
+                                    </div>
+
+                                    <div
+                                        class="w-12 md:w-24 h-1 md:h-2 bg-[#6200EE]/20 rounded-full mx-auto mb-2 md:mb-6">
+                                    </div>
+
+                                    <!-- Items -->
+                                    <div class="w-full space-y-1.5 md:space-y-4 mb-2 md:mb-4">
+                                        <div class="flex justify-between items-center">
+                                            <div class="w-1/2 h-0.5 md:h-1.5 bg-slate-200 rounded-full"></div>
+                                            <div class="w-1/4 h-1 md:h-2 bg-slate-800 rounded-full"></div>
+                                        </div>
+                                        <div class="flex justify-between items-center">
+                                            <div class="w-1/3 h-0.5 md:h-1.5 bg-slate-200 rounded-full"></div>
+                                            <div class="w-1/5 h-0.5 md:h-1.5 bg-slate-400 rounded-full"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="w-full border-t border-dashed border-slate-300 my-1.5 md:my-4"></div>
+
+                                    <div
+                                        class="flex justify-between items-center bg-[#FF6D00]/10 p-1 md:p-2 rounded-md">
+                                        <div class="w-1/3 h-0.5 md:h-1.5 bg-[#FF6D00]/60 rounded-full"></div>
+                                        <div class="w-8 md:w-16 h-1 md:h-2 bg-[#FF6D00] rounded-full"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Rating Stars -->
+                                <div
+                                    class="w-[90%] bg-white/20 backdrop-blur-md rounded-md md:rounded-xl mt-3 md:mt-6 p-1.5 md:p-3 flex justify-center gap-1 md:gap-2 border border-white/30 transform transition-transform duration-500 delay-100 group-hover:-translate-y-2">
+                                    <span
+                                        class="material-symbols-outlined text-[10px] md:text-xl text-yellow-400 font-bold"
+                                        style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span
+                                        class="material-symbols-outlined text-[10px] md:text-xl text-yellow-400 font-bold"
+                                        style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span
+                                        class="material-symbols-outlined text-[10px] md:text-xl text-yellow-400 font-bold"
+                                        style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span
+                                        class="material-symbols-outlined text-[10px] md:text-xl text-yellow-400 font-bold"
+                                        style="font-variation-settings: 'FILL' 1;">star</span>
+                                    <span
+                                        class="material-symbols-outlined text-[10px] md:text-xl text-yellow-400 font-bold"
+                                        style="font-variation-settings: 'FILL' 1;">star</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="ml-6 md:ml-0 flex-1 pt-0 md:pt-0 max-w-[280px]">
+                            <h3 class="text-lg md:text-xl font-bold text-[#6200EE] mb-2 md:mb-4">4. Thanh toán<br
+                                    class="hidden md:block" /> & Đánh giá</h3>
+                            <p class="text-sm text-slate-600 font-medium leading-relaxed">Thanh toán đúng mức giá đã
+                                niêm yết ban đầu. Chấm điểm uy tín hai chiều để góp phần xây dựng cộng đồng Transcake
+                                văn minh.</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
