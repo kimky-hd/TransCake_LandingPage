@@ -1523,7 +1523,10 @@
                             </div>
                             <span class="material-symbols-outlined text-slate-300">format_quote</span>
                         </div>
-                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Ban đầu cũng hơi ngại đi chung với người lạ, nhưng dùng Transcake thì khác hẳn. Sáng nay ghép được một anh tài xế cùng sở thích nghe nhạc Rock, hai anh em mải buôn chuyện mà đến công ty lúc nào không hay. Xe sạch, app báo giá rõ ràng, cực kỳ ưng!"</p>
+                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Ban đầu cũng hơi ngại đi
+                            chung với người lạ, nhưng dùng Transcake thì khác hẳn. Sáng nay ghép được một anh tài xế
+                            cùng sở thích nghe nhạc Rock, hai anh em mải buôn chuyện mà đến công ty lúc nào không hay.
+                            Xe sạch, app báo giá rõ ràng, cực kỳ ưng!"</p>
                     </div>
                     <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-6">Hanoi,
                         Vietnam</span>
@@ -1544,7 +1547,10 @@
                             </div>
                             <span class="material-symbols-outlined text-slate-300">format_quote</span>
                         </div>
-                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Đi làm về muộn mà có app này thấy yên tâm hẳn. Mình hay chọn bộ lọc 'Tài xế nữ' cho an toàn. Các chị em tài xế thân thiện, nói chuyện vui vẻ, lại còn tiết kiệm được kha khá so với đặt xe truyền thống. 5 sao cho đội ngũ Transcake!"</p>
+                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Đi làm về muộn mà có app
+                            này thấy yên tâm hẳn. Mình hay chọn bộ lọc 'Tài xế nữ' cho an toàn. Các chị em tài xế thân
+                            thiện, nói chuyện vui vẻ, lại còn tiết kiệm được kha khá so với đặt xe truyền thống. 5 sao
+                            cho đội ngũ Transcake!"</p>
                     </div>
                     <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-6">Da Nang,
                         Vietnam</span>
@@ -1565,7 +1571,10 @@
                             </div>
                             <span class="material-symbols-outlined text-slate-300">format_quote</span>
                         </div>
-                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Thích nhất tính năng Bản đồ mạng xã hội trên app, vừa đi vừa biết bạn bè mình đang ở đâu quanh đây. Chiều qua ghép chuyến đi nhậu với mấy ông bạn cùng tần số IT, tiện đường mà lại còn kết nối thêm được mối quan hệ mới. Rất đáng để trải nghiệm mỗi ngày."</p>
+                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Thích nhất tính năng Bản
+                            đồ mạng xã hội trên app, vừa đi vừa biết bạn bè mình đang ở đâu quanh đây. Chiều qua
+                            ghép chuyến đi nhậu với mấy ông bạn cùng tần số IT, tiện đường mà lại còn kết nối thêm được
+                            mối quan hệ mới. Rất đáng để trải nghiệm mỗi ngày."</p>
                     </div>
                     <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-6">HCMC,
                         Vietnam</span>
