@@ -377,36 +377,41 @@
                 <!-- Set 1 -->
                 <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực eKYC</span></span><span
                     class="ticker-dot"></span>
-<%--                <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span--%>
-<%--                    class="ticker-dot"></span>--%>
-                <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh bạch</span></span><span
-                    class="ticker-dot"></span>
-                <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span> CÙNG TẦN SỐ</span><span
-                    class="ticker-dot"></span>
-                <span class="ticker-item">HỖ TRỢ <span class="ticker-item-italic">khẩn cấp 24/7</span></span><span
-                    class="ticker-dot"></span>
-                <!-- Set 2 (duplicate for seamless loop) -->
-                <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực eKYC</span></span><span
-                    class="ticker-dot"></span>
-<%--                <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span--%>
-<%--                    class="ticker-dot"></span>--%>
-                <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh bạch</span></span><span
-                    class="ticker-dot"></span>
-                <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span> CÙNG TẦN SỐ</span><span
-                    class="ticker-dot"></span>
-                <span class="ticker-item">HỖ TRỢ <span class="ticker-item-italic">khẩn cấp 24/7</span></span><span
-                    class="ticker-dot"></span>
-                <!-- Set 3 (duplicate for seamless loop) -->
-                <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực eKYC</span></span><span
-                    class="ticker-dot"></span>
-<%--                <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span--%>
-<%--                    class="ticker-dot"></span>--%>
-                <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh bạch</span></span><span
-                    class="ticker-dot"></span>
-                <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span> CÙNG TẦN SỐ</span><span
-                    class="ticker-dot"></span>
-                <span class="ticker-item">HỖ TRỢ <span class="ticker-item-italic">khẩn cấp 24/7</span></span><span
-                    class="ticker-dot"></span>
+                <%-- <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span--%>
+                        <%-- class="ticker-dot"></span>--%>
+                            <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh
+                                    bạch</span></span><span class="ticker-dot"></span>
+                            <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span> CÙNG TẦN
+                                SỐ</span><span class="ticker-dot"></span>
+                            <span class="ticker-item">HỖ TRỢ <span class="ticker-item-italic">khẩn cấp
+                                    24/7</span></span><span class="ticker-dot"></span>
+                            <!-- Set 2 (duplicate for seamless loop) -->
+                            <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực
+                                    eKYC</span></span><span class="ticker-dot"></span>
+                            <%-- <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN
+                                TẢNG</span><span--%>
+                                    <%-- class="ticker-dot"></span>--%>
+                                        <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh
+                                                bạch</span></span><span class="ticker-dot"></span>
+                                        <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span>
+                                            CÙNG TẦN SỐ</span><span class="ticker-dot"></span>
+                                        <span class="ticker-item">HỖ TRỢ <span class="ticker-item-italic">khẩn cấp
+                                                24/7</span></span><span class="ticker-dot"></span>
+                                        <!-- Set 3 (duplicate for seamless loop) -->
+                                        <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực
+                                                eKYC</span></span><span class="ticker-dot"></span>
+                                        <%-- <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ
+                                            NỀN TẢNG</span><span--%>
+                                                <%-- class="ticker-dot"></span>--%>
+                                                    <span class="ticker-item">GIÁ CƯỚC <span
+                                                            class="ticker-item-italic">minh bạch</span></span><span
+                                                        class="ticker-dot"></span>
+                                                    <span class="ticker-item"><span class="ticker-item-outline">GHÉP
+                                                            CHUYẾN</span> CÙNG TẦN SỐ</span><span
+                                                        class="ticker-dot"></span>
+                                                    <span class="ticker-item">HỖ TRỢ <span
+                                                            class="ticker-item-italic">khẩn cấp 24/7</span></span><span
+                                                        class="ticker-dot"></span>
             </div>
         </section>
 
@@ -1230,12 +1235,14 @@
                             <li class="flex items-start gap-3">
                                 <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
                                     style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Sử dụng mạng xã hội Transcake cơ bản.</span>
+                                <span class="text-slate-700 font-medium">Sử dụng mạng xã hội Transcake cơ
+                                    bản.</span>
                             </li>
                             <li class="flex items-start gap-3">
                                 <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
                                     style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Đặt xe không cần cọc, thanh toán trực tiếp cho tài xế.</span>
+                                <span class="text-slate-700 font-medium">Đặt xe không cần cọc, thanh toán trực tiếp cho
+                                    tài xế.</span>
                             </li>
                         </ul>
                         <a href="#"
@@ -1286,17 +1293,20 @@
                             <li class="flex items-start gap-3">
                                 <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
                                     style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Bộ lọc và tính năng an toàn: Gửi cảnh báo cho người thân nếu đi sai lộ trình.</span>
+                                <span class="text-slate-700 font-medium">Bộ lọc và tính năng an toàn: Gửi cảnh báo
+                                    cho người thân nếu đi sai lộ trình.</span>
                             </li>
                             <li class="flex items-start gap-3">
                                 <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
                                     style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Trải nghiệm giao diện ứng dụng cá nhân hóa.</span>
+                                <span class="text-slate-700 font-medium">Trải nghiệm giao diện ứng dụng cá nhân
+                                    hóa.</span>
                             </li>
                             <li class="flex items-start gap-3">
                                 <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                      style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Bản đồ mạng xã hội chia sẻ vị trí thời gian thực với bạn bè.</span>
+                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="text-slate-700 font-medium">Bản đồ mạng xã hội chia sẻ vị trí thời
+                                    gian thực với bạn bè.</span>
                             </li>
                         </ul>
                         <a href="#"
@@ -1513,8 +1523,7 @@
                             </div>
                             <span class="material-symbols-outlined text-slate-300">format_quote</span>
                         </div>
-                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Best Transcake experiences
-                            - best mo-drams. Best Transcake deal than child."</p>
+                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Ban đầu cũng hơi ngại đi chung với người lạ, nhưng dùng Transcake thì khác hẳn. Sáng nay ghép được một anh tài xế cùng sở thích nghe nhạc Rock, hai anh em mải buôn chuyện mà đến công ty lúc nào không hay. Xe sạch, app báo giá rõ ràng, cực kỳ ưng!"</p>
                     </div>
                     <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-6">Hanoi,
                         Vietnam</span>
@@ -1535,9 +1544,7 @@
                             </div>
                             <span class="material-symbols-outlined text-slate-300">format_quote</span>
                         </div>
-                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Best Transcake experiences
-                            chat xang boi moi. Nhu di choi, lai con kiem them niem vui giao tiep. Don cua toi rat an
-                            toan va tien dung."</p>
+                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Đi làm về muộn mà có app này thấy yên tâm hẳn. Mình hay chọn bộ lọc 'Tài xế nữ' cho an toàn. Các chị em tài xế thân thiện, nói chuyện vui vẻ, lại còn tiết kiệm được kha khá so với đặt xe truyền thống. 5 sao cho đội ngũ Transcake!"</p>
                     </div>
                     <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-6">Da Nang,
                         Vietnam</span>
@@ -1558,9 +1565,7 @@
                             </div>
                             <span class="material-symbols-outlined text-slate-300">format_quote</span>
                         </div>
-                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Trai ngiem Transcake to ra
-                            tuyet doi. Nhan duoc su tien loi lai co the gap nhung nguoi chi huong. Dang de dung moi
-                            ngay."</p>
+                        <p class="text-slate-600 font-medium leading-relaxed italic text-sm">"Thích nhất tính năng Bản đồ mạng xã hội trên app, vừa đi vừa biết bạn bè mình đang ở đâu quanh đây. Chiều qua ghép chuyến đi nhậu với mấy ông bạn cùng tần số IT, tiện đường mà lại còn kết nối thêm được mối quan hệ mới. Rất đáng để trải nghiệm mỗi ngày."</p>
                     </div>
                     <span class="text-[10px] text-slate-400 font-medium uppercase tracking-widest mt-6">HCMC,
                         Vietnam</span>
