@@ -1216,10 +1216,10 @@
                     <!-- Basic Plan -->
                     <div
                         class="bg-white border border-slate-200 rounded-[2rem] p-8 md:p-10 flex flex-col hover:shadow-xl transition-shadow duration-300 self-center">
-                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Gói Basic</h3>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Transcake Freemium</h3>
                         <p class="text-slate-500 text-sm mb-6 h-10">Dành cho nhu cầu di chuyển cơ bản.</p>
                         <div class="text-4xl font-black text-slate-900 mb-8 pb-8 border-b border-slate-100">
-                            0 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
+                            <span class="text-lg text-slate-500 font-medium">miễn phí</span>
                         </div>
                         <ul class="space-y-4 mb-10 flex-1">
                             <li class="flex items-start gap-3">
