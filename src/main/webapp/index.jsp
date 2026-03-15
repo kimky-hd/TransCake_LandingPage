@@ -377,8 +377,8 @@
                 <!-- Set 1 -->
                 <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực eKYC</span></span><span
                     class="ticker-dot"></span>
-                <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span
-                    class="ticker-dot"></span>
+<%--                <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span--%>
+<%--                    class="ticker-dot"></span>--%>
                 <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh bạch</span></span><span
                     class="ticker-dot"></span>
                 <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span> CÙNG TẦN SỐ</span><span
@@ -869,7 +869,9 @@
         </section>
 
         <!-- How It Works: Cinematic 3D iPhone Narrative -->
-        <section id="how-it-works" class="relative bg-white" style="height: 500vh;">
+        <section id="how-it-works" class="relative bg-white h-[500vh]">
+            <!-- Added ID for GSAP Trigger -->
+            <div id="how-it-works-cinematic" class="absolute inset-0 pointer-events-none"></div>
             <!-- Sticky Viewport -->
             <div class="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
 
@@ -1135,41 +1137,41 @@
                     gsap.set(uis.slice(1), { opacity: 0 });
                     gsap.set(scaffold, { rotateY: 0, rotateX: 0, scale: 0.85 });
 
-                    // PHASE 1: eKYC (0% - 25%)
+                    // PHASE 1: eKYC (0% - 20%)
                     tl.to(narratives[0], { opacity: 1, y: 0, duration: 2 }, "phase1")
                         .to(scaffold, { rotateY: 20, rotateX: 5, duration: 2, scale: 1 }, "phase1")
                         .to(cccd, { opacity: 1, x: 20, z: 250, duration: 1.5, rotateY: -10 }, "phase1+=0.5")
                         .to(uis[0], { opacity: 1, duration: 1 }, "phase1");
 
                     // Transition 1-2
-                    tl.to(narratives[0], { opacity: 0, y: -50, duration: 1 }, "t12")
-                        .to(cccd, { opacity: 0, z: 500, scale: 0.2, duration: 1 }, "t12")
-                        .to(uis[0], { opacity: 0, duration: 0.5 }, "t12")
-                        .to(uis[1], { opacity: 1, duration: 0.5 }, "t12+=0.5");
+                    tl.to(narratives[0], { opacity: 0, y: -50, duration: 1.5 }, "t12")
+                        .to(cccd, { opacity: 0, z: 500, scale: 0.2, duration: 1.5 }, "t12")
+                        .to(uis[0], { opacity: 0, duration: 0.8 }, "t12")
+                        .to(uis[1], { opacity: 1, duration: 0.8 }, "t12+=0.7");
 
-                    // PHASE 2: Vibe Matching (25% - 50%)
+                    // PHASE 2: Vibe Matching (25% - 45%)
                     tl.to(narratives[1], { opacity: 1, y: 0, duration: 2 }, "phase2")
                         .to(scaffold, { rotateY: -20, rotateX: 10, duration: 2 }, "phase2")
                         .to(tags, { opacity: 1, z: 200, duration: 1.5 }, "phase2")
                         .from(tags.querySelectorAll('div'), { z: 400, opacity: 0, stagger: 0.2, duration: 1 }, "phase2+=0.5");
 
                     // Transition 2-3
-                    tl.to(narratives[1], { opacity: 0, y: -50, duration: 1 }, "t23")
-                        .to(tags, { opacity: 0, z: -500, duration: 1 }, "t23")
-                        .to(uis[1], { opacity: 0, duration: 0.5 }, "t23")
-                        .to(uis[2], { opacity: 1, duration: 0.5 }, "t23+=0.5");
+                    tl.to(narratives[1], { opacity: 0, y: -50, duration: 1.5 }, "t23")
+                        .to(tags, { opacity: 0, z: -500, duration: 1.5 }, "t23")
+                        .to(uis[1], { opacity: 0, duration: 0.8 }, "t23")
+                        .to(uis[2], { opacity: 1, duration: 0.8 }, "t23+=0.7");
 
-                    // PHASE 3: Journey (50% - 75%)
+                    // PHASE 3: Journey (50% - 70%)
                     tl.to(narratives[2], { opacity: 1, y: 0, duration: 2 }, "phase3")
                         .to(scaffold, { rotateY: 45, rotateX: -15, scale: 1.2, duration: 2 }, "phase3")
                         .to(route, { opacity: 1, z: 150, duration: 1.5 }, "phase3")
                         .fromTo("#route-path-3d", { strokeDasharray: 200, strokeDashoffset: 200 }, { strokeDashoffset: 0, duration: 2 }, "phase3");
 
                     // Transition 3-4
-                    tl.to(narratives[2], { opacity: 0, y: -50, duration: 1 }, "t34")
-                        .to(route, { opacity: 0, scale: 1.5, duration: 1 }, "t34")
-                        .to(uis[2], { opacity: 0, duration: 0.5 }, "t34")
-                        .to(uis[3], { opacity: 1, duration: 0.5 }, "t34+=0.5");
+                    tl.to(narratives[2], { opacity: 0, y: -50, duration: 1.5 }, "t34")
+                        .to(route, { opacity: 0, scale: 1.5, duration: 1.5 }, "t34")
+                        .to(uis[2], { opacity: 0, duration: 0.8 }, "t34")
+                        .to(uis[3], { opacity: 1, duration: 0.8 }, "t34+=0.7");
 
                     // PHASE 4: Success/Payment (75% - 100%)
                     tl.to(narratives[3], { opacity: 1, y: 0, duration: 2 }, "phase4")
