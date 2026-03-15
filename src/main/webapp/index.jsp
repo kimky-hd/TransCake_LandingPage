@@ -1225,18 +1225,17 @@
                             <li class="flex items-start gap-3">
                                 <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
                                     style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Đặt xe nhanh chóng, trả đúng giá cước
-                                    gốc.</span>
+                                <span class="text-slate-700 font-medium">Đặt xe, ghép chuyến theo nhu cầu.</span>
                             </li>
                             <li class="flex items-start gap-3">
                                 <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
                                     style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Không phí nền tảng ẩn.</span>
+                                <span class="text-slate-700 font-medium">Sử dụng mạng xã hội Transcake cơ bản.</span>
                             </li>
                             <li class="flex items-start gap-3">
                                 <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
                                     style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Thanh toán trực tiếp cho tài xế.</span>
+                                <span class="text-slate-700 font-medium">Đặt xe không cần cọc, thanh toán trực tiếp cho tài xế.</span>
                             </li>
                         </ul>
                         <a href="#"
@@ -1287,12 +1286,17 @@
                             <li class="flex items-start gap-3">
                                 <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
                                     style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Bộ lọc an toàn: Chỉ đi cùng tài xế nữ.</span>
+                                <span class="text-slate-700 font-medium">Bộ lọc và tính năng an toàn: Gửi cảnh báo cho người thân nếu đi sai lộ trình.</span>
                             </li>
                             <li class="flex items-start gap-3">
                                 <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
                                     style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Trải nghiệm ứng dụng không quảng cáo.</span>
+                                <span class="text-slate-700 font-medium">Trải nghiệm giao diện ứng dụng cá nhân hóa.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
+                                      style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                <span class="text-slate-700 font-medium">Bản đồ mạng xã hội chia sẻ vị trí thời gian thực với bạn bè.</span>
                             </li>
                         </ul>
                         <a href="#"
