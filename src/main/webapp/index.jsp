@@ -388,8 +388,8 @@
                 <!-- Set 2 (duplicate for seamless loop) -->
                 <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực eKYC</span></span><span
                     class="ticker-dot"></span>
-                <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span
-                    class="ticker-dot"></span>
+<%--                <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span--%>
+<%--                    class="ticker-dot"></span>--%>
                 <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh bạch</span></span><span
                     class="ticker-dot"></span>
                 <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span> CÙNG TẦN SỐ</span><span
@@ -399,8 +399,8 @@
                 <!-- Set 3 (duplicate for seamless loop) -->
                 <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực eKYC</span></span><span
                     class="ticker-dot"></span>
-                <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span
-                    class="ticker-dot"></span>
+<%--                <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span--%>
+<%--                    class="ticker-dot"></span>--%>
                 <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh bạch</span></span><span
                     class="ticker-dot"></span>
                 <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span> CÙNG TẦN SỐ</span><span
