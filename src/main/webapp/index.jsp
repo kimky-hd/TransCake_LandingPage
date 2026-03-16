@@ -179,12 +179,12 @@
     <body class="font-sans antialiased bg-[#fcfcfd] text-slate-800 overflow-x-hidden">
 
         <!-- Navbar -->
-        <header id="main-header" class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-3 pointer-events-none">
-            <nav class="max-w-7xl mx-auto mockup-glass rounded-full px-8 py-3 flex items-center justify-between shadow-md pointer-events-auto"
+        <header id="main-header" class="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 md:px-8 py-2 sm:py-3 pointer-events-none">
+            <nav class="max-w-7xl mx-auto mockup-glass rounded-full px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 flex items-center justify-between shadow-md pointer-events-auto"
                 id="navbar">
-                <div class="flex items-center relative h-6 w-32">
+                <div class="flex items-center relative h-6 w-24 sm:w-32">
                     <img src="${pageContext.request.contextPath}/img/transcake-03.png" alt="Transcake Logo"
-                        class="absolute left-0 h-14 md:h-16 w-auto object-contain">
+                        class="absolute left-0 h-10 sm:h-14 md:h-16 w-auto object-contain">
                 </div>
                 <div class="hidden lg:flex items-center gap-10">
                     <a class="nav-link text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
@@ -192,17 +192,42 @@
                     <a class="nav-link text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
                         href="#features">Tính năng</a>
                     <a class="nav-link text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
-                        href="#how-it-works">Hướng dẫn</a>
+                        href="#how-it-works">Hướng dẫn</a>
                     <a class="nav-link text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
                         href="#pricing">Bảng giá</a>
                     <a class="nav-link text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
                         href="#contact">Contact us</a>
                 </div>
-                <button
-                    class="bg-accent text-white px-6 py-2 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40">
-                    Tải ứng dụng
-                </button>
+                <div class="flex items-center gap-3">
+                    <button
+                        class="hidden sm:block bg-accent text-white px-4 sm:px-6 py-2 rounded-full font-bold text-xs sm:text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40">
+                        Tải ứng dụng
+                    </button>
+                    <!-- Hamburger Menu Button (Mobile) -->
+                    <button id="mobile-menu-btn" class="lg:hidden flex flex-col gap-1.5 p-2 rounded-xl hover:bg-white/30 transition-colors" aria-label="Menu">
+                        <span class="block w-5 h-0.5 bg-slate-700 rounded-full transition-all duration-300" id="burger-line-1"></span>
+                        <span class="block w-5 h-0.5 bg-slate-700 rounded-full transition-all duration-300" id="burger-line-2"></span>
+                        <span class="block w-3.5 h-0.5 bg-slate-700 rounded-full transition-all duration-300" id="burger-line-3"></span>
+                    </button>
+                </div>
             </nav>
+            <!-- Mobile Menu Drawer -->
+            <div id="mobile-menu" class="lg:hidden pointer-events-auto fixed inset-0 z-[100] translate-x-full transition-transform duration-300 ease-in-out">
+                <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="mobile-menu-overlay"></div>
+                <div class="absolute right-0 top-0 h-full w-72 sm:w-80 bg-white/95 backdrop-blur-2xl shadow-2xl p-8 pt-20 flex flex-col gap-2">
+                    <button id="mobile-menu-close" class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
+                        <span class="material-symbols-outlined text-slate-600">close</span>
+                    </button>
+                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100" href="#about" onclick="closeMobileMenu()">Về chúng tôi</a>
+                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100" href="#features" onclick="closeMobileMenu()">Tính năng</a>
+                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100" href="#how-it-works" onclick="closeMobileMenu()">Hướng dẫn</a>
+                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100" href="#pricing" onclick="closeMobileMenu()">Bảng giá</a>
+                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100" href="#contact" onclick="closeMobileMenu()">Contact us</a>
+                    <button class="mt-6 bg-accent text-white px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40 w-full">
+                        Tải ứng dụng
+                    </button>
+                </div>
+            </div>
         </header>
 
         <!-- Hero Section -->
@@ -214,78 +239,103 @@
             </div>
 
             <!-- LEFT PHONE (7.png) -->
-            <div class="absolute left-0 bottom-[8%] z-10 float-phone-left pointer-events-none"
-                style="width: clamp(300px, 32vw, 520px); transform: rotate(-8deg) translateX(4%);">
+            <div class="absolute left-0 bottom-[8%] z-10 float-phone-left pointer-events-none hidden md:block"
+                style="width: clamp(220px, 32vw, 520px); transform: rotate(-8deg) translateX(4%);">
                 <img src="${pageContext.request.contextPath}/img/7.png"
                     class="w-full h-auto drop-shadow-[0_40px_50px_rgba(0,0,0,0.6)]" />
             </div>
 
             <!-- RIGHT PHONE (8.png) -->
-            <div class="absolute right-0 bottom-[8%] z-10 float-phone-right pointer-events-none"
-                style="width: clamp(300px, 32vw, 520px); transform: rotate(8deg) translateX(-4%);">
+            <div class="absolute right-0 bottom-[8%] z-10 float-phone-right pointer-events-none hidden md:block"
+                style="width: clamp(220px, 32vw, 520px); transform: rotate(8deg) translateX(-4%);">
                 <img src="${pageContext.request.contextPath}/img/8.png"
                     class="w-full h-auto drop-shadow-[0_40px_50px_rgba(0,0,0,0.6)]" />
             </div>
 
-            <!-- Floating emojis top left -->
-            <div class="absolute top-[22%] left-[18%] z-20 float-1 text-3xl pointer-events-none select-none"
+            <!-- Desktop-only floating emojis -->
+            <div class="absolute top-[22%] left-[18%] z-20 float-1 text-3xl pointer-events-none select-none hidden sm:block"
                 style="filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));">&#127925;</div>
-            <div class="absolute top-[18%] left-[26%] z-20 float-2 text-2xl pointer-events-none select-none"
+            <div class="absolute top-[18%] left-[26%] z-20 float-2 text-2xl pointer-events-none select-none hidden md:block"
                 style="filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); color: #00E676;">&#127925;</div>
-
-            <!-- Basketball near left phone -->
-            <div class="absolute bottom-[28%] left-[22%] z-20 float-3 text-2xl pointer-events-none select-none"
+            <div class="absolute bottom-[28%] left-[22%] z-20 float-3 text-2xl pointer-events-none select-none hidden md:block"
                 style="filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));">&#127936;</div>
-
-            <!-- Bottom left: Music pill -->
-            <div class="absolute bottom-[16%] left-[28%] z-20 float-4">
-                <div
-                    class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
+            <div class="absolute bottom-[16%] left-[28%] z-20 float-4 hidden md:block">
+                <div class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
                     <span class="text-base">&#127925;</span>
                     <span class="text-white font-bold text-sm tracking-wide">Music</span>
                 </div>
             </div>
-
-            <!-- Top right: Music pill -->
-            <div class="absolute top-[22%] right-[20%] z-20 float-2">
-                <div
-                    class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
+            <div class="absolute top-[22%] right-[20%] z-20 float-2 hidden md:block">
+                <div class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
                     <span class="text-base">&#127925;</span>
                     <span class="text-white font-bold text-sm tracking-wide">Music</span>
                 </div>
             </div>
-
-            <!-- Bottom right: Tech pill -->
-            <div class="absolute bottom-[16%] right-[26%] z-20 float-3">
-                <div
-                    class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
+            <div class="absolute bottom-[16%] right-[26%] z-20 float-3 hidden md:block">
+                <div class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
                     <span class="text-base">&#128187;</span>
                     <span class="text-white font-bold text-sm tracking-wide">Tech</span>
                 </div>
             </div>
-
-            <!-- Sparkle stars -->
-            <div class="absolute bottom-[20%] right-[14%] z-20 float-1 text-white/60 text-xl pointer-events-none">
+            <div class="absolute bottom-[20%] right-[14%] z-20 float-1 text-white/60 text-xl pointer-events-none hidden sm:block">
                 &#10022;</div>
-            <div class="absolute top-[40%] left-[10%] z-20 float-3 text-white/40 text-base pointer-events-none">&#10022;
+            <div class="absolute top-[40%] left-[10%] z-20 float-3 text-white/40 text-base pointer-events-none hidden sm:block">&#10022;
             </div>
 
+            <!-- ===== MOBILE-ONLY Decorations ===== -->
+            <!-- Glowing gradient ring behind card -->
+            <div class="absolute z-20 w-[320px] h-[320px] rounded-full pointer-events-none md:hidden"
+                style="background: conic-gradient(from 0deg, rgba(98,0,238,0.3), rgba(255,109,0,0.2), rgba(98,0,238,0.3)); filter: blur(50px); animation: spin 20s linear infinite;"></div>
+            <!-- Mobile floating pills (smaller, repositioned) -->
+            <div class="absolute top-[15%] left-[5%] z-20 float-1 md:hidden pointer-events-none">
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full shadow-lg">
+                    <span class="text-white font-bold text-[10px] tracking-wide">&#127925; Music</span>
+                </div>
+            </div>
+            <div class="absolute top-[20%] right-[8%] z-20 float-2 md:hidden pointer-events-none">
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full shadow-lg">
+                    <span class="text-white font-bold text-[10px] tracking-wide">&#128187; Tech</span>
+                </div>
+            </div>
+            <div class="absolute bottom-[22%] left-[8%] z-20 float-3 md:hidden pointer-events-none">
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full shadow-lg">
+                    <span class="text-white font-bold text-[10px] tracking-wide">&#127936; Sport</span>
+                </div>
+            </div>
+            <div class="absolute bottom-[18%] right-[10%] z-20 float-4 md:hidden pointer-events-none">
+                <div class="bg-[#6200EE]/30 backdrop-blur-md border border-purple-400/20 px-3 py-1.5 rounded-full shadow-lg">
+                    <span class="text-white font-bold text-[10px] tracking-wide">&#10024; Transcake</span>
+                </div>
+            </div>
+            <!-- Small sparkle dots for mobile -->
+            <div class="absolute top-[30%] left-[15%] z-20 w-1.5 h-1.5 bg-white/40 rounded-full float-1 md:hidden pointer-events-none"></div>
+            <div class="absolute top-[25%] right-[18%] z-20 w-1 h-1 bg-purple-300/50 rounded-full float-2 md:hidden pointer-events-none"></div>
+            <div class="absolute bottom-[30%] left-[25%] z-20 w-2 h-2 bg-orange-300/30 rounded-full float-3 md:hidden pointer-events-none"></div>
+            <div class="absolute bottom-[35%] right-[20%] z-20 w-1 h-1 bg-white/50 rounded-full float-4 md:hidden pointer-events-none"></div>
+
             <!-- CENTER CARD (dark glassmorphism) -->
-            <div class="relative z-30 mx-auto text-center px-10 py-12 max-w-xl"
-                style="background: rgba(98, 0, 238, 0.35); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(180, 140, 255, 0.2); border-radius: 2.5rem; box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);">
-                <h1 class="text-4xl md:text-5xl font-black text-white leading-[1.1] tracking-tight mb-5"
+            <div class="relative z-30 mx-4 sm:mx-auto text-center px-5 sm:px-8 md:px-10 py-8 sm:py-10 md:py-12 max-w-xl"
+                style="background: rgba(98, 0, 238, 0.35); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(180, 140, 255, 0.2); border-radius: 1.5rem; box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);">
+                <!-- Mobile-only top badge -->
+                <div class="md:hidden flex justify-center mb-4">
+                    <span class="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full">
+                        <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+                        Ride Hailing mới
+                    </span>
+                </div>
+                <h1 class="text-[1.6rem] leading-[1.2] sm:text-3xl md:text-5xl font-black text-white tracking-tight mb-3 sm:mb-5"
                     style="text-shadow: 0 0 40px rgba(160,100,255,0.4);">
-                    Nền tảng tiên phong kết nôí di chuyển cộng đồng
+                    Nền tảng tiên phong kết nôí di chuyển cộng đồng
                 </h1>
-                <p class="text-white/90 text-base md:text-lg leading-[1.7] mb-4 font-medium">
+                <p class="text-white/90 text-[13px] sm:text-base md:text-lg leading-[1.7] mb-3 sm:mb-4 font-medium">
                     Transcake: Gọi xe, ghép chuyến, kết nối cộng đồng.
                     Giá cước minh bạch, ghép chuyến cùng tần số,
                     an tâm tuyệt đối.
                 </p>
-                <p class="text-white/70 text-sm font-medium mb-8 tracking-wide">
-                    kết nối, minh bạch, cá nhân hóa.
+                <p class="text-white/70 text-xs sm:text-sm font-medium mb-5 sm:mb-8 tracking-wide">
+                    kết nối, minh bạch, cá nhân hóa.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center mt-2">
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mt-2">
                     <button>
                         <div class="flex gap-3">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
@@ -299,6 +349,21 @@
                         </div>
                     </button>
                 </div>
+                <!-- Mobile-only trust badges -->
+                <div class="md:hidden flex flex-wrap justify-center gap-2 mt-5 pt-4 border-t border-white/10">
+                    <span class="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-semibold px-2.5 py-1 rounded-full">
+                        <span class="material-symbols-outlined text-green-400 text-[12px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                        eKYC 100%
+                    </span>
+                    <span class="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-semibold px-2.5 py-1 rounded-full">
+                        <span class="material-symbols-outlined text-orange-400 text-[12px]" style="font-variation-settings: 'FILL' 1;">shield</span>
+                        An toàn
+                    </span>
+                    <span class="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-semibold px-2.5 py-1 rounded-full">
+                        <span class="material-symbols-outlined text-purple-300 text-[12px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                        Ghép chuyến
+                    </span>
+                </div>
             </div>
 
         </section>
@@ -307,7 +372,7 @@
 
         <!-- Trust Ticker Marquee -->
         <section
-            class="w-full bg-[#f8f9fa] border-y border-slate-200 overflow-hidden flex items-center justify-center py-24 md:py-32"
+            class="w-full bg-[#f8f9fa] border-y border-slate-200 overflow-hidden flex items-center justify-center py-10 sm:py-16 md:py-24 lg:py-32"
             style="mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);">
             <style>
                 @keyframes ticker-scroll {
@@ -425,7 +490,7 @@
         </div>
 
         <!-- About Us: Editorial Collage -->
-        <section id="about" class="relative py-20 px-4 md:px-8 bg-[#fcfcfd] overflow-hidden">
+        <section id="about" class="relative py-12 sm:py-16 md:py-20 px-4 md:px-8 bg-[#fcfcfd] overflow-hidden">
             <!-- Background Soft Glows -->
             <div
                 class="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px] pointer-events-none">
@@ -436,12 +501,12 @@
 
             <div class="max-w-7xl mx-auto relative z-10">
                 <!-- 1. The Hook -->
-                <div class="text-center max-w-4xl mx-auto mb-24 relative">
+                <div class="text-center max-w-4xl mx-auto mb-12 sm:mb-16 md:mb-24 relative">
                     <span
-                        class="inline-block text-[#FF6D00] font-black tracking-[0.3em] uppercase text-sm mb-6 drop-shadow-sm">HƠN
+                        class="inline-block text-[#FF6D00] font-black tracking-[0.2em] sm:tracking-[0.3em] uppercase text-xs sm:text-sm mb-4 sm:mb-6 drop-shadow-sm">HƠN
                         CẢ MỘT CUỐC XE</span>
                     <h2
-                        class="text-4xl md:text-5xl lg:text-6xl font-black text-[#1e293b] leading-[1.2] font-['Playfair_Display']">
+                        class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black text-[#1e293b] leading-[1.2] font-['Playfair_Display']">
                         Chúng tôi kiến tạo <span class="text-[#6200EE]">hạ tầng</span><br class="hidden md:block" /> và
                         kết nối cộng đồng.
                     </h2>
@@ -474,7 +539,7 @@
                     </svg>
 
                     <!-- Block 1: Vibe Matching -->
-                    <div class="relative flex flex-col lg:flex-row items-center gap-12 mb-32 z-10">
+                    <div class="relative flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12 mb-16 sm:mb-24 lg:mb-32 z-10">
                         <div class="relative w-full lg:w-1/2 group">
                             <!-- Image -->
                             <div
@@ -487,7 +552,7 @@
                             </div>
                             <!-- Glassmorphism Overlay -->
                             <div
-                                class="absolute -bottom-8 -right-4 lg:-right-12 bg-white/30 backdrop-blur-xl border border-white/40 shadow-[0_20px_40px_rgba(0,0,0,0.15)] rounded-2xl p-5 w-64 transform transition-all duration-500 group-hover:-translate-y-4">
+                                class="absolute -bottom-6 sm:-bottom-8 right-2 sm:-right-4 lg:-right-12 bg-white/30 backdrop-blur-xl border border-white/40 shadow-[0_20px_40px_rgba(0,0,0,0.15)] rounded-2xl p-3 sm:p-5 w-48 sm:w-64 transform transition-all duration-500 group-hover:-translate-y-4">
                                 <div class="flex items-center gap-3 mb-3">
                                     <div
                                         class="w-10 h-10 rounded-full bg-gradient-to-br from-[#FF6D00] to-[#FF9100] flex items-center justify-center text-white shadow-lg">
@@ -510,11 +575,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="w-full lg:w-1/2 lg:pl-16 mt-8 lg:mt-0">
-                            <h3 class="text-3xl font-bold text-slate-900 mb-6 font-['Playfair_Display']">Cá nhân hóa
+                        <div class="w-full lg:w-1/2 lg:pl-16 mt-12 sm:mt-14 lg:mt-0">
+                            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 mb-4 sm:mb-6 font-['Playfair_Display']">Cá nhân hóa
                                 <span class="italic text-[#FF6D00]">trải nghiệm</span>
                             </h3>
-                            <p class="text-lg text-slate-600 leading-[1.8] font-medium">
+                            <p class="text-base sm:text-lg text-slate-600 leading-[1.8] font-medium">
                                 Kết nối đa chiều. Transcake không chỉ lấp đầy ghế trống, chúng tôi giúp bạn tìm thấy
                                 những người đồng hành 'cùng tần số' qua thuật toán ghép chuyến thông minh.
                             </p>
@@ -522,11 +587,11 @@
                     </div>
 
                     <!-- Block 2: Trust Infrastructure -->
-                    <div class="relative flex flex-col-reverse lg:flex-row items-center gap-12 mb-32 z-10">
-                        <div class="w-full lg:w-1/2 lg:pr-16 text-left lg:text-right mt-8 lg:mt-0">
-                            <h3 class="text-3xl font-bold text-slate-900 mb-6 font-['Playfair_Display']"><span
+                    <div class="relative flex flex-col-reverse lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12 mb-16 sm:mb-24 lg:mb-32 z-10">
+                        <div class="w-full lg:w-1/2 lg:pr-16 text-left lg:text-right mt-6 sm:mt-8 lg:mt-0">
+                            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 mb-4 sm:mb-6 font-['Playfair_Display']"><span
                                     class="italic text-[#6200EE]">An tâm</span> tuyệt đối</h3>
-                            <p class="text-lg text-slate-600 leading-[1.8] font-medium">
+                            <p class="text-base sm:text-lg text-slate-600 leading-[1.8] font-medium">
                                 Với hệ thống xác thực danh tính 100%, đánh giá chéo 2 chiều và cảnh báo lệch lộ trình,
                                 sự an toàn của bạn là tiêu chuẩn bắt buộc.
                             </p>
@@ -543,7 +608,7 @@
                             </div>
                             <!-- Glassmorphism Overlay -->
                             <div
-                                class="absolute top-10 -left-4 lg:-left-12 bg-[#1a1130]/80 backdrop-blur-xl border border-purple-500/30 shadow-[0_20px_50px_rgba(98,0,238,0.4)] rounded-2xl p-5 w-60 transform transition-all duration-500 group-hover:-translate-y-4">
+                                class="absolute top-6 sm:top-10 left-2 sm:-left-4 lg:-left-12 bg-[#1a1130]/80 backdrop-blur-xl border border-purple-500/30 shadow-[0_20px_50px_rgba(98,0,238,0.4)] rounded-2xl p-3 sm:p-5 w-48 sm:w-60 transform transition-all duration-500 group-hover:-translate-y-4">
                                 <div class="flex items-center gap-3 mb-4">
                                     <div
                                         class="relative w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white shadow-[0_0_20px_rgba(16,185,129,0.5)]">
@@ -569,7 +634,7 @@
                     </div>
 
                     <!-- Block 3: Travel Blog & Community -->
-                    <div class="relative flex flex-col lg:flex-row items-center gap-12 z-10">
+                    <div class="relative flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12 z-10">
                         <div class="relative w-full lg:w-5/12 group xl:-ml-10">
                             <!-- Image -->
                             <div
@@ -582,7 +647,7 @@
                             </div>
                             <!-- Social Media Post Overlay -->
                             <div
-                                class="absolute top-[20%] -right-8 lg:-right-24 bg-white/40 backdrop-blur-2xl border border-white/50 rounded-2xl shadow-[0_30px_60px_rgba(98,0,238,0.2)] p-5 w-72 transform rotate-2 transition-all duration-500 group-hover:rotate-0 group-hover:-translate-y-4">
+                                class="absolute top-[20%] right-0 sm:-right-8 lg:-right-24 bg-white/40 backdrop-blur-2xl border border-white/50 rounded-2xl shadow-[0_30px_60px_rgba(98,0,238,0.2)] p-3 sm:p-5 w-56 sm:w-72 transform rotate-2 transition-all duration-500 group-hover:rotate-0 group-hover:-translate-y-4">
                                 <!-- User Info -->
                                 <div class="flex items-center gap-3 mb-3">
                                     <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm">
@@ -625,10 +690,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="w-full lg:w-7/12 lg:pl-24 mt-8 lg:mt-0 text-left">
-                            <h3 class="text-4xl font-black text-[#6200EE] mb-6 font-['Playfair_Display']">Nhật ký hành
+                        <div class="w-full lg:w-7/12 lg:pl-24 mt-12 sm:mt-14 lg:mt-0 text-left">
+                            <h3 class="text-2xl sm:text-3xl md:text-4xl font-black text-[#6200EE] mb-4 sm:mb-6 font-['Playfair_Display']">Nhật ký hành
                                 trình</h3>
-                            <p class="text-lg text-slate-600 leading-[1.8] font-medium">
+                            <p class="text-base sm:text-lg text-slate-600 leading-[1.8] font-medium">
                                 Chia sẻ trải nghiệm, đánh giá chuyến đi và lưu giữ những khoảnh khắc đáng nhớ trên mọi
                                 nẻo đường. Transcake biến mỗi cuốc xe thành một không gian kết nối, nơi bạn có thể tự do
                                 viết nên câu chuyện của riêng mình.
@@ -641,14 +706,14 @@
         </section>
 
         <!-- Core Features: Bento Box Grid -->
-        <section id="features" class="py-24 bg-[#F3F4F6]">
+        <section id="features" class="py-12 sm:py-16 md:py-24 bg-[#F3F4F6]">
             <div class="max-w-7xl mx-auto px-4 md:px-8">
                 <!-- Header -->
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <span class="block text-[#FF6D00] text-sm font-bold uppercase tracking-widest mb-4">Khám phá
+                <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-12 md:mb-16">
+                    <span class="block text-[#FF6D00] text-xs sm:text-sm font-bold uppercase tracking-widest mb-3 sm:mb-4">Khám phá
                         Transcake</span>
                     <h2
-                        class="text-3xl md:text-4xl lg:text-5xl font-black text-[#6200EE] leading-tight font-['Playfair_Display']">
+                        class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-[#6200EE] leading-tight font-['Playfair_Display']">
                         Công nghệ lõi định hình lại cách bạn di chuyển.</h2>
                 </div>
 
@@ -871,7 +936,7 @@
         </section>
 
         <!-- How It Works: Cinematic 3D iPhone Narrative -->
-        <section id="how-it-works" class="relative bg-white h-[500vh]">
+        <section id="how-it-works" class="relative bg-white h-[300vh] md:h-[500vh]">
             <!-- Added ID for GSAP Trigger -->
             <div id="how-it-works-cinematic" class="absolute inset-0 pointer-events-none"></div>
             <!-- Sticky Viewport -->
@@ -883,19 +948,19 @@
                 </div>
 
                 <!-- Storyteller Container -->
-                <div class="relative w-full max-w-7xl mx-auto px-6 h-full flex items-center">
+                <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center">
 
                     <!-- Left Side: Narratives (Overlaying) -->
-                    <div class="relative z-20 w-full md:w-1/2 pointer-events-none">
+                    <div class="relative z-20 w-full md:w-1/2 pointer-events-none pr-0 md:pr-4">
                         <!-- Step 1 Text -->
                         <div id="narrative-1"
                             class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 01</span>
-                            <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Tải ứng dụng &
+                            <h3 class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">Tải ứng dụng &
                                 <span class="text-[#6200EE]">Xác thực eKYC.</span>
                             </h3>
-                            <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Mở cổng an toàn. Đăng
+                            <p class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">Mở cổng an toàn. Đăng
                                 ký và hoàn tất xác thực danh tính bằng CCCD trong 30 giây để đảm bảo cộng đồng di chuyển
                                 tin cậy.</p>
                         </div>
@@ -904,10 +969,10 @@
                             class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 02</span>
-                            <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Đặt chuyến &
+                            <h3 class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">Đặt chuyến &
                                 <span class="text-[#6200EE]">Chọn tần số.</span>
                             </h3>
-                            <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Nhập điểm đến và lọc
+                            <p class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">Nhập điểm đến và lọc
                                 các thẻ sở thích (Âm nhạc, Công nghệ) để hệ thống ghép bạn với "Soulmate" phù hợp nhất.
                             </p>
                         </div>
@@ -916,10 +981,10 @@
                             class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 03</span>
-                            <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Tận hưởng
+                            <h3 class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">Tận hưởng
                                 <span class="text-[#6200EE]">Hành trình.</span>
                             </h3>
-                            <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Theo dõi GPS thời
+                            <p class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">Theo dõi GPS thời
                                 gian thực và trải nghiệm kết nối thú vị với những người bạn mới cùng lộ trình.</p>
                         </div>
                         <!-- Step 4 Text -->
@@ -927,20 +992,20 @@
                             class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 04</span>
-                            <h3 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">Thanh toán &
+                            <h3 class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">Thanh toán &
                                 <span class="text-[#6200EE]">Đánh giá.</span>
                             </h3>
-                            <p class="text-slate-500 text-lg font-medium max-w-md leading-relaxed">Tự động tất toán minh
+                            <p class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">Tự động tất toán minh
                                 bạch. Chấm điểm uy tín để cùng xây dựng văn hóa di chuyển văn minh của Transcake.</p>
                         </div>
                     </div>
 
                     <!-- Right Side: 3D Camera Focus -->
-                    <div class="relative flex-1 h-full flex items-center justify-center perspective-[2000px]">
+                    <div class="relative flex-1 h-full hidden md:flex items-center justify-center perspective-[2000px]">
 
                         <!-- The 3D Phone Scaffold -->
                         <div id="hero-phone-scaffold"
-                            class="relative w-[280px] md:w-[320px] aspect-[9/19] preserve-3d transition-transform duration-100 ease-linear">
+                            class="relative w-[240px] sm:w-[280px] md:w-[320px] aspect-[9/19] preserve-3d transition-transform duration-100 ease-linear">
 
                             <!-- Phone Shadow -->
                             <div
@@ -1034,7 +1099,7 @@
 
                             <!-- Floating CCCD (Step 1) -->
                             <div id="float-cccd"
-                                class="absolute top-[20%] -left-20 w-48 h-28 bg-white rounded-xl shadow-2xl border border-slate-100 p-4 opacity-0 z-50 translate-z-[100px]">
+                                class="absolute top-[20%] -left-10 md:-left-20 w-40 md:w-48 h-24 md:h-28 bg-white rounded-xl shadow-2xl border border-slate-100 p-3 md:p-4 opacity-0 z-50 translate-z-[100px]">
                                 <div class="flex gap-3 mb-4">
                                     <div class="w-10 h-10 bg-slate-200 rounded"></div>
                                     <div class="flex-1 space-y-2">
@@ -1421,15 +1486,15 @@
         </section>
 
         <!-- Deep Dive 1: Connection -->
-        <section class="py-24 px-6 overflow-hidden max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row items-center gap-16 md:gap-24">
+        <section class="py-12 sm:py-16 md:py-24 px-4 sm:px-6 overflow-hidden max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row items-center gap-10 md:gap-16 lg:gap-24">
                 <!-- Left: Phone with Tags -->
-                <div class="flex-1 relative perspective-1000 min-h-[600px] w-full flex items-center justify-center">
+                <div class="flex-1 relative perspective-1000 min-h-[400px] sm:min-h-[500px] md:min-h-[600px] w-full flex items-center justify-center">
                     <!-- Background Glow -->
                     <div class="absolute w-[400px] h-[400px] bg-primary/20 blur-[100px] rounded-full"></div>
 
-                    <div class="relative w-[280px] rotate-12 rotate-y-12 preserve-3d">
-                        <div class="phone-frame h-[580px]">
+                    <div class="relative w-[220px] sm:w-[250px] md:w-[280px] rotate-12 rotate-y-12 preserve-3d">
+                        <div class="phone-frame h-[440px] sm:h-[500px] md:h-[580px]">
                             <div class="phone-notch"></div>
                             <div class="w-full h-full bg-slate-50 relative p-6 pt-20">
                                 <h3 class="font-bold text-xl text-center mb-2">Interest selection</h3>
@@ -1463,37 +1528,36 @@
                             </div>
                         </div>
 
-                        <!-- Floating Tags -->
-                        <div class="absolute -left-16 top-1/4 bg-primary text-white font-bold text-sm px-6 py-3 rounded-full shadow-xl shadow-primary/30 tags-anim transform translate-z-30 flex items-center gap-2"
+                        <div class="absolute -left-6 sm:-left-12 md:-left-16 top-1/4 bg-primary text-white font-bold text-xs sm:text-sm px-3 sm:px-4 md:px-6 py-2 sm:py-3 rounded-full shadow-xl shadow-primary/30 tags-anim transform translate-z-30 flex items-center gap-2"
                             style="animation-delay: 0s;">
-                            <span>🎵</span> Rock Music
+                            <span>🎵</span> <span class="hidden sm:inline">Rock </span>Music
                         </div>
-                        <div class="absolute -right-20 top-1/3 bg-white text-slate-800 font-bold text-sm px-6 py-3 rounded-full shadow-lg border border-slate-100 tags-anim transform translate-z-20 flex items-center gap-2"
+                        <div class="absolute -right-6 sm:-right-12 md:-right-20 top-1/3 bg-white text-slate-800 font-bold text-xs sm:text-sm px-3 sm:px-4 md:px-6 py-2 sm:py-3 rounded-full shadow-lg border border-slate-100 tags-anim transform translate-z-20 flex items-center gap-2"
                             style="animation-delay: 1s;">
                             <span>💻</span> Tech
                         </div>
-                        <div class="absolute -left-10 bottom-1/3 bg-white text-slate-800 font-bold text-sm px-6 py-3 rounded-full shadow-lg border border-slate-100 tags-anim transform translate-z-20 flex items-center gap-2"
+                        <div class="absolute -left-4 sm:-left-8 md:-left-10 bottom-1/3 bg-white text-slate-800 font-bold text-xs sm:text-sm px-3 sm:px-4 md:px-6 py-2 sm:py-3 rounded-full shadow-lg border border-slate-100 tags-anim transform translate-z-20 flex items-center gap-2"
                             style="animation-delay: 2s;">
                             <span>⚽</span> Football
                         </div>
-                        <div class="absolute right-0 bottom-1/4 bg-slate-900 text-white font-bold text-sm px-6 py-3 rounded-full shadow-xl tags-anim transform translate-z-30 flex items-center gap-2"
+                        <div class="absolute right-0 bottom-1/4 bg-slate-900 text-white font-bold text-xs sm:text-sm px-3 sm:px-4 md:px-6 py-2 sm:py-3 rounded-full shadow-xl tags-anim transform translate-z-30 flex items-center gap-2"
                             style="animation-delay: 0.5s;">
                             <span>🍣</span> Sushi
                         </div>
                         <!-- Smaller blurred tags for depth -->
-                        <div class="absolute left-1/2 -top-10 bg-white/60 backdrop-blur text-slate-600 font-bold text-xs px-4 py-2 rounded-full shadow-sm transform -translate-z-10 tags-anim"
+                        <div class="absolute left-1/2 -top-10 bg-white/60 backdrop-blur text-slate-600 font-bold text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-sm transform -translate-z-10 tags-anim hidden sm:block"
                             style="animation-delay: 1.5s;">Startup</div>
-                        <div class="absolute -right-10 bottom-10 bg-white/60 backdrop-blur text-slate-600 font-bold text-xs px-4 py-2 rounded-full shadow-sm transform -translate-z-10 tags-anim"
+                        <div class="absolute -right-4 sm:-right-10 bottom-10 bg-white/60 backdrop-blur text-slate-600 font-bold text-[10px] sm:text-xs px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-sm transform -translate-z-10 tags-anim hidden sm:block"
                             style="animation-delay: 0.8s;">Art</div>
                     </div>
                 </div>
 
                 <!-- Right: Text Content -->
                 <div class="flex-1 max-w-md">
-                    <span class="text-primary font-bold text-sm tracking-widest uppercase mb-4 block">Transcake</span>
-                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-6 leading-tight">Không chỉ là gọi
+                    <span class="text-primary font-bold text-xs sm:text-sm tracking-widest uppercase mb-3 sm:mb-4 block">Transcake</span>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">Không chỉ là gọi
                         xe.<br />Đó là sự kết nối.</h2>
-                    <p class="text-slate-600 text-lg leading-relaxed">Trải nghiệm gọi xe trở nên thú vị hơn
+                    <p class="text-slate-600 text-base sm:text-lg leading-relaxed">Trải nghiệm gọi xe trở nên thú vị hơn
                         bao giờ hết
                         khi bạn tìm thấy người bạn đồng hành chung gu âm nhạc, sở thích và phong
                         cách sống, xua tan đi
@@ -1502,7 +1566,7 @@
             </div>
         </section>
         <!-- Testimonials -->
-        <section class="py-12 px-6 max-w-6xl mx-auto">
+        <section class="py-8 sm:py-10 md:py-12 px-4 sm:px-6 max-w-6xl mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Review 1 -->
                 <div
@@ -1586,9 +1650,9 @@
         </section>
 
         <!-- Bottom CTA Card -->
-        <section class="py-24 px-6 max-w-6xl mx-auto">
+        <section class="py-12 sm:py-16 md:py-24 px-4 sm:px-6 max-w-6xl mx-auto">
             <div
-                class="relative w-full rounded-[3rem] p-10 md:p-16 flex flex-col md:flex-row items-center justify-between overflow-hidden">
+                class="relative w-full rounded-2xl sm:rounded-[2rem] md:rounded-[3rem] p-6 sm:p-8 md:p-10 lg:p-16 flex flex-col md:flex-row items-center justify-between overflow-hidden">
                 <!-- Gradient background exactly like mockup -->
                 <div class="absolute inset-0 bg-gradient-to-r from-[#DFD5FF] via-[#EADBFF] to-[#DFD5FF] z-0"></div>
                 <!-- Abstract background shape -->
@@ -1596,8 +1660,8 @@
                     class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-white/30 to-transparent blur-2xl z-0 transform translate-x-1/2 rounded-full">
                 </div>
 
-                <div class="relative z-10 max-w-lg mb-12 md:mb-0">
-                    <h2 class="text-4xl md:text-5xl font-black text-slate-900 mb-8 leading-tight">Sẵn sàng di
+                <div class="relative z-10 max-w-lg mb-8 sm:mb-10 md:mb-0">
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-6 sm:mb-8 leading-tight">Sẵn sàng di
                         chuyển
                         <br /> theo cách của bạn?
                     </h2>
@@ -1616,7 +1680,7 @@
                 </div>
 
                 <!-- Phone Peeking out -->
-                <div class="relative z-10 w-[240px] md:w-[280px] h-0 md:h-full md:min-h-[400px]">
+                <div class="relative z-10 w-[240px] md:w-[280px] h-0 md:h-full md:min-h-[400px] hidden md:block">
                     <div class="absolute top-20 right-0 w-[280px]">
                         <div class="phone-frame h-[500px] border-[#1e293b]">
                             <div class="phone-notch"></div>
@@ -1642,14 +1706,14 @@
         </section>
 
         <!-- Footer -->
-        <footer id="contact" class="bg-[#4615B2] pt-20 pb-10 px-6 text-white text-sm relative overflow-hidden">
+        <footer id="contact" class="bg-[#4615B2] pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-10 px-4 sm:px-6 text-white text-sm relative overflow-hidden">
             <!-- Decoration Star -->
             <div
-                class="absolute right-[10%] top-[40%] text-white/10 text-9xl font-black pointer-events-none transform rotate-12 select-none">
+                class="absolute right-[10%] top-[40%] text-white/10 text-7xl sm:text-9xl font-black pointer-events-none transform rotate-12 select-none">
                 ✦</div>
 
             <div
-                class="max-w-6xl mx-auto flex flex-col md:flex-row flex-wrap gap-12 justify-between mb-16 relative z-10">
+                class="max-w-6xl mx-auto flex flex-col md:flex-row flex-wrap gap-8 sm:gap-10 md:gap-12 justify-between mb-10 sm:mb-12 md:mb-16 relative z-10">
                 <!-- Column 1 -->
                 <div class="max-w-sm">
                     <div class="flex items-center mb-6">
@@ -1693,7 +1757,7 @@
             </div>
 
             <!-- Sub Footer Divider -->
-            <div class="max-w-6xl mx-auto h-px bg-white/10 mb-8 w-full"></div>
+            <div class="max-w-6xl mx-auto h-px bg-white/10 mb-6 sm:mb-8 w-full"></div>
 
             <div
                 class="max-w-6xl mx-auto flex flex-col-reverse md:flex-row items-start md:items-center justify-between gap-6 relative z-10 text-white/50 font-medium">
@@ -1712,6 +1776,35 @@
                 </div>
             </div>
         </footer>
+
+        <!-- Mobile Menu Script -->
+        <script>
+            function closeMobileMenu() {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const menuBtn = document.getElementById('mobile-menu-btn');
+                const menuClose = document.getElementById('mobile-menu-close');
+                const menuOverlay = document.getElementById('mobile-menu-overlay');
+                const mobileMenu = document.getElementById('mobile-menu');
+
+                if (menuBtn && mobileMenu) {
+                    menuBtn.addEventListener('click', () => {
+                        mobileMenu.classList.remove('translate-x-full');
+                        document.body.style.overflow = 'hidden';
+                    });
+                }
+                if (menuClose) {
+                    menuClose.addEventListener('click', closeMobileMenu);
+                }
+                if (menuOverlay) {
+                    menuOverlay.addEventListener('click', closeMobileMenu);
+                }
+            });
+        </script>
 
         <!-- Scroll Spy & Smooth Scroll Script -->
         <script>
