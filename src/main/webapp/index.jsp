@@ -182,11 +182,9 @@
         <header id="main-header" class="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-3 pointer-events-none">
             <nav class="max-w-7xl mx-auto mockup-glass rounded-full px-8 py-3 flex items-center justify-between shadow-md pointer-events-auto"
                 id="navbar">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
-                        <span class="material-symbols-outlined text-[20px] font-bold">cake</span>
-                    </div>
-                    <span class="text-xl font-black tracking-tight text-primary">Transcake</span>
+                <div class="flex items-center relative h-6 w-32">
+                    <img src="${pageContext.request.contextPath}/img/transcake-03.png" alt="Transcake Logo"
+                        class="absolute left-0 h-14 md:h-16 w-auto object-contain">
                 </div>
                 <div class="hidden lg:flex items-center gap-10">
                     <a class="nav-link text-sm font-semibold text-slate-700 hover:text-primary transition-colors"
@@ -277,16 +275,15 @@
                 style="background: rgba(98, 0, 238, 0.35); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(180, 140, 255, 0.2); border-radius: 2.5rem; box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);">
                 <h1 class="text-4xl md:text-5xl font-black text-white leading-[1.1] tracking-tight mb-5"
                     style="text-shadow: 0 0 40px rgba(160,100,255,0.4);">
-                    M&#7841;ng x&#227; h&#7897;i di chuy&#7875;n<br />&#273;&#7847;u ti&#234;n t&#7841;i Vi&#7879;t Nam
+                    Nền tảng tiên phong kết nôí di chuyển cộng đồng
                 </h1>
                 <p class="text-white/90 text-base md:text-lg leading-[1.7] mb-4 font-medium">
-                    Transcake: G&#7885;i xe, gh&#233;p chuy&#7871;n, k&#7871;t n&#7889;i c&#7897;ng
-                    &#273;&#7891;ng.<br />
-                    Gi&#225; c&#432;&#7899;c minh b&#7841;ch, gh&#233;p chuy&#7871;n c&#249;ng t&#7847;n
-                    s&#7889;,<br />an t&#226;m tuy&#7879;t &#273;&#7889;i.
+                    Transcake: Gọi xe, ghép chuyến, kết nối cộng đồng.
+                    Giá cước minh bạch, ghép chuyến cùng tần số,
+                    an tâm tuyệt đối.
                 </p>
                 <p class="text-white/70 text-sm font-medium mb-8 tracking-wide">
-                    0&#273; ph&#237; n&#7873;n t&#7843;ng, minh b&#7841;ch, c&#225; nh&#226;n h&#243;a.
+                    kết nối, minh bạch, cá nhân hóa.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center mt-2">
                     <button>
@@ -445,8 +442,8 @@
                         CẢ MỘT CUỐC XE</span>
                     <h2
                         class="text-4xl md:text-5xl lg:text-6xl font-black text-[#1e293b] leading-[1.2] font-['Playfair_Display']">
-                        Chúng tôi kiến tạo <span class="text-[#6200EE]">hạ tầng</span><br
-                            class="hidden md:block" /> và kết nối cộng đồng.
+                        Chúng tôi kiến tạo <span class="text-[#6200EE]">hạ tầng</span><br class="hidden md:block" /> và
+                        kết nối cộng đồng.
                     </h2>
                 </div>
 
@@ -1655,11 +1652,9 @@
                 class="max-w-6xl mx-auto flex flex-col md:flex-row flex-wrap gap-12 justify-between mb-16 relative z-10">
                 <!-- Column 1 -->
                 <div class="max-w-sm">
-                    <div class="flex items-center gap-2 mb-6 text-white">
-                        <div class="w-8 h-8 rounded-lg flex items-center justify-center border-2 border-white/40">
-                            <span class="material-symbols-outlined text-[18px]">cake</span>
-                        </div>
-                        <span class="text-xl font-black tracking-tight">Transcake</span>
+                    <div class="flex items-center mb-6">
+                        <img src="${pageContext.request.contextPath}/img/transcake-03.png" alt="Transcake Logo"
+                            class="h-20 w-auto object-contain brightness-0 invert">
                     </div>
                     <p class="text-white/70 leading-relaxed font-medium">Transcake create experiences bringing true
                         human value into society standing out of the crowd.</p>
