@@ -445,7 +445,7 @@
                         CẢ MỘT CUỐC XE</span>
                     <h2
                         class="text-4xl md:text-5xl lg:text-6xl font-black text-[#1e293b] leading-[1.2] font-['Playfair_Display']">
-                        Chúng tôi kiến tạo <span class="text-[#6200EE]">hạ tầng niềm tin</span><br
+                        Chúng tôi kiến tạo <span class="text-[#6200EE]">hạ tầng</span><br
                             class="hidden md:block" /> và kết nối cộng đồng.
                     </h2>
                 </div>
