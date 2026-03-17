@@ -369,112 +369,112 @@
 
 
 
-        <!-- Trust Ticker Marquee -->
-        <section
-            class="w-full bg-[#f8f9fa] border-y border-slate-200 overflow-hidden flex items-center justify-center py-10 sm:py-16 md:py-24 lg:py-32"
-            style="mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);">
-            <style>
-                @keyframes ticker-scroll {
-                    0% {
-                        transform: translateX(0);
-                    }
+<%--        <!-- Trust Ticker Marquee -->--%>
+<%--        <section--%>
+<%--            class="w-full bg-[#f8f9fa] border-y border-slate-200 overflow-hidden flex items-center justify-center py-10 sm:py-16 md:py-24 lg:py-32"--%>
+<%--            style="mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);">--%>
+<%--            <style>--%>
+<%--                @keyframes ticker-scroll {--%>
+<%--                    0% {--%>
+<%--                        transform: translateX(0);--%>
+<%--                    }--%>
 
-                    100% {
-                        transform: translateX(-33.3333%);
-                    }
-                }
+<%--                    100% {--%>
+<%--                        transform: translateX(-33.3333%);--%>
+<%--                    }--%>
+<%--                }--%>
 
-                .ticker-track {
-                    display: flex;
-                    width: max-content;
-                    animation: ticker-scroll 60s linear infinite;
-                }
+<%--                .ticker-track {--%>
+<%--                    display: flex;--%>
+<%--                    width: max-content;--%>
+<%--                    animation: ticker-scroll 60s linear infinite;--%>
+<%--                }--%>
 
-                .ticker-track:hover {
-                    animation-play-state: paused;
-                }
+<%--                .ticker-track:hover {--%>
+<%--                    animation-play-state: paused;--%>
+<%--                }--%>
 
-                .ticker-item {
-                    display: flex;
-                    align-items: center;
-                    white-space: nowrap;
-                    font-family: 'Playfair Display', serif;
-                    font-size: clamp(3rem, 6vw, 5rem);
-                    font-weight: 800;
-                    letter-spacing: -0.02em;
-                    text-transform: uppercase;
-                    color: #1e293b;
-                    padding: 0 1.5rem;
-                }
+<%--                .ticker-item {--%>
+<%--                    display: flex;--%>
+<%--                    align-items: center;--%>
+<%--                    white-space: nowrap;--%>
+<%--                    font-family: 'Playfair Display', serif;--%>
+<%--                    font-size: clamp(3rem, 6vw, 5rem);--%>
+<%--                    font-weight: 800;--%>
+<%--                    letter-spacing: -0.02em;--%>
+<%--                    text-transform: uppercase;--%>
+<%--                    color: #1e293b;--%>
+<%--                    padding: 0 1.5rem;--%>
+<%--                }--%>
 
-                .ticker-item-outline {
-                    color: transparent;
-                    -webkit-text-stroke: 2px #1e293b;
-                    opacity: 0.85;
-                    margin-right: 0.5rem;
-                }
+<%--                .ticker-item-outline {--%>
+<%--                    color: transparent;--%>
+<%--                    -webkit-text-stroke: 2px #1e293b;--%>
+<%--                    opacity: 0.85;--%>
+<%--                    margin-right: 0.5rem;--%>
+<%--                }--%>
 
-                .ticker-item-italic {
-                    font-family: 'Playfair Display', serif;
-                    font-style: italic;
-                    font-weight: 600;
-                    color: #6200EE;
-                    text-transform: lowercase;
-                    margin-left: 0.8rem;
-                    opacity: 0.9;
-                }
+<%--                .ticker-item-italic {--%>
+<%--                    font-family: 'Playfair Display', serif;--%>
+<%--                    font-style: italic;--%>
+<%--                    font-weight: 600;--%>
+<%--                    color: #6200EE;--%>
+<%--                    text-transform: lowercase;--%>
+<%--                    margin-left: 0.8rem;--%>
+<%--                    opacity: 0.9;--%>
+<%--                }--%>
 
-                .ticker-dot {
-                    display: inline-block;
-                    width: clamp(10px, 1.5vw, 16px);
-                    height: clamp(10px, 1.5vw, 16px);
-                    border-radius: 50%;
-                    background-color: #6200EE;
-                    margin: 0 1.5rem;
-                    flex-shrink: 0;
-                }
-            </style>
-            <div class="ticker-track" aria-label="Trust signals">
-                <!-- Set 1 -->
-                <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực eKYC</span></span><span
-                    class="ticker-dot"></span>
-                <%-- <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span--%>
-                        <%-- class="ticker-dot"></span>--%>
-                            <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh
-                                    bạch</span></span><span class="ticker-dot"></span>
-                            <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span> CÙNG TẦN
-                                SỐ</span><span class="ticker-dot"></span>
-                            <span class="ticker-item">HỖ TRỢ <span class="ticker-item-italic">khẩn cấp
-                                    24/7</span></span><span class="ticker-dot"></span>
-                            <!-- Set 2 (duplicate for seamless loop) -->
-                            <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực
-                                    eKYC</span></span><span class="ticker-dot"></span>
-                            <%-- <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN
-                                TẢNG</span><span--%>
-                                    <%-- class="ticker-dot"></span>--%>
-                                        <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh
-                                                bạch</span></span><span class="ticker-dot"></span>
-                                        <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span>
-                                            CÙNG TẦN SỐ</span><span class="ticker-dot"></span>
-                                        <span class="ticker-item">HỖ TRỢ <span class="ticker-item-italic">khẩn cấp
-                                                24/7</span></span><span class="ticker-dot"></span>
-                                        <!-- Set 3 (duplicate for seamless loop) -->
-                                        <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực
-                                                eKYC</span></span><span class="ticker-dot"></span>
-                                        <%-- <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ
-                                            NỀN TẢNG</span><span--%>
-                                                <%-- class="ticker-dot"></span>--%>
-                                                    <span class="ticker-item">GIÁ CƯỚC <span
-                                                            class="ticker-item-italic">minh bạch</span></span><span
-                                                        class="ticker-dot"></span>
-                                                    <span class="ticker-item"><span class="ticker-item-outline">GHÉP
-                                                            CHUYẾN</span> CÙNG TẦN SỐ</span><span
-                                                        class="ticker-dot"></span>
-                                                    <span class="ticker-item">HỖ TRỢ <span
-                                                            class="ticker-item-italic">khẩn cấp 24/7</span></span><span
-                                                        class="ticker-dot"></span>
-            </div>
-        </section>
+<%--                .ticker-dot {--%>
+<%--                    display: inline-block;--%>
+<%--                    width: clamp(10px, 1.5vw, 16px);--%>
+<%--                    height: clamp(10px, 1.5vw, 16px);--%>
+<%--                    border-radius: 50%;--%>
+<%--                    background-color: #6200EE;--%>
+<%--                    margin: 0 1.5rem;--%>
+<%--                    flex-shrink: 0;--%>
+<%--                }--%>
+<%--            </style>--%>
+<%--&lt;%&ndash;            <div class="ticker-track" aria-label="Trust signals">&ndash;%&gt;--%>
+<%--&lt;%&ndash;                <!-- Set 1 -->&ndash;%&gt;--%>
+<%--&lt;%&ndash;                <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực eKYC</span></span><span&ndash;%&gt;--%>
+<%--&lt;%&ndash;                    class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                &lt;%&ndash; <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span&ndash;%&gt;&ndash;%&gt;--%>
+<%--&lt;%&ndash;                        &lt;%&ndash; class="ticker-dot"></span>&ndash;%&gt;&ndash;%&gt;--%>
+<%--&lt;%&ndash;                            <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                    bạch</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                            <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span> CÙNG TẦN&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                SỐ</span><span class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                            <span class="ticker-item">HỖ TRỢ <span class="ticker-item-italic">khẩn cấp&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                    24/7</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                            <!-- Set 2 (duplicate for seamless loop) -->&ndash;%&gt;--%>
+<%--&lt;%&ndash;                            <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                    eKYC</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                            &lt;%&ndash; <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                TẢNG</span><span&ndash;%&gt;&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                    &lt;%&ndash; class="ticker-dot"></span>&ndash;%&gt;&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                        <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                bạch</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                        <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                            CÙNG TẦN SỐ</span><span class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                        <span class="ticker-item">HỖ TRỢ <span class="ticker-item-italic">khẩn cấp&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                24/7</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                        <!-- Set 3 (duplicate for seamless loop) -->&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                        <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                eKYC</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                        &lt;%&ndash; <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                            NỀN TẢNG</span><span&ndash;%&gt;&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                &lt;%&ndash; class="ticker-dot"></span>&ndash;%&gt;&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                    <span class="ticker-item">GIÁ CƯỚC <span&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                            class="ticker-item-italic">minh bạch</span></span><span&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                        class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                    <span class="ticker-item"><span class="ticker-item-outline">GHÉP&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                            CHUYẾN</span> CÙNG TẦN SỐ</span><span&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                        class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                    <span class="ticker-item">HỖ TRỢ <span&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                            class="ticker-item-italic">khẩn cấp 24/7</span></span><span&ndash;%&gt;--%>
+<%--&lt;%&ndash;                                                        class="ticker-dot"></span>&ndash;%&gt;--%>
+<%--&lt;%&ndash;            </div>&ndash;%&gt;--%>
+<%--        </section>--%>
 
 
 
