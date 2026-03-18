@@ -510,7 +510,6 @@
                         kết nối cộng đồng.
                     </h2>
                 </div>
-
                 <!-- 2. The Creative Core (Collage Container) -->
                 <div class="relative w-full max-w-6xl mx-auto">
 
