@@ -179,7 +179,8 @@
     <body class="font-sans antialiased bg-[#fcfcfd] text-slate-800 overflow-x-hidden">
 
         <!-- Navbar -->
-        <header id="main-header" class="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 md:px-8 py-2 sm:py-3 pointer-events-none">
+        <header id="main-header"
+            class="fixed top-0 left-0 right-0 z-50 px-3 sm:px-4 md:px-8 py-2 sm:py-3 pointer-events-none">
             <nav class="max-w-7xl mx-auto mockup-glass rounded-full px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 flex items-center justify-between shadow-md pointer-events-auto"
                 id="navbar">
                 <div class="flex items-center relative h-6 w-24 sm:w-32">
@@ -204,26 +205,40 @@
                         Tải ứng dụng
                     </button>
                     <!-- Hamburger Menu Button (Mobile) -->
-                    <button id="mobile-menu-btn" class="lg:hidden flex flex-col gap-1.5 p-2 rounded-xl hover:bg-white/30 transition-colors" aria-label="Menu">
-                        <span class="block w-5 h-0.5 bg-slate-700 rounded-full transition-all duration-300" id="burger-line-1"></span>
-                        <span class="block w-5 h-0.5 bg-slate-700 rounded-full transition-all duration-300" id="burger-line-2"></span>
-                        <span class="block w-3.5 h-0.5 bg-slate-700 rounded-full transition-all duration-300" id="burger-line-3"></span>
+                    <button id="mobile-menu-btn"
+                        class="lg:hidden flex flex-col gap-1.5 p-2 rounded-xl hover:bg-white/30 transition-colors"
+                        aria-label="Menu">
+                        <span class="block w-5 h-0.5 bg-slate-700 rounded-full transition-all duration-300"
+                            id="burger-line-1"></span>
+                        <span class="block w-5 h-0.5 bg-slate-700 rounded-full transition-all duration-300"
+                            id="burger-line-2"></span>
+                        <span class="block w-3.5 h-0.5 bg-slate-700 rounded-full transition-all duration-300"
+                            id="burger-line-3"></span>
                     </button>
                 </div>
             </nav>
             <!-- Mobile Menu Drawer -->
-            <div id="mobile-menu" class="lg:hidden pointer-events-auto fixed inset-0 z-[100] translate-x-full transition-transform duration-300 ease-in-out">
+            <div id="mobile-menu"
+                class="lg:hidden pointer-events-auto fixed inset-0 z-[100] translate-x-full transition-transform duration-300 ease-in-out">
                 <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" id="mobile-menu-overlay"></div>
-                <div class="absolute right-0 top-0 h-full w-72 sm:w-80 bg-white/95 backdrop-blur-2xl shadow-2xl p-8 pt-20 flex flex-col gap-2">
-                    <button id="mobile-menu-close" class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
+                <div
+                    class="absolute right-0 top-0 h-full w-72 sm:w-80 bg-white/95 backdrop-blur-2xl shadow-2xl p-8 pt-20 flex flex-col gap-2">
+                    <button id="mobile-menu-close"
+                        class="absolute top-5 right-5 w-10 h-10 flex items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
                         <span class="material-symbols-outlined text-slate-600">close</span>
                     </button>
-                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100" href="#about" onclick="closeMobileMenu()">Về chúng tôi</a>
-                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100" href="#features" onclick="closeMobileMenu()">Tính năng</a>
-                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100" href="#how-it-works" onclick="closeMobileMenu()">Hướng dẫn</a>
-                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100" href="#pricing" onclick="closeMobileMenu()">Bảng giá</a>
-                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100" href="#contact" onclick="closeMobileMenu()">Contact us</a>
-                    <button class="mt-6 bg-accent text-white px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40 w-full">
+                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100"
+                        href="#about" onclick="closeMobileMenu()">Về chúng tôi</a>
+                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100"
+                        href="#features" onclick="closeMobileMenu()">Tính năng</a>
+                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100"
+                        href="#how-it-works" onclick="closeMobileMenu()">Hướng dẫn</a>
+                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100"
+                        href="#pricing" onclick="closeMobileMenu()">Bảng giá</a>
+                    <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100"
+                        href="#contact" onclick="closeMobileMenu()">Contact us</a>
+                    <button
+                        class="mt-6 bg-accent text-white px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40 w-full">
                         Tải ứng dụng
                     </button>
                 </div>
@@ -260,32 +275,39 @@
             <div class="absolute bottom-[28%] left-[22%] z-20 float-3 text-2xl pointer-events-none select-none hidden md:block"
                 style="filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));">&#127936;</div>
             <div class="absolute bottom-[16%] left-[28%] z-20 float-4 hidden md:block">
-                <div class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
+                <div
+                    class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
                     <span class="text-base">&#127925;</span>
                     <span class="text-white font-bold text-sm tracking-wide">Music</span>
                 </div>
             </div>
             <div class="absolute top-[22%] right-[20%] z-20 float-2 hidden md:block">
-                <div class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
+                <div
+                    class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
                     <span class="text-base">&#127925;</span>
                     <span class="text-white font-bold text-sm tracking-wide">Music</span>
                 </div>
             </div>
             <div class="absolute bottom-[16%] right-[26%] z-20 float-3 hidden md:block">
-                <div class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
+                <div
+                    class="flex items-center gap-2 bg-[#2a1a4e]/80 backdrop-blur-md border border-purple-500/30 px-5 py-2.5 rounded-full shadow-lg shadow-purple-900/40">
                     <span class="text-base">&#128187;</span>
                     <span class="text-white font-bold text-sm tracking-wide">Tech</span>
                 </div>
             </div>
-            <div class="absolute bottom-[20%] right-[14%] z-20 float-1 text-white/60 text-xl pointer-events-none hidden sm:block">
+            <div
+                class="absolute bottom-[20%] right-[14%] z-20 float-1 text-white/60 text-xl pointer-events-none hidden sm:block">
                 &#10022;</div>
-            <div class="absolute top-[40%] left-[10%] z-20 float-3 text-white/40 text-base pointer-events-none hidden sm:block">&#10022;
+            <div
+                class="absolute top-[40%] left-[10%] z-20 float-3 text-white/40 text-base pointer-events-none hidden sm:block">
+                &#10022;
             </div>
 
             <!-- ===== MOBILE-ONLY Decorations ===== -->
             <!-- Glowing gradient ring behind card -->
             <div class="absolute z-20 w-[320px] h-[320px] rounded-full pointer-events-none md:hidden"
-                style="background: conic-gradient(from 0deg, rgba(98,0,238,0.3), rgba(255,109,0,0.2), rgba(98,0,238,0.3)); filter: blur(50px); animation: spin 20s linear infinite;"></div>
+                style="background: conic-gradient(from 0deg, rgba(98,0,238,0.3), rgba(255,109,0,0.2), rgba(98,0,238,0.3)); filter: blur(50px); animation: spin 20s linear infinite;">
+            </div>
             <!-- Mobile floating pills (smaller, repositioned) -->
             <div class="absolute top-[15%] left-[5%] z-20 float-1 md:hidden pointer-events-none">
                 <div class="bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1.5 rounded-full shadow-lg">
@@ -303,22 +325,32 @@
                 </div>
             </div>
             <div class="absolute bottom-[18%] right-[10%] z-20 float-4 md:hidden pointer-events-none">
-                <div class="bg-[#6200EE]/30 backdrop-blur-md border border-purple-400/20 px-3 py-1.5 rounded-full shadow-lg">
+                <div
+                    class="bg-[#6200EE]/30 backdrop-blur-md border border-purple-400/20 px-3 py-1.5 rounded-full shadow-lg">
                     <span class="text-white font-bold text-[10px] tracking-wide">&#10024; Transcake</span>
                 </div>
             </div>
             <!-- Small sparkle dots for mobile -->
-            <div class="absolute top-[30%] left-[15%] z-20 w-1.5 h-1.5 bg-white/40 rounded-full float-1 md:hidden pointer-events-none"></div>
-            <div class="absolute top-[25%] right-[18%] z-20 w-1 h-1 bg-purple-300/50 rounded-full float-2 md:hidden pointer-events-none"></div>
-            <div class="absolute bottom-[30%] left-[25%] z-20 w-2 h-2 bg-orange-300/30 rounded-full float-3 md:hidden pointer-events-none"></div>
-            <div class="absolute bottom-[35%] right-[20%] z-20 w-1 h-1 bg-white/50 rounded-full float-4 md:hidden pointer-events-none"></div>
+            <div
+                class="absolute top-[30%] left-[15%] z-20 w-1.5 h-1.5 bg-white/40 rounded-full float-1 md:hidden pointer-events-none">
+            </div>
+            <div
+                class="absolute top-[25%] right-[18%] z-20 w-1 h-1 bg-purple-300/50 rounded-full float-2 md:hidden pointer-events-none">
+            </div>
+            <div
+                class="absolute bottom-[30%] left-[25%] z-20 w-2 h-2 bg-orange-300/30 rounded-full float-3 md:hidden pointer-events-none">
+            </div>
+            <div
+                class="absolute bottom-[35%] right-[20%] z-20 w-1 h-1 bg-white/50 rounded-full float-4 md:hidden pointer-events-none">
+            </div>
 
             <!-- CENTER CARD (dark glassmorphism) -->
             <div class="relative z-30 mx-4 sm:mx-auto text-center px-5 sm:px-8 md:px-10 py-8 sm:py-10 md:py-12 max-w-xl"
                 style="background: rgba(98, 0, 238, 0.35); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(180, 140, 255, 0.2); border-radius: 1.5rem; box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);">
                 <!-- Mobile-only top badge -->
                 <div class="md:hidden flex justify-center mb-4">
-                    <span class="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full">
+                    <span
+                        class="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm border border-white/20 text-white/90 text-[10px] font-bold uppercase tracking-[0.2em] px-4 py-1.5 rounded-full">
                         <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
                         Ride Hailing mới
                     </span>
@@ -351,133 +383,27 @@
                 </div>
                 <!-- Mobile-only trust badges -->
                 <div class="md:hidden flex flex-wrap justify-center gap-2 mt-5 pt-4 border-t border-white/10">
-                    <span class="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-semibold px-2.5 py-1 rounded-full">
-                        <span class="material-symbols-outlined text-green-400 text-[12px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                    <span
+                        class="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-semibold px-2.5 py-1 rounded-full">
+                        <span class="material-symbols-outlined text-green-400 text-[12px]"
+                            style="font-variation-settings: 'FILL' 1;">verified_user</span>
                         eKYC 100%
                     </span>
-                    <span class="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-semibold px-2.5 py-1 rounded-full">
-                        <span class="material-symbols-outlined text-orange-400 text-[12px]" style="font-variation-settings: 'FILL' 1;">shield</span>
+                    <span
+                        class="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-semibold px-2.5 py-1 rounded-full">
+                        <span class="material-symbols-outlined text-orange-400 text-[12px]"
+                            style="font-variation-settings: 'FILL' 1;">shield</span>
                         An toàn
                     </span>
-                    <span class="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-semibold px-2.5 py-1 rounded-full">
-                        <span class="material-symbols-outlined text-purple-300 text-[12px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                    <span
+                        class="inline-flex items-center gap-1 bg-white/10 text-white/80 text-[10px] font-semibold px-2.5 py-1 rounded-full">
+                        <span class="material-symbols-outlined text-purple-300 text-[12px]"
+                            style="font-variation-settings: 'FILL' 1;">favorite</span>
                         Ghép chuyến
                     </span>
                 </div>
             </div>
         </section>
-
-
-
-<%--        <!-- Trust Ticker Marquee -->--%>
-<%--        <section--%>
-<%--            class="w-full bg-[#f8f9fa] border-y border-slate-200 overflow-hidden flex items-center justify-center py-10 sm:py-16 md:py-24 lg:py-32"--%>
-<%--            style="mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);">--%>
-<%--            <style>--%>
-<%--                @keyframes ticker-scroll {--%>
-<%--                    0% {--%>
-<%--                        transform: translateX(0);--%>
-<%--                    }--%>
-
-<%--                    100% {--%>
-<%--                        transform: translateX(-33.3333%);--%>
-<%--                    }--%>
-<%--                }--%>
-
-<%--                .ticker-track {--%>
-<%--                    display: flex;--%>
-<%--                    width: max-content;--%>
-<%--                    animation: ticker-scroll 60s linear infinite;--%>
-<%--                }--%>
-
-<%--                .ticker-track:hover {--%>
-<%--                    animation-play-state: paused;--%>
-<%--                }--%>
-
-<%--                .ticker-item {--%>
-<%--                    display: flex;--%>
-<%--                    align-items: center;--%>
-<%--                    white-space: nowrap;--%>
-<%--                    font-family: 'Playfair Display', serif;--%>
-<%--                    font-size: clamp(3rem, 6vw, 5rem);--%>
-<%--                    font-weight: 800;--%>
-<%--                    letter-spacing: -0.02em;--%>
-<%--                    text-transform: uppercase;--%>
-<%--                    color: #1e293b;--%>
-<%--                    padding: 0 1.5rem;--%>
-<%--                }--%>
-
-<%--                .ticker-item-outline {--%>
-<%--                    color: transparent;--%>
-<%--                    -webkit-text-stroke: 2px #1e293b;--%>
-<%--                    opacity: 0.85;--%>
-<%--                    margin-right: 0.5rem;--%>
-<%--                }--%>
-
-<%--                .ticker-item-italic {--%>
-<%--                    font-family: 'Playfair Display', serif;--%>
-<%--                    font-style: italic;--%>
-<%--                    font-weight: 600;--%>
-<%--                    color: #6200EE;--%>
-<%--                    text-transform: lowercase;--%>
-<%--                    margin-left: 0.8rem;--%>
-<%--                    opacity: 0.9;--%>
-<%--                }--%>
-
-<%--                .ticker-dot {--%>
-<%--                    display: inline-block;--%>
-<%--                    width: clamp(10px, 1.5vw, 16px);--%>
-<%--                    height: clamp(10px, 1.5vw, 16px);--%>
-<%--                    border-radius: 50%;--%>
-<%--                    background-color: #6200EE;--%>
-<%--                    margin: 0 1.5rem;--%>
-<%--                    flex-shrink: 0;--%>
-<%--                }--%>
-<%--            </style>--%>
-<%--&lt;%&ndash;            <div class="ticker-track" aria-label="Trust signals">&ndash;%&gt;--%>
-<%--&lt;%&ndash;                <!-- Set 1 -->&ndash;%&gt;--%>
-<%--&lt;%&ndash;                <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực eKYC</span></span><span&ndash;%&gt;--%>
-<%--&lt;%&ndash;                    class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                &lt;%&ndash; <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN TẢNG</span><span&ndash;%&gt;&ndash;%&gt;--%>
-<%--&lt;%&ndash;                        &lt;%&ndash; class="ticker-dot"></span>&ndash;%&gt;&ndash;%&gt;--%>
-<%--&lt;%&ndash;                            <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                    bạch</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                            <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span> CÙNG TẦN&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                SỐ</span><span class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                            <span class="ticker-item">HỖ TRỢ <span class="ticker-item-italic">khẩn cấp&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                    24/7</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                            <!-- Set 2 (duplicate for seamless loop) -->&ndash;%&gt;--%>
-<%--&lt;%&ndash;                            <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                    eKYC</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                            &lt;%&ndash; <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ NỀN&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                TẢNG</span><span&ndash;%&gt;&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                    &lt;%&ndash; class="ticker-dot"></span>&ndash;%&gt;&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                        <span class="ticker-item">GIÁ CƯỚC <span class="ticker-item-italic">minh&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                bạch</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                        <span class="ticker-item"><span class="ticker-item-outline">GHÉP CHUYẾN</span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                            CÙNG TẦN SỐ</span><span class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                        <span class="ticker-item">HỖ TRỢ <span class="ticker-item-italic">khẩn cấp&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                24/7</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                        <!-- Set 3 (duplicate for seamless loop) -->&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                        <span class="ticker-item">100% TÀI XẾ <span class="ticker-item-italic">xác thực&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                eKYC</span></span><span class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                        &lt;%&ndash; <span class="ticker-item"><span class="ticker-item-outline">0Đ</span> PHÍ&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                            NỀN TẢNG</span><span&ndash;%&gt;&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                &lt;%&ndash; class="ticker-dot"></span>&ndash;%&gt;&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                    <span class="ticker-item">GIÁ CƯỚC <span&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                            class="ticker-item-italic">minh bạch</span></span><span&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                        class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                    <span class="ticker-item"><span class="ticker-item-outline">GHÉP&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                            CHUYẾN</span> CÙNG TẦN SỐ</span><span&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                        class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                    <span class="ticker-item">HỖ TRỢ <span&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                            class="ticker-item-italic">khẩn cấp 24/7</span></span><span&ndash;%&gt;--%>
-<%--&lt;%&ndash;                                                        class="ticker-dot"></span>&ndash;%&gt;--%>
-<%--&lt;%&ndash;            </div>&ndash;%&gt;--%>
-<%--        </section>--%>
-
-
-
 
         <!-- SVG Wave Divider -->
         <div class="relative w-full overflow-hidden leading-none z-10 -mt-2" style="transform: rotate(180deg);">
@@ -537,7 +463,8 @@
                     </svg>
 
                     <!-- Block 1: Vibe Matching -->
-                    <div class="relative flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12 mb-16 sm:mb-24 lg:mb-32 z-10">
+                    <div
+                        class="relative flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12 mb-16 sm:mb-24 lg:mb-32 z-10">
                         <div class="relative w-full lg:w-1/2 group">
                             <!-- Image -->
                             <div
@@ -574,7 +501,9 @@
                             </div>
                         </div>
                         <div class="w-full lg:w-1/2 lg:pl-16 mt-12 sm:mt-14 lg:mt-0">
-                            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 mb-4 sm:mb-6 font-['Playfair_Display']">Cá nhân hóa
+                            <h3
+                                class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 mb-4 sm:mb-6 font-['Playfair_Display']">
+                                Cá nhân hóa
                                 <span class="italic text-[#FF6D00]">trải nghiệm</span>
                             </h3>
                             <p class="text-base sm:text-lg text-slate-600 leading-[1.8] font-medium">
@@ -585,10 +514,13 @@
                     </div>
 
                     <!-- Block 2: Trust Infrastructure -->
-                    <div class="relative flex flex-col-reverse lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12 mb-16 sm:mb-24 lg:mb-32 z-10">
+                    <div
+                        class="relative flex flex-col-reverse lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12 mb-16 sm:mb-24 lg:mb-32 z-10">
                         <div class="w-full lg:w-1/2 lg:pr-16 text-left lg:text-right mt-6 sm:mt-8 lg:mt-0">
-                            <h3 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 mb-4 sm:mb-6 font-['Playfair_Display']"><span
-                                    class="italic text-[#6200EE]">An tâm</span> tuyệt đối</h3>
+                            <h3
+                                class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 mb-4 sm:mb-6 font-['Playfair_Display']">
+                                <span class="italic text-[#6200EE]">An tâm</span> tuyệt đối
+                            </h3>
                             <p class="text-base sm:text-lg text-slate-600 leading-[1.8] font-medium">
                                 Với hệ thống xác thực danh tính 100%, đánh giá chéo 2 chiều và cảnh báo lệch lộ trình,
                                 sự an toàn của bạn là tiêu chuẩn bắt buộc.
@@ -689,7 +621,9 @@
                             </div>
                         </div>
                         <div class="w-full lg:w-7/12 lg:pl-24 mt-12 sm:mt-14 lg:mt-0 text-left">
-                            <h3 class="text-2xl sm:text-3xl md:text-4xl font-black text-[#6200EE] mb-4 sm:mb-6 font-['Playfair_Display']">Nhật ký hành
+                            <h3
+                                class="text-2xl sm:text-3xl md:text-4xl font-black text-[#6200EE] mb-4 sm:mb-6 font-['Playfair_Display']">
+                                Nhật ký hành
                                 trình</h3>
                             <p class="text-base sm:text-lg text-slate-600 leading-[1.8] font-medium">
                                 Chia sẻ trải nghiệm, đánh giá chuyến đi và lưu giữ những khoảnh khắc đáng nhớ trên mọi
@@ -708,7 +642,9 @@
             <div class="max-w-7xl mx-auto px-4 md:px-8">
                 <!-- Header -->
                 <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-12 md:mb-16">
-                    <span class="block text-[#FF6D00] text-xs sm:text-sm font-bold uppercase tracking-widest mb-3 sm:mb-4">Khám phá
+                    <span
+                        class="block text-[#FF6D00] text-xs sm:text-sm font-bold uppercase tracking-widest mb-3 sm:mb-4">Khám
+                        phá
                         Transcake</span>
                     <h2
                         class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-[#6200EE] leading-tight font-['Playfair_Display']">
@@ -955,10 +891,14 @@
                             class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 01</span>
-                            <h3 class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">Tải ứng dụng &
+                            <h3
+                                class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">
+                                Tải ứng dụng &
                                 <span class="text-[#6200EE]">Xác thực eKYC.</span>
                             </h3>
-                            <p class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">Mở cổng an toàn. Đăng
+                            <p
+                                class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">
+                                Mở cổng an toàn. Đăng
                                 ký và hoàn tất xác thực danh tính bằng CCCD trong 30 giây để đảm bảo cộng đồng di chuyển
                                 tin cậy.</p>
                         </div>
@@ -967,10 +907,14 @@
                             class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 02</span>
-                            <h3 class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">Đặt chuyến &
+                            <h3
+                                class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">
+                                Đặt chuyến &
                                 <span class="text-[#6200EE]">Chọn tần số.</span>
                             </h3>
-                            <p class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">Nhập điểm đến và lọc
+                            <p
+                                class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">
+                                Nhập điểm đến và lọc
                                 các thẻ sở thích (Âm nhạc, Công nghệ) để hệ thống ghép bạn với "Soulmate" phù hợp nhất.
                             </p>
                         </div>
@@ -979,10 +923,14 @@
                             class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 03</span>
-                            <h3 class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">Tận hưởng
+                            <h3
+                                class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">
+                                Tận hưởng
                                 <span class="text-[#6200EE]">Hành trình.</span>
                             </h3>
-                            <p class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">Theo dõi GPS thời
+                            <p
+                                class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">
+                                Theo dõi GPS thời
                                 gian thực và trải nghiệm kết nối thú vị với những người bạn mới cùng lộ trình.</p>
                         </div>
                         <!-- Step 4 Text -->
@@ -990,10 +938,14 @@
                             class="absolute inset-0 flex flex-col justify-center opacity-0 translate-y-10">
                             <span class="text-orange-500 font-black text-xs uppercase tracking-widest mb-4">Bước
                                 04</span>
-                            <h3 class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">Thanh toán &
+                            <h3
+                                class="text-2xl sm:text-3xl md:text-6xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">
+                                Thanh toán &
                                 <span class="text-[#6200EE]">Đánh giá.</span>
                             </h3>
-                            <p class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">Tự động tất toán minh
+                            <p
+                                class="text-slate-500 text-sm sm:text-base md:text-lg font-medium max-w-md leading-relaxed">
+                                Tự động tất toán minh
                                 bạch. Chấm điểm uy tín để cùng xây dựng văn hóa di chuyển văn minh của Transcake.</p>
                         </div>
                     </div>
@@ -1260,113 +1212,123 @@
                         Lựa chọn hành trình theo cách của bạn.
                     </h2>
 
-                    <!-- Toggle Switch -->
+                    <!-- Toggle Switch (Top Center) -->
                     <div class="flex items-center justify-center gap-4 text-sm font-semibold select-none">
-                        <span class="text-slate-900" id="label-monthly">Gói Tháng</span>
+                        <span class="text-slate-900 transition-colors" id="label-monthly">Gói Tháng</span>
                         <button id="billing-toggle"
                             class="w-14 h-8 bg-slate-200 rounded-full relative transition-colors duration-300 focus:outline-none">
                             <div id="toggle-circle"
                                 class="w-6 h-6 bg-white rounded-full absolute top-1 left-1 shadow-md transition-transform duration-300">
                             </div>
                         </button>
-                        <span class="text-slate-500" id="label-yearly">Gói Năm <span
-                                class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full ml-1">Tiết kiệm
-                                30%</span></span>
+                        <span class="text-slate-500 transition-colors" id="label-yearly">Gói Năm <span
+                                class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full ml-1 font-bold">Tiết kiệm 20%</span></span>
                     </div>
                 </div>
 
-                <!-- Passenger Pricing (B2C) -->
+                <!-- Pricing Cards Container -->
                 <div class="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto mb-20 relative z-10">
 
-                    <!-- Basic Plan -->
+                    <!-- Card 1 - Transcake Standard (Left) -->
                     <div
-                        class="bg-white border border-slate-200 rounded-[2rem] p-8 md:p-10 flex flex-col hover:shadow-xl transition-shadow duration-300 self-center">
-                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Transcake Freemium</h3>
-                        <p class="text-slate-500 text-sm mb-6 h-10">Dành cho nhu cầu di chuyển cơ bản.</p>
-                        <div class="text-4xl font-black text-slate-900 mb-8 pb-8 border-b border-slate-100">
-                            <span class="text-lg text-slate-500 font-medium">miễn phí</span>
+                        class="bg-white border border-slate-200 rounded-[2rem] p-8 md:p-10 flex flex-col hover:shadow-xl transition-shadow duration-300">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Transcake Standard</h3>
+                        <p class="text-slate-500 text-sm mb-6 h-10">Dành cho nhu cầu di chuyển an toàn và kết nối cơ bản.</p>
+                        
+                        <div class="text-4xl font-black text-slate-900 mb-8 pb-8 border-b border-slate-100 flex items-baseline gap-1 relative overflow-hidden h-[80px]">
+                            <!-- Standard Monthly Price -->
+                            <div id="price-standard-monthly" class="absolute top-0 left-0 transition-all duration-500 ease-in-out">
+                                49.000 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
+                            </div>
+                            <!-- Standard Yearly Price -->
+                            <div id="price-standard-yearly" class="absolute top-[100%] left-0 transition-all duration-500 ease-in-out opacity-0">
+                                469.000 <span class="text-lg text-slate-500 font-medium">VNĐ / năm</span>
+                            </div>
                         </div>
+
                         <ul class="space-y-4 mb-10 flex-1">
                             <li class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
-                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Đặt xe, ghép chuyến theo nhu cầu.</span>
+                                <div class="w-5 h-5 rounded-full border-2 border-[#6200EE] flex items-center justify-center shrink-0 mt-0.5">
+                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#6200EE] rotate-45 mb-1"></div>
+                                </div>
+                                <span class="text-slate-700 font-medium">Quyền truy cập mạng lưới đặt xe và ghép chuyến.</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
-                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Sử dụng mạng xã hội Transcake cơ
-                                    bản.</span>
+                                <div class="w-5 h-5 rounded-full border-2 border-[#6200EE] flex items-center justify-center shrink-0 mt-0.5">
+                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#6200EE] rotate-45 mb-1"></div>
+                                </div>
+                                <span class="text-slate-700 font-medium">Tham gia vào mạng lướt mạng xã hội Transcake cơ bản.</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-[#6200EE] text-xl shrink-0 mt-0.5"
-                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Đặt xe không cần cọc, thanh toán trực tiếp cho
-                                    tài xế.</span>
+                                <div class="w-5 h-5 rounded-full border-2 border-[#6200EE] flex items-center justify-center shrink-0 mt-0.5">
+                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#6200EE] rotate-45 mb-1"></div>
+                                </div>
+                                <span class="text-slate-700 font-medium">Đặt xe không cọc, thanh toán trực tiếp cho tài xế.</span>
                             </li>
                         </ul>
                         <a href="#"
-                            class="block w-full text-center py-4 rounded-xl border-2 border-slate-200 text-slate-700 font-bold hover:bg-slate-50 hover:border-slate-300 transition-all">
-                            Trải nghiệm miễn phí
+                            class="block w-full text-center py-4 rounded-xl border-2 border-[#6200EE] text-[#6200EE] font-bold hover:bg-purple-50 transition-all">
+                            Đăng ký Standard
                         </a>
                     </div>
 
-                    <!-- Pro Plan -->
+                    <!-- Card 2 - Transcake Pro (Right - Highlighted) -->
                     <div
-                        class="bg-white border-2 border-[#FF6D00] rounded-[2rem] p-8 md:p-10 flex flex-col relative shadow-[0_20px_50px_rgba(98,0,238,0.15)] md:scale-105 z-10">
+                        class="bg-white border-2 border-[#FF6D00] rounded-[2rem] p-8 md:p-10 flex flex-col relative shadow-[0_20px_50px_rgba(255,109,0,0.15)] md:scale-105 z-10 transition-transform duration-300">
                         <div
                             class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FF6D00] text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
-                            Phổ biến nhất
+                            PHỔ BIẾN NHẤT
                         </div>
-                        <h3 class="text-2xl font-bold text-[#6200EE] mb-2">Transcake Pro</h3>
-                        <p class="text-slate-500 text-sm mb-6 h-10">Dành cho trải nghiệm cá nhân hóa tối đa.</p>
-                        <div
-                            class="text-4xl font-black text-[#6200EE] mb-8 pb-8 border-b border-slate-100 flex items-baseline gap-1 relative overflow-hidden h-[90px]">
-                            <!-- Monthly Price -->
-                            <div id="price-pro-monthly"
-                                class="absolute top-0 left-0 transition-transform duration-500 ease-in-out">
-                                49.000 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
+                        <h3 class="text-2xl font-bold text-[#FF6D00] mb-2">Transcake Pro</h3>
+                        <p class="text-slate-500 text-sm mb-6 h-10">Dành cho trải nghiệm cá nhân hóa và mạng xã hội di chuyển.</p>
+
+                        <div class="text-4xl font-black text-[#FF6D00] mb-8 pb-8 border-b border-slate-100 flex items-baseline gap-1 relative overflow-hidden h-[80px]">
+                            <!-- Pro Monthly Price -->
+                            <div id="price-pro-monthly" class="absolute top-0 left-0 transition-all duration-500 ease-in-out">
+                                89.000 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
                             </div>
-                            <!-- Yearly Price -->
-                            <div id="price-pro-yearly"
-                                class="absolute top-[100%] left-0 transition-transform duration-500 ease-in-out opacity-0">
-                                449.000 <span class="text-lg text-slate-500 font-medium">VNĐ / năm</span>
+                            <!-- Pro Yearly Price -->
+                            <div id="price-pro-yearly" class="absolute top-[100%] left-0 transition-all duration-500 ease-in-out opacity-0">
+                                849.000 <span class="text-lg text-slate-500 font-medium">VNĐ / năm</span>
                             </div>
                         </div>
+
                         <ul class="space-y-4 mb-10 flex-1">
                             <li class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Toàn bộ đặc quyền của gói Basic.</span>
+                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
+                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
+                                </div>
+                                <span class="text-slate-700 font-medium">Toàn bộ đặc quyền của gói Standard.</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Ưu tiên ghép chuyến nhanh nhất.</span>
+                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
+                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
+                                </div>
+                                <span class="text-slate-700 font-medium">Ưu tiên ghép chuyến nhanh nhất.</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Vibe Matching: Chọn tài xế cùng sở
-                                    thích.</span>
+                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
+                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
+                                </div>
+                                <span class="text-slate-700 font-medium">Vibe Matching: Thuật toán chọn tài xế dựa trên thông tin cá nhân hóa</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Bộ lọc và tính năng an toàn: Gửi cảnh báo
-                                    cho người thân nếu đi sai lộ trình.</span>
+                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
+                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
+                                </div>
+                                <span class="text-slate-700 font-medium">Tính năng an toàn nâng cao: lựa chọn tài xế cùng giới tính & Tự động gửi cảnh báo cho người thân nếu đi sai lộ trình.</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Trải nghiệm giao diện ứng dụng cá nhân
-                                    hóa.</span>
+                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
+                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
+                                </div>
+                                <span class="text-slate-700 font-medium">Trải nghiệm không gian ứng dụng cá nhân hóa.</span>
                             </li>
                             <li class="flex items-start gap-3">
-                                <span class="material-symbols-outlined text-[#FF6D00] text-xl shrink-0 mt-0.5"
-                                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                                <span class="text-slate-700 font-medium">Bản đồ mạng xã hội chia sẻ vị trí thời
-                                    gian thực với bạn bè.</span>
+                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
+                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
+                                </div>
+                                <span class="text-slate-700 font-medium">Bản đồ mạng xã hội chia sẻ vị trí thời gian thực với bạn bè </span>
                             </li>
                         </ul>
                         <a href="#"
@@ -1374,17 +1336,11 @@
                             Nâng cấp Pro ngay
                         </a>
                     </div>
-
                 </div>
 
                 <!-- Driver Commission Banner (B2B/Partners) -->
                 <div
                     class="max-w-4xl mx-auto rounded-3xl p-8 md:p-10 relative overflow-hidden backdrop-blur-xl bg-purple-50/80 border border-purple-100 shadow-[0_10px_30px_rgba(98,0,238,0.05)] text-left">
-                    <!-- Watermark -->
-                    <span
-                        class="material-symbols-outlined absolute right-0 bottom-0 text-[200px] text-[#6200EE]/5 -z-10 translate-x-1/4 translate-y-1/4 select-none"
-                        style="font-variation-settings: 'FILL' 1;">shield</span>
-
                     <h3 class="text-2xl md:text-3xl font-bold text-[#6200EE] mb-8 max-w-2xl">
                         Dành cho Đối tác Tài xế: Tối đa thu nhập, An tâm cầm lái.
                     </h3>
@@ -1392,32 +1348,24 @@
                     <div class="grid md:grid-cols-2 gap-6 mb-8">
                         <!-- Xe Máy -->
                         <div class="bg-white/60 p-6 rounded-2xl border border-white">
-                            <div class="flex items-center gap-3 mb-3">
-                                <span class="material-symbols-outlined text-[#FF6D00] text-2xl">two_wheeler</span>
-                                <h4 class="font-bold text-slate-800 text-lg">Xe máy</h4>
-                            </div>
+                            <h4 class="font-bold text-slate-800 text-lg mb-2">Xe máy</h4>
                             <p class="text-slate-600 font-medium mb-3">
                                 Chiết khấu siêu thấp chỉ <strong>15%</strong><br>
                                 <span class="text-sm text-slate-500">(Tối thiểu 3.000 VNĐ/chuyến)</span>
                             </p>
-                            <p class="text-xs text-slate-500 flex items-start gap-1">
-                                <span class="material-symbols-outlined text-green-500 text-[14px]">security</span>
+                            <p class="text-xs text-slate-500">
                                 Đã bao gồm 1.000 VNĐ trích quỹ bảo hiểm phương tiện.
                             </p>
                         </div>
 
                         <!-- Ô Tô -->
                         <div class="bg-white/60 p-6 rounded-2xl border border-white">
-                            <div class="flex items-center gap-3 mb-3">
-                                <span class="material-symbols-outlined text-[#FF6D00] text-2xl">directions_car</span>
-                                <h4 class="font-bold text-slate-800 text-lg">Ô tô</h4>
-                            </div>
+                            <h4 class="font-bold text-slate-800 text-lg mb-2">Ô tô</h4>
                             <p class="text-slate-600 font-medium mb-3">
                                 Chiết khấu ưu đãi chỉ <strong>10%</strong><br>
                                 <span class="text-sm text-slate-500">(Tối thiểu 10.000 VNĐ/chuyến)</span>
                             </p>
-                            <p class="text-xs text-slate-500 flex items-start gap-1">
-                                <span class="material-symbols-outlined text-green-500 text-[14px]">security</span>
+                            <p class="text-xs text-slate-500">
                                 Đã bao gồm 2.000 VNĐ trích quỹ bảo hiểm phương tiện.
                             </p>
                         </div>
@@ -1426,8 +1374,6 @@
                     <a href="#"
                         class="inline-flex items-center gap-2 text-[#FF6D00] font-bold hover:text-[#E65C00] transition-colors group">
                         Xem chi tiết chính sách Tài xế
-                        <span
-                            class="material-symbols-outlined transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
                 </div>
 
@@ -1438,8 +1384,10 @@
                         const labelMonthly = document.getElementById('label-monthly');
                         const labelYearly = document.getElementById('label-yearly');
 
-                        const priceMonthly = document.getElementById('price-pro-monthly');
-                        const priceYearly = document.getElementById('price-pro-yearly');
+                        const priceStandardMonthly = document.getElementById('price-standard-monthly');
+                        const priceStandardYearly = document.getElementById('price-standard-yearly');
+                        const priceProMonthly = document.getElementById('price-pro-monthly');
+                        const priceProYearly = document.getElementById('price-pro-yearly');
 
                         let isYearly = false;
 
@@ -1456,11 +1404,17 @@
                                 labelYearly.classList.remove('text-slate-500');
                                 labelYearly.classList.add('text-slate-900');
 
-                                priceMonthly.style.transform = 'translateY(-100%)';
-                                priceMonthly.style.opacity = '0';
+                                // Standard Price Animation
+                                priceStandardMonthly.style.transform = 'translateY(-100%)';
+                                priceStandardMonthly.style.opacity = '0';
+                                priceStandardYearly.style.transform = 'translateY(-100%)';
+                                priceStandardYearly.style.opacity = '1';
 
-                                priceYearly.style.transform = 'translateY(-100%)';
-                                priceYearly.style.opacity = '1';
+                                // Pro Price Animation
+                                priceProMonthly.style.transform = 'translateY(-100%)';
+                                priceProMonthly.style.opacity = '0';
+                                priceProYearly.style.transform = 'translateY(-100%)';
+                                priceProYearly.style.opacity = '1';
                             } else {
                                 toggleCircle.style.transform = 'translateX(0)';
                                 toggleBtn.classList.remove('bg-[#6200EE]');
@@ -1471,11 +1425,17 @@
                                 labelYearly.classList.remove('text-slate-900');
                                 labelYearly.classList.add('text-slate-500');
 
-                                priceMonthly.style.transform = 'translateY(0)';
-                                priceMonthly.style.opacity = '1';
+                                // Standard Price Animation
+                                priceStandardMonthly.style.transform = 'translateY(0)';
+                                priceStandardMonthly.style.opacity = '1';
+                                priceStandardYearly.style.transform = 'translateY(0)';
+                                priceStandardYearly.style.opacity = '0';
 
-                                priceYearly.style.transform = 'translateY(0)';
-                                priceYearly.style.opacity = '0';
+                                // Pro Price Animation
+                                priceProMonthly.style.transform = 'translateY(0)';
+                                priceProMonthly.style.opacity = '1';
+                                priceProYearly.style.transform = 'translateY(0)';
+                                priceProYearly.style.opacity = '0';
                             }
                         });
                     });
@@ -1487,7 +1447,8 @@
         <section class="py-12 sm:py-16 md:py-24 px-4 sm:px-6 overflow-hidden max-w-7xl mx-auto">
             <div class="flex flex-col md:flex-row items-center gap-10 md:gap-16 lg:gap-24">
                 <!-- Left: Phone with Tags -->
-                <div class="flex-1 relative perspective-1000 min-h-[400px] sm:min-h-[500px] md:min-h-[600px] w-full flex items-center justify-center">
+                <div
+                    class="flex-1 relative perspective-1000 min-h-[400px] sm:min-h-[500px] md:min-h-[600px] w-full flex items-center justify-center">
                     <!-- Background Glow -->
                     <div class="absolute w-[400px] h-[400px] bg-primary/20 blur-[100px] rounded-full"></div>
 
@@ -1552,8 +1513,11 @@
 
                 <!-- Right: Text Content -->
                 <div class="flex-1 max-w-md">
-                    <span class="text-primary font-bold text-xs sm:text-sm tracking-widest uppercase mb-3 sm:mb-4 block">Transcake</span>
-                    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">Không chỉ là gọi
+                    <span
+                        class="text-primary font-bold text-xs sm:text-sm tracking-widest uppercase mb-3 sm:mb-4 block">Transcake</span>
+                    <h2
+                        class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-4 sm:mb-6 leading-tight">
+                        Không chỉ là gọi
                         xe.<br />Đó là sự kết nối.</h2>
                     <p class="text-slate-600 text-base sm:text-lg leading-relaxed">Trải nghiệm gọi xe trở nên thú vị hơn
                         bao giờ hết
@@ -1659,7 +1623,9 @@
                 </div>
 
                 <div class="relative z-10 max-w-lg mb-8 sm:mb-10 md:mb-0">
-                    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-6 sm:mb-8 leading-tight">Sẵn sàng di
+                    <h2
+                        class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-6 sm:mb-8 leading-tight">
+                        Sẵn sàng di
                         chuyển
                         <br /> theo cách của bạn?
                     </h2>
@@ -1704,7 +1670,8 @@
         </section>
 
         <!-- Footer -->
-        <footer id="contact" class="bg-[#4615B2] pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-10 px-4 sm:px-6 text-white text-sm relative overflow-hidden">
+        <footer id="contact"
+            class="bg-[#4615B2] pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-10 px-4 sm:px-6 text-white text-sm relative overflow-hidden">
             <!-- Decoration Star -->
             <div
                 class="absolute right-[10%] top-[40%] text-white/10 text-7xl sm:text-9xl font-black pointer-events-none transform rotate-12 select-none">
