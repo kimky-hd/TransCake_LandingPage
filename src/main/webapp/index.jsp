@@ -1337,7 +1337,6 @@
                         </a>
                     </div>
                 </div>
-
                 <!-- Driver Commission Banner (B2B/Partners) -->
                 <div
                     class="max-w-4xl mx-auto rounded-3xl p-8 md:p-10 relative overflow-hidden backdrop-blur-xl bg-purple-50/80 border border-purple-100 shadow-[0_10px_30px_rgba(98,0,238,0.05)] text-left">
