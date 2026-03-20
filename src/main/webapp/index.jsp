@@ -1356,7 +1356,6 @@
                                 Đã bao gồm 1.000 VNĐ trích quỹ bảo hiểm phương tiện.
                             </p>
                         </div>
-
                         <!-- Ô Tô -->
                         <div class="bg-white/60 p-6 rounded-2xl border border-white">
                             <h4 class="font-bold text-slate-800 text-lg mb-2">Ô tô</h4>
