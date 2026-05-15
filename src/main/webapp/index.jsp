@@ -202,7 +202,7 @@
                 <div class="flex items-center gap-3">
                     <button
                         class="hidden sm:block bg-accent text-white px-4 sm:px-6 py-2 rounded-full font-bold text-xs sm:text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40">
-                        Tải ứng dụng
+                        Trải nghiệm ngay
                     </button>
                     <!-- Hamburger Menu Button (Mobile) -->
                     <button id="mobile-menu-btn"
