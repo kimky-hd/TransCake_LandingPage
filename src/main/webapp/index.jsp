@@ -239,7 +239,7 @@
                         href="#contact" onclick="closeMobileMenu()">Contact us</a>
                     <button
                         class="mt-6 bg-accent text-white px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40 w-full">
-                        Tải ứng dụng
+                        Trải nghiệm ngay
                     </button>
                 </div>
             </div>
