@@ -1,4 +1,4 @@
-package org.example.dao;
+package org.example.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +14,7 @@ public class DBContext {
 
         // Nếu chạy ở Local (url sẽ null), dùng thông số máy cá nhân
         if (url == null || url.isEmpty()) {
-            url = "jdbc:mysql://localhost:3306/resume_db";
+            url = "jdbc:mysql://localhost:3306/transcake_db";
             user = "root";
             pass = "1234";
         }
