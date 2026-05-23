@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const id = entry.target.getAttribute('id');
                 navLinks.forEach(link => {
                     link.classList.remove('active');
-                    if (link.getAttribute('href') === `#${id}`) {
+                    if (link.getAttribute('href') === #) {
                         link.classList.add('active');
                     }
                 });
