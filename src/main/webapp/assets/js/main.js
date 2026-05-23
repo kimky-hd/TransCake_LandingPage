@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1. Initialize Lenis Smooth Scrolling Engine
     const lenis = new Lenis({
         duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smooth: true,
     });
 
@@ -36,12 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3. Generic Reveal Animations (Fade up)
     const revealElements = document.querySelectorAll('section > div > h2, section > div > h3, .trust-card');
     revealElements.forEach((el) => {
-        gsap.fromTo(el, 
+        gsap.fromTo(el,
             { opacity: 0, y: 40 },
-            { 
-                opacity: 1, 
-                y: 0, 
-                duration: 1, 
+            {
+                opacity: 1,
+                y: 0,
+                duration: 1,
                 ease: "power3.out",
                 scrollTrigger: {
                     trigger: el,
