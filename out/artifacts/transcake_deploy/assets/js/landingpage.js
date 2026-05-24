@@ -147,4 +147,136 @@ document.addEventListener('DOMContentLoaded', () => {
             tabLogin.classList.add('text-slate-400', 'hover:text-slate-600');
         });
     }
+
+    // --- Authentication API Logic ---
+
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const registerBtn = document.getElementById('registerBtn');
+    const loginBtn = document.getElementById('loginBtn');
+
+    // Send OTP
+    if(sendOtpBtn) {
+        sendOtpBtn.addEventListener('click', () => {
+            const phone = document.getElementById('registerPhone').value.trim();
+            if(!phone || !/^(0[3|5|7|8|9])+([0-9]{8})$/.test(phone)) {
+                alert('Vui lòng nhập số điện thoại hợp lệ (Ví dụ: 0912345678).');
+                return;
+            }
+
+            sendOtpBtn.disabled = true;
+            sendOtpBtn.innerText = 'Đang gửi...';
+
+            fetch(window.CONTEXT_PATH + '/api/send-otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phoneNumber: phone })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                if(data.success) {
+                    sendOtpBtn.innerText = 'Đã gửi mã';
+                    // Note: Mã OTP sẽ hiển thị trên Console của IDE theo yêu cầu
+                } else {
+                    sendOtpBtn.disabled = false;
+                    sendOtpBtn.innerText = 'Gửi mã';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Có lỗi xảy ra khi kết nối đến máy chủ.');
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.innerText = 'Gửi mã';
+            });
+        });
+    }
+
+    // Register Submit
+    if(registerBtn) {
+        registerBtn.addEventListener('click', () => {
+            const fullName = document.getElementById('registerFullName').value.trim();
+            const phone = document.getElementById('registerPhone').value.trim();
+            const otpCode = document.getElementById('registerOtp').value.trim();
+            const password = document.getElementById('registerPassword').value;
+
+            if(!fullName || !phone || !otpCode || !password) {
+                alert('Vui lòng nhập đầy đủ thông tin đăng ký.');
+                return;
+            }
+
+            registerBtn.disabled = true;
+            registerBtn.innerText = 'Đang đăng ký...';
+
+            fetch(window.CONTEXT_PATH + '/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fullName: fullName,
+                    phoneNumber: phone,
+                    otpCode: otpCode,
+                    password: password
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                if(data.success) {
+                    // Đăng ký thành công -> Chuyển hướng tới trang Onboarding
+                    window.location.href = window.CONTEXT_PATH + '/onboarding.jsp';
+                } else {
+                    registerBtn.disabled = false;
+                    registerBtn.innerText = 'Đăng ký ngay';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Có lỗi xảy ra khi kết nối đến máy chủ.');
+                registerBtn.disabled = false;
+                registerBtn.innerText = 'Đăng ký ngay';
+            });
+        });
+    }
+
+    // Login Submit
+    if(loginBtn) {
+        loginBtn.addEventListener('click', () => {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if(!phone || !password) {
+                alert('Vui lòng nhập đủ số điện thoại và mật khẩu.');
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.innerText = 'Đang xử lý...';
+
+            fetch(window.CONTEXT_PATH + '/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    phoneNumber: phone,
+                    password: password
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    alert(data.message + ' Chào mừng bạn, ' + data.userName + '!');
+                    // Đăng nhập thành công -> Chuyển hướng tới trang Onboarding
+                    window.location.href = window.CONTEXT_PATH + '/onboarding.jsp';
+                } else {
+                    alert(data.message);
+                    loginBtn.disabled = false;
+                    loginBtn.innerText = 'Đăng nhập';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Có lỗi xảy ra khi kết nối đến máy chủ.');
+                loginBtn.disabled = false;
+                loginBtn.innerText = 'Đăng nhập';
+            });
+        });
+    }
 });

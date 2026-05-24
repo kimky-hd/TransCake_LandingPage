@@ -1,4 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script>
+    // Định nghĩa biến toàn cục để Javascript dễ dàng lấy đúng Application Context của Tomcat
+    window.CONTEXT_PATH = "${pageContext.request.contextPath}";
+</script>
 <!-- Auth Modal -->
 <div id="authModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center pointer-events-auto">
     <!-- Backdrop -->
@@ -31,16 +35,16 @@
                 <form id="loginForm" class="space-y-2.5">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Số điện thoại</label>
-                        <input type="tel" placeholder="Nhập số điện thoại của bạn" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
+                        <input type="tel" id="loginPhone" placeholder="Nhập số điện thoại của bạn" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
                     </div>
                     <div>
                         <div class="flex items-center justify-between mb-1.5">
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Mật khẩu</label>
                             <a href="#" class="text-xs font-semibold text-[#6200EE] hover:underline">Quên mật khẩu?</a>
                         </div>
-                        <input type="password" placeholder="Nhập mật khẩu" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
+                        <input type="password" id="loginPassword" placeholder="Nhập mật khẩu" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
                     </div>
-                    <button type="button" class="w-full mt-4 bg-gradient-to-r from-[#6200EE] to-[#b84bf0] text-white py-3 rounded-xl font-bold shadow-lg shadow-purple-500/30 hover:scale-[1.02] transition-transform">Đăng nhập</button>
+                    <button type="button" id="loginBtn" class="w-full mt-4 bg-gradient-to-r from-[#6200EE] to-[#b84bf0] text-white py-3 rounded-xl font-bold shadow-lg shadow-purple-500/30 hover:scale-[1.02] transition-transform">Đăng nhập</button>
                     
                     <div class="mt-4 flex items-center justify-center gap-4">
                         <div class="h-px bg-slate-200 flex-1"></div>
@@ -64,24 +68,24 @@
                 <form id="registerForm" class="space-y-2.5 hidden">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Họ và tên</label>
-                        <input type="text" placeholder="Tên của bạn" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
+                        <input type="text" id="registerFullName" placeholder="Tên của bạn" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Số điện thoại</label>
                         <div class="flex gap-2">
-                            <input type="tel" placeholder="Nhập số điện thoại" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
-                            <button type="button" class="whitespace-nowrap px-4 py-2.5 bg-slate-100 text-[#6200EE] hover:bg-[#6200EE] hover:text-white border border-slate-200 rounded-xl text-sm font-bold transition-colors shadow-sm">Gửi mã</button>
+                            <input type="tel" id="registerPhone" placeholder="Nhập số điện thoại" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
+                            <button type="button" id="sendOtpBtn" class="whitespace-nowrap px-4 py-2.5 bg-slate-100 text-[#6200EE] hover:bg-[#6200EE] hover:text-white border border-slate-200 rounded-xl text-sm font-bold transition-colors shadow-sm">Gửi mã</button>
                         </div>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Mã OTP</label>
-                        <input type="text" placeholder="Nhập mã OTP 6 số" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400 text-center tracking-[0.5em] font-mono text-lg" maxlength="6">
+                        <input type="text" id="registerOtp" placeholder="Nhập mã OTP 6 số" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400 text-center tracking-[0.5em] font-mono text-lg" maxlength="6">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Mật khẩu</label>
-                        <input type="password" placeholder="Tạo mật khẩu" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
+                        <input type="password" id="registerPassword" placeholder="Tạo mật khẩu" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
                     </div>
-                    <button type="button" class="w-full mt-3 bg-[#FF6B00] text-white py-3 rounded-xl font-bold shadow-lg shadow-orange-500/30 hover:scale-[1.02] transition-transform">Đăng ký ngay</button>
+                    <button type="button" id="registerBtn" class="w-full mt-3 bg-[#FF6B00] text-white py-3 rounded-xl font-bold shadow-lg shadow-orange-500/30 hover:scale-[1.02] transition-transform">Đăng ký ngay</button>
                     <p class="text-center text-[11px] font-medium text-slate-500 mt-2.5 leading-relaxed">Bằng việc đăng ký, bạn đồng ý với <a href="#" class="text-[#6200EE] hover:underline">Điều khoản dịch vụ</a> và <a href="#" class="text-[#6200EE] hover:underline">Chính sách bảo mật</a> của chúng tôi.</p>
                 </form>
             </div>
