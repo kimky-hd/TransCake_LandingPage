@@ -319,9 +319,29 @@
                         </div>
                     </div>
                 </div>
+                </div>
+
+                <!-- Locate Me Button -->
+                <button onclick="recenterMap()"
+                    class="absolute bottom-8 right-8 z-20 w-14 h-14 bg-white text-slate-700 hover:text-[#6200EE] rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.15)] flex items-center justify-center transition-all hover:scale-105 border border-slate-200"
+                    title="Vị trí của tôi">
+                    <span class="material-symbols-outlined text-[28px]">my_location</span>
+                </button>
 
                 <!-- Script to handle switching roles -->
                 <script>
+                    let userLngLat = [105.8542, 21.0285]; // Default: Hanoi
+
+                    function recenterMap() {
+                        if (window.mapInstance) {
+                            window.mapInstance.flyTo({
+                                center: userLngLat,
+                                zoom: 15,
+                                speed: 1.2
+                            });
+                        }
+                    }
+
                     function setRole(role) {
                         const toggleBg = document.getElementById('toggle-bg');
                         const btnPassenger = document.getElementById('btn-passenger');
@@ -412,6 +432,7 @@
                         zoom: 13,
                         attributionControl: false // Ẩn logo mapbox nhỏ nếu muốn UI sạch hơn
                     });
+                    window.mapInstance = map;
 
                     // Tạo DOM element cho Custom Marker
                     const markerEl = document.createElement('div');
@@ -436,6 +457,7 @@
                                 (position) => {
                                     const lng = position.coords.longitude;
                                     const lat = position.coords.latitude;
+                                    userLngLat = [lng, lat]; // Cập nhật vị trí toàn cục
 
                                     // Di chuyển bản đồ (FlyTo) tới vị trí của user với hiệu ứng mượt
                                     map.flyTo({
