@@ -1464,7 +1464,12 @@
         <!-- Auth Modal -->
         <jsp:include page="includes/auth_modal.jsp" />
 
+        <!-- Onboarding Modal -->
+        <jsp:include page="includes/onboarding_modal.jsp" />
+
         <!-- Mobile Menu Script -->
+        <!-- Toast Notification Utility -->
+        <script src="${pageContext.request.contextPath}/assets/js/toast.js"></script>
         <!-- Main Application Script -->
         <script src="${pageContext.request.contextPath}/assets/js/landingpage.js"></script>
         <!-- Initialize Animation Engine Script -->

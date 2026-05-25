@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Adjust navbar background on scroll
 document.addEventListener('DOMContentLoaded', () => {
     const navbar = document.getElementById("navbar");
-    if(navbar) {
+    if (navbar) {
         window.addEventListener("scroll", () => {
             if (window.scrollY > 50) {
                 navbar.classList.add("scale-95");
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const backdrop = document.getElementById('authModalBackdrop');
     const content = document.getElementById('authModalContent');
     const closeBtn = document.getElementById('closeAuthModalBtn');
-    
+
     const tabLogin = document.getElementById('tabLogin');
     const tabRegister = document.getElementById('tabRegister');
     const loginForm = document.getElementById('loginForm');
@@ -119,19 +119,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 300);
     }
 
-    if(openBtn) openBtn.addEventListener('click', openModal);
-    if(closeBtn) closeBtn.addEventListener('click', closeModal);
-    if(backdrop) backdrop.addEventListener('click', closeModal);
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (backdrop) backdrop.addEventListener('click', closeModal);
 
     // Tabs Logic
-    if(tabLogin && tabRegister && loginForm && registerForm) {
+    if (tabLogin && tabRegister && loginForm && registerForm) {
         tabLogin.addEventListener('click', () => {
             loginForm.classList.remove('hidden');
             registerForm.classList.add('hidden');
-            
+
             tabLogin.classList.remove('text-slate-400', 'hover:text-slate-600');
             tabLogin.classList.add('text-[#6200EE]', 'border-b-2', 'border-[#6200EE]');
-            
+
             tabRegister.classList.remove('text-[#6200EE]', 'border-b-2', 'border-[#6200EE]');
             tabRegister.classList.add('text-slate-400', 'hover:text-slate-600');
         });
@@ -139,10 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
         tabRegister.addEventListener('click', () => {
             registerForm.classList.remove('hidden');
             loginForm.classList.add('hidden');
-            
+
             tabRegister.classList.remove('text-slate-400', 'hover:text-slate-600');
             tabRegister.classList.add('text-[#6200EE]', 'border-b-2', 'border-[#6200EE]');
-            
+
             tabLogin.classList.remove('text-[#6200EE]', 'border-b-2', 'border-[#6200EE]');
             tabLogin.classList.add('text-slate-400', 'hover:text-slate-600');
         });
@@ -155,11 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginBtn = document.getElementById('loginBtn');
 
     // Send OTP
-    if(sendOtpBtn) {
+    if (sendOtpBtn) {
         sendOtpBtn.addEventListener('click', () => {
             const phone = document.getElementById('registerPhone').value.trim();
-            if(!phone || !/^(0[3|5|7|8|9])+([0-9]{8})$/.test(phone)) {
-                alert('Vui lòng nhập số điện thoại hợp lệ (Ví dụ: 0912345678).');
+            if (!phone || !/^(0[3|5|7|8|9])+([0-9]{8})$/.test(phone)) {
+                showToast('Vui lòng nhập số điện thoại hợp lệ (Ví dụ: 0912345678).', 'error');
                 return;
             }
 
@@ -171,36 +171,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phoneNumber: phone })
             })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message);
-                if(data.success) {
-                    sendOtpBtn.innerText = 'Đã gửi mã';
-                    // Note: Mã OTP sẽ hiển thị trên Console của IDE theo yêu cầu
-                } else {
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                        sendOtpBtn.innerText = 'Đã gửi mã';
+                        // Note: Mã OTP sẽ hiển thị trên Console của IDE theo yêu cầu
+                    } else {
+                        showToast(data.message, 'error');
+                        sendOtpBtn.disabled = false;
+                        sendOtpBtn.innerText = 'Gửi mã';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    showToast('Có lỗi xảy ra khi kết nối đến máy chủ.', 'error');
                     sendOtpBtn.disabled = false;
                     sendOtpBtn.innerText = 'Gửi mã';
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Có lỗi xảy ra khi kết nối đến máy chủ.');
-                sendOtpBtn.disabled = false;
-                sendOtpBtn.innerText = 'Gửi mã';
-            });
+                });
         });
     }
 
     // Register Submit
-    if(registerBtn) {
+    if (registerBtn) {
         registerBtn.addEventListener('click', () => {
-            const fullName = document.getElementById('registerFullName').value.trim();
             const phone = document.getElementById('registerPhone').value.trim();
             const otpCode = document.getElementById('registerOtp').value.trim();
             const password = document.getElementById('registerPassword').value;
 
-            if(!fullName || !phone || !otpCode || !password) {
-                alert('Vui lòng nhập đầy đủ thông tin đăng ký.');
+            if (!phone || !otpCode || !password) {
+                showToast('Vui lòng nhập đầy đủ thông tin đăng ký.', 'warning');
                 return;
             }
 
@@ -211,40 +211,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    fullName: fullName,
                     phoneNumber: phone,
                     otpCode: otpCode,
                     password: password
                 })
             })
-            .then(res => res.json())
-            .then(data => {
-                alert(data.message);
-                if(data.success) {
-                    // Đăng ký thành công -> Chuyển hướng tới trang Onboarding
-                    window.location.href = window.CONTEXT_PATH + '/onboarding.jsp';
-                } else {
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message, 'success');
+                        // Đăng ký thành công -> Hiển thị popup Onboarding
+                        closeModal();
+                        if (window.openOnboardingModal) {
+                            window.openOnboardingModal();
+                        } else {
+                            console.error("openOnboardingModal is not defined");
+                            window.location.href = window.CONTEXT_PATH + '/dashboard.html';
+                        }
+                    } else {
+                        showToast(data.message, 'error');
+                        registerBtn.disabled = false;
+                        registerBtn.innerText = 'Đăng ký ngay';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    showToast('Có lỗi xảy ra khi kết nối đến máy chủ.', 'error');
                     registerBtn.disabled = false;
                     registerBtn.innerText = 'Đăng ký ngay';
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Có lỗi xảy ra khi kết nối đến máy chủ.');
-                registerBtn.disabled = false;
-                registerBtn.innerText = 'Đăng ký ngay';
-            });
+                });
         });
     }
 
     // Login Submit
-    if(loginBtn) {
+    if (loginBtn) {
         loginBtn.addEventListener('click', () => {
             const phone = document.getElementById('loginPhone').value.trim();
             const password = document.getElementById('loginPassword').value;
 
-            if(!phone || !password) {
-                alert('Vui lòng nhập đủ số điện thoại và mật khẩu.');
+            if (!phone || !password) {
+                showToast('Vui lòng nhập đủ số điện thoại và mật khẩu.', 'warning');
                 return;
             }
 
@@ -259,24 +265,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     password: password
                 })
             })
-            .then(res => res.json())
-            .then(data => {
-                if(data.success) {
-                    alert(data.message + ' Chào mừng bạn, ' + data.userName + '!');
-                    // Đăng nhập thành công -> Chuyển hướng tới trang Onboarding
-                    window.location.href = window.CONTEXT_PATH + '/onboarding.jsp';
-                } else {
-                    alert(data.message);
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(data.message + ' Chào mừng bạn, ' + data.userName + '!', 'success');
+                        // Đăng nhập thành công -> Hiển thị popup Onboarding
+                        closeModal();
+                        if (window.openOnboardingModal) {
+                            window.openOnboardingModal();
+                        } else {
+                            console.error("openOnboardingModal is not defined");
+                            window.location.href = window.CONTEXT_PATH + '/dashboard.html';
+                        }
+                    } else {
+                        showToast(data.message, 'error');
+                        loginBtn.disabled = false;
+                        loginBtn.innerText = 'Đăng nhập';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    showToast('Có lỗi xảy ra khi kết nối đến máy chủ.', 'error');
                     loginBtn.disabled = false;
                     loginBtn.innerText = 'Đăng nhập';
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                alert('Có lỗi xảy ra khi kết nối đến máy chủ.');
-                loginBtn.disabled = false;
-                loginBtn.innerText = 'Đăng nhập';
-            });
+                });
         });
     }
 });

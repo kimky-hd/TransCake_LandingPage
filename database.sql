@@ -7,13 +7,18 @@ USE transcake_db;
 -- ========================================================
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    full_name VARCHAR(100) NOT NULL,
+    full_name VARCHAR(100) DEFAULT NULL,
     phone_number VARCHAR(20) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     status ENUM('ACTIVE', 'INACTIVE', 'BANNED') DEFAULT 'ACTIVE',
+    gender ENUM('male', 'female', 'other') DEFAULT 'other',
+    role ENUM('passenger', 'driver', 'none') DEFAULT 'none',
+    hobbies VARCHAR(500) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+
 
 -- ========================================================
 -- Bảng: otp_codes
