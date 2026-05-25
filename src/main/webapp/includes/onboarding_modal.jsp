@@ -432,7 +432,7 @@
             window.finishAndRedirect = function () {
                 closeOnboardingModal();
                 setTimeout(() => {
-                    window.location.href = window.CONTEXT_PATH + '/dashboard.html';
+                    window.location.href = window.CONTEXT_PATH + '/dashboard.jsp';
                 }, 300);
             };
 
