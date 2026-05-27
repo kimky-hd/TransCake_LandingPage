@@ -106,18 +106,7 @@
                                                 d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                                         </svg>
                                     </div>
-                                    <% if (isLoggedIn) { %>
-                                        <!-- Dropdown Menu -->
-                                        <div id="passenger-dropdown"
-                                            class="hidden absolute top-full left-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden z-50">
-                                            <button type="button" id="passenger-logout-btn"
-                                                class="w-full text-left px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors">
-                                                <span
-                                                    class="material-symbols-outlined text-[18px] pointer-events-none">logout</span>
-                                                Đăng xuất
-                                            </button>
-                                        </div>
-                                        <% } %>
+
                                 </div>
                                 <div class="flex-1">
                                     <% if (isLoggedIn) { %>
@@ -238,18 +227,7 @@
                                         <span
                                             class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-[2.5px] border-white rounded-full shadow-sm"></span>
                                     </div>
-                                    <% if (isLoggedIn) { %>
-                                        <!-- Dropdown Menu -->
-                                        <div id="driver-dropdown"
-                                            class="hidden absolute top-full left-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden z-50">
-                                            <button type="button" id="driver-logout-btn"
-                                                class="w-full text-left px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors">
-                                                <span
-                                                    class="material-symbols-outlined text-[18px] pointer-events-none">logout</span>
-                                                Đăng xuất
-                                            </button>
-                                        </div>
-                                        <% } %>
+
                                 </div>
                                 <div class="flex-1">
                                     <% if (isLoggedIn) { %>
