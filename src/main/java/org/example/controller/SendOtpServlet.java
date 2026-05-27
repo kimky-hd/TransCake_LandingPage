@@ -44,6 +44,9 @@ public class SendOtpServlet extends HttpServlet {
             // Hạn sử dụng 5 phút
             Timestamp expiresAt = new Timestamp(System.currentTimeMillis() + (5 * 60 * 1000));
             
+            // Xóa các OTP cũ của số điện thoại này
+            otpDAO.deleteOtpsByPhone(phoneNumber);
+
             OtpCode otp = new OtpCode(phoneNumber, otpCode, expiresAt);
             if (otpDAO.saveOtp(otp)) {
                 // In ra màn hình console của IDE theo yêu cầu

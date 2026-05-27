@@ -148,6 +148,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Utility: Enter key to navigate and submit ---
+    function setupEnterToNext(formId, submitBtnId) {
+        const form = document.getElementById(formId);
+        if (!form) return;
+        
+        // Find all visible, non-hidden inputs
+        const inputs = Array.from(form.querySelectorAll('input:not([type="hidden"])'));
+        const submitBtn = document.getElementById(submitBtnId);
+
+        inputs.forEach((input, index) => {
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); // Prevent default form submission if any
+                    
+                    // If there's a next input, focus it
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    } else {
+                        // Otherwise, click the submit button
+                        if (submitBtn && !submitBtn.disabled) {
+                            submitBtn.click();
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    // Apply to Login and Register forms
+    setupEnterToNext('loginForm', 'loginBtn');
+    setupEnterToNext('registerForm', 'registerBtn');
+
     // --- Authentication API Logic ---
 
     const sendOtpBtn = document.getElementById('sendOtpBtn');
@@ -175,7 +207,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(data => {
                     if (data.success) {
                         showToast(data.message, 'success');
-                        sendOtpBtn.innerText = 'Đã gửi mã';
+                        
+                        let timeLeft = 30;
+                        sendOtpBtn.innerText = `Gửi lại (${timeLeft}s)`;
+                        
+                        const timer = setInterval(() => {
+                            timeLeft--;
+                            if (timeLeft <= 0) {
+                                clearInterval(timer);
+                                sendOtpBtn.disabled = false;
+                                sendOtpBtn.innerText = 'Gửi lại mã';
+                            } else {
+                                sendOtpBtn.innerText = `Gửi lại (${timeLeft}s)`;
+                            }
+                        }, 1000);
                         // Note: Mã OTP sẽ hiển thị trên Console của IDE theo yêu cầu
                     } else {
                         showToast(data.message, 'error');
