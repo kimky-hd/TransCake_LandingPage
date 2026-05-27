@@ -65,22 +65,17 @@ public class RegisterServlet extends HttpServlet {
             // Mã hóa mật khẩu
             String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt(12));
 
-            // Lưu User mới
-            User newUser = new User(null, phoneNumber, hashedPassword); // fullName tạm thời bằng null
-            if (userDAO.createUser(newUser)) {
-                // Đánh dấu OTP đã sử dụng
-                otpDAO.markOtpAsUsed(latestOtp.getId());
-                
-                // Tự động đăng nhập cho user
-                User createdUser = userDAO.findByPhoneNumber(phoneNumber);
-                request.getSession().setAttribute("loggedInUser", createdUser);
-                
-                result.put("success", true);
-                result.put("message", "Đăng ký tài khoản thành công!");
-            } else {
-                result.put("success", false);
-                result.put("message", "Đã xảy ra lỗi khi tạo tài khoản.");
-            }
+            // Đánh dấu OTP đã sử dụng
+            otpDAO.markOtpAsUsed(latestOtp.getId());
+            
+            // Lưu tạm thông tin vào Session (không tạo User ngay lập tức)
+            request.getSession().setAttribute("pendingUserPhone", phoneNumber);
+            request.getSession().setAttribute("pendingUserPass", hashedPassword);
+            
+            // Trả về cờ yêu cầu onboarding
+            result.put("success", true);
+            result.put("needsOnboarding", true);
+            result.put("message", "Xác thực thành công! Vui lòng hoàn tất hồ sơ.");
 
         } catch (Exception e) {
             e.printStackTrace();

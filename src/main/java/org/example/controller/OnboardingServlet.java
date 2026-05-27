@@ -26,16 +26,25 @@ public class OnboardingServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         Map<String, Object> result = new HashMap<>();
 
-        // Kiểm tra đăng nhập
+        // Kiểm tra đăng nhập hoặc đăng ký tạm thời
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("loggedInUser") == null) {
+        if (session == null) {
             result.put("success", false);
-            result.put("message", "Vui lòng đăng nhập trước khi cập nhật hồ sơ.");
+            result.put("message", "Phiên làm việc đã hết hạn. Vui lòng thử lại.");
             response.getWriter().write(gson.toJson(result));
             return;
         }
 
         User loggedInUser = (User) session.getAttribute("loggedInUser");
+        String pendingPhone = (String) session.getAttribute("pendingUserPhone");
+        String pendingPass = (String) session.getAttribute("pendingUserPass");
+
+        if (loggedInUser == null && (pendingPhone == null || pendingPass == null)) {
+            result.put("success", false);
+            result.put("message", "Vui lòng đăng nhập hoặc đăng ký trước khi thực hiện.");
+            response.getWriter().write(gson.toJson(result));
+            return;
+        }
 
         try {
             // Đọc dữ liệu JSON
@@ -69,20 +78,32 @@ public class OnboardingServlet extends HttpServlet {
 
             // Kết hợp List tags thành chuỗi cách nhau bởi dấu phẩy
             String joinedHobbies = String.join(", ", tags);
+            boolean isSuccess = false;
 
-            // Lưu dữ liệu vào CSDL
-            boolean isProfileUpdated = userDAO.updateOnboardingProfile(loggedInUser.getId(), fullName, gender, role, joinedHobbies);
+            if (pendingPhone != null && pendingPass != null) {
+                // Luồng Đăng ký mới
+                isSuccess = userDAO.createUserWithOnboarding(pendingPhone, pendingPass, fullName, gender, role, joinedHobbies);
+                if (isSuccess) {
+                    User createdUser = userDAO.findByPhoneNumber(pendingPhone);
+                    session.setAttribute("loggedInUser", createdUser);
+                    session.removeAttribute("pendingUserPhone");
+                    session.removeAttribute("pendingUserPass");
+                }
+            } else if (loggedInUser != null) {
+                // Luồng đã Đăng nhập
+                isSuccess = userDAO.updateOnboardingProfile(loggedInUser.getId(), fullName, gender, role, joinedHobbies);
+                if (isSuccess) {
+                    loggedInUser.setFullName(fullName);
+                    loggedInUser.setGender(gender);
+                    loggedInUser.setRole(role);
+                    loggedInUser.setHobbies(joinedHobbies);
+                    session.setAttribute("loggedInUser", loggedInUser);
+                }
+            }
 
-            if (isProfileUpdated) {
-                // Cập nhật lại session
-                loggedInUser.setFullName(fullName);
-                loggedInUser.setGender(gender);
-                loggedInUser.setRole(role);
-                loggedInUser.setHobbies(joinedHobbies);
-                session.setAttribute("loggedInUser", loggedInUser);
-
+            if (isSuccess) {
                 result.put("success", true);
-                result.put("message", "Cập nhật hồ sơ thành công!");
+                result.put("message", "Hoàn tất hồ sơ thành công!");
             } else {
                 result.put("success", false);
                 result.put("message", "Lỗi server khi lưu thông tin.");

@@ -304,16 +304,6 @@
                     </div>
                 </div>
 
-            </div>
-
-            <!-- Global Footer / Skip Button -->
-            <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/80 backdrop-blur-md text-center">
-                <button type="button" onclick="skipOnboarding()"
-                    class="text-sm font-semibold text-slate-400 hover:text-slate-600 hover:underline underline-offset-2 transition-colors">
-                    Bỏ qua bước này (Skip for now)
-                </button>
-            </div>
-
         </div>
     </div>
 
@@ -552,7 +542,5 @@
                 }, 300);
             };
 
-            // Close on clicking backdrop
-            backdrop.addEventListener('click', closeOnboardingModal);
         })();
     </script>

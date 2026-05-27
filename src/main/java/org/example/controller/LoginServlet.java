@@ -52,9 +52,15 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("loggedInUser", user);
 
             result.put("success", true);
-            result.put("message", "Đăng nhập thành công!");
             String displayUser = (user.getFullName() != null && !user.getFullName().trim().isEmpty()) ? user.getFullName() : "Người dùng mới";
             result.put("userName", displayUser);
+            
+            if (user.getRole() == null || user.getRole().trim().isEmpty()) {
+                result.put("needsOnboarding", true);
+                result.put("message", "Đăng nhập thành công! Vui lòng hoàn tất hồ sơ.");
+            } else {
+                result.put("message", "Đăng nhập thành công!");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

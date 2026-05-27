@@ -20,10 +20,10 @@
                         href="#contact">Contact us</a>
                 </div>
                 <div class="flex items-center gap-3">
-                    <button id="openAuthModalBtn"
-                        class="hidden sm:block bg-accent text-white px-4 sm:px-6 py-2 rounded-full font-bold text-xs sm:text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40">
+                    <a href="${pageContext.request.contextPath}/dashboard.jsp"
+                        class="hidden sm:block bg-accent text-white px-4 sm:px-6 py-2 rounded-full font-bold text-xs sm:text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40 text-center">
                         Trải nghiệm ngay
-                    </button>
+                    </a>
                     <!-- Hamburger Menu Button (Mobile) -->
                     <button id="mobile-menu-btn"
                         class="lg:hidden flex flex-col gap-1.5 p-2 rounded-xl hover:bg-white/30 transition-colors"

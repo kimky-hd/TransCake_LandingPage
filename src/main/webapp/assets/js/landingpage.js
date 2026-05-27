@@ -101,13 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function openModal() {
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
-        // Small delay to allow display:block to apply before animating opacity
         setTimeout(() => {
             backdrop.classList.remove('opacity-0');
             content.classList.remove('opacity-0', 'scale-95');
             content.classList.add('opacity-100', 'scale-100');
         }, 10);
     }
+    window.openAuthModal = openModal;
 
     function closeModal() {
         backdrop.classList.add('opacity-0');
@@ -220,13 +220,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(data => {
                     if (data.success) {
                         showToast(data.message, 'success');
-                        // Đăng ký thành công -> Hiển thị popup Onboarding
                         closeModal();
-                        if (window.openOnboardingModal) {
+                        if (data.needsOnboarding && window.openOnboardingModal) {
                             window.openOnboardingModal();
                         } else {
-                            console.error("openOnboardingModal is not defined");
-                            window.location.href = window.CONTEXT_PATH + '/dashboard.html';
+                            if (window.location.pathname.includes('dashboard.jsp')) {
+                                window.location.reload();
+                            } else {
+                                window.location.href = window.CONTEXT_PATH + '/dashboard.jsp';
+                            }
                         }
                     } else {
                         showToast(data.message, 'error');
@@ -268,14 +270,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        showToast(data.message + ' Chào mừng bạn, ' + data.userName + '!', 'success');
-                        // Đăng nhập thành công -> Hiển thị popup Onboarding
+                        const welcomeMsg = data.userName ? ' Chào mừng bạn, ' + data.userName + '!' : '';
+                        showToast(data.message + welcomeMsg, 'success');
                         closeModal();
-                        if (window.openOnboardingModal) {
+                        if (data.needsOnboarding && window.openOnboardingModal) {
                             window.openOnboardingModal();
                         } else {
-                            console.error("openOnboardingModal is not defined");
-                            window.location.href = window.CONTEXT_PATH + '/dashboard.html';
+                            if (window.location.pathname.includes('dashboard.jsp')) {
+                                window.location.reload();
+                            } else {
+                                window.location.href = window.CONTEXT_PATH + '/dashboard.jsp';
+                            }
                         }
                     } else {
                         showToast(data.message, 'error');

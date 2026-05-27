@@ -54,6 +54,26 @@ public class UserDAO {
             return false;
         }
     }
+
+    public boolean createUserWithOnboarding(String phoneNumber, String passwordHash, String fullName, String gender, String role, String hobbies) {
+        String sql = "INSERT INTO users (phone_number, password_hash, full_name, gender, role, hobbies) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, phoneNumber);
+            ps.setString(2, passwordHash);
+            ps.setString(3, fullName);
+            ps.setString(4, gender);
+            ps.setString(5, role);
+            ps.setString(6, hobbies);
+            
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     // Cập nhật thông tin họ tên, giới tính, vai trò và sở thích sau Onboarding
     public boolean updateOnboardingProfile(int userId, String fullName, String gender, String role, String hobbies) {
         String sql = "UPDATE users SET full_name = ?, gender = ?, role = ?, hobbies = ? WHERE id = ?";
