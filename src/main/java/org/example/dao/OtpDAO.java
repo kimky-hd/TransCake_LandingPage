@@ -27,6 +27,19 @@ public class OtpDAO {
         }
     }
 
+    public boolean deleteOtpsByPhone(String phoneNumber) {
+        String sql = "DELETE FROM otp_codes WHERE phone_number = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, phoneNumber);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public OtpCode getLatestValidOtp(String phoneNumber) {
         String sql = "SELECT * FROM otp_codes WHERE phone_number = ? AND is_used = FALSE AND expires_at > NOW() ORDER BY created_at DESC LIMIT 1";
         try (Connection conn = DBContext.getConnection();

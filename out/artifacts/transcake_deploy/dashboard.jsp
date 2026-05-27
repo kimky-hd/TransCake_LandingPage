@@ -1,16 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="org.example.model.User" %>
-<%
-    // Prevent browser caching of dashboard page to ensure latest JS and session states are loaded
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-    response.setHeader("Pragma", "no-cache");
-    response.setDateHeader("Expires", 0);
-
-    User user = (User) session.getAttribute("loggedInUser");
-    boolean isLoggedIn = (user != null);
-    String fullName = isLoggedIn && user.getFullName() != null && !user.getFullName().trim().isEmpty() ?
-        user.getFullName() : "Người dùng";
-%>
+    <%@ page import="org.example.model.User" %>
+        <% // Prevent browser caching of dashboard page to ensure latest JS and session states are loaded
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate" );
+            response.setHeader("Pragma", "no-cache" ); response.setDateHeader("Expires", 0); User user=(User)
+            session.getAttribute("loggedInUser"); boolean isLoggedIn=(user !=null); String fullName=isLoggedIn &&
+            user.getFullName() !=null && !user.getFullName().trim().isEmpty() ? user.getFullName() : "Người dùng" ; %>
             <!DOCTYPE html>
             <html lang="vi">
 
@@ -21,11 +15,14 @@
 
                 <!-- Tailwind CSS -->
                 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-                <script src="${pageContext.request.contextPath}/assets/js/tailwind-config.js?v=<%= System.currentTimeMillis() %>"></script>
+                <script
+                    src="${pageContext.request.contextPath}/assets/js/tailwind-config.js?v=<%= System.currentTimeMillis() %>"></script>
 
                 <!-- Custom CSS -->
-                <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.css?v=<%= System.currentTimeMillis() %>" />
-                <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/landingpage.css?v=<%= System.currentTimeMillis() %>" />
+                <link rel="stylesheet"
+                    href="${pageContext.request.contextPath}/assets/css/styles.css?v=<%= System.currentTimeMillis() %>" />
+                <link rel="stylesheet"
+                    href="${pageContext.request.contextPath}/assets/css/landingpage.css?v=<%= System.currentTimeMillis() %>" />
 
                 <!-- Google Fonts & Material Symbols -->
                 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
@@ -115,7 +112,9 @@
                                             class="hidden absolute top-full left-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden z-50">
                                             <button type="button" id="passenger-logout-btn"
                                                 class="w-full text-left px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors">
-                                                <span class="material-symbols-outlined text-[18px] pointer-events-none">logout</span> Đăng xuất
+                                                <span
+                                                    class="material-symbols-outlined text-[18px] pointer-events-none">logout</span>
+                                                Đăng xuất
                                             </button>
                                         </div>
                                         <% } %>
@@ -146,12 +145,22 @@
                                 </div>
                             </div>
 
-                            <!-- Primary CTA -->
-                            <button
-                                class="w-full bg-gradient-to-r from-[#6200EE] to-[#8C3AFF] hover:from-[#5000C8] hover:to-[#7A26F0] text-white font-bold text-lg py-4 rounded-2xl shadow-[0_10px_25px_rgba(98,0,238,0.35)] transition-all transform hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(98,0,238,0.4)] mb-8 flex items-center justify-center gap-2">
-                                <span class="material-symbols-outlined">search</span>
-                                Find a Ride
-                            </button>
+                            <!-- Primary CTA & Search Form -->
+                            <div class="mb-8 relative">
+                                <button <% if (isLoggedIn) { %>
+                                    onclick="toggleBottomSearchBar()"
+                                    <% } else { %>
+                                        onclick="window.openAuthModal && window.openAuthModal()"
+                                        <% } %>
+                                            class="w-full bg-gradient-to-r from-[#6200EE] to-[#8C3AFF]
+                                            hover:from-[#5000C8] hover:to-[#7A26F0] text-white font-bold text-lg py-4
+                                            rounded-2xl shadow-[0_10px_25px_rgba(98,0,238,0.35)] transition-all
+                                            transform hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(98,0,238,0.4)]
+                                            flex items-center justify-center gap-2 relative z-10">
+                                            <span class="material-symbols-outlined">search</span>
+                                            Find a Ride
+                                </button>
+                            </div>
 
                             <!-- Expanded Desktop Features -->
                             <div class="space-y-3">
@@ -235,7 +244,9 @@
                                             class="hidden absolute top-full left-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden z-50">
                                             <button type="button" id="driver-logout-btn"
                                                 class="w-full text-left px-4 py-3 text-sm font-bold text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors">
-                                                <span class="material-symbols-outlined text-[18px] pointer-events-none">logout</span> Đăng xuất
+                                                <span
+                                                    class="material-symbols-outlined text-[18px] pointer-events-none">logout</span>
+                                                Đăng xuất
                                             </button>
                                         </div>
                                         <% } %>
@@ -364,7 +375,8 @@
                                 <span class="material-symbols-outlined">map</span>
                             </button>
                             <button
-                                class="w-12 h-12 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+                                class="w-12 h-12 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                                id="nav-blog" onclick="toggleBottomBlogBar()">
                                 <span class="material-symbols-outlined">article</span>
                             </button>
                             <button
@@ -375,346 +387,888 @@
                     </div>
                 </div>
 
-                <!-- Locate Me Button -->
-                <button onclick="recenterMap()"
-                    class="absolute bottom-8 right-8 z-20 w-14 h-14 bg-white text-slate-700 hover:text-[#6200EE] rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.15)] flex items-center justify-center transition-all hover:scale-105 border border-slate-200"
-                    title="Vị trí của tôi">
-                    <span class="material-symbols-outlined text-[28px]">my_location</span>
-                </button>
+                <!-- Bottom Search Bar (Right of Dynamic Island) -->
+                <% if (isLoggedIn) { %>
+                    <div id="bottom-search-bar"
+                        class="fixed bottom-8 left-[420px] right-8 z-30 bg-white/75 backdrop-blur-xl border border-white/60 rounded-3xl p-6 transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto min-h-[360px]">
 
-                <!-- Script to handle switching roles -->
-                <script>
-                    let userLngLat = [105.8542, 21.0285]; // Default: Hanoi
+                        <!-- Handle for dragging/closing -->
+                        <div class="w-full flex justify-center mb-4 cursor-pointer" onclick="toggleBottomSearchBar()">
+                            <div class="w-16 h-1.5 bg-slate-300 rounded-full hover:bg-slate-400 transition-colors">
+                            </div>
+                        </div>
 
-                    function recenterMap() {
-                        if (window.mapInstance) {
-                            window.mapInstance.flyTo({
-                                center: userLngLat,
-                                zoom: 15,
-                                speed: 1.2
-                            });
+                        <!-- Header & Close -->
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-2xl font-bold text-slate-800 tracking-tight">Tìm kiếm chuyến đi</h3>
+                            <button onclick="toggleBottomSearchBar()"
+                                class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">close</span>
+                            </button>
+                        </div>
+
+                        <!-- Split Layout: Left (Form) | Right (Results) -->
+                        <div class="flex flex-col lg:flex-row gap-8 flex-1 h-full">
+
+                            <!-- LEFT: Search Form -->
+                            <div class="w-full lg:w-[45%] flex flex-col gap-5 border-r border-slate-200/60 pr-4">
+                                <!-- Location Input Group -->
+                                <div class="relative flex flex-col gap-3 w-full">
+                                    <!-- Connecting Line -->
+                                    <div
+                                        class="absolute left-6 top-10 bottom-10 w-[2px] bg-slate-200 flex flex-col items-center justify-center pointer-events-none z-0">
+                                    </div>
+
+                                    <!-- Pickup -->
+                                    <div
+                                        class="relative flex items-center p-1 bg-white border border-slate-200/80 rounded-full shadow-sm hover:border-[#6200EE]/50 transition-colors z-10 w-full">
+                                        <div class="w-10 h-10 flex items-center justify-center shrink-0">
+                                            <div
+                                                class="w-3.5 h-3.5 rounded-full border-[3px] border-[#6200EE] bg-white">
+                                            </div>
+                                        </div>
+                                        <input type="text" placeholder="Điểm đón (VD: 123 Nguyễn Trãi)"
+                                            class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-medium placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                    </div>
+
+                                    <!-- Dropoff -->
+                                    <div
+                                        class="relative flex items-center p-1 bg-white border border-slate-200/80 rounded-full shadow-sm hover:border-[#6200EE]/50 transition-colors z-10 w-full">
+                                        <div class="w-10 h-10 flex items-center justify-center shrink-0">
+                                            <span
+                                                class="material-symbols-outlined text-[#FF6D00] text-[22px]">location_on</span>
+                                        </div>
+                                        <input type="text" placeholder="Điểm đến (VD: Sân bay Nội Bài)"
+                                            class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-medium placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                    </div>
+                                </div>
+
+                                <!-- Date & Time -->
+                                <div class="flex gap-3">
+                                    <div
+                                        class="relative flex-1 bg-white border border-slate-200/80 rounded-full overflow-hidden shadow-sm flex items-center hover:border-[#6200EE]/50 transition-colors">
+                                        <div
+                                            class="w-10 h-10 flex items-center justify-center text-slate-400 shrink-0 ml-1">
+                                            <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                                        </div>
+                                        <input type="date"
+                                            class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-semibold text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                    </div>
+                                    <div
+                                        class="relative flex-1 bg-white border border-slate-200/80 rounded-full overflow-hidden shadow-sm flex items-center hover:border-[#6200EE]/50 transition-colors">
+                                        <div
+                                            class="w-10 h-10 flex items-center justify-center text-slate-400 shrink-0 ml-1">
+                                            <span class="material-symbols-outlined text-[18px]">schedule</span>
+                                        </div>
+                                        <input type="time"
+                                            class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-semibold text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                    </div>
+                                </div>
+
+                                <button
+                                    class="w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto">
+                                    Tìm chuyến
+                                    <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                                </button>
+                            </div>
+
+                            <!-- RIGHT: Results Display -->
+                            <div class="w-full lg:w-[55%] flex flex-col pl-4">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h4 class="font-bold text-slate-800 text-lg">Kết quả nổi bật</h4>
+                                    <span
+                                        class="bg-[#6200EE]/10 text-[#6200EE] text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">local_taxi</span>
+                                        2 chuyến xe
+                                    </span>
+                                </div>
+
+                                <!-- Results List (Scrollable if too long) -->
+                                <div class="flex-1 overflow-y-auto pr-2 space-y-3 max-h-[250px] panel-scroll">
+                                    <!-- Result Card 1 -->
+                                    <div
+                                        class="bg-white border border-slate-200 hover:border-[#6200EE]/50 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-between group">
+                                        <div class="flex items-center gap-4">
+                                            <div class="relative">
+                                                <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Driver"
+                                                    class="w-12 h-12 rounded-full object-cover shadow-sm">
+                                                <div
+                                                    class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h5
+                                                    class="font-bold text-slate-800 text-base group-hover:text-[#6200EE] transition-colors">
+                                                    Nguyễn Văn A</h5>
+                                                <p class="text-sm text-slate-500 flex items-center gap-1 mt-0.5">
+                                                    <span
+                                                        class="material-symbols-outlined text-[14px] text-amber-400">star</span>
+                                                    <span class="font-bold text-slate-700">4.9</span> (120 chuyến)
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-lg font-black text-[#6200EE]">150.000đ</p>
+                                            <p
+                                                class="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded mt-1 inline-block">
+                                                Honda City • 4 chỗ</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Result Card 2 -->
+                                    <div
+                                        class="bg-white border border-slate-200 hover:border-[#6200EE]/50 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-between group">
+                                        <div class="flex items-center gap-4">
+                                            <div class="relative">
+                                                <img src="https://i.pravatar.cc/150?u=a04258114e29026702d" alt="Driver"
+                                                    class="w-12 h-12 rounded-full object-cover shadow-sm">
+                                                <div
+                                                    class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full">
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h5
+                                                    class="font-bold text-slate-800 text-base group-hover:text-[#6200EE] transition-colors">
+                                                    Trần Thị B</h5>
+                                                <p class="text-sm text-slate-500 flex items-center gap-1 mt-0.5">
+                                                    <span
+                                                        class="material-symbols-outlined text-[14px] text-amber-400">star</span>
+                                                    <span class="font-bold text-slate-700">5.0</span> (85 chuyến)
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <p class="text-lg font-black text-[#6200EE]">140.000đ</p>
+                                            <p
+                                                class="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded mt-1 inline-block">
+                                                Kia Morning • 4 chỗ</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Bottom Blog Bar (Right of Dynamic Island) -->
+                    <div id="bottom-blog-bar"
+                        class="fixed bottom-8 left-[420px] right-8 z-30 bg-white/75 backdrop-blur-xl border border-white/60 rounded-3xl p-6 transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto max-h-[80vh] min-h-[360px]">
+
+                        <!-- Handle for dragging/closing -->
+                        <div class="w-full flex justify-center mb-4 cursor-pointer shrink-0"
+                            onclick="toggleBottomBlogBar()">
+                            <div class="w-16 h-1.5 bg-slate-300 rounded-full hover:bg-slate-400 transition-colors">
+                            </div>
+                        </div>
+
+                        <!-- Header & Close -->
+                        <div class="flex justify-between items-center mb-6 shrink-0">
+                            <h3 class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                                <span class="material-symbols-outlined text-[#6200EE]">diversity_3</span> Cộng đồng &
+                                Chia sẻ
+                            </h3>
+                            <button onclick="toggleBottomBlogBar()"
+                                class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
+                                <span class="material-symbols-outlined text-[20px]">close</span>
+                            </button>
+                        </div>
+
+                        <!-- Split Layout -->
+                        <div class="flex flex-col lg:flex-row gap-8 flex-1 overflow-hidden">
+                            <!-- Left: Blog Feed (2/3) -->
+                            <div class="w-full lg:w-2/3 flex flex-col h-full overflow-hidden">
+                                <div class="flex-1 overflow-y-auto pr-3 space-y-5 panel-scroll pb-4">
+                                    <!-- Post 1 -->
+                                    <div
+                                        class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                                        <div class="flex items-center gap-3 mb-4">
+                                            <img src="https://i.pravatar.cc/150?u=1"
+                                                class="w-10 h-10 rounded-full object-cover shrink-0">
+                                            <div>
+                                                <h5 class="font-bold text-slate-800 text-sm">Hải Đăng</h5>
+                                                <p class="text-xs text-slate-500">2 giờ trước • Nhóm Tìm người ghép
+                                                    chuyến</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-slate-700 text-sm mb-3 leading-relaxed">
+                                            Sáng mai 6h mình có chuyến từ Hà Nội về Hải Phòng, xe 4 chỗ còn trống 2 ghế.
+                                            Ai có nhu cầu đi chung cho vui thì inbox mình nhé! Chi phí cưa đôi cực rẻ ạ.
+                                        </p>
+                                        <!-- Fixed image stretching -->
+                                        <div class="w-full aspect-video rounded-2xl overflow-hidden mb-3 bg-slate-100">
+                                            <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=800&auto=format&fit=crop"
+                                                class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
+                                            <button
+                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                <span class="material-symbols-outlined text-[20px]">thumb_up</span>
+                                                Thích (24)
+                                            </button>
+                                            <button
+                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+                                                Bình luận (5)
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Post 2 -->
+                                    <div
+                                        class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                                        <div class="flex items-center gap-3 mb-4">
+                                            <img src="https://i.pravatar.cc/150?u=2"
+                                                class="w-10 h-10 rounded-full object-cover shrink-0">
+                                            <div>
+                                                <h5 class="font-bold text-slate-800 text-sm">Minh Anh</h5>
+                                                <p class="text-xs text-slate-500">Hôm qua lúc 15:30 • Nhóm Review & Chia
+                                                    sẻ</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-slate-700 text-sm mb-3 leading-relaxed">
+                                            Review chuyến đi Sapa cuối tuần qua cùng TransCake! Tài xế siêu dễ thương,
+                                            xe sạch sẽ thơm tho, lại còn biết rất nhiều điểm check-in ẩn. Lần tới chắc
+                                            chắn sẽ book tiếp! 🥰
+                                        </p>
+                                        <!-- Fixed image stretching with grid -->
+                                        <div class="grid grid-cols-2 gap-2 mb-3">
+                                            <div
+                                                class="w-full aspect-square md:aspect-video rounded-2xl overflow-hidden bg-slate-100">
+                                                <img src="https://images.unsplash.com/photo-1542050893-807cce01d8f8?q=80&w=400&auto=format&fit=crop"
+                                                    class="w-full h-full object-cover">
+                                            </div>
+                                            <div
+                                                class="w-full aspect-square md:aspect-video rounded-2xl overflow-hidden bg-slate-100">
+                                                <img src="https://images.unsplash.com/photo-1518098268026-4e89f1a2cd8e?q=80&w=400&auto=format&fit=crop"
+                                                    class="w-full h-full object-cover">
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
+                                            <button
+                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                <span class="material-symbols-outlined text-[20px]">thumb_up</span>
+                                                Thích (156)
+                                            </button>
+                                            <button
+                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+                                                Bình luận (12)
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Post 3 -->
+                                    <div
+                                        class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                                        <div class="flex items-center gap-3 mb-4">
+                                            <img src="https://i.pravatar.cc/150?u=3"
+                                                class="w-10 h-10 rounded-full object-cover shrink-0">
+                                            <div>
+                                                <h5 class="font-bold text-slate-800 text-sm">Tuấn Phong</h5>
+                                                <p class="text-xs text-slate-500">5 giờ trước • Nhóm Hỏi đáp & Kinh
+                                                    nghiệm</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-slate-700 text-sm mb-3 leading-relaxed">
+                                            Mọi người cho mình hỏi đi Đà Lạt mùa này đi đường đèo nào thì an toàn nhất
+                                            ạ? Mình lái xe 7 chỗ, có kinh nghiệm đi đèo nhưng lần đầu đi Đà Lạt nên hơi
+                                            lo lắng. Cảm ơn cả nhà!
+                                        </p>
+                                        <div class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
+                                            <button
+                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                <span class="material-symbols-outlined text-[20px]">thumb_up</span>
+                                                Thích (45)
+                                            </button>
+                                            <button
+                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+                                                Bình luận (28)
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Post 4 -->
+                                    <div
+                                        class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                                        <div class="flex items-center gap-3 mb-4">
+                                            <img src="https://i.pravatar.cc/150?u=4"
+                                                class="w-10 h-10 rounded-full object-cover shrink-0">
+                                            <div>
+                                                <h5 class="font-bold text-slate-800 text-sm">Ngọc Bích</h5>
+                                                <p class="text-xs text-slate-500">Hôm qua lúc 19:45 • Nhóm Review & Chia
+                                                    sẻ</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-slate-700 text-sm mb-3 leading-relaxed">
+                                            Góc sống ảo cực chill tại Vũng Tàu! Chuyến đi cùng hội chị em siêu vui. Nhờ
+                                            có TransCake mà bọn mình tìm được bác tài siêu nhiệt tình, chụp hình có tâm
+                                            quá chừng! 🥰📸🌊
+                                        </p>
+                                        <div class="w-full aspect-video rounded-2xl overflow-hidden mb-3 bg-slate-100">
+                                            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop"
+                                                class="w-full h-full object-cover">
+                                        </div>
+                                        <div class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
+                                            <button
+                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                <span class="material-symbols-outlined text-[20px]">thumb_up</span>
+                                                Thích (210)
+                                            </button>
+                                            <button
+                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+                                                Bình luận (34)
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Post 5 -->
+                                    <div
+                                        class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow">
+                                        <div class="flex items-center gap-3 mb-4">
+                                            <img src="https://i.pravatar.cc/150?u=5"
+                                                class="w-10 h-10 rounded-full object-cover shrink-0">
+                                            <div>
+                                                <h5 class="font-bold text-slate-800 text-sm">Hoàng Nam</h5>
+                                                <p class="text-xs text-slate-500">Hôm qua lúc 09:15 • Nhóm Tìm người
+                                                    ghép chuyến</p>
+                                            </div>
+                                        </div>
+                                        <p class="text-slate-700 text-sm mb-3 leading-relaxed">
+                                            [Cần ghép xe] Tối mai thứ 6, mình cần tìm xe hoặc khách đi chung từ Sài Gòn
+                                            về Cần Thơ, xuất phát khoảng 19h. Ai có dư chỗ hoặc muốn đi chung xe thì
+                                            comment nhé!
+                                        </p>
+                                        <div class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
+                                            <button
+                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                <span class="material-symbols-outlined text-[20px]">thumb_up</span>
+                                                Thích (12)
+                                            </button>
+                                            <button
+                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+                                                Bình luận (8)
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: Create Post & Friends (1/3) -->
+                            <div class="w-full lg:w-1/3 flex flex-col gap-6 h-full overflow-hidden">
+                                <!-- Create Post -->
+                                <div class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm shrink-0">
+                                    <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
+                                        <span
+                                            class="material-symbols-outlined text-[#6200EE] text-[20px]">edit_square</span>
+                                        Tạo bài đăng
+                                    </h4>
+                                    <textarea
+                                        class="w-full bg-white border border-slate-200/80 rounded-2xl p-3 text-sm focus:outline-none focus:border-[#6200EE]/50 focus:ring-2 focus:ring-[#6200EE]/20 resize-none h-20 mb-3 placeholder:text-slate-400 transition-all"
+                                        placeholder="Bạn đang nghĩ gì? Chia sẻ hành trình của bạn..."></textarea>
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex gap-1 text-slate-500">
+                                            <button
+                                                class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors"
+                                                title="Thêm ảnh">
+                                                <span
+                                                    class="material-symbols-outlined text-[20px] text-green-500">image</span>
+                                            </button>
+                                            <button
+                                                class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors"
+                                                title="Gắn thẻ vị trí">
+                                                <span
+                                                    class="material-symbols-outlined text-[20px] text-red-500">location_on</span>
+                                            </button>
+                                            <button
+                                                class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded-full transition-colors"
+                                                title="Tìm ghép chuyến">
+                                                <span
+                                                    class="material-symbols-outlined text-[20px] text-blue-500">directions_car</span>
+                                            </button>
+                                        </div>
+                                        <button
+                                            class="bg-[#6200EE] hover:bg-[#5000c0] text-white px-5 py-2 rounded-xl text-sm font-bold transition-all shadow-sm hover:shadow-md">
+                                            Đăng bài
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Friends List -->
+                                <div
+                                    class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm flex-1 overflow-y-auto panel-scroll">
+                                    <h4 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-[#FF6D00] text-[20px]">group</span>
+                                        Người liên hệ
+                                    </h4>
+                                    <div class="flex flex-col gap-4">
+                                        <div class="flex items-center gap-3 cursor-pointer group">
+                                            <div class="relative shrink-0">
+                                                <img src="https://i.pravatar.cc/150?u=a04"
+                                                    class="w-10 h-10 rounded-full object-cover">
+                                                <div
+                                                    class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full">
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <h6
+                                                    class="text-sm font-bold text-slate-800 group-hover:text-[#6200EE] transition-colors truncate">
+                                                    Phương Thảo</h6>
+                                                <p class="text-xs text-slate-500 truncate">Trực tuyến</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 cursor-pointer group">
+                                            <div class="relative shrink-0">
+                                                <img src="https://i.pravatar.cc/150?u=a05"
+                                                    class="w-10 h-10 rounded-full object-cover">
+                                                <div
+                                                    class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full">
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <h6
+                                                    class="text-sm font-bold text-slate-800 group-hover:text-[#6200EE] transition-colors truncate">
+                                                    Tuấn Anh</h6>
+                                                <p class="text-xs text-slate-500 truncate">Trực tuyến</p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-3 cursor-pointer group">
+                                            <div class="relative shrink-0">
+                                                <img src="https://i.pravatar.cc/150?u=a06"
+                                                    class="w-10 h-10 rounded-full object-cover">
+                                                <div
+                                                    class="absolute bottom-0 right-0 w-3 h-3 bg-slate-300 border-2 border-white rounded-full">
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <h6
+                                                    class="text-sm font-bold text-slate-800 group-hover:text-[#6200EE] transition-colors truncate">
+                                                    Đức Mạnh</h6>
+                                                <p class="text-xs text-slate-500 truncate">Hoạt động 5p trước</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function toggleBottomSearchBar() {
+                            const searchBar = document.getElementById('bottom-search-bar');
+                            const blogBar = document.getElementById('bottom-blog-bar');
+                            if (searchBar) {
+                                if (searchBar.classList.contains('translate-y-[150%]')) {
+                                    // Close blog bar if open
+                                    if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
+                                        blogBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                        blogBar.classList.remove('translate-y-0', 'opacity-100');
+                                    }
+
+                                    searchBar.classList.remove('translate-y-[150%]');
+                                    searchBar.classList.remove('opacity-0');
+                                    searchBar.classList.add('translate-y-0');
+                                    searchBar.classList.add('opacity-100');
+                                } else {
+                                    searchBar.classList.add('translate-y-[150%]');
+                                    searchBar.classList.add('opacity-0');
+                                    searchBar.classList.remove('translate-y-0');
+                                    searchBar.classList.remove('opacity-100');
+                                }
+                            }
                         }
-                    }
 
-                    function setRole(role) {
-                        const toggleBg = document.getElementById('toggle-bg');
-                        const btnPassenger = document.getElementById('btn-passenger');
-                        const btnDriver = document.getElementById('btn-driver');
+                        function toggleBottomBlogBar() {
+                            const searchBar = document.getElementById('bottom-search-bar');
+                            const blogBar = document.getElementById('bottom-blog-bar');
+                            if (blogBar) {
+                                if (blogBar.classList.contains('translate-y-[150%]')) {
+                                    // Close search bar if open
+                                    if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
+                                        searchBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                        searchBar.classList.remove('translate-y-0', 'opacity-100');
+                                    }
 
-                        const passView = document.getElementById('passenger-view');
-                        const drvView = document.getElementById('driver-view');
+                                    blogBar.classList.remove('translate-y-[150%]');
+                                    blogBar.classList.remove('opacity-0');
+                                    blogBar.classList.add('translate-y-0');
+                                    blogBar.classList.add('opacity-100');
+                                } else {
+                                    blogBar.classList.add('translate-y-[150%]');
+                                    blogBar.classList.add('opacity-0');
+                                    blogBar.classList.remove('translate-y-0');
+                                    blogBar.classList.remove('opacity-100');
+                                }
+                            }
+                        }
+                    </script>
+                    <% } %>
 
-                        const markerPulse = document.getElementById('marker-pulse');
-                        const markerDot = document.getElementById('marker-dot');
+                        <!-- Locate Me Button -->
+                        <button onclick="recenterMap()"
+                            class="absolute bottom-8 right-8 z-20 w-14 h-14 bg-white text-slate-700 hover:text-[#6200EE] rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.15)] flex items-center justify-center transition-all hover:scale-105 border border-slate-200"
+                            title="Vị trí của tôi">
+                            <span class="material-symbols-outlined text-[28px]">my_location</span>
+                        </button>
 
-                        const navHome = document.getElementById('nav-home');
+                        <!-- Script to handle switching roles -->
+                        <script>
+                            let userLngLat = [105.8542, 21.0285]; // Default: Hanoi
 
-                        if (role === 'passenger') {
-                            // UI Toggle position
-                            toggleBg.style.transform = 'translateX(0)';
-
-                            // Text colors
-                            btnPassenger.classList.remove('text-slate-500', 'hover:text-slate-700');
-                            btnPassenger.classList.add('text-[#6200EE]');
-
-                            btnDriver.classList.remove('text-[#FF6D00]');
-                            btnDriver.classList.add('text-slate-500', 'hover:text-slate-700');
-
-                            // View transition
-                            passView.classList.replace('opacity-0', 'opacity-100');
-                            passView.classList.replace('-translate-x-10', 'translate-x-0');
-                            passView.classList.remove('pointer-events-none');
-
-                            drvView.classList.replace('opacity-100', 'opacity-0');
-                            drvView.classList.replace('translate-x-0', 'translate-x-10');
-                            drvView.classList.add('pointer-events-none');
-
-                            // Update map marker colors
-                            markerPulse.className = 'absolute w-20 h-20 bg-[#6200EE]/30 rounded-full animate-ping';
-                            markerDot.className = 'relative w-8 h-8 bg-[#6200EE] border-[3px] border-white rounded-full shadow-xl';
-
-                            // Update nav active color
-                            navHome.classList.replace('text-[#FF6D00]', 'text-[#6200EE]');
-                            navHome.classList.replace('bg-orange-50', 'bg-purple-50');
-
-                        } else {
-                            // UI Toggle position
-                            toggleBg.style.transform = 'translateX(100%)';
-
-                            // Text colors
-                            btnDriver.classList.remove('text-slate-500', 'hover:text-slate-700');
-                            btnDriver.classList.add('text-[#FF6D00]');
-
-                            btnPassenger.classList.remove('text-[#6200EE]');
-                            btnPassenger.classList.add('text-slate-500', 'hover:text-slate-700');
-
-                            // View transition
-                            drvView.classList.replace('opacity-0', 'opacity-100');
-                            drvView.classList.replace('translate-x-10', 'translate-x-0');
-                            drvView.classList.remove('pointer-events-none');
-
-                            passView.classList.replace('opacity-100', 'opacity-0');
-                            passView.classList.replace('translate-x-0', '-translate-x-10');
-                            passView.classList.add('pointer-events-none');
-
-                            // Update map marker colors (if marker exists)
-                            if (window.userMarkerEl) {
-                                const pulse = window.userMarkerEl.querySelector('.animate-ping');
-                                const dot = window.userMarkerEl.querySelector('.shadow-xl');
-                                if (pulse) pulse.className = 'absolute w-20 h-20 bg-[#FF6D00]/30 rounded-full animate-ping';
-                                if (dot) dot.className = 'relative w-8 h-8 bg-[#FF6D00] border-[3px] border-white rounded-full shadow-xl';
+                            function recenterMap() {
+                                if (window.mapInstance) {
+                                    window.mapInstance.flyTo({
+                                        center: userLngLat,
+                                        zoom: 15,
+                                        speed: 1.2
+                                    });
+                                }
                             }
 
-                            // Update nav active color
-                            navHome.classList.replace('text-[#6200EE]', 'text-[#FF6D00]');
-                            navHome.classList.replace('bg-purple-50', 'bg-orange-50');
-                        }
-                    }
+                            function setRole(role) {
+                                const toggleBg = document.getElementById('toggle-bg');
+                                const btnPassenger = document.getElementById('btn-passenger');
+                                const btnDriver = document.getElementById('btn-driver');
 
-                    // ==========================================
-                    // MAPBOX INITIALIZATION & GEOLOCATION
-                    // ==========================================
+                                const passView = document.getElementById('passenger-view');
+                                const drvView = document.getElementById('driver-view');
 
-                    // Access token của bạn
-                    mapboxgl.accessToken = 'pk.eyJ1Ijoia2lta3l2dSIsImEiOiJjbXBrbjBsenkxaG8xMnJvcWE4Ymp2bHVkIn0.cqSefs1dwaF89hY4SlLUsQ';
+                                const markerPulse = document.getElementById('marker-pulse');
+                                const markerDot = document.getElementById('marker-dot');
 
-                    // Khởi tạo bản đồ với style sáng màu (phù hợp UI)
-                    const map = new mapboxgl.Map({
-                        container: 'map', // id của thẻ div
-                        style: 'mapbox://styles/mapbox/light-v11', // giao diện sáng, tối giản
-                        center: [105.8542, 21.0285], // Tọa độ mặc định (Hà Nội)
-                        zoom: 13,
-                        attributionControl: false // Ẩn logo mapbox nhỏ nếu muốn UI sạch hơn
-                    });
-                    window.mapInstance = map;
+                                const navHome = document.getElementById('nav-home');
 
-                    // Tạo DOM element cho Custom Marker
-                    const markerEl = document.createElement('div');
-                    markerEl.className = 'relative flex items-center justify-center';
-                    markerEl.innerHTML = `
+                                if (role === 'passenger') {
+                                    // UI Toggle position
+                                    toggleBg.style.transform = 'translateX(0)';
+
+                                    // Text colors
+                                    btnPassenger.classList.remove('text-slate-500', 'hover:text-slate-700');
+                                    btnPassenger.classList.add('text-[#6200EE]');
+
+                                    btnDriver.classList.remove('text-[#FF6D00]');
+                                    btnDriver.classList.add('text-slate-500', 'hover:text-slate-700');
+
+                                    // View transition
+                                    passView.classList.replace('opacity-0', 'opacity-100');
+                                    passView.classList.replace('-translate-x-10', 'translate-x-0');
+                                    passView.classList.remove('pointer-events-none');
+
+                                    drvView.classList.replace('opacity-100', 'opacity-0');
+                                    drvView.classList.replace('translate-x-0', 'translate-x-10');
+                                    drvView.classList.add('pointer-events-none');
+
+                                    // Update map marker colors
+                                    markerPulse.className = 'absolute w-20 h-20 bg-[#6200EE]/30 rounded-full animate-ping';
+                                    markerDot.className = 'relative w-8 h-8 bg-[#6200EE] border-[3px] border-white rounded-full shadow-xl';
+
+                                    // Update nav active color
+                                    navHome.classList.replace('text-[#FF6D00]', 'text-[#6200EE]');
+                                    navHome.classList.replace('bg-orange-50', 'bg-purple-50');
+
+                                } else {
+                                    // UI Toggle position
+                                    toggleBg.style.transform = 'translateX(100%)';
+
+                                    // Text colors
+                                    btnDriver.classList.remove('text-slate-500', 'hover:text-slate-700');
+                                    btnDriver.classList.add('text-[#FF6D00]');
+
+                                    btnPassenger.classList.remove('text-[#6200EE]');
+                                    btnPassenger.classList.add('text-slate-500', 'hover:text-slate-700');
+
+                                    // View transition
+                                    drvView.classList.replace('opacity-0', 'opacity-100');
+                                    drvView.classList.replace('translate-x-10', 'translate-x-0');
+                                    drvView.classList.remove('pointer-events-none');
+
+                                    passView.classList.replace('opacity-100', 'opacity-0');
+                                    passView.classList.replace('translate-x-0', '-translate-x-10');
+                                    passView.classList.add('pointer-events-none');
+
+                                    // Update map marker colors (if marker exists)
+                                    if (window.userMarkerEl) {
+                                        const pulse = window.userMarkerEl.querySelector('.animate-ping');
+                                        const dot = window.userMarkerEl.querySelector('.shadow-xl');
+                                        if (pulse) pulse.className = 'absolute w-20 h-20 bg-[#FF6D00]/30 rounded-full animate-ping';
+                                        if (dot) dot.className = 'relative w-8 h-8 bg-[#FF6D00] border-[3px] border-white rounded-full shadow-xl';
+                                    }
+
+                                    // Update nav active color
+                                    navHome.classList.replace('text-[#6200EE]', 'text-[#FF6D00]');
+                                    navHome.classList.replace('bg-purple-50', 'bg-orange-50');
+                                }
+                            }
+
+                            // ==========================================
+                            // MAPBOX INITIALIZATION & GEOLOCATION
+                            // ==========================================
+
+                            // Access token của bạn
+                            mapboxgl.accessToken = 'pk.eyJ1Ijoia2lta3l2dSIsImEiOiJjbXBrbjBsenkxaG8xMnJvcWE4Ymp2bHVkIn0.cqSefs1dwaF89hY4SlLUsQ';
+
+                            // Khởi tạo bản đồ với style sáng màu (phù hợp UI)
+                            const map = new mapboxgl.Map({
+                                container: 'map', // id của thẻ div
+                                style: 'mapbox://styles/mapbox/light-v11', // giao diện sáng, tối giản
+                                center: [105.8542, 21.0285], // Tọa độ mặc định (Hà Nội)
+                                zoom: 13,
+                                attributionControl: false // Ẩn logo mapbox nhỏ nếu muốn UI sạch hơn
+                            });
+                            window.mapInstance = map;
+
+                            // Tạo DOM element cho Custom Marker
+                            const markerEl = document.createElement('div');
+                            markerEl.className = 'relative flex items-center justify-center';
+                            markerEl.innerHTML = `
             <div class="absolute w-20 h-20 bg-[#6200EE]/30 rounded-full animate-ping"></div>
             <div class="relative w-8 h-8 bg-[#6200EE] border-[3px] border-white rounded-full shadow-xl">
                 <div class="absolute inset-0 rounded-full border border-black/10"></div>
             </div>
         `;
-                    // Lưu lại để có thể đổi màu khi toggle role
-                    window.userMarkerEl = markerEl;
+                            // Lưu lại để có thể đổi màu khi toggle role
+                            window.userMarkerEl = markerEl;
 
-                    // Khởi tạo đối tượng Marker của Mapbox (nhưng chưa add vào map)
-                    const userMarker = new mapboxgl.Marker(markerEl);
+                            // Khởi tạo đối tượng Marker của Mapbox (nhưng chưa add vào map)
+                            const userMarker = new mapboxgl.Marker(markerEl);
 
-                    // Khi bản đồ load xong, ta sẽ lấy vị trí thực của user
-                    map.on('load', () => {
-                        if (navigator.geolocation) {
-                            // Yêu cầu quyền truy cập vị trí và lấy tọa độ
-                            navigator.geolocation.getCurrentPosition(
-                                (position) => {
-                                    const lng = position.coords.longitude;
-                                    const lat = position.coords.latitude;
-                                    userLngLat = [lng, lat]; // Cập nhật vị trí toàn cục
+                            // Khi bản đồ load xong, ta sẽ lấy vị trí thực của user
+                            map.on('load', () => {
+                                if (navigator.geolocation) {
+                                    // Yêu cầu quyền truy cập vị trí và lấy tọa độ
+                                    navigator.geolocation.getCurrentPosition(
+                                        (position) => {
+                                            const lng = position.coords.longitude;
+                                            const lat = position.coords.latitude;
+                                            userLngLat = [lng, lat]; // Cập nhật vị trí toàn cục
 
-                                    // Di chuyển bản đồ (FlyTo) tới vị trí của user với hiệu ứng mượt
-                                    map.flyTo({
-                                        center: [lng, lat],
-                                        zoom: 15,
-                                        speed: 1.2
-                                    });
+                                            // Di chuyển bản đồ (FlyTo) tới vị trí của user với hiệu ứng mượt
+                                            map.flyTo({
+                                                center: [lng, lat],
+                                                zoom: 15,
+                                                speed: 1.2
+                                            });
 
-                                    // Đặt custom marker lên vị trí của user
-                                    userMarker.setLngLat([lng, lat]).addTo(map);
-                                },
-                                (error) => {
-                                    console.error("Lỗi khi lấy vị trí: ", error.message);
-                                    // Nếu user từ chối, marker có thể được đặt ở tọa độ mặc định
-                                    userMarker.setLngLat([105.8542, 21.0285]).addTo(map);
-                                },
-                                {
-                                    enableHighAccuracy: true,
-                                    timeout: 5000,
-                                    maximumAge: 0
+                                            // Đặt custom marker lên vị trí của user
+                                            userMarker.setLngLat([lng, lat]).addTo(map);
+                                        },
+                                        (error) => {
+                                            console.error("Lỗi khi lấy vị trí: ", error.message);
+                                            // Nếu user từ chối, marker có thể được đặt ở tọa độ mặc định
+                                            userMarker.setLngLat([105.8542, 21.0285]).addTo(map);
+                                        },
+                                        {
+                                            enableHighAccuracy: true,
+                                            timeout: 5000,
+                                            maximumAge: 0
+                                        }
+                                    );
+                                } else {
+                                    console.log("Trình duyệt không hỗ trợ Geolocation.");
                                 }
-                            );
-                        } else {
-                            console.log("Trình duyệt không hỗ trợ Geolocation.");
-                        }
-                    });
+                            });
 
-                </script>
+                        </script>
 
-                <!-- Auth Modal Include & Script -->
-                <jsp:include page="includes/auth_modal.jsp" />
-                <!-- Onboarding Modal -->
-                <jsp:include page="includes/onboarding_modal.jsp" />
+                        <!-- Auth Modal Include & Script -->
+                        <jsp:include page="includes/auth_modal.jsp" />
+                        <!-- Onboarding Modal -->
+                        <jsp:include page="includes/onboarding_modal.jsp" />
 
-                <!-- Logout Confirmation Modal (Bulletproof) -->
-                <div id="logoutConfirmModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; align-items: center; justify-content: center; font-family: 'Inter', sans-serif;">
-                    <!-- Backdrop -->
-                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);"></div>
-                    
-                    <!-- Content -->
-                    <div style="background: white; border-radius: 1.5rem; padding: 1.5rem; position: relative; width: 90%; max-width: 24rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; align-items: center; text-align: center; animation: modalPop 0.3s ease-out forwards;">
-                        <style>
-                            @keyframes modalPop {
-                                0% { opacity: 0; transform: scale(0.95); }
-                                100% { opacity: 1; transform: scale(1); }
-                            }
-                        </style>
-                        <div style="width: 4rem; height: 4rem; background: rgba(254, 226, 226, 0.5); border-radius: 9999px; display: flex; align-items: center; justify-content: center; color: #ef4444; margin-bottom: 1rem; border: 1px solid #fee2e2;">
-                            <span class="material-symbols-outlined" style="font-size: 1.875rem;">logout</span>
+                        <!-- Logout Confirmation Modal (Bulletproof) -->
+                        <div id="logoutConfirmModal"
+                            style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; align-items: center; justify-content: center; font-family: 'Inter', sans-serif;">
+                            <!-- Backdrop -->
+                            <div
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);">
+                            </div>
+
+                            <!-- Content -->
+                            <div
+                                style="background: white; border-radius: 1.5rem; padding: 1.5rem; position: relative; width: 90%; max-width: 24rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; align-items: center; text-align: center; animation: modalPop 0.3s ease-out forwards;">
+                                <style>
+                                    @keyframes modalPop {
+                                        0% {
+                                            opacity: 0;
+                                            transform: scale(0.95);
+                                        }
+
+                                        100% {
+                                            opacity: 1;
+                                            transform: scale(1);
+                                        }
+                                    }
+                                </style>
+                                <div
+                                    style="width: 4rem; height: 4rem; background: rgba(254, 226, 226, 0.5); border-radius: 9999px; display: flex; align-items: center; justify-content: center; color: #ef4444; margin-bottom: 1rem; border: 1px solid #fee2e2;">
+                                    <span class="material-symbols-outlined" style="font-size: 1.875rem;">logout</span>
+                                </div>
+                                <h3
+                                    style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; line-height: 1.2;">
+                                    Đăng xuất tài khoản?</h3>
+                                <p
+                                    style="font-size: 0.875rem; color: #64748b; font-weight: 500; margin-bottom: 1.5rem; line-height: 1.5;">
+                                    Bạn có chắc chắn muốn đăng xuất không? Bạn sẽ cần đăng nhập lại để tiếp tục sử dụng.
+                                </p>
+                                <div style="display: flex; gap: 0.75rem; width: 100%;">
+                                    <button type="button" id="btnCancelLogout"
+                                        style="flex: 1; padding: 0.75rem 1rem; background: #f1f5f9; color: #334155; font-weight: 700; border-radius: 0.75rem; font-size: 0.875rem; border: none; cursor: pointer; transition: background 0.2s;"
+                                        onmouseover="this.style.background='#e2e8f0'"
+                                        onmouseout="this.style.background='#f1f5f9'">Hủy bỏ</button>
+                                    <button type="button" id="btnConfirmLogout"
+                                        style="flex: 1; padding: 0.75rem 1rem; background: #ef4444; color: white; font-weight: 700; border-radius: 0.75rem; font-size: 0.875rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: none; cursor: pointer; transition: background 0.2s;"
+                                        onmouseover="this.style.background='#dc2626'"
+                                        onmouseout="this.style.background='#ef4444'">Đăng xuất</button>
+                                </div>
+                            </div>
                         </div>
-                        <h3 style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; line-height: 1.2;">Đăng xuất tài khoản?</h3>
-                        <p style="font-size: 0.875rem; color: #64748b; font-weight: 500; margin-bottom: 1.5rem; line-height: 1.5;">Bạn có chắc chắn muốn đăng xuất không? Bạn sẽ cần đăng nhập lại để tiếp tục sử dụng.</p>
-                        <div style="display: flex; gap: 0.75rem; width: 100%;">
-                            <button type="button" id="btnCancelLogout"
-                                style="flex: 1; padding: 0.75rem 1rem; background: #f1f5f9; color: #334155; font-weight: 700; border-radius: 0.75rem; font-size: 0.875rem; border: none; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f1f5f9'">Hủy bỏ</button>
-                            <button type="button" id="btnConfirmLogout"
-                                style="flex: 1; padding: 0.75rem 1rem; background: #ef4444; color: white; font-weight: 700; border-radius: 0.75rem; font-size: 0.875rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: none; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">Đăng xuất</button>
-                        </div>
-                    </div>
-                </div>
 
-                <script>
-                    window.CONTEXT_PATH = '${pageContext.request.contextPath}';
+                        <script>
+                            window.CONTEXT_PATH = '${pageContext.request.contextPath}';
                     <% if (!isLoggedIn) { %>
-                        // Auto-open modal if not logged in
-                        document.addEventListener('DOMContentLoaded', () => {
-                            setTimeout(() => {
-                                if (window.openAuthModal) window.openAuthModal();
-                            }, 500);
-                        });
+                                // Auto-open modal if not logged in
+                                document.addEventListener('DOMContentLoaded', () => {
+                                    setTimeout(() => {
+                                        if (window.openAuthModal) window.openAuthModal();
+                                    }, 500);
+                                });
                     <% } %>
 
-                    // Define functions globally on window
-                    window.showLogoutConfirmModal = function() {
-                        console.log("[Logout] Opening confirmation modal");
-                        const modal = document.getElementById('logoutConfirmModal');
-                        if (modal) {
-                            modal.style.setProperty('display', 'flex', 'important');
-                        } else {
-                            console.error("[Logout] Modal #logoutConfirmModal not found!");
-                        }
-                        const passDrop = document.getElementById('passenger-dropdown');
-                        const drivDrop = document.getElementById('driver-dropdown');
-                        if (passDrop) passDrop.classList.add('hidden');
-                        if (drivDrop) drivDrop.classList.add('hidden');
-                    };
-
-                    window.closeLogoutConfirmModal = function() {
-                        console.log("[Logout] Closing confirmation modal");
-                        const modal = document.getElementById('logoutConfirmModal');
-                        if (modal) {
-                            modal.style.setProperty('display', 'none', 'important');
-                        }
-                    };
-
-                    window.confirmLogout = function() {
-                        console.log("[Logout] confirmLogout triggered");
-                        const btn = document.getElementById('btnConfirmLogout');
-                        if (btn) {
-                            btn.disabled = true;
-                            btn.innerHTML = 'Đang đăng xuất...';
-                        }
-                        fetch(window.CONTEXT_PATH + '/api/logout', { method: 'POST' })
-                            .then(res => {
-                                if(!res.ok) throw new Error("HTTP error " + res.status);
-                                return res.json();
-                            })
-                            .then(data => {
-                                console.log("[Logout] Response received", data);
-                                if (data.success) {
-                                    window.location.href = window.CONTEXT_PATH + '/dashboard.jsp';
-                                } else {
-                                    alert("Đăng xuất thất bại: " + data.message);
-                                    if (btn) {
-                                        btn.disabled = false;
-                                        btn.innerHTML = 'Đăng xuất';
+                                // Define functions globally on window
+                                window.showLogoutConfirmModal = function() {
+                                    console.log("[Logout] Opening confirmation modal");
+                                    const modal = document.getElementById('logoutConfirmModal');
+                                    if (modal) {
+                                        modal.style.setProperty('display', 'flex', 'important');
+                                    } else {
+                                        console.error("[Logout] Modal #logoutConfirmModal not found!");
                                     }
+                                    const passDrop = document.getElementById('passenger-dropdown');
+                                    const drivDrop = document.getElementById('driver-dropdown');
+                                    if (passDrop) passDrop.classList.add('hidden');
+                                    if (drivDrop) drivDrop.classList.add('hidden');
+                                };
+
+                            window.closeLogoutConfirmModal = function () {
+                                console.log("[Logout] Closing confirmation modal");
+                                const modal = document.getElementById('logoutConfirmModal');
+                                if (modal) {
+                                    modal.style.setProperty('display', 'none', 'important');
                                 }
-                            })
-                            .catch(err => {
-                                console.error("[Logout] error", err);
-                                alert("Đã xảy ra lỗi mạng khi đăng xuất. Trình duyệt sẽ tự tải lại.");
-                                window.location.href = window.CONTEXT_PATH + '/dashboard.jsp';
-                            });
-                    };
+                            };
 
-                    // Bind dynamic events after DOM content is loaded
-                    document.addEventListener('DOMContentLoaded', function() {
-                        console.log("[Logout] Initializing logout event listeners");
+                            window.confirmLogout = function () {
+                                console.log("[Logout] confirmLogout triggered");
+                                const btn = document.getElementById('btnConfirmLogout');
+                                if (btn) {
+                                    btn.disabled = true;
+                                    btn.innerHTML = 'Đang đăng xuất...';
+                                }
+                                fetch(window.CONTEXT_PATH + '/api/logout', { method: 'POST' })
+                                    .then(res => {
+                                        if (!res.ok) throw new Error("HTTP error " + res.status);
+                                        return res.json();
+                                    })
+                                    .then(data => {
+                                        console.log("[Logout] Response received", data);
+                                        if (data.success) {
+                                            window.location.href = window.CONTEXT_PATH + '/dashboard.jsp';
+                                        } else {
+                                            alert("Đăng xuất thất bại: " + data.message);
+                                            if (btn) {
+                                                btn.disabled = false;
+                                                btn.innerHTML = 'Đăng xuất';
+                                            }
+                                        }
+                                    })
+                                    .catch(err => {
+                                        console.error("[Logout] error", err);
+                                        alert("Đã xảy ra lỗi mạng khi đăng xuất. Trình duyệt sẽ tự tải lại.");
+                                        window.location.href = window.CONTEXT_PATH + '/dashboard.jsp';
+                                    });
+                            };
 
-                        // 1. Avatar Triggers
-                        const pAvatarTrigger = document.getElementById('passenger-avatar-trigger');
-                        if (pAvatarTrigger) {
-                            pAvatarTrigger.addEventListener('click', function(e) {
-                                e.stopPropagation();
-                                const dropdown = document.getElementById('passenger-dropdown');
-                                if (dropdown) dropdown.classList.toggle('hidden');
-                            });
-                        }
-                        const dAvatarTrigger = document.getElementById('driver-avatar-trigger');
-                        if (dAvatarTrigger) {
-                            dAvatarTrigger.addEventListener('click', function(e) {
-                                e.stopPropagation();
-                                const dropdown = document.getElementById('driver-dropdown');
-                                if (dropdown) dropdown.classList.toggle('hidden');
-                            });
-                        }
+                            // Bind dynamic events after DOM content is loaded
+                            document.addEventListener('DOMContentLoaded', function () {
+                                console.log("[Logout] Initializing logout event listeners");
 
-                        // 2. Dropdown Logout Buttons
-                        const pLogoutBtn = document.getElementById('passenger-logout-btn');
-                        if (pLogoutBtn) {
-                            pLogoutBtn.addEventListener('click', function(e) {
-                                console.log("[Logout] Passenger logout clicked");
-                                e.preventDefault();
-                                e.stopPropagation();
-                                window.showLogoutConfirmModal();
-                            });
-                        }
-                        const dLogoutBtn = document.getElementById('driver-logout-btn');
-                        if (dLogoutBtn) {
-                            dLogoutBtn.addEventListener('click', function(e) {
-                                console.log("[Logout] Driver logout clicked");
-                                e.preventDefault();
-                                e.stopPropagation();
-                                window.showLogoutConfirmModal();
-                            });
-                        }
+                                // 1. Avatar Triggers
+                                const pAvatarTrigger = document.getElementById('passenger-avatar-trigger');
+                                if (pAvatarTrigger) {
+                                    pAvatarTrigger.addEventListener('click', function (e) {
+                                        e.stopPropagation();
+                                        const dropdown = document.getElementById('passenger-dropdown');
+                                        if (dropdown) dropdown.classList.toggle('hidden');
+                                    });
+                                }
+                                const dAvatarTrigger = document.getElementById('driver-avatar-trigger');
+                                if (dAvatarTrigger) {
+                                    dAvatarTrigger.addEventListener('click', function (e) {
+                                        e.stopPropagation();
+                                        const dropdown = document.getElementById('driver-dropdown');
+                                        if (dropdown) dropdown.classList.toggle('hidden');
+                                    });
+                                }
 
-                        // 3. Modal buttons
-                        const cancelLogoutBtn = document.getElementById('btnCancelLogout');
-                        if (cancelLogoutBtn) {
-                            cancelLogoutBtn.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                window.closeLogoutConfirmModal();
-                            });
-                        }
-                        const confirmLogoutBtn = document.getElementById('btnConfirmLogout');
-                        if (confirmLogoutBtn) {
-                            confirmLogoutBtn.addEventListener('click', function(e) {
-                                e.preventDefault();
-                                window.confirmLogout();
-                            });
-                        }
-                    });
+                                // 2. Dropdown Logout Buttons
+                                const pLogoutBtn = document.getElementById('passenger-logout-btn');
+                                if (pLogoutBtn) {
+                                    pLogoutBtn.addEventListener('click', function (e) {
+                                        console.log("[Logout] Passenger logout clicked");
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        window.showLogoutConfirmModal();
+                                    });
+                                }
+                                const dLogoutBtn = document.getElementById('driver-logout-btn');
+                                if (dLogoutBtn) {
+                                    dLogoutBtn.addEventListener('click', function (e) {
+                                        console.log("[Logout] Driver logout clicked");
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        window.showLogoutConfirmModal();
+                                    });
+                                }
 
-                    // 4. Global click listener to close dropdowns when clicking outside
-                    document.addEventListener('click', function (event) {
-                        const passDrop = document.getElementById('passenger-dropdown');
-                        const passContainer = document.getElementById('passenger-avatar-container');
-                        const drivDrop = document.getElementById('driver-dropdown');
-                        const drivContainer = document.getElementById('driver-avatar-container');
+                                // 3. Modal buttons
+                                const cancelLogoutBtn = document.getElementById('btnCancelLogout');
+                                if (cancelLogoutBtn) {
+                                    cancelLogoutBtn.addEventListener('click', function (e) {
+                                        e.preventDefault();
+                                        window.closeLogoutConfirmModal();
+                                    });
+                                }
+                                const confirmLogoutBtn = document.getElementById('btnConfirmLogout');
+                                if (confirmLogoutBtn) {
+                                    confirmLogoutBtn.addEventListener('click', function (e) {
+                                        e.preventDefault();
+                                        window.confirmLogout();
+                                    });
+                                }
+                            });
 
-                        if (passDrop && passContainer && !passContainer.contains(event.target)) {
-                            passDrop.classList.add('hidden');
-                        }
-                        if (drivDrop && drivContainer && !drivContainer.contains(event.target)) {
-                            drivDrop.classList.add('hidden');
-                        }
-                    });
-                </script>
-                <!-- Toast Notification Utility -->
-                <script src="${pageContext.request.contextPath}/assets/js/toast.js?v=<%= System.currentTimeMillis() %>"></script>
-                <script src="${pageContext.request.contextPath}/assets/js/landingpage.js?v=<%= System.currentTimeMillis() %>"></script>
+                            // 4. Global click listener to close dropdowns when clicking outside
+                            document.addEventListener('click', function (event) {
+                                const passDrop = document.getElementById('passenger-dropdown');
+                                const passContainer = document.getElementById('passenger-avatar-container');
+                                const drivDrop = document.getElementById('driver-dropdown');
+                                const drivContainer = document.getElementById('driver-avatar-container');
+
+                                if (passDrop && passContainer && !passContainer.contains(event.target)) {
+                                    passDrop.classList.add('hidden');
+                                }
+                                if (drivDrop && drivContainer && !drivContainer.contains(event.target)) {
+                                    drivDrop.classList.add('hidden');
+                                }
+                            });
+                        </script>
+                        <!-- Toast Notification Utility -->
+                        <script
+                            src="${pageContext.request.contextPath}/assets/js/toast.js?v=<%= System.currentTimeMillis() %>"></script>
+                        <script
+                            src="${pageContext.request.contextPath}/assets/js/landingpage.js?v=<%= System.currentTimeMillis() %>"></script>
             </body>
 
             </html>
