@@ -41,6 +41,7 @@
                 <style>
                     body {
                         font-family: 'Inter', sans-serif;
+                        /* Removed custom cursors to use system defaults */
                     }
                 </style>
             </head>
