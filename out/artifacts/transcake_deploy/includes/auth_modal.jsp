@@ -63,26 +63,7 @@
                             class="w-full mt-4 bg-gradient-to-r from-[#6200EE] to-[#b84bf0] text-white py-3 rounded-xl font-bold shadow-lg shadow-purple-500/30 hover:scale-[1.02] transition-transform">Đăng
                             nhập</button>
 
-                        <div class="mt-4 flex items-center justify-center gap-4">
-                            <div class="h-px bg-slate-200 flex-1"></div>
-                            <span class="text-xs font-semibold text-slate-400 uppercase">Hoặc đăng nhập với</span>
-                            <div class="h-px bg-slate-200 flex-1"></div>
-                        </div>
 
-                        <div class="flex gap-4 mt-4">
-                            <button type="button"
-                                class="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
-                                    alt="Google" class="w-5 h-5">
-                                <span class="text-sm font-semibold text-slate-700">Google</span>
-                            </button>
-                            <button type="button"
-                                class="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 transition-colors">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png"
-                                    alt="Facebook" class="w-5 h-5">
-                                <span class="text-sm font-semibold text-slate-700">Facebook</span>
-                            </button>
-                        </div>
                     </form>
 
                     <!-- Register Form (Hidden initially) -->

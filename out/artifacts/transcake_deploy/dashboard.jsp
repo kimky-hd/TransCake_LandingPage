@@ -390,7 +390,25 @@
                         <div class="flex flex-col lg:flex-row gap-8 flex-1 h-full">
 
                             <!-- LEFT: Search Form -->
-                            <div class="w-full lg:w-[45%] flex flex-col gap-5 border-r border-slate-200/60 pr-4">
+                            <form action="${pageContext.request.contextPath}/trip-search" method="POST"
+                                class="w-full lg:w-[45%] flex flex-col gap-5 border-r border-slate-200/60 pr-4">
+
+                                <!-- Booking Type Toggle -->
+                                <div
+                                    class="bg-slate-100/80 p-1 rounded-full flex relative border border-slate-200/50 shadow-inner w-full">
+                                    <input type="hidden" name="tripType" id="tripType" value="ON_DEMAND">
+                                    <!-- Sliding background indicator -->
+                                    <div class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white rounded-full shadow-sm border border-slate-200 transition-transform duration-300 ease-out"
+                                        id="booking-type-bg"></div>
+
+                                    <button type="button"
+                                        class="flex-1 py-2 text-sm font-bold z-10 transition-colors duration-300 text-[#6200EE]"
+                                        id="btn-ondemand" onclick="setBookingType('ON_DEMAND')">Đặt xe ngay</button>
+                                    <button type="button"
+                                        class="flex-1 py-2 text-sm font-bold z-10 transition-colors duration-300 text-slate-500 hover:text-slate-700"
+                                        id="btn-prebook" onclick="setBookingType('PRE_BOOK')">Đặt lịch trước</button>
+                                </div>
+
                                 <!-- Location Input Group -->
                                 <div class="relative flex flex-col gap-3 w-full">
                                     <!-- Connecting Line -->
@@ -399,57 +417,90 @@
                                     </div>
 
                                     <!-- Pickup -->
-                                    <div
-                                        class="relative flex items-center p-1 bg-white border border-slate-200/80 rounded-full shadow-sm hover:border-[#6200EE]/50 transition-colors z-10 w-full">
-                                        <div class="w-10 h-10 flex items-center justify-center shrink-0">
-                                            <div
-                                                class="w-3.5 h-3.5 rounded-full border-[3px] border-[#6200EE] bg-white">
+                                    <div class="relative z-20">
+                                        <div
+                                            class="relative flex items-center p-1 bg-white border border-slate-200/80 rounded-full shadow-sm hover:border-[#6200EE]/50 transition-colors w-full">
+                                            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+                                                <div
+                                                    class="w-3.5 h-3.5 rounded-full border-[3px] border-[#6200EE] bg-white">
+                                                </div>
                                             </div>
+                                            <input type="text" id="pickup-input" name="pickup" required
+                                                autocomplete="off" placeholder="Điểm đón (VD: 123 Nguyễn Trãi)"
+                                                class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-medium placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none">
                                         </div>
-                                        <input type="text" placeholder="Điểm đón (VD: 123 Nguyễn Trãi)"
-                                            class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-medium placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                        <div id="pickup-suggestions"
+                                            class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden hidden max-h-48 panel-scroll overflow-y-auto">
+                                        </div>
                                     </div>
 
                                     <!-- Dropoff -->
-                                    <div
-                                        class="relative flex items-center p-1 bg-white border border-slate-200/80 rounded-full shadow-sm hover:border-[#6200EE]/50 transition-colors z-10 w-full">
-                                        <div class="w-10 h-10 flex items-center justify-center shrink-0">
-                                            <span
-                                                class="material-symbols-outlined text-[#FF6D00] text-[22px]">location_on</span>
+                                    <div class="relative z-10">
+                                        <div
+                                            class="relative flex items-center p-1 bg-white border border-slate-200/80 rounded-full shadow-sm hover:border-[#6200EE]/50 transition-colors w-full">
+                                            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+                                                <span
+                                                    class="material-symbols-outlined text-[#FF6D00] text-[22px]">location_on</span>
+                                            </div>
+                                            <input type="text" id="dropoff-input" name="dropoff" required
+                                                autocomplete="off" placeholder="Điểm đến (VD: Sân bay Nội Bài)"
+                                                class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-medium placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none">
                                         </div>
-                                        <input type="text" placeholder="Điểm đến (VD: Sân bay Nội Bài)"
-                                            class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-medium placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                        <div id="dropoff-suggestions"
+                                            class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden hidden max-h-48 panel-scroll overflow-y-auto">
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!-- Date & Time -->
-                                <div class="flex gap-3">
-                                    <div
-                                        class="relative flex-1 bg-white border border-slate-200/80 rounded-full overflow-hidden shadow-sm flex items-center hover:border-[#6200EE]/50 transition-colors">
+                                <div id="datetime-container"
+                                    class="flex flex-col gap-3 hidden opacity-0 transition-all duration-300 transform -translate-y-2">
+                                    <div class="flex gap-3">
                                         <div
-                                            class="w-10 h-10 flex items-center justify-center text-slate-400 shrink-0 ml-1">
-                                            <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                                            class="relative flex-1 bg-white border border-slate-200/80 rounded-full overflow-hidden shadow-sm flex items-center hover:border-[#6200EE]/50 transition-colors">
+                                            <div
+                                                class="w-10 h-10 flex items-center justify-center text-slate-400 shrink-0 ml-1">
+                                                <span
+                                                    class="material-symbols-outlined text-[18px]">calendar_today</span>
+                                            </div>
+                                            <input type="date" name="date" id="trip-date"
+                                                class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-semibold text-slate-700 border-none focus:ring-0 focus:outline-none">
                                         </div>
-                                        <input type="date"
-                                            class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-semibold text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                        <div
+                                            class="relative flex-1 bg-white border border-slate-200/80 rounded-full overflow-hidden shadow-sm flex items-center hover:border-[#6200EE]/50 transition-colors">
+                                            <div
+                                                class="w-10 h-10 flex items-center justify-center text-slate-400 shrink-0 ml-1">
+                                                <span class="material-symbols-outlined text-[18px]">schedule</span>
+                                            </div>
+                                            <input type="time" name="time" id="trip-time"
+                                                class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-semibold text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                        </div>
                                     </div>
-                                    <div
-                                        class="relative flex-1 bg-white border border-slate-200/80 rounded-full overflow-hidden shadow-sm flex items-center hover:border-[#6200EE]/50 transition-colors">
-                                        <div
-                                            class="w-10 h-10 flex items-center justify-center text-slate-400 shrink-0 ml-1">
-                                            <span class="material-symbols-outlined text-[18px]">schedule</span>
+
+                                    <!-- Share to Blog Toggle -->
+                                    <div class="flex items-center justify-between px-2 mt-1">
+                                        <div class="flex items-center gap-2">
+                                            <span
+                                                class="material-symbols-outlined text-[#6200EE] text-[20px]">dynamic_feed</span>
+                                            <span class="text-sm font-semibold text-slate-700">Chia sẻ lên Cộng
+                                                đồng</span>
                                         </div>
-                                        <input type="time"
-                                            class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-semibold text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" name="shareToBlog" value="true" class="sr-only peer"
+                                                checked>
+                                            <div
+                                                class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#6200EE]">
+                                            </div>
+                                        </label>
                                     </div>
                                 </div>
 
-                                <button
+                                <button type="submit"
                                     class="w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto">
                                     Tìm chuyến
                                     <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
                                 </button>
-                            </div>
+                            </form>
 
                             <!-- RIGHT: Results Display -->
                             <div class="w-full lg:w-[55%] flex flex-col pl-4">
@@ -1241,6 +1292,140 @@
                                 if (drivDrop && drivContainer && !drivContainer.contains(event.target)) {
                                     drivDrop.classList.add('hidden');
                                 }
+                            });
+
+                            // Function to handle booking type toggle (On-demand vs Pre-book)
+                            window.setBookingType = function (type) {
+                                const inputTripType = document.getElementById('tripType');
+                                const bg = document.getElementById('booking-type-bg');
+                                const btnOnDemand = document.getElementById('btn-ondemand');
+                                const btnPreBook = document.getElementById('btn-prebook');
+                                const datetimeContainer = document.getElementById('datetime-container');
+                                const tripDate = document.getElementById('trip-date');
+                                const tripTime = document.getElementById('trip-time');
+
+                                if (!inputTripType || !bg) return;
+
+                                inputTripType.value = type;
+
+                                if (type === 'ON_DEMAND') {
+                                    // Set Toggle UI
+                                    bg.style.transform = 'translateX(0)';
+                                    btnOnDemand.classList.remove('text-slate-500');
+                                    btnOnDemand.classList.add('text-[#6200EE]');
+                                    btnPreBook.classList.remove('text-[#6200EE]');
+                                    btnPreBook.classList.add('text-slate-500');
+
+                                    // Hide Date/Time fields smoothly and remove 'required'
+                                    datetimeContainer.classList.add('opacity-0', '-translate-y-2');
+                                    setTimeout(() => {
+                                        datetimeContainer.classList.add('hidden');
+                                        datetimeContainer.classList.remove('flex');
+                                    }, 300);
+
+                                    tripDate.removeAttribute('required');
+                                    tripTime.removeAttribute('required');
+
+                                } else if (type === 'PRE_BOOK') {
+                                    // Set Toggle UI
+                                    bg.style.transform = 'translateX(100%)';
+                                    btnPreBook.classList.remove('text-slate-500');
+                                    btnPreBook.classList.add('text-[#6200EE]');
+                                    btnOnDemand.classList.remove('text-[#6200EE]');
+                                    btnOnDemand.classList.add('text-slate-500');
+
+                                    // Show Date/Time fields smoothly and add 'required'
+                                    datetimeContainer.classList.remove('hidden');
+                                    datetimeContainer.classList.add('flex');
+                                    setTimeout(() => {
+                                        datetimeContainer.classList.remove('opacity-0', '-translate-y-2');
+                                    }, 10); // Small delay to allow display change to take effect
+
+                                    tripDate.setAttribute('required', 'required');
+                                    tripTime.setAttribute('required', 'required');
+                                }
+                            };
+
+                            // Mapbox Location Autocomplete
+                            function setupAutocomplete(inputId, suggestionsId) {
+                                const input = document.getElementById(inputId);
+                                const suggestionsContainer = document.getElementById(suggestionsId);
+                                let debounceTimer;
+
+                                if (!input || !suggestionsContainer) return;
+
+                                input.addEventListener('input', function () {
+                                    clearTimeout(debounceTimer);
+                                    const query = this.value;
+
+                                    if (!query || query.length < 2) {
+                                        suggestionsContainer.innerHTML = '';
+                                        suggestionsContainer.classList.add('hidden');
+                                        return;
+                                    }
+
+                                    debounceTimer = setTimeout(() => {
+                                        // Tối ưu hóa: Thêm proximity (tọa độ người dùng) để ưu tiên hiển thị các kết quả ở gần vị trí hiện tại
+                                        const proximityParam = (typeof userLngLat !== 'undefined' && userLngLat && userLngLat.length === 2)
+                                            ? `&proximity=\${userLngLat[0]},\${userLngLat[1]}`
+                                            : `&proximity=105.8542,21.0285`; // Mặc định ở Hà Nội nếu chưa có vị trí
+
+                                        // Thêm fuzzyMatch=false để Mapbox không tự đoán sai dấu tiếng Việt (VD: gõ "sân" sẽ không ra "san hô")
+                                        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/\${encodeURIComponent(query)}.json?access_token=\${mapboxgl.accessToken}&country=vn&language=vi&types=poi,address,neighborhood,place&autocomplete=true&fuzzyMatch=false&limit=8\${proximityParam}`;
+
+                                        fetch(url)
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                suggestionsContainer.innerHTML = '';
+                                                if (data.features && data.features.length > 0) {
+                                                    data.features.forEach(feature => {
+                                                        const mainText = feature.text || '';
+                                                        let fullAddress = feature.place_name || '';
+
+                                                        // Loại bỏ mã bưu điện 5 số của Việt Nam (VD: "12400, ") để địa chỉ đẹp hơn
+                                                        fullAddress = fullAddress.replace(/\b\d{5},\s*/g, '');
+
+                                                        const secondaryText = fullAddress.startsWith(mainText)
+                                                            ? fullAddress.substring(mainText.length).replace(/^,\s*/, '')
+                                                            : fullAddress;
+
+                                                        const div = document.createElement('div');
+                                                        div.className = 'px-4 py-2 hover:bg-slate-100 cursor-pointer text-sm text-slate-700 border-b border-slate-100 last:border-0';
+
+                                                        // Viết tách HTML để tránh lỗi format của IDE làm hỏng thẻ <br>
+                                                        let suggestionHtml = `<strong>\${mainText}</strong>`;
+                                                        if (secondaryText) {
+                                                            suggestionHtml += `<br><span class="text-xs text-slate-500">\${secondaryText}</span>`;
+                                                        }
+                                                        div.innerHTML = suggestionHtml;
+
+                                                        div.addEventListener('click', () => {
+                                                            input.value = fullAddress;
+                                                            suggestionsContainer.innerHTML = '';
+                                                            suggestionsContainer.classList.add('hidden');
+                                                        });
+                                                        suggestionsContainer.appendChild(div);
+                                                    });
+                                                    suggestionsContainer.classList.remove('hidden');
+                                                } else {
+                                                    suggestionsContainer.classList.add('hidden');
+                                                }
+                                            })
+                                            .catch(err => console.error("Geocoding error:", err));
+                                    }, 300);
+                                });
+
+                                // Hide suggestions when clicking outside
+                                document.addEventListener('click', function (e) {
+                                    if (e.target !== input && !suggestionsContainer.contains(e.target)) {
+                                        suggestionsContainer.classList.add('hidden');
+                                    }
+                                });
+                            }
+
+                            document.addEventListener('DOMContentLoaded', function () {
+                                setupAutocomplete('pickup-input', 'pickup-suggestions');
+                                setupAutocomplete('dropoff-input', 'dropoff-suggestions');
                             });
                         </script>
                         <!-- Toast Notification Utility -->
