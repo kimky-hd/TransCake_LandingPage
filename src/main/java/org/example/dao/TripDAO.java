@@ -8,6 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.ArrayList;
+import org.example.model.BlogPost;
 
 public class TripDAO {
 
@@ -110,5 +113,43 @@ public class TripDAO {
             System.err.println("Lỗi updateCompletionStatus: " + e.getMessage());
         }
         return false;
+    }
+
+    /**
+     * Lấy danh sách các bài đăng blog từ database kèm theo thông tin chuyến đi và người đăng
+     * @return Danh sách bài đăng
+     */
+    public List<BlogPost> getAllActiveBlogPosts() {
+        List<BlogPost> posts = new ArrayList<>();
+        String sql = "SELECT b.id, b.trip_id, b.title, b.content, b.is_active, " +
+                     "u.full_name, t.created_at, t.pickup_location, t.dropoff_location " +
+                     "FROM trip_blog_posts b " +
+                     "JOIN trips t ON b.trip_id = t.id " +
+                     "JOIN users u ON t.passenger_id = u.id " +
+                     "WHERE b.is_active = TRUE " +
+                     "ORDER BY b.id DESC";
+                     
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+             
+            while (rs.next()) {
+                BlogPost post = new BlogPost(
+                    rs.getInt("id"),
+                    rs.getInt("trip_id"),
+                    rs.getString("title"),
+                    rs.getString("content"),
+                    rs.getBoolean("is_active"),
+                    rs.getString("full_name"),
+                    rs.getTimestamp("created_at"),
+                    rs.getString("pickup_location"),
+                    rs.getString("dropoff_location")
+                );
+                posts.add(post);
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi getAllActiveBlogPosts: " + e.getMessage());
+        }
+        return posts;
     }
 }

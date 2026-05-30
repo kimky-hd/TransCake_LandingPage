@@ -1,10 +1,21 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-    <%@ page import="org.example.model.User" %>
-        <% // Prevent browser caching of dashboard page to ensure latest JS and session states are loaded
-            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate" );
-            response.setHeader("Pragma", "no-cache" ); response.setDateHeader("Expires", 0); User user=(User)
-            session.getAttribute("loggedInUser"); boolean isLoggedIn=(user !=null); String fullName=isLoggedIn &&
-            user.getFullName() !=null && !user.getFullName().trim().isEmpty() ? user.getFullName() : "Người dùng" ; %>
+<%@ page import="org.example.model.User" %>
+<%@ page import="org.example.model.BlogPost" %>
+<%@ page import="org.example.dao.TripDAO" %>
+<%@ page import="java.util.List" %>
+<% 
+    // Prevent browser caching of dashboard page
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache"); 
+    response.setDateHeader("Expires", 0); 
+    User user = (User) session.getAttribute("loggedInUser"); 
+    boolean isLoggedIn = (user != null); 
+    String fullName = isLoggedIn && user.getFullName() != null && !user.getFullName().trim().isEmpty() ? user.getFullName() : "Người dùng" ; 
+    
+    // Fetch community blog posts
+    TripDAO blogTripDAO = new TripDAO();
+    List<BlogPost> blogPosts = blogTripDAO.getAllActiveBlogPosts();
+%>
             <!DOCTYPE html>
             <html lang="vi">
 
@@ -608,181 +619,51 @@
                             <!-- Left: Blog Feed (2/3) -->
                             <div class="w-full lg:w-2/3 flex flex-col h-full overflow-hidden">
                                 <div class="flex-1 overflow-y-auto pr-3 space-y-5 panel-scroll pb-4">
-                                    <!-- Post 1 -->
-                                    <div
-                                        class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow">
+<%
+                                        if (blogPosts != null && !blogPosts.isEmpty()) {
+                                            for (BlogPost post : blogPosts) {
+                                    %>
+                                    <div class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow mb-4">
                                         <div class="flex items-center gap-3 mb-4">
-                                            <img src="https://i.pravatar.cc/150?u=1"
-                                                class="w-10 h-10 rounded-full object-cover shrink-0">
+                                            <!-- Empty Avatar -->
+                                            <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center shrink-0 text-slate-400">
+                                                <span class="material-symbols-outlined text-[20px]">person</span>
+                                            </div>
                                             <div>
-                                                <h5 class="font-bold text-slate-800 text-sm">Hải Đăng</h5>
-                                                <p class="text-xs text-slate-500">2 giờ trước • Nhóm Tìm người ghép
-                                                    chuyến</p>
+                                                <h5 class="font-bold text-slate-800 text-sm"><%= post.getPassengerName() != null ? post.getPassengerName() : "Người dùng ẩn danh" %></h5>
+                                                <p class="text-xs text-slate-500">
+                                                    <%= post.getTripCreatedAt() != null ? new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(post.getTripCreatedAt()) : "Mới đây" %>
+                                                    • Nhóm Chia sẻ chuyến đi
+                                                </p>
                                             </div>
                                         </div>
-                                        <p class="text-slate-700 text-sm mb-3 leading-relaxed">
-                                            Sáng mai 6h mình có chuyến từ Hà Nội về Hải Phòng, xe 4 chỗ còn trống 2 ghế.
-                                            Ai có nhu cầu đi chung cho vui thì inbox mình nhé! Chi phí cưa đôi cực rẻ ạ.
+                                        <p class="text-slate-700 text-sm mb-3 leading-relaxed whitespace-pre-line">
+                                            <strong><%= post.getTitle() %></strong>
+                                            
+                                            <%= post.getContent() %>
                                         </p>
-                                        <!-- Fixed image stretching -->
-                                        <div class="w-full aspect-video rounded-2xl overflow-hidden mb-3 bg-slate-100">
-                                            <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=800&auto=format&fit=crop"
-                                                class="w-full h-full object-cover">
-                                        </div>
                                         <div class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
-                                            <button
-                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                            <button class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
                                                 <span class="material-symbols-outlined text-[20px]">thumb_up</span>
-                                                Thích (24)
+                                                Thích (0)
                                             </button>
-                                            <button
-                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                            <button class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
                                                 <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
-                                                Bình luận (5)
+                                                Bình luận (0)
                                             </button>
                                         </div>
                                     </div>
-
-                                    <!-- Post 2 -->
-                                    <div
-                                        class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                                        <div class="flex items-center gap-3 mb-4">
-                                            <img src="https://i.pravatar.cc/150?u=2"
-                                                class="w-10 h-10 rounded-full object-cover shrink-0">
-                                            <div>
-                                                <h5 class="font-bold text-slate-800 text-sm">Minh Anh</h5>
-                                                <p class="text-xs text-slate-500">Hôm qua lúc 15:30 • Nhóm Review & Chia
-                                                    sẻ</p>
-                                            </div>
-                                        </div>
-                                        <p class="text-slate-700 text-sm mb-3 leading-relaxed">
-                                            Review chuyến đi Sapa cuối tuần qua cùng TransCake! Tài xế siêu dễ thương,
-                                            xe sạch sẽ thơm tho, lại còn biết rất nhiều điểm check-in ẩn. Lần tới chắc
-                                            chắn sẽ book tiếp! 🥰
-                                        </p>
-                                        <!-- Fixed image stretching with grid -->
-                                        <div class="grid grid-cols-2 gap-2 mb-3">
-                                            <div
-                                                class="w-full aspect-square md:aspect-video rounded-2xl overflow-hidden bg-slate-100">
-                                                <img src="https://images.unsplash.com/photo-1542050893-807cce01d8f8?q=80&w=400&auto=format&fit=crop"
-                                                    class="w-full h-full object-cover">
-                                            </div>
-                                            <div
-                                                class="w-full aspect-square md:aspect-video rounded-2xl overflow-hidden bg-slate-100">
-                                                <img src="https://images.unsplash.com/photo-1518098268026-4e89f1a2cd8e?q=80&w=400&auto=format&fit=crop"
-                                                    class="w-full h-full object-cover">
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
-                                            <button
-                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
-                                                <span class="material-symbols-outlined text-[20px]">thumb_up</span>
-                                                Thích (156)
-                                            </button>
-                                            <button
-                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
-                                                <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
-                                                Bình luận (12)
-                                            </button>
-                                        </div>
+                                    <%
+                                            }
+                                        } else {
+                                    %>
+                                    <div class="text-center p-10 bg-white/50 border border-slate-200/80 rounded-3xl">
+                                        <span class="material-symbols-outlined text-[40px] text-slate-300 mb-2">inbox</span>
+                                        <p class="text-slate-500 font-medium">Hiện chưa có bài đăng nào.</p>
                                     </div>
-
-                                    <!-- Post 3 -->
-                                    <div
-                                        class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                                        <div class="flex items-center gap-3 mb-4">
-                                            <img src="https://i.pravatar.cc/150?u=3"
-                                                class="w-10 h-10 rounded-full object-cover shrink-0">
-                                            <div>
-                                                <h5 class="font-bold text-slate-800 text-sm">Tuấn Phong</h5>
-                                                <p class="text-xs text-slate-500">5 giờ trước • Nhóm Hỏi đáp & Kinh
-                                                    nghiệm</p>
-                                            </div>
-                                        </div>
-                                        <p class="text-slate-700 text-sm mb-3 leading-relaxed">
-                                            Mọi người cho mình hỏi đi Đà Lạt mùa này đi đường đèo nào thì an toàn nhất
-                                            ạ? Mình lái xe 7 chỗ, có kinh nghiệm đi đèo nhưng lần đầu đi Đà Lạt nên hơi
-                                            lo lắng. Cảm ơn cả nhà!
-                                        </p>
-                                        <div class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
-                                            <button
-                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
-                                                <span class="material-symbols-outlined text-[20px]">thumb_up</span>
-                                                Thích (45)
-                                            </button>
-                                            <button
-                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
-                                                <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
-                                                Bình luận (28)
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Post 4 -->
-                                    <div
-                                        class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                                        <div class="flex items-center gap-3 mb-4">
-                                            <img src="https://i.pravatar.cc/150?u=4"
-                                                class="w-10 h-10 rounded-full object-cover shrink-0">
-                                            <div>
-                                                <h5 class="font-bold text-slate-800 text-sm">Ngọc Bích</h5>
-                                                <p class="text-xs text-slate-500">Hôm qua lúc 19:45 • Nhóm Review & Chia
-                                                    sẻ</p>
-                                            </div>
-                                        </div>
-                                        <p class="text-slate-700 text-sm mb-3 leading-relaxed">
-                                            Góc sống ảo cực chill tại Vũng Tàu! Chuyến đi cùng hội chị em siêu vui. Nhờ
-                                            có TransCake mà bọn mình tìm được bác tài siêu nhiệt tình, chụp hình có tâm
-                                            quá chừng! 🥰📸🌊
-                                        </p>
-                                        <div class="w-full aspect-video rounded-2xl overflow-hidden mb-3 bg-slate-100">
-                                            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop"
-                                                class="w-full h-full object-cover">
-                                        </div>
-                                        <div class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
-                                            <button
-                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
-                                                <span class="material-symbols-outlined text-[20px]">thumb_up</span>
-                                                Thích (210)
-                                            </button>
-                                            <button
-                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
-                                                <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
-                                                Bình luận (34)
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Post 5 -->
-                                    <div
-                                        class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                                        <div class="flex items-center gap-3 mb-4">
-                                            <img src="https://i.pravatar.cc/150?u=5"
-                                                class="w-10 h-10 rounded-full object-cover shrink-0">
-                                            <div>
-                                                <h5 class="font-bold text-slate-800 text-sm">Hoàng Nam</h5>
-                                                <p class="text-xs text-slate-500">Hôm qua lúc 09:15 • Nhóm Tìm người
-                                                    ghép chuyến</p>
-                                            </div>
-                                        </div>
-                                        <p class="text-slate-700 text-sm mb-3 leading-relaxed">
-                                            [Cần ghép xe] Tối mai thứ 6, mình cần tìm xe hoặc khách đi chung từ Sài Gòn
-                                            về Cần Thơ, xuất phát khoảng 19h. Ai có dư chỗ hoặc muốn đi chung xe thì
-                                            comment nhé!
-                                        </p>
-                                        <div class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
-                                            <button
-                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
-                                                <span class="material-symbols-outlined text-[20px]">thumb_up</span>
-                                                Thích (12)
-                                            </button>
-                                            <button
-                                                class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
-                                                <span class="material-symbols-outlined text-[20px]">chat_bubble</span>
-                                                Bình luận (8)
-                                            </button>
-                                        </div>
-                                    </div>
+                                    <%
+                                        }
+                                    %>
                                 </div>
                             </div>
 
@@ -1039,10 +920,10 @@
                             // Access token của bạn
                             mapboxgl.accessToken = 'pk.eyJ1Ijoia2lta3l2dSIsImEiOiJjbXBrbjBsenkxaG8xMnJvcWE4Ymp2bHVkIn0.cqSefs1dwaF89hY4SlLUsQ';
 
-                            // Khởi tạo bản đồ với style sáng màu (phù hợp UI)
+                            // Khởi tạo bản đồ với style Outdoors
                             const map = new mapboxgl.Map({
                                 container: 'map', // id của thẻ div
-                                style: 'mapbox://styles/mapbox/light-v11', // giao diện sáng, tối giản
+                                style: 'mapbox://styles/mapbox/outdoors-v12', // giao diện Ngoài trời (địa hình, công viên)
                                 center: [105.8542, 21.0285], // Tọa độ mặc định (Hà Nội)
                                 zoom: 13,
                                 attributionControl: false // Ẩn logo mapbox nhỏ nếu muốn UI sạch hơn
