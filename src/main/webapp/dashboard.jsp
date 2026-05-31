@@ -23,6 +23,7 @@
                 <meta charset="utf-8" />
                 <meta content="width=device-width, initial-scale=1.0" name="viewport" />
                 <title>Transcake - Dashboard</title>
+                <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/img/transcake-04.png" />
 
                 <!-- Tailwind CSS -->
                 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -401,7 +402,8 @@
                         <div class="flex flex-col lg:flex-row gap-8 flex-1 h-full">
 
                             <!-- LEFT: Search Form -->
-                            <form action="${pageContext.request.contextPath}/trip-search" method="POST"
+                            <form id="trip-search-form" action="${pageContext.request.contextPath}/trip-search" method="POST"
+                                onsubmit="handleTripSearch(event)"
                                 class="w-full lg:w-[45%] flex flex-col gap-5 border-r border-slate-200/60 pr-4">
 
                                 <!-- Booking Type Toggle -->
@@ -514,76 +516,36 @@
                             </form>
 
                             <!-- RIGHT: Results Display -->
-                            <div class="w-full lg:w-[55%] flex flex-col pl-4">
-                                <div class="flex items-center justify-between mb-4">
-                                    <h4 class="font-bold text-slate-800 text-lg">Kết quả nổi bật</h4>
-                                    <span
-                                        class="bg-[#6200EE]/10 text-[#6200EE] text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1">
-                                        <span class="material-symbols-outlined text-[14px]">local_taxi</span>
-                                        2 chuyến xe
-                                    </span>
+                            <div class="w-full lg:w-[55%] flex flex-col pl-4 relative h-full min-h-[300px]">
+                                <!-- Empty State -->
+                                <div id="empty-search-state" class="absolute inset-0 flex flex-col items-center justify-center p-6 bg-white/50 border border-dashed border-slate-300/80 rounded-3xl ml-4">
+                                    <div class="w-20 h-20 bg-slate-100/80 rounded-full flex items-center justify-center mb-5 shadow-inner">
+                                        <span class="material-symbols-outlined text-[40px] text-slate-400">directions_car</span>
+                                    </div>
+                                    <h5 class="font-bold text-slate-800 text-lg mb-2">Tìm chuyến xe của bạn</h5>
+                                    <p class="text-sm text-slate-500 text-center max-w-[280px]">Nhập điểm đón và điểm đến, sau đó nhấn "Tìm chuyến" để bắt đầu.</p>
                                 </div>
 
-                                <!-- Results List (Scrollable if too long) -->
-                                <div class="flex-1 overflow-y-auto pr-2 space-y-3 max-h-[250px] panel-scroll">
-                                    <!-- Result Card 1 -->
-                                    <div
-                                        class="bg-white border border-slate-200 hover:border-[#6200EE]/50 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-between group">
-                                        <div class="flex items-center gap-4">
-                                            <div class="relative">
-                                                <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Driver"
-                                                    class="w-12 h-12 rounded-full object-cover shadow-sm">
-                                                <div
-                                                    class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full">
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h5
-                                                    class="font-bold text-slate-800 text-base group-hover:text-[#6200EE] transition-colors">
-                                                    Nguyễn Văn A</h5>
-                                                <p class="text-sm text-slate-500 flex items-center gap-1 mt-0.5">
-                                                    <span
-                                                        class="material-symbols-outlined text-[14px] text-amber-400">star</span>
-                                                    <span class="font-bold text-slate-700">4.9</span> (120 chuyến)
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="text-right">
-                                            <p class="text-lg font-black text-[#6200EE]">150.000đ</p>
-                                            <p
-                                                class="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded mt-1 inline-block">
-                                                Honda City • 4 chỗ</p>
-                                        </div>
+                                <!-- Loading State -->
+                                <div id="loading-search-state" class="absolute inset-0 hidden flex-col ml-4">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="font-bold text-slate-800 text-lg">Kết quả nổi bật</h4>
+                                        <span class="bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm">
+                                            <span class="material-symbols-outlined text-[14px] animate-spin">sync</span>
+                                            Đang tìm kiếm
+                                        </span>
                                     </div>
-
-                                    <!-- Result Card 2 -->
-                                    <div
-                                        class="bg-white border border-slate-200 hover:border-[#6200EE]/50 rounded-2xl p-4 shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-between group">
-                                        <div class="flex items-center gap-4">
-                                            <div class="relative">
-                                                <img src="https://i.pravatar.cc/150?u=a04258114e29026702d" alt="Driver"
-                                                    class="w-12 h-12 rounded-full object-cover shadow-sm">
-                                                <div
-                                                    class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full">
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h5
-                                                    class="font-bold text-slate-800 text-base group-hover:text-[#6200EE] transition-colors">
-                                                    Trần Thị B</h5>
-                                                <p class="text-sm text-slate-500 flex items-center gap-1 mt-0.5">
-                                                    <span
-                                                        class="material-symbols-outlined text-[14px] text-amber-400">star</span>
-                                                    <span class="font-bold text-slate-700">5.0</span> (85 chuyến)
-                                                </p>
+                                    <div class="flex-1 flex flex-col items-center justify-center p-6 bg-white/50 border border-slate-200/60 rounded-3xl shadow-inner">
+                                        <div class="relative w-16 h-16 mb-6">
+                                            <!-- Ripple/Pulse effect -->
+                                            <div class="absolute inset-0 bg-[#6200EE]/20 rounded-full animate-ping duration-1000"></div>
+                                            <div class="absolute inset-2 bg-[#6200EE]/40 rounded-full animate-pulse"></div>
+                                            <div class="absolute inset-0 flex items-center justify-center bg-white rounded-full shadow-sm z-10">
+                                                <span class="material-symbols-outlined text-[#6200EE] text-[28px] animate-[spin_3s_linear_infinite]">radar</span>
                                             </div>
                                         </div>
-                                        <div class="text-right">
-                                            <p class="text-lg font-black text-[#6200EE]">140.000đ</p>
-                                            <p
-                                                class="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded mt-1 inline-block">
-                                                Kia Morning • 4 chỗ</p>
-                                        </div>
+                                        <h5 class="font-bold text-slate-800 text-base mb-1">Đang quét hệ thống...</h5>
+                                        <p class="text-sm text-slate-500 text-center max-w-[280px]">Chúng tôi đang tìm kiếm các chuyến xe có lộ trình phù hợp nhất với bạn.</p>
                                     </div>
                                 </div>
                             </div>
@@ -615,10 +577,9 @@
                         </div>
 
                         <!-- Split Layout -->
-                        <div class="flex flex-col lg:flex-row gap-8 flex-1 overflow-hidden">
+                        <div class="flex flex-col lg:flex-row gap-8 flex-1 min-h-0 overflow-y-auto panel-scroll pr-2 relative">
                             <!-- Left: Blog Feed (2/3) -->
-                            <div class="w-full lg:w-2/3 flex flex-col h-full overflow-hidden">
-                                <div class="flex-1 overflow-y-auto pr-3 space-y-5 panel-scroll pb-4">
+                            <div class="w-full lg:w-2/3 flex flex-col space-y-5 pb-4">
 <%
                                         if (blogPosts != null && !blogPosts.isEmpty()) {
                                             for (BlogPost post : blogPosts) {
@@ -664,11 +625,11 @@
                                     <%
                                         }
                                     %>
-                                </div>
                             </div>
 
                             <!-- Right: Create Post & Friends (1/3) -->
-                            <div class="w-full lg:w-1/3 flex flex-col gap-6 h-full overflow-hidden">
+                            <div class="w-full lg:w-1/3">
+                                <div class="sticky top-0 flex flex-col gap-6 pb-4">
                                 <!-- Create Post -->
                                 <div class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm shrink-0">
                                     <h4 class="font-bold text-slate-800 mb-3 flex items-center gap-2">
@@ -709,7 +670,7 @@
 
                                 <!-- Friends List -->
                                 <div
-                                    class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm flex-1 overflow-y-auto panel-scroll">
+                                    class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm max-h-[40vh] overflow-y-auto panel-scroll">
                                     <h4 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
                                         <span class="material-symbols-outlined text-[#FF6D00] text-[20px]">group</span>
                                         Người liên hệ
@@ -762,11 +723,38 @@
                                         </div>
                                     </div>
                                 </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <script>
+                        function handleTripSearch(event) {
+                            event.preventDefault(); // Ngăn chặn load lại trang
+                            const form = event.target;
+                            
+                            // Ẩn state rỗng, hiện loading state
+                            document.getElementById('empty-search-state').classList.add('hidden');
+                            document.getElementById('empty-search-state').classList.remove('flex');
+                            
+                            document.getElementById('loading-search-state').classList.remove('hidden');
+                            document.getElementById('loading-search-state').classList.add('flex');
+                            
+                            // Gửi data thực tế lên server (sử dụng x-www-form-urlencoded để tương thích với Servlet thông thường)
+                            const urlEncodedData = new URLSearchParams(new FormData(form)).toString();
+                            fetch(form.action, {
+                                method: form.method,
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: urlEncodedData
+                            }).then(response => {
+                                console.log("Đã gửi yêu cầu tìm chuyến thành công!");
+                            }).catch(error => {
+                                console.error("Lỗi khi gửi yêu cầu tìm chuyến:", error);
+                            });
+                        }
+
                         function toggleBottomSearchBar() {
                             const searchBar = document.getElementById('bottom-search-bar');
                             const blogBar = document.getElementById('bottom-blog-bar');
