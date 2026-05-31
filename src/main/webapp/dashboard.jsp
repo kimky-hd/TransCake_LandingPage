@@ -784,6 +784,14 @@
                                     btnSubmit.disabled = false;
                                     btnSubmit.onclick = cancelTripSearch;
                                 }
+                                
+                                // Hiển thị popup nếu khung search đang ẩn
+                                const miniPopup = document.getElementById('mini-search-popup');
+                                const searchBar = document.getElementById('bottom-search-bar');
+                                if (miniPopup && searchBar && searchBar.classList.contains('translate-y-[150%]')) {
+                                    miniPopup.classList.remove('translate-x-[150%]', 'opacity-0');
+                                    miniPopup.classList.add('translate-x-0', 'opacity-100');
+                                }
                             }
                         });
 
