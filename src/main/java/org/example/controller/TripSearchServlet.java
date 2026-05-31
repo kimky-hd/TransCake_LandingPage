@@ -61,8 +61,28 @@ public class TripSearchServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/dashboard.jsp?error=invalid_datetime");
                 return;
             }
+            // Kiểm tra trùng PRE_BOOK
+            if (tripDAO.getActivePreBookTrip(loggedInUser.getId()) != null) {
+                if ("true".equals(request.getParameter("ajax"))) {
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"success\": false, \"error\": \"Bạn đã có chuyến Đặt trước. Vui lòng hủy trước khi tạo mới!\"}");
+                    return;
+                }
+                response.sendRedirect(request.getContextPath() + "/dashboard.jsp?error=limit_exceeded");
+                return;
+            }
         } else {
             tripType = "ON_DEMAND"; // default or fallback
+            // Kiểm tra trùng ON_DEMAND
+            if (tripDAO.getActiveOnDemandTrip(loggedInUser.getId()) != null) {
+                if ("true".equals(request.getParameter("ajax"))) {
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"success\": false, \"error\": \"Bạn đang tìm chuyến Đặt ngay. Vui lòng hủy trước khi tạo mới!\"}");
+                    return;
+                }
+                response.sendRedirect(request.getContextPath() + "/dashboard.jsp?error=limit_exceeded");
+                return;
+            }
         }
 
         // Create Trip Object

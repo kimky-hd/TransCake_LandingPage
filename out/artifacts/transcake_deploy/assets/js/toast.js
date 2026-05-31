@@ -71,3 +71,60 @@ window.showToast = function(message, type = 'info') {
         }
     }, 4000);
 };
+
+/**
+ * Global Confirm Modal Utility
+ * Displays a custom styled confirmation dialog
+ */
+window.showConfirmModal = function(title, message, onConfirmCallback) {
+    // 1. Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'fixed inset-0 z-[10000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm opacity-0 transition-opacity duration-300';
+    
+    // 2. Create modal box
+    const modal = document.createElement('div');
+    modal.className = 'bg-white rounded-2xl p-6 max-w-sm w-[90%] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] transform scale-95 opacity-0 transition-all duration-300 text-center';
+    
+    modal.innerHTML = `
+        <div class="mx-auto w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">${title}</h3>
+        <p class="text-sm text-slate-500 mb-6">${message}</p>
+        <div class="flex gap-3 justify-center">
+            <button id="btn-confirm-cancel" class="flex-1 py-2.5 px-4 rounded-full border border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-colors">
+                Hủy bỏ
+            </button>
+            <button id="btn-confirm-ok" class="flex-1 py-2.5 px-4 rounded-full bg-red-500 text-white font-semibold text-sm hover:bg-red-600 transition-colors shadow-md shadow-red-500/20">
+                Đồng ý
+            </button>
+        </div>
+    `;
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    // Function to close modal
+    const closeModal = () => {
+        overlay.classList.remove('opacity-100');
+        modal.classList.remove('scale-100', 'opacity-100');
+        setTimeout(() => overlay.remove(), 300);
+    };
+    
+    // Bind events
+    modal.querySelector('#btn-confirm-cancel').onclick = closeModal;
+    modal.querySelector('#btn-confirm-ok').onclick = () => {
+        closeModal();
+        if (typeof onConfirmCallback === 'function') {
+            onConfirmCallback();
+        }
+    };
+    
+    // Animate in
+    setTimeout(() => {
+        overlay.classList.add('opacity-100');
+        modal.classList.add('scale-100', 'opacity-100');
+    }, 10);
+};

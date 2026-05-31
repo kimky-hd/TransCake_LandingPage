@@ -19,8 +19,18 @@
     
     // Kiểm tra xem người dùng có đang tìm chuyến đi ON_DEMAND nào không
     Trip activeTrip = null;
+    Trip activePreBookTrip = null;
+    String preBookDateStr = "";
+    String preBookTimeStr = "";
     if (isLoggedIn) {
         activeTrip = blogTripDAO.getActiveOnDemandTrip(user.getId());
+        activePreBookTrip = blogTripDAO.getActivePreBookTrip(user.getId());
+        if (activePreBookTrip != null && activePreBookTrip.getScheduledTime() != null) {
+            java.text.SimpleDateFormat sdfDate = new java.text.SimpleDateFormat("yyyy-MM-dd");
+            java.text.SimpleDateFormat sdfTime = new java.text.SimpleDateFormat("HH:mm");
+            preBookDateStr = sdfDate.format(activePreBookTrip.getScheduledTime());
+            preBookTimeStr = sdfTime.format(activePreBookTrip.getScheduledTime());
+        }
     }
 %>
             <!DOCTYPE html>
@@ -559,7 +569,7 @@
                     </div>
 
                     <!-- Mini Search Popup (Top Right) -->
-                    <div id="mini-search-popup" class="fixed top-24 right-8 z-40 bg-white/90 backdrop-blur-md border border-[#6200EE]/30 rounded-2xl p-4 shadow-[0_8px_30px_rgba(98,0,238,0.15)] transition-all duration-500 transform translate-x-[150%] opacity-0 flex items-center gap-4 w-[320px] cursor-pointer hover:bg-white" onclick="toggleBottomSearchBar()">
+                    <div id="mini-search-popup" class="fixed top-24 right-8 z-40 bg-white/90 backdrop-blur-md border border-[#6200EE]/30 rounded-2xl p-4 shadow-[0_8px_30px_rgba(98,0,238,0.15)] transition-all duration-500 transform translate-x-[150%] opacity-0 flex items-center gap-4 w-[320px] cursor-pointer hover:bg-white" onclick="toggleBottomSearchBar(); if(window.setBookingType) window.setBookingType('ON_DEMAND');">
                         <div class="relative w-10 h-10 shrink-0">
                             <div class="absolute inset-0 bg-[#6200EE]/20 rounded-full animate-ping"></div>
                             <div class="absolute inset-0 flex items-center justify-center bg-white border border-[#6200EE]/50 rounded-full shadow-sm z-10">
@@ -575,6 +585,26 @@
                             <div class="flex items-center gap-1 text-xs text-slate-600 truncate mt-0.5">
                                 <span class="material-symbols-outlined text-[#FF6D00] text-[12px] shrink-0">location_on</span>
                                 <span id="mini-popup-dropoff" class="truncate"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mini Prebook Popup (Top Right, Below OnDemand) -->
+                    <div id="mini-prebook-popup" class="fixed top-48 right-8 z-40 bg-white/90 backdrop-blur-md border border-[#00BFA5]/30 rounded-2xl p-4 shadow-[0_8px_30px_rgba(0,191,165,0.15)] transition-all duration-500 transform translate-x-[150%] opacity-0 flex items-center gap-4 w-[320px] cursor-pointer hover:bg-white" onclick="toggleBottomSearchBar(); if(window.setBookingType) window.setBookingType('PRE_BOOK');">
+                        <div class="relative w-10 h-10 shrink-0">
+                            <div class="absolute inset-0 flex items-center justify-center bg-teal-50 border border-[#00BFA5]/50 rounded-full shadow-sm z-10">
+                                <span class="material-symbols-outlined text-[#00BFA5] text-[20px]">calendar_month</span>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h6 class="text-sm font-bold text-[#00BFA5] mb-1">Chuyến đi đã đặt trước</h6>
+                            <div class="flex items-center gap-1 text-xs text-slate-600 truncate">
+                                <div class="w-1.5 h-1.5 rounded-full border-[2px] border-[#00BFA5] bg-white shrink-0"></div>
+                                <span id="mini-prebook-pickup" class="truncate"></span>
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-slate-600 truncate mt-0.5">
+                                <span class="material-symbols-outlined text-[#FF6D00] text-[12px] shrink-0">location_on</span>
+                                <span id="mini-prebook-dropoff" class="truncate"></span>
                             </div>
                         </div>
                     </div>
@@ -758,6 +788,24 @@
                         let isSearchingOnDemand = <%= activeTrip != null ? "true" : "false" %>;
                         window.currentTripId = <%= activeTrip != null ? activeTrip.getId() : "null" %>;
                         
+                        let hasPreBookTrip = <%= activePreBookTrip != null ? "true" : "false" %>;
+                        window.currentPreBookTripId = <%= activePreBookTrip != null ? activePreBookTrip.getId() : "null" %>;
+                        
+                        const tripData = {
+                            ON_DEMAND: {
+                                active: isSearchingOnDemand,
+                                pickup: "<%= activeTrip != null ? activeTrip.getPickupLocation() : "" %>",
+                                dropoff: "<%= activeTrip != null ? activeTrip.getDropoffLocation() : "" %>"
+                            },
+                            PRE_BOOK: {
+                                active: hasPreBookTrip,
+                                pickup: "<%= activePreBookTrip != null ? activePreBookTrip.getPickupLocation() : "" %>",
+                                dropoff: "<%= activePreBookTrip != null ? activePreBookTrip.getDropoffLocation() : "" %>",
+                                date: "<%= preBookDateStr %>",
+                                time: "<%= preBookTimeStr %>"
+                            }
+                        };
+                        
                         // Phục hồi trạng thái UI nếu đã có chuyến xe đang tìm kiếm
                         document.addEventListener("DOMContentLoaded", function() {
                             if (isSearchingOnDemand) {
@@ -769,8 +817,8 @@
                                 document.getElementById('loading-search-state').classList.add('flex');
                                 
                                 // Giao diện form
-                                document.getElementById('pickup-input').value = "<%= activeTrip != null ? activeTrip.getPickupLocation() : "" %>";
-                                document.getElementById('dropoff-input').value = "<%= activeTrip != null ? activeTrip.getDropoffLocation() : "" %>";
+                                document.getElementById('pickup-input').value = tripData.ON_DEMAND.pickup;
+                                document.getElementById('dropoff-input').value = tripData.ON_DEMAND.dropoff;
                                 
                                 // Giao diện popup
                                 document.getElementById('mini-popup-pickup').textContent = "<%= activeTrip != null ? activeTrip.getPickupLocation() : "" %>";
@@ -784,13 +832,29 @@
                                     btnSubmit.disabled = false;
                                     btnSubmit.onclick = cancelTripSearch;
                                 }
-                                
-                                // Hiển thị popup nếu khung search đang ẩn
-                                const miniPopup = document.getElementById('mini-search-popup');
-                                const searchBar = document.getElementById('bottom-search-bar');
-                                if (miniPopup && searchBar && searchBar.classList.contains('translate-y-[150%]')) {
-                                    miniPopup.classList.remove('translate-x-[150%]', 'opacity-0');
-                                    miniPopup.classList.add('translate-x-0', 'opacity-100');
+                            }
+                            
+                            if (hasPreBookTrip) {
+                                document.getElementById('mini-prebook-pickup').textContent = "<%= activePreBookTrip != null ? activePreBookTrip.getPickupLocation() : "" %>";
+                                document.getElementById('mini-prebook-dropoff').textContent = "<%= activePreBookTrip != null ? activePreBookTrip.getDropoffLocation() : "" %>";
+                            }
+                            
+                            // Hiển thị popup nếu khung search đang ẩn
+                            const searchBar = document.getElementById('bottom-search-bar');
+                            if (searchBar && searchBar.classList.contains('translate-y-[150%]')) {
+                                if (isSearchingOnDemand) {
+                                    const miniPopup = document.getElementById('mini-search-popup');
+                                    if (miniPopup) {
+                                        miniPopup.classList.remove('translate-x-[150%]', 'opacity-0');
+                                        miniPopup.classList.add('translate-x-0', 'opacity-100');
+                                    }
+                                }
+                                if (hasPreBookTrip) {
+                                    const prebookPopup = document.getElementById('mini-prebook-popup');
+                                    if (prebookPopup) {
+                                        prebookPopup.classList.remove('translate-x-[150%]', 'opacity-0');
+                                        prebookPopup.classList.add('translate-x-0', 'opacity-100');
+                                    }
                                 }
                             }
                         });
@@ -803,7 +867,7 @@
                             const tripType = document.getElementById('tripType') ? document.getElementById('tripType').value : 'ON_DEMAND';
                             if (tripType === 'ON_DEMAND') {
                                 if (isSearchingOnDemand) {
-                                    alert("Bạn đang tìm kiếm một chuyến đi. Vui lòng chờ kết quả!");
+                                    showToast("Bạn đang tìm kiếm một chuyến đi. Vui lòng chờ kết quả!", "warning");
                                     return; // Chặn không cho tìm thêm
                                 }
                                 isSearchingOnDemand = true;
@@ -861,11 +925,12 @@
 
                         function cancelTripSearch() {
                             if (!window.currentTripId) {
-                                alert("Đang xử lý, vui lòng thử lại sau giây lát.");
+                                showToast("Đang xử lý, vui lòng thử lại sau giây lát.", "warning");
                                 return;
                             }
                             
-                            if (confirm("Bạn có chắc chắn muốn hủy yêu cầu tìm kiếm này?")) {
+                            // Sử dụng Confirm Modal tuỳ chỉnh
+                            showConfirmModal("Xác nhận hủy", "Bạn có chắc chắn muốn hủy yêu cầu tìm kiếm này?", function() {
                                 fetch('${pageContext.request.contextPath}/trip-cancel', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -877,6 +942,7 @@
                                         // Reset giao diện
                                         isSearchingOnDemand = false;
                                         window.currentTripId = null;
+                                        tripData.ON_DEMAND.active = false;
                                         
                                         // Trả lại nút Tìm chuyến nếu đang ở tab ON_DEMAND
                                         const btnSubmit = document.getElementById('btn-submit-search');
@@ -885,6 +951,9 @@
                                             btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
                                             btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
                                             btnSubmit.onclick = null;
+                                            
+                                            // Gọi lại setBookingType để làm sạch form
+                                            if (window.setBookingType) window.setBookingType('ON_DEMAND');
                                         }
                                         
                                         // Ẩn loading state, hiện empty state
@@ -899,16 +968,65 @@
                                             miniPopup.classList.add('translate-x-[150%]', 'opacity-0');
                                             miniPopup.classList.remove('translate-x-0', 'opacity-100');
                                         }
+                                        
+                                        showToast("Đã hủy chuyến đi thành công!", "success");
                                     } else {
-                                        alert("Lỗi khi hủy chuyến: " + (data.error || "Không xác định"));
+                                        showToast("Lỗi khi hủy chuyến: " + (data.error || "Không xác định"), "error");
                                     }
                                 });
+                            });
+                        }
+
+                        function cancelPreBookTrip() {
+                            if (!window.currentPreBookTripId) {
+                                showToast("Đang xử lý, vui lòng thử lại sau giây lát.", "warning");
+                                return;
                             }
+                            
+                            showConfirmModal("Xác nhận hủy", "Bạn có chắc chắn muốn hủy chuyến xe đặt trước này?", function() {
+                                fetch('${pageContext.request.contextPath}/trip-cancel', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                    body: 'tripId=' + window.currentPreBookTripId
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        hasPreBookTrip = false;
+                                        window.currentPreBookTripId = null;
+                                        tripData.PRE_BOOK.active = false;
+                                        
+                                        // Reset nút bấm nếu đang ở tab PRE_BOOK
+                                        const btnSubmit = document.getElementById('btn-submit-search');
+                                        if (btnSubmit && document.getElementById('tripType').value === 'PRE_BOOK') {
+                                            btnSubmit.type = 'submit';
+                                            btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
+                                            btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                            btnSubmit.onclick = null;
+                                            
+                                            // Gọi lại setBookingType để làm sạch form
+                                            if (window.setBookingType) window.setBookingType('PRE_BOOK');
+                                        }
+                                        
+                                        // Ẩn mini popup đặt trước
+                                        const prebookPopup = document.getElementById('mini-prebook-popup');
+                                        if (prebookPopup) {
+                                            prebookPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                            prebookPopup.classList.remove('translate-x-0', 'opacity-100');
+                                        }
+                                        
+                                        showToast("Đã hủy chuyến xe đặt trước thành công!", "success");
+                                    } else {
+                                        showToast("Lỗi khi hủy chuyến: " + (data.error || "Không xác định"), "error");
+                                    }
+                                });
+                            });
                         }
 
                         function toggleBottomSearchBar() {
                             const searchBar = document.getElementById('bottom-search-bar');
                             const blogBar = document.getElementById('bottom-blog-bar');
+                            
                             if (searchBar) {
                                 if (searchBar.classList.contains('translate-y-[150%]')) {
                                     // Close blog bar if open
@@ -922,11 +1040,16 @@
                                     searchBar.classList.add('translate-y-0');
                                     searchBar.classList.add('opacity-100');
                                     
-                                    // Ẩn mini popup khi mở search bar
+                                    // Ẩn mini popups khi mở search bar
                                     const miniPopup = document.getElementById('mini-search-popup');
                                     if (miniPopup) {
                                         miniPopup.classList.add('translate-x-[150%]', 'opacity-0');
                                         miniPopup.classList.remove('translate-x-0', 'opacity-100');
+                                    }
+                                    const prebookPopup = document.getElementById('mini-prebook-popup');
+                                    if (prebookPopup) {
+                                        prebookPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                        prebookPopup.classList.remove('translate-x-0', 'opacity-100');
                                     }
                                 } else {
                                     searchBar.classList.add('translate-y-[150%]');
@@ -934,11 +1057,16 @@
                                     searchBar.classList.remove('translate-y-0');
                                     searchBar.classList.remove('opacity-100');
                                     
-                                    // Hiện mini popup nếu đang tìm kiếm
+                                    // Hiện mini popups nếu đang tìm kiếm
                                     const miniPopup = document.getElementById('mini-search-popup');
                                     if (isSearchingOnDemand && miniPopup) {
                                         miniPopup.classList.remove('translate-x-[150%]', 'opacity-0');
                                         miniPopup.classList.add('translate-x-0', 'opacity-100');
+                                    }
+                                    const prebookPopup = document.getElementById('mini-prebook-popup');
+                                    if (hasPreBookTrip && prebookPopup) {
+                                        prebookPopup.classList.remove('translate-x-[150%]', 'opacity-0');
+                                        prebookPopup.classList.add('translate-x-0', 'opacity-100');
                                     }
                                 }
                             }
@@ -949,21 +1077,43 @@
                             const blogBar = document.getElementById('bottom-blog-bar');
                             if (blogBar) {
                                 if (blogBar.classList.contains('translate-y-[150%]')) {
-                                    // Close search bar if open
+                                    // Đang ẩn -> Mở lên
+                                    // Đóng search bar nếu đang mở
                                     if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
                                         searchBar.classList.add('translate-y-[150%]', 'opacity-0');
                                         searchBar.classList.remove('translate-y-0', 'opacity-100');
                                     }
 
-                                    blogBar.classList.remove('translate-y-[150%]');
-                                    blogBar.classList.remove('opacity-0');
-                                    blogBar.classList.add('translate-y-0');
-                                    blogBar.classList.add('opacity-100');
+                                    blogBar.classList.remove('translate-y-[150%]', 'opacity-0');
+                                    blogBar.classList.add('translate-y-0', 'opacity-100');
+                                    
+                                    // Ẩn mini popups
+                                    const miniPopup = document.getElementById('mini-search-popup');
+                                    if (miniPopup) {
+                                        miniPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                        miniPopup.classList.remove('translate-x-0', 'opacity-100');
+                                    }
+                                    const prebookPopup = document.getElementById('mini-prebook-popup');
+                                    if (prebookPopup) {
+                                        prebookPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                        prebookPopup.classList.remove('translate-x-0', 'opacity-100');
+                                    }
                                 } else {
-                                    blogBar.classList.add('translate-y-[150%]');
-                                    blogBar.classList.add('opacity-0');
-                                    blogBar.classList.remove('translate-y-0');
-                                    blogBar.classList.remove('opacity-100');
+                                    // Đang mở -> Đóng lại
+                                    blogBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                    blogBar.classList.remove('translate-y-0', 'opacity-100');
+                                    
+                                    // Hiện lại mini popups nếu đang có
+                                    const miniPopup = document.getElementById('mini-search-popup');
+                                    if (isSearchingOnDemand && miniPopup) {
+                                        miniPopup.classList.remove('translate-x-[150%]', 'opacity-0');
+                                        miniPopup.classList.add('translate-x-0', 'opacity-100');
+                                    }
+                                    const prebookPopup = document.getElementById('mini-prebook-popup');
+                                    if (hasPreBookTrip && prebookPopup) {
+                                        prebookPopup.classList.remove('translate-x-[150%]', 'opacity-0');
+                                        prebookPopup.classList.add('translate-x-0', 'opacity-100');
+                                    }
                                 }
                             }
                         }
@@ -1238,9 +1388,9 @@
                                     .then(data => {
                                         console.log("[Logout] Response received", data);
                                         if (data.success) {
-                                            window.location.href = window.CONTEXT_PATH + '/dashboard.jsp';
+                                            window.location.href = data.redirect || window.CONTEXT_PATH + '/dashboard.jsp';
                                         } else {
-                                            alert("Đăng xuất thất bại: " + data.message);
+                                            showToast("Đăng xuất thất bại: " + data.message, "error");
                                             if (btn) {
                                                 btn.disabled = false;
                                                 btn.innerHTML = 'Đăng xuất';
@@ -1249,8 +1399,8 @@
                                     })
                                     .catch(err => {
                                         console.error("[Logout] error", err);
-                                        alert("Đã xảy ra lỗi mạng khi đăng xuất. Trình duyệt sẽ tự tải lại.");
-                                        window.location.href = window.CONTEXT_PATH + '/dashboard.jsp';
+                                        showToast("Đã xảy ra lỗi mạng khi đăng xuất. Trình duyệt sẽ tự tải lại.", "error");
+                                        setTimeout(() => { window.location.href = window.CONTEXT_PATH + '/dashboard.jsp'; }, 1500);
                                     });
                             };
 
@@ -1360,6 +1510,16 @@
                                     tripDate.removeAttribute('required');
                                     tripTime.removeAttribute('required');
                                     
+                                    // Điền form nếu có dữ liệu chuyến đang tìm
+                                    if (tripData.ON_DEMAND.active) {
+                                        document.getElementById('pickup-input').value = tripData.ON_DEMAND.pickup;
+                                        document.getElementById('dropoff-input').value = tripData.ON_DEMAND.dropoff;
+                                    } else if (tripData.PRE_BOOK.active) {
+                                        // Xóa form nếu tab cũ có active trip
+                                        document.getElementById('pickup-input').value = "";
+                                        document.getElementById('dropoff-input').value = "";
+                                    }
+                                    
                                     // Chuyển nút về trạng thái Hủy nếu đang tìm kiếm ON_DEMAND
                                     const btnSubmit = document.getElementById('btn-submit-search');
                                     if (btnSubmit) {
@@ -1396,14 +1556,36 @@
                                     tripDate.setAttribute('required', 'required');
                                     tripTime.setAttribute('required', 'required');
                                     
-                                    // Phục hồi nút Submit mặc định để đăng ký chuyến xe trước
+                                    // Điền form nếu có dữ liệu chuyến đặt trước
+                                    if (tripData.PRE_BOOK.active) {
+                                        document.getElementById('pickup-input').value = tripData.PRE_BOOK.pickup;
+                                        document.getElementById('dropoff-input').value = tripData.PRE_BOOK.dropoff;
+                                        document.getElementById('trip-date').value = tripData.PRE_BOOK.date;
+                                        document.getElementById('trip-time').value = tripData.PRE_BOOK.time;
+                                    } else if (tripData.ON_DEMAND.active) {
+                                        // Xóa form nếu tab cũ có active trip
+                                        document.getElementById('pickup-input').value = "";
+                                        document.getElementById('dropoff-input').value = "";
+                                        document.getElementById('trip-date').value = "";
+                                        document.getElementById('trip-time').value = "";
+                                    }
+                                    
+                                    // Phục hồi nút Submit mặc định để đăng ký chuyến xe trước, hoặc Đổi sang hủy nếu đã có chuyến
                                     const btnSubmit = document.getElementById('btn-submit-search');
                                     if (btnSubmit) {
-                                        btnSubmit.type = 'submit';
-                                        btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
-                                        btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
-                                        btnSubmit.onclick = null;
-                                        btnSubmit.disabled = false;
+                                        if (hasPreBookTrip) {
+                                            btnSubmit.type = 'button';
+                                            btnSubmit.innerHTML = 'Hủy đặt lịch <span class="material-symbols-outlined text-[20px]">cancel</span>';
+                                            btnSubmit.className = 'w-full bg-[#00BFA5] hover:bg-[#009688] text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                            btnSubmit.disabled = false;
+                                            btnSubmit.onclick = cancelPreBookTrip;
+                                        } else {
+                                            btnSubmit.type = 'submit';
+                                            btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
+                                            btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                            btnSubmit.onclick = null;
+                                            btnSubmit.disabled = false;
+                                        }
                                     }
                                 }
                             };
