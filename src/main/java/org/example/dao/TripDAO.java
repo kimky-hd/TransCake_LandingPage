@@ -129,6 +129,32 @@ public class TripDAO {
     }
 
     /**
+     * Lấy chuyến đi ON_DEMAND đang trong trạng thái chờ (PENDING)
+     */
+    public Trip getActiveOnDemandTrip(int passengerId) {
+        String sql = "SELECT * FROM trips WHERE passenger_id = ? AND trip_type = 'ON_DEMAND' AND match_status = 'PENDING' ORDER BY id DESC LIMIT 1";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, passengerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Trip trip = new Trip();
+                    trip.setId(rs.getInt("id"));
+                    trip.setPassengerId(rs.getInt("passenger_id"));
+                    trip.setPickupLocation(rs.getString("pickup_location"));
+                    trip.setDropoffLocation(rs.getString("dropoff_location"));
+                    trip.setTripType(rs.getString("trip_type"));
+                    trip.setMatchStatus(rs.getString("match_status"));
+                    return trip;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi getActiveOnDemandTrip: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
      * Lấy danh sách các bài đăng blog từ database kèm theo thông tin chuyến đi và người đăng
      * @return Danh sách bài đăng
      */

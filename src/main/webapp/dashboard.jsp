@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="org.example.model.User" %>
 <%@ page import="org.example.model.BlogPost" %>
+<%@ page import="org.example.model.Trip" %>
 <%@ page import="org.example.dao.TripDAO" %>
 <%@ page import="java.util.List" %>
 <% 
@@ -15,6 +16,12 @@
     // Fetch community blog posts
     TripDAO blogTripDAO = new TripDAO();
     List<BlogPost> blogPosts = blogTripDAO.getAllActiveBlogPosts();
+    
+    // Kiểm tra xem người dùng có đang tìm chuyến đi ON_DEMAND nào không
+    Trip activeTrip = null;
+    if (isLoggedIn) {
+        activeTrip = blogTripDAO.getActiveOnDemandTrip(user.getId());
+    }
 %>
             <!DOCTYPE html>
             <html lang="vi">
@@ -748,7 +755,38 @@
                     </div>
 
                     <script>
-                        let isSearchingOnDemand = false;
+                        let isSearchingOnDemand = <%= activeTrip != null ? "true" : "false" %>;
+                        window.currentTripId = <%= activeTrip != null ? activeTrip.getId() : "null" %>;
+                        
+                        // Phục hồi trạng thái UI nếu đã có chuyến xe đang tìm kiếm
+                        document.addEventListener("DOMContentLoaded", function() {
+                            if (isSearchingOnDemand) {
+                                // Giao diện đang tìm kiếm
+                                document.getElementById('empty-search-state').classList.add('hidden');
+                                document.getElementById('empty-search-state').classList.remove('flex');
+                                
+                                document.getElementById('loading-search-state').classList.remove('hidden');
+                                document.getElementById('loading-search-state').classList.add('flex');
+                                
+                                // Giao diện form
+                                document.getElementById('pickup-input').value = "<%= activeTrip != null ? activeTrip.getPickupLocation() : "" %>";
+                                document.getElementById('dropoff-input').value = "<%= activeTrip != null ? activeTrip.getDropoffLocation() : "" %>";
+                                
+                                // Giao diện popup
+                                document.getElementById('mini-popup-pickup').textContent = "<%= activeTrip != null ? activeTrip.getPickupLocation() : "" %>";
+                                document.getElementById('mini-popup-dropoff').textContent = "<%= activeTrip != null ? activeTrip.getDropoffLocation() : "" %>";
+                                
+                                const btnSubmit = document.getElementById('btn-submit-search');
+                                if (btnSubmit) {
+                                    btnSubmit.type = 'button';
+                                    btnSubmit.innerHTML = 'Hủy tìm kiếm <span class="material-symbols-outlined text-[20px]">cancel</span>';
+                                    btnSubmit.className = 'w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                    btnSubmit.disabled = false;
+                                    btnSubmit.onclick = cancelTripSearch;
+                                }
+                            }
+                        });
+
 
                         function handleTripSearch(event) {
                             event.preventDefault(); // Ngăn chặn load lại trang
@@ -832,12 +870,14 @@
                                         isSearchingOnDemand = false;
                                         window.currentTripId = null;
                                         
-                                        // Trả lại nút Tìm chuyến
+                                        // Trả lại nút Tìm chuyến nếu đang ở tab ON_DEMAND
                                         const btnSubmit = document.getElementById('btn-submit-search');
-                                        btnSubmit.type = 'submit';
-                                        btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
-                                        btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
-                                        btnSubmit.onclick = null;
+                                        if (btnSubmit && document.getElementById('tripType').value === 'ON_DEMAND') {
+                                            btnSubmit.type = 'submit';
+                                            btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
+                                            btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                            btnSubmit.onclick = null;
+                                        }
                                         
                                         // Ẩn loading state, hiện empty state
                                         document.getElementById('loading-search-state').classList.add('hidden');
@@ -1311,6 +1351,24 @@
 
                                     tripDate.removeAttribute('required');
                                     tripTime.removeAttribute('required');
+                                    
+                                    // Chuyển nút về trạng thái Hủy nếu đang tìm kiếm ON_DEMAND
+                                    const btnSubmit = document.getElementById('btn-submit-search');
+                                    if (btnSubmit) {
+                                        if (isSearchingOnDemand) {
+                                            btnSubmit.type = 'button';
+                                            btnSubmit.innerHTML = 'Hủy tìm kiếm <span class="material-symbols-outlined text-[20px]">cancel</span>';
+                                            btnSubmit.className = 'w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                            btnSubmit.disabled = false;
+                                            btnSubmit.onclick = cancelTripSearch;
+                                        } else {
+                                            btnSubmit.type = 'submit';
+                                            btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
+                                            btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                            btnSubmit.onclick = null;
+                                            btnSubmit.disabled = false;
+                                        }
+                                    }
 
                                 } else if (type === 'PRE_BOOK') {
                                     // Set Toggle UI
@@ -1329,6 +1387,16 @@
 
                                     tripDate.setAttribute('required', 'required');
                                     tripTime.setAttribute('required', 'required');
+                                    
+                                    // Phục hồi nút Submit mặc định để đăng ký chuyến xe trước
+                                    const btnSubmit = document.getElementById('btn-submit-search');
+                                    if (btnSubmit) {
+                                        btnSubmit.type = 'submit';
+                                        btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
+                                        btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                        btnSubmit.onclick = null;
+                                        btnSubmit.disabled = false;
+                                    }
                                 }
                             };
 
