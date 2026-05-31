@@ -79,9 +79,18 @@ public class TripSearchServlet extends HttpServlet {
                                  scheduledTimestamp.toString() + ". Ai có nhu cầu đi chung thì liên hệ nhé!";
                 tripDAO.createBlogForTrip(tripId, title, content);
             }
-            
+            if ("true".equals(request.getParameter("ajax"))) {
+                response.setContentType("application/json");
+                response.getWriter().write("{\"success\": true, \"tripId\": " + tripId + "}");
+                return;
+            }
             response.sendRedirect(request.getContextPath() + "/dashboard.jsp?success=trip_created");
         } else {
+            if ("true".equals(request.getParameter("ajax"))) {
+                response.setContentType("application/json");
+                response.getWriter().write("{\"success\": false}");
+                return;
+            }
             response.sendRedirect(request.getContextPath() + "/dashboard.jsp?error=db_error");
         }
     }

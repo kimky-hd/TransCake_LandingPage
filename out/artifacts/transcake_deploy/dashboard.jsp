@@ -506,7 +506,7 @@
                                     </div>
                                 </div>
 
-                                <button type="submit"
+                                <button type="submit" id="btn-submit-search"
                                     class="w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto">
                                     Tìm chuyến
                                     <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
@@ -548,6 +548,27 @@
                                 </div>
                             </div>
 
+                        </div>
+                    </div>
+
+                    <!-- Mini Search Popup (Top Right) -->
+                    <div id="mini-search-popup" class="fixed top-24 right-8 z-40 bg-white/90 backdrop-blur-md border border-[#6200EE]/30 rounded-2xl p-4 shadow-[0_8px_30px_rgba(98,0,238,0.15)] transition-all duration-500 transform translate-x-[150%] opacity-0 flex items-center gap-4 w-[320px] cursor-pointer hover:bg-white" onclick="toggleBottomSearchBar()">
+                        <div class="relative w-10 h-10 shrink-0">
+                            <div class="absolute inset-0 bg-[#6200EE]/20 rounded-full animate-ping"></div>
+                            <div class="absolute inset-0 flex items-center justify-center bg-white border border-[#6200EE]/50 rounded-full shadow-sm z-10">
+                                <span class="material-symbols-outlined text-[#6200EE] text-[20px] animate-[spin_3s_linear_infinite]">radar</span>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h6 class="text-sm font-bold text-[#6200EE] mb-1">Đang tìm chuyến xe...</h6>
+                            <div class="flex items-center gap-1 text-xs text-slate-600 truncate">
+                                <div class="w-1.5 h-1.5 rounded-full border-[2px] border-[#6200EE] bg-white shrink-0"></div>
+                                <span id="mini-popup-pickup" class="truncate"></span>
+                            </div>
+                            <div class="flex items-center gap-1 text-xs text-slate-600 truncate mt-0.5">
+                                <span class="material-symbols-outlined text-[#FF6D00] text-[12px] shrink-0">location_on</span>
+                                <span id="mini-popup-dropoff" class="truncate"></span>
+                            </div>
                         </div>
                     </div>
 
@@ -727,9 +748,32 @@
                     </div>
 
                     <script>
+                        let isSearchingOnDemand = false;
+
                         function handleTripSearch(event) {
                             event.preventDefault(); // Ngăn chặn load lại trang
                             const form = event.target;
+                            
+                            const tripType = document.getElementById('tripType') ? document.getElementById('tripType').value : 'ON_DEMAND';
+                            if (tripType === 'ON_DEMAND') {
+                                if (isSearchingOnDemand) {
+                                    alert("Bạn đang tìm kiếm một chuyến đi. Vui lòng chờ kết quả!");
+                                    return; // Chặn không cho tìm thêm
+                                }
+                                isSearchingOnDemand = true;
+                                
+                                // Cập nhật thông tin lên mini popup
+                                document.getElementById('mini-popup-pickup').textContent = document.getElementById('pickup-input').value || "Đang tải...";
+                                document.getElementById('mini-popup-dropoff').textContent = document.getElementById('dropoff-input').value || "Đang tải...";
+                                
+                                // Disable nút tìm kiếm
+                                const btnSubmit = document.getElementById('btn-submit-search');
+                                if (btnSubmit) {
+                                    btnSubmit.disabled = true;
+                                    btnSubmit.classList.add('opacity-70', 'cursor-not-allowed');
+                                    btnSubmit.innerHTML = 'Đang tìm kiếm... <span class="material-symbols-outlined text-[20px] animate-spin">sync</span>';
+                                }
+                            }
                             
                             // Ẩn state rỗng, hiện loading state
                             document.getElementById('empty-search-state').classList.add('hidden');
@@ -739,18 +783,79 @@
                             document.getElementById('loading-search-state').classList.add('flex');
                             
                             // Gửi data thực tế lên server (sử dụng x-www-form-urlencoded để tương thích với Servlet thông thường)
-                            const urlEncodedData = new URLSearchParams(new FormData(form)).toString();
+                            const formData = new URLSearchParams(new FormData(form));
+                            formData.append("ajax", "true");
+                            
                             fetch(form.action, {
                                 method: form.method,
                                 headers: {
                                     'Content-Type': 'application/x-www-form-urlencoded'
                                 },
-                                body: urlEncodedData
-                            }).then(response => {
-                                console.log("Đã gửi yêu cầu tìm chuyến thành công!");
+                                body: formData.toString()
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success && tripType === 'ON_DEMAND') {
+                                    window.currentTripId = data.tripId;
+                                    const btnSubmit = document.getElementById('btn-submit-search');
+                                    if (btnSubmit) {
+                                        // Đổi nút thành nút Hủy tìm kiếm
+                                        btnSubmit.type = 'button';
+                                        btnSubmit.innerHTML = 'Hủy tìm kiếm <span class="material-symbols-outlined text-[20px]">cancel</span>';
+                                        btnSubmit.classList.remove('bg-slate-900', 'hover:bg-black', 'opacity-70', 'cursor-not-allowed');
+                                        btnSubmit.classList.add('bg-red-500', 'hover:bg-red-600');
+                                        btnSubmit.disabled = false;
+                                        btnSubmit.onclick = cancelTripSearch;
+                                    }
+                                }
                             }).catch(error => {
                                 console.error("Lỗi khi gửi yêu cầu tìm chuyến:", error);
                             });
+                        }
+
+                        function cancelTripSearch() {
+                            if (!window.currentTripId) {
+                                alert("Đang xử lý, vui lòng thử lại sau giây lát.");
+                                return;
+                            }
+                            
+                            if (confirm("Bạn có chắc chắn muốn hủy yêu cầu tìm kiếm này?")) {
+                                fetch('${pageContext.request.contextPath}/trip-cancel', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                    body: 'tripId=' + window.currentTripId
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        // Reset giao diện
+                                        isSearchingOnDemand = false;
+                                        window.currentTripId = null;
+                                        
+                                        // Trả lại nút Tìm chuyến
+                                        const btnSubmit = document.getElementById('btn-submit-search');
+                                        btnSubmit.type = 'submit';
+                                        btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
+                                        btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                        btnSubmit.onclick = null;
+                                        
+                                        // Ẩn loading state, hiện empty state
+                                        document.getElementById('loading-search-state').classList.add('hidden');
+                                        document.getElementById('loading-search-state').classList.remove('flex');
+                                        document.getElementById('empty-search-state').classList.remove('hidden');
+                                        document.getElementById('empty-search-state').classList.add('flex');
+                                        
+                                        // Ẩn mini popup
+                                        const miniPopup = document.getElementById('mini-search-popup');
+                                        if (miniPopup) {
+                                            miniPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                            miniPopup.classList.remove('translate-x-0', 'opacity-100');
+                                        }
+                                    } else {
+                                        alert("Lỗi khi hủy chuyến: " + (data.error || "Không xác định"));
+                                    }
+                                });
+                            }
                         }
 
                         function toggleBottomSearchBar() {
@@ -768,11 +873,25 @@
                                     searchBar.classList.remove('opacity-0');
                                     searchBar.classList.add('translate-y-0');
                                     searchBar.classList.add('opacity-100');
+                                    
+                                    // Ẩn mini popup khi mở search bar
+                                    const miniPopup = document.getElementById('mini-search-popup');
+                                    if (miniPopup) {
+                                        miniPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                        miniPopup.classList.remove('translate-x-0', 'opacity-100');
+                                    }
                                 } else {
                                     searchBar.classList.add('translate-y-[150%]');
                                     searchBar.classList.add('opacity-0');
                                     searchBar.classList.remove('translate-y-0');
                                     searchBar.classList.remove('opacity-100');
+                                    
+                                    // Hiện mini popup nếu đang tìm kiếm
+                                    const miniPopup = document.getElementById('mini-search-popup');
+                                    if (isSearchingOnDemand && miniPopup) {
+                                        miniPopup.classList.remove('translate-x-[150%]', 'opacity-0');
+                                        miniPopup.classList.add('translate-x-0', 'opacity-100');
+                                    }
                                 }
                             }
                         }

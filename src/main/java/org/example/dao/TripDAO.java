@@ -94,12 +94,6 @@ public class TripDAO {
         return false;
     }
 
-    /**
-     * Cập nhật trạng thái hoàn thành của chuyến đi
-     * @param tripId ID của chuyến đi
-     * @param status Trạng thái (IN_PROGRESS, COMPLETED, FAILED)
-     * @return true nếu thành công
-     */
     public boolean updateCompletionStatus(int tripId, String status) {
         String sql = "UPDATE trips SET completion_status = ? WHERE id = ?";
         try (Connection conn = DBContext.getConnection();
@@ -111,6 +105,25 @@ public class TripDAO {
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Lỗi updateCompletionStatus: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Hủy chuyến đi (Cập nhật match_status = CANCELLED)
+     * @param tripId ID của chuyến đi
+     * @return true nếu thành công
+     */
+    public boolean cancelTrip(int tripId) {
+        String sql = "UPDATE trips SET match_status = 'CANCELLED' WHERE id = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, tripId);
+            
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi cancelTrip: " + e.getMessage());
         }
         return false;
     }
