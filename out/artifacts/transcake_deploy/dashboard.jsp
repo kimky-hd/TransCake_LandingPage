@@ -188,7 +188,7 @@
                                 </div>
 
                                 <!-- Community Feed -->
-                                <div
+                                <div onclick="toggleBottomBlogBar()"
                                     class="bg-white/70 hover:bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm cursor-pointer transition-colors flex items-center gap-4 group">
                                     <div
                                         class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] relative group-hover:scale-110 transition-transform">
@@ -274,7 +274,7 @@
                             <button
                                 class="w-full bg-gradient-to-r from-[#FF6D00] to-[#FF9100] hover:from-[#E66200] hover:to-[#E68200] text-white font-bold text-lg py-4 rounded-2xl shadow-[0_10px_25px_rgba(255,109,0,0.35)] transition-all transform hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(255,109,0,0.4)] mb-8 flex items-center justify-center gap-2">
                                 <span class="material-symbols-outlined">add_circle</span>
-                                Post a Ride
+                                Đăng chuyến đi
                             </button>
 
                             <!-- Expanded Desktop Features -->
@@ -287,8 +287,8 @@
                                         <span
                                             class="material-symbols-outlined text-slate-400 group-hover:text-red-500 transition-colors mb-2">person_add</span>
                                         <div>
-                                            <h4 class="font-bold text-slate-800 text-xs">Ride Requests</h4>
-                                            <p class="text-[13px] font-black text-red-500 mt-0.5">3 new pending</p>
+                                            <h4 class="font-bold text-slate-800 text-xs">Đề xuất chuyến đi</h4>
+                                            <p class="text-[13px] font-black text-red-500 mt-0.5">3 chuyến đang chờ</p>
                                         </div>
                                     </div>
                                     <!-- Card 2: Earnings -->
@@ -305,8 +305,8 @@
                                         <span
                                             class="material-symbols-outlined text-slate-400 group-hover:text-emerald-500 transition-colors mb-2 relative z-10">account_balance_wallet</span>
                                         <div class="relative z-10">
-                                            <h4 class="font-bold text-slate-800 text-xs">Earnings</h4>
-                                            <p class="text-[13px] font-black text-emerald-600 mt-0.5">$245.50 /wk</p>
+                                            <h4 class="font-bold text-slate-800 text-xs">Thu nhập</h4>
+                                            <p class="text-[13px] font-black text-emerald-600 mt-0.5">800.000đ/wk</p>
                                         </div>
                                     </div>
                                 </div>
@@ -319,8 +319,8 @@
                                         <span class="material-symbols-outlined">directions_car</span>
                                     </div>
                                     <div class="flex-1">
-                                        <h4 class="font-bold text-slate-800 text-sm">Driver History</h4>
-                                        <p class="text-xs text-slate-500 font-medium">Review past rides</p>
+                                        <h4 class="font-bold text-slate-800 text-sm">Lịch sử chuyến đi</h4>
+                                        <p class="text-xs text-slate-500 font-medium">Xem lịch sử chuyến đi</p>
                                     </div>
                                     <span
                                         class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-colors">chevron_right</span>
