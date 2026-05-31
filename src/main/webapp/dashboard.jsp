@@ -95,10 +95,10 @@
 
                             <button
                                 class="flex-1 py-2 text-sm font-bold z-10 transition-colors duration-300 text-[#6200EE]"
-                                id="btn-passenger" onclick="setRole('passenger')">Passenger</button>
+                                id="btn-passenger" onclick="setRole('passenger')">Hành khách</button>
                             <button
                                 class="flex-1 py-2 text-sm font-bold z-10 transition-colors duration-300 text-slate-500 hover:text-slate-700"
-                                id="btn-driver" onclick="setRole('driver')">Driver</button>
+                                id="btn-driver" onclick="setRole('driver')">Tài xế</button>
                         </div>
                     </div>
 
@@ -129,8 +129,7 @@
                                         <div class="flex flex-col mt-1.5">
                                             <div class="flex items-center justify-between mb-1.5">
                                                 <span
-                                                    class="text-[10px] font-bold text-[#6200EE] uppercase tracking-wider bg-purple-100 border border-purple-200 px-2 py-0.5 rounded-md">Trust
-                                                    Points: 10</span>
+                                                    class="text-[10px] font-bold text-[#6200EE] uppercase tracking-wider bg-purple-100 border border-purple-200 px-2 py-0.5 rounded-md">Điểm uy tín: 10</span>
                                             </div>
                                             <div class="w-2/3 bg-purple-100 rounded-full h-1.5 overflow-hidden">
                                                 <div class="bg-[#6200EE] h-full rounded-full" style="width: 100%"></div>
@@ -160,7 +159,7 @@
                                             transform hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(98,0,238,0.4)]
                                             flex items-center justify-center gap-2 relative z-10">
                                             <span class="material-symbols-outlined">search</span>
-                                            Find a Ride
+                                            Tìm kiếm chuyến đi
                                 </button>
                             </div>
 
@@ -174,8 +173,8 @@
                                         <span class="material-symbols-outlined">history</span>
                                     </div>
                                     <div class="flex-1">
-                                        <h4 class="font-bold text-slate-800 text-sm">Recent Trips</h4>
-                                        <p class="text-xs text-slate-500 font-medium">View travel history</p>
+                                        <h4 class="font-bold text-slate-800 text-sm">Lịch sử chuyến đi</h4>
+                                        <p class="text-xs text-slate-500 font-medium">Xem lịch sử chuyến đi</p>
                                     </div>
                                     <span
                                         class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-colors">chevron_right</span>
@@ -191,8 +190,8 @@
                                             class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>
                                     </div>
                                     <div class="flex-1">
-                                        <h4 class="font-bold text-slate-800 text-sm">Community Feed</h4>
-                                        <p class="text-xs text-slate-500 font-medium">Connect with your network</p>
+                                        <h4 class="font-bold text-slate-800 text-sm">Kết nối cộng đồng</h4>
+                                        <p class="text-xs text-slate-500 font-medium">Kết nối với cộng đồng của bạn</p>
                                     </div>
                                     <span
                                         class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-colors">chevron_right</span>
@@ -250,8 +249,7 @@
                                         <div class="flex flex-col mt-1.5">
                                             <div class="flex items-center justify-between">
                                                 <span
-                                                    class="text-[10px] font-bold text-[#FF6D00] uppercase tracking-wider bg-orange-100 border border-orange-200 px-2 py-0.5 rounded-md">Trust
-                                                    Points: 10</span>
+                                                    class="text-[10px] font-bold text-[#FF6D00] uppercase tracking-wider bg-orange-100 border border-orange-200 px-2 py-0.5 rounded-md">Điểm uy tín: 10</span>
                                             </div>
                                         </div>
                                         <% } else { %>
