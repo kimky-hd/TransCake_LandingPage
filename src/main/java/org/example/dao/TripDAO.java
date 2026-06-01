@@ -20,7 +20,7 @@ public class TripDAO {
      * @return ID của chuyến đi nếu thành công, -1 nếu thất bại
      */
     public int insertTrip(Trip trip) {
-        String sql = "INSERT INTO trips (passenger_id, pickup_location, dropoff_location, trip_type, scheduled_time, match_status, completion_status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO trips (passenger_id, pickup_location, dropoff_location, trip_type, scheduled_time, match_status, completion_status, note_for_driver, price, distance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
@@ -31,6 +31,17 @@ public class TripDAO {
             ps.setTimestamp(5, trip.getScheduledTime());
             ps.setString(6, trip.getMatchStatus());
             ps.setString(7, trip.getCompletionStatus());
+            ps.setString(8, trip.getNoteForDriver());
+            if (trip.getPrice() != null) {
+                ps.setDouble(9, trip.getPrice());
+            } else {
+                ps.setNull(9, java.sql.Types.DECIMAL);
+            }
+            if (trip.getDistance() != null) {
+                ps.setDouble(10, trip.getDistance());
+            } else {
+                ps.setNull(10, java.sql.Types.DECIMAL);
+            }
             
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {

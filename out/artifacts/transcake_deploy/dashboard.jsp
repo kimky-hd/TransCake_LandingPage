@@ -439,6 +439,10 @@
 
                                 <!-- Location Input Group -->
                                 <div class="relative flex flex-col gap-3 w-full">
+                                    <input type="hidden" name="pickupLat" id="pickup-lat">
+                                    <input type="hidden" name="pickupLng" id="pickup-lng">
+                                    <input type="hidden" name="dropoffLat" id="dropoff-lat">
+                                    <input type="hidden" name="dropoffLng" id="dropoff-lng">
                                     <!-- Connecting Line -->
                                     <div
                                         class="absolute left-6 top-10 bottom-10 w-[2px] bg-slate-200 flex flex-col items-center justify-center pointer-events-none z-0">
@@ -477,6 +481,32 @@
                                         <div id="dropoff-suggestions"
                                             class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden hidden max-h-48 panel-scroll overflow-y-auto">
                                         </div>
+                                    </div>
+                                    
+                                    <!-- Price Estimation Box -->
+                                    <div id="price-estimation-box" class="hidden w-full bg-orange-50/80 border border-orange-200 rounded-2xl p-4 shadow-sm transition-all duration-300">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-sm font-bold text-slate-700">Giá cước ước tính</span>
+                                            <span id="price-value" class="text-lg font-bold text-[#FF6D00]">...</span>
+                                        </div>
+                                        <div class="flex justify-between items-center text-xs text-slate-500">
+                                            <span id="distance-value">Đang tính toán...</span>
+                                            <span id="duration-value"></span>
+                                        </div>
+                                        <input type="hidden" name="price" id="trip-price">
+                                        <input type="hidden" name="distance" id="trip-distance">
+                                    </div>
+                                </div>
+
+                                <!-- Note for Driver -->
+                                <div class="w-full">
+                                    <div class="relative flex items-start p-1 bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:border-[#6200EE]/50 transition-colors w-full">
+                                        <div class="w-10 h-10 flex items-center justify-center shrink-0 mt-1">
+                                            <span class="material-symbols-outlined text-slate-400 text-[20px]">edit_note</span>
+                                        </div>
+                                        <textarea id="note-input" name="note" rows="2"
+                                            placeholder="Lưu ý cho tài xế (VD: Đứng ở cổng chính, tôi mang nhiều đồ...)"
+                                            class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none resize-none"></textarea>
                                     </div>
                                 </div>
 
@@ -862,6 +892,16 @@
 
                         function handleTripSearch(event) {
                             event.preventDefault(); // Ngăn chặn load lại trang
+                            
+                            // Validate if locations were selected from dropdown
+                            const pickupLat = document.getElementById('pickup-lat').value;
+                            const dropoffLat = document.getElementById('dropoff-lat').value;
+                            
+                            if(!pickupLat || !dropoffLat) {
+                                showToast("Vui lòng chọn Điểm đón và Điểm đến từ danh sách gợi ý của bản đồ!", "error");
+                                return;
+                            }
+
                             const form = event.target;
                             
                             const tripType = document.getElementById('tripType') ? document.getElementById('tripType').value : 'ON_DEMAND';
@@ -1608,6 +1648,15 @@
                                 input.addEventListener('input', function () {
                                     clearTimeout(debounceTimer);
                                     const query = this.value;
+                                    
+                                    // Clear hidden coordinates when user types
+                                    if(inputId === 'pickup-input') {
+                                        document.getElementById('pickup-lat').value = '';
+                                        document.getElementById('pickup-lng').value = '';
+                                    } else if(inputId === 'dropoff-input') {
+                                        document.getElementById('dropoff-lat').value = '';
+                                        document.getElementById('dropoff-lng').value = '';
+                                    }
 
                                     if (!query || query.length < 2) {
                                         suggestionsContainer.innerHTML = '';
@@ -1644,36 +1693,61 @@
                                                             input.value = fullAddress;
                                                             suggestionsContainer.innerHTML = '';
                                                             suggestionsContainer.classList.add('hidden');
-                                                            // Bay đến vị trí
-                                                            if (feature.lat && feature.lng) {
-                                                                map.flyTo({
-                                                                    center: [feature.lng, feature.lat],
-                                                                    zoom: 15,
-                                                                    essential: true
-                                                                });
+                                                            
+                                                            // Gọi Place API để lấy toạ độ chính xác từ ref_id
+                                                            if (feature.ref_id) {
+                                                                const placeUrl = `https://maps.vietmap.vn/api/place/v3?apikey=\${vietmapSearchApiKey}&refid=\${feature.ref_id}`;
+                                                                fetch(placeUrl)
+                                                                    .then(res => res.json())
+                                                                    .then(placeData => {
+                                                                        const lat = placeData.lat;
+                                                                        const lng = placeData.lng;
+                                                                        
+                                                                        if (lat && lng) {
+                                                                            // Lưu coordinates vào hidden fields
+                                                                            if (inputId === 'pickup-input') {
+                                                                                document.getElementById('pickup-lat').value = lat;
+                                                                                document.getElementById('pickup-lng').value = lng;
+                                                                            } else if (inputId === 'dropoff-input') {
+                                                                                document.getElementById('dropoff-lat').value = lat;
+                                                                                document.getElementById('dropoff-lng').value = lng;
+                                                                            }
+                                                                            
+                                                                            // Bay đến vị trí
+                                                                            map.flyTo({
+                                                                                center: [lng, lat],
+                                                                                zoom: 15,
+                                                                                essential: true
+                                                                            });
 
-                                                                // Xóa marker cũ nếu có
-                                                                if (window.searchMarker) {
-                                                                    window.searchMarker.remove();
-                                                                }
+                                                                            // Xóa marker cũ nếu có
+                                                                            if (window.searchMarker) {
+                                                                                window.searchMarker.remove();
+                                                                            }
 
-                                                                // Tạo Custom Marker (Màu Cam có sóng nổi)
-                                                                const searchMarkerEl = document.createElement('div');
-                                                                searchMarkerEl.className = 'relative flex items-center justify-center';
-                                                                searchMarkerEl.innerHTML = `
-                                                                    <div class="absolute w-24 h-24 bg-orange-500/30 rounded-full animate-ping"></div>
-                                                                    <div class="absolute w-12 h-12 bg-orange-500/40 rounded-full animate-pulse"></div>
-                                                                    <div class="relative flex flex-col items-center">
-                                                                        <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 border-[3px] border-white rounded-full shadow-[0_4px_15px_rgba(249,115,22,0.5)] z-10 flex items-center justify-center">
-                                                                            <div class="w-2 h-2 bg-white rounded-full shadow-inner"></div>
-                                                                        </div>
-                                                                        <div class="w-1 h-3 bg-orange-600 -mt-1 rounded-b-full"></div>
-                                                                    </div>
-                                                                `;
+                                                                            // Tạo Custom Marker
+                                                                            const searchMarkerEl = document.createElement('div');
+                                                                            searchMarkerEl.className = 'relative flex items-center justify-center';
+                                                                            searchMarkerEl.innerHTML = `
+                                                                                <div class="absolute w-24 h-24 bg-orange-500/30 rounded-full animate-ping"></div>
+                                                                                <div class="absolute w-12 h-12 bg-orange-500/40 rounded-full animate-pulse"></div>
+                                                                                <div class="relative flex flex-col items-center">
+                                                                                    <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 border-[3px] border-white rounded-full shadow-[0_4px_15px_rgba(249,115,22,0.5)] z-10 flex items-center justify-center">
+                                                                                        <div class="w-2 h-2 bg-white rounded-full shadow-inner"></div>
+                                                                                    </div>
+                                                                                    <div class="w-1 h-3 bg-orange-600 -mt-1 rounded-b-full"></div>
+                                                                                </div>
+                                                                            `;
 
-                                                                window.searchMarker = new vietmapgl.Marker({ element: searchMarkerEl, offset: [0, -15] })
-                                                                    .setLngLat([feature.lng, feature.lat])
-                                                                    .addTo(map);
+                                                                            window.searchMarker = new vietmapgl.Marker({ element: searchMarkerEl, offset: [0, -15] })
+                                                                                .setLngLat([lng, lat])
+                                                                                .addTo(map);
+                                                                                
+                                                                            // Nếu cả 2 điểm đã được chọn, gọi hàm tính giá
+                                                                            calculateRouteAndPrice();
+                                                                        }
+                                                                    })
+                                                                    .catch(err => console.error("Place API error:", err));
                                                             }
                                                         };
                                                         suggestionsContainer.appendChild(div);
@@ -1693,6 +1767,56 @@
                                         suggestionsContainer.classList.add('hidden');
                                     }
                                 });
+                            }
+                            
+                            function calculateRouteAndPrice() {
+                                const pLat = document.getElementById('pickup-lat').value;
+                                const pLng = document.getElementById('pickup-lng').value;
+                                const dLat = document.getElementById('dropoff-lat').value;
+                                const dLng = document.getElementById('dropoff-lng').value;
+                                
+                                if(pLat && pLng && dLat && dLng) {
+                                    const priceBox = document.getElementById('price-estimation-box');
+                                    priceBox.classList.remove('hidden');
+                                    document.getElementById('price-value').textContent = "Đang tính...";
+                                    document.getElementById('distance-value').textContent = "Đang quét tuyến đường...";
+                                    document.getElementById('duration-value').textContent = "";
+                                    
+                                    const routeUrl = `https://maps.vietmap.vn/api/route?api-version=1.1&apikey=\${vietmapSearchApiKey}&point=\${pLat},\${pLng}&point=\${dLat},\${dLng}&vehicle=car`;
+                                    
+                                    fetch(routeUrl)
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            if(data.paths && data.paths.length > 0) {
+                                                const distanceMeters = data.paths[0].distance;
+                                                const timeMs = data.paths[0].time;
+                                                
+                                                const distanceKm = (distanceMeters / 1000).toFixed(1);
+                                                const durationMins = Math.ceil(timeMs / 60000);
+                                                
+                                                // Tính giá: 10k mở cửa + 12k/km
+                                                const baseFare = 10000;
+                                                const perKmFare = 12000;
+                                                const totalPrice = baseFare + (distanceKm * perKmFare);
+                                                
+                                                // Hiển thị
+                                                document.getElementById('distance-value').textContent = `Quãng đường: \${distanceKm} km`;
+                                                document.getElementById('duration-value').textContent = `Thời gian: ~\${durationMins} phút`;
+                                                document.getElementById('price-value').textContent = totalPrice.toLocaleString('vi-VN') + " đ";
+                                                
+                                                // Lưu vào hidden input
+                                                document.getElementById('trip-price').value = totalPrice;
+                                                document.getElementById('trip-distance').value = distanceKm;
+                                            } else {
+                                                document.getElementById('distance-value').textContent = "Không tìm thấy đường đi";
+                                                document.getElementById('price-value').textContent = "Chưa rõ";
+                                            }
+                                        })
+                                        .catch(err => {
+                                            console.error("Routing error:", err);
+                                            document.getElementById('distance-value').textContent = "Lỗi tính toán quãng đường";
+                                        });
+                                }
                             }
 
                             document.addEventListener('DOMContentLoaded', function () {

@@ -85,8 +85,22 @@ public class TripSearchServlet extends HttpServlet {
             }
         }
 
-        // Create Trip Object
-        Trip trip = new Trip(loggedInUser.getId(), pickup, dropoff, tripType, scheduledTimestamp);
+        String note = request.getParameter("note");
+        Double price = null;
+        Double distance = null;
+        try {
+            if (request.getParameter("price") != null && !request.getParameter("price").isEmpty()) {
+                price = Double.parseDouble(request.getParameter("price"));
+            }
+            if (request.getParameter("distance") != null && !request.getParameter("distance").isEmpty()) {
+                distance = Double.parseDouble(request.getParameter("distance"));
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing price/distance: " + e.getMessage());
+        }
+
+        // Create Trip Object (truyền đầy đủ dữ liệu)
+        Trip trip = new Trip(loggedInUser.getId(), pickup, dropoff, tripType, scheduledTimestamp, note, price, distance);
         
         // Save to Database
         int tripId = tripDAO.insertTrip(trip);

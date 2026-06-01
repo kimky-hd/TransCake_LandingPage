@@ -33,3 +33,25 @@ CREATE TABLE IF NOT EXISTS otp_codes (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_phone_number (phone_number)
 );
+
+-- ========================================================
+-- Bảng: trips
+-- Mô tả: Lưu trữ thông tin chuyến đi của hành khách và tài xế
+-- ========================================================
+CREATE TABLE IF NOT EXISTS trips (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    passenger_id INT NOT NULL,
+    driver_id INT DEFAULT NULL,
+    pickup_location VARCHAR(255) NOT NULL,
+    dropoff_location VARCHAR(255) NOT NULL,
+    trip_type ENUM('ON_DEMAND', 'PRE_BOOK') NOT NULL,
+    scheduled_time TIMESTAMP NULL,
+    match_status ENUM('PENDING', 'MATCHED', 'CANCELLED') DEFAULT 'PENDING',
+    completion_status ENUM('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED', 'FAILED') DEFAULT 'NOT_STARTED',
+    note_for_driver VARCHAR(500) DEFAULT NULL,
+    price DECIMAL(10,2) DEFAULT NULL,
+    distance DECIMAL(10,2) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (passenger_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE SET NULL
+);

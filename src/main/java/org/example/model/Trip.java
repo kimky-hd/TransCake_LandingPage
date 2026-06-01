@@ -12,13 +12,16 @@ public class Trip {
     private Timestamp scheduledTime; // Can be null
     private String matchStatus; // 'PENDING', 'MATCHED', 'CANCELLED'
     private String completionStatus; // 'NOT_STARTED', 'IN_PROGRESS', 'COMPLETED', 'FAILED'
+    private String noteForDriver;
+    private Double price;
+    private Double distance;
     private Timestamp createdAt;
 
     // Constructors
     public Trip() {
     }
 
-    public Trip(int passengerId, String pickupLocation, String dropoffLocation, String tripType, Timestamp scheduledTime) {
+    public Trip(int passengerId, String pickupLocation, String dropoffLocation, String tripType, Timestamp scheduledTime, String noteForDriver, Double price, Double distance) {
         this.passengerId = passengerId;
         this.pickupLocation = pickupLocation;
         this.dropoffLocation = dropoffLocation;
@@ -26,6 +29,9 @@ public class Trip {
         this.scheduledTime = scheduledTime;
         this.matchStatus = "PENDING";
         this.completionStatus = "NOT_STARTED";
+        this.noteForDriver = noteForDriver;
+        this.price = price;
+        this.distance = distance;
     }
 
     // Getters and Setters
@@ -107,5 +113,29 @@ public class Trip {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getNoteForDriver() {
+        return noteForDriver;
+    }
+
+    public void setNoteForDriver(String noteForDriver) {
+        this.noteForDriver = noteForDriver;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
     }
 }
