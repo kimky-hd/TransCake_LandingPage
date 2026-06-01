@@ -482,20 +482,21 @@
                                             class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden hidden max-h-48 panel-scroll overflow-y-auto">
                                         </div>
                                     </div>
-                                    
-                                    <!-- Price Estimation Box -->
-                                    <div id="price-estimation-box" class="hidden w-full bg-orange-50/80 border border-orange-200 rounded-2xl p-4 shadow-sm transition-all duration-300">
-                                        <div class="flex justify-between items-center mb-1">
-                                            <span class="text-sm font-bold text-slate-700">Giá cước ước tính</span>
-                                            <span id="price-value" class="text-lg font-bold text-[#FF6D00]">...</span>
-                                        </div>
-                                        <div class="flex justify-between items-center text-xs text-slate-500">
-                                            <span id="distance-value">Đang tính toán...</span>
-                                            <span id="duration-value"></span>
-                                        </div>
-                                        <input type="hidden" name="price" id="trip-price">
-                                        <input type="hidden" name="distance" id="trip-distance">
+                                    <!-- End of Location Input Group -->
+                                </div>
+                                
+                                <!-- Price Estimation Box -->
+                                <div id="price-estimation-box" class="hidden w-full bg-orange-50/80 border border-orange-200 rounded-2xl p-4 shadow-sm transition-all duration-300 mt-2">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-sm font-bold text-slate-700">Giá cước ước tính</span>
+                                        <span id="price-value" class="text-lg font-bold text-[#FF6D00]">...</span>
                                     </div>
+                                    <div class="flex justify-between items-center text-xs text-slate-500">
+                                        <span id="distance-value">Đang tính toán...</span>
+                                        <span id="duration-value"></span>
+                                    </div>
+                                    <input type="hidden" name="price" id="trip-price">
+                                    <input type="hidden" name="distance" id="trip-distance">
                                 </div>
 
                                 <!-- Note for Driver -->
@@ -620,16 +621,16 @@
                     </div>
 
                     <!-- Mini Prebook Popup (Top Right, Below OnDemand) -->
-                    <div id="mini-prebook-popup" class="fixed top-48 right-8 z-40 bg-white/90 backdrop-blur-md border border-[#00BFA5]/30 rounded-2xl p-4 shadow-[0_8px_30px_rgba(0,191,165,0.15)] transition-all duration-500 transform translate-x-[150%] opacity-0 flex items-center gap-4 w-[320px] cursor-pointer hover:bg-white" onclick="toggleBottomSearchBar(); if(window.setBookingType) window.setBookingType('PRE_BOOK');">
+                    <div id="mini-prebook-popup" class="fixed top-48 right-8 z-40 bg-white/90 backdrop-blur-md border border-[#FF6D00]/30 rounded-2xl p-4 shadow-[0_8px_30px_rgba(255,109,0,0.15)] transition-all duration-500 transform translate-x-[150%] opacity-0 flex items-center gap-4 w-[320px] cursor-pointer hover:bg-white" onclick="toggleBottomSearchBar(); if(window.setBookingType) window.setBookingType('PRE_BOOK');">
                         <div class="relative w-10 h-10 shrink-0">
-                            <div class="absolute inset-0 flex items-center justify-center bg-teal-50 border border-[#00BFA5]/50 rounded-full shadow-sm z-10">
-                                <span class="material-symbols-outlined text-[#00BFA5] text-[20px]">calendar_month</span>
+                            <div class="absolute inset-0 flex items-center justify-center bg-orange-50 border border-[#FF6D00]/50 rounded-full shadow-sm z-10">
+                                <span class="material-symbols-outlined text-[#FF6D00] text-[20px]">calendar_month</span>
                             </div>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h6 class="text-sm font-bold text-[#00BFA5] mb-1">Chuyến đi đã đặt trước</h6>
+                            <h6 class="text-sm font-bold text-[#FF6D00] mb-1">Chuyến đi đã đặt trước</h6>
                             <div class="flex items-center gap-1 text-xs text-slate-600 truncate">
-                                <div class="w-1.5 h-1.5 rounded-full border-[2px] border-[#00BFA5] bg-white shrink-0"></div>
+                                <div class="w-1.5 h-1.5 rounded-full border-[2px] border-[#FF6D00] bg-white shrink-0"></div>
                                 <span id="mini-prebook-pickup" class="truncate"></span>
                             </div>
                             <div class="flex items-center gap-1 text-xs text-slate-600 truncate mt-0.5">
@@ -945,17 +946,33 @@
                             })
                             .then(response => response.json())
                             .then(data => {
-                                if (data.success && tripType === 'ON_DEMAND') {
-                                    window.currentTripId = data.tripId;
-                                    const btnSubmit = document.getElementById('btn-submit-search');
-                                    if (btnSubmit) {
-                                        // Đổi nút thành nút Hủy tìm kiếm
-                                        btnSubmit.type = 'button';
-                                        btnSubmit.innerHTML = 'Hủy tìm kiếm <span class="material-symbols-outlined text-[20px]">cancel</span>';
-                                        btnSubmit.classList.remove('bg-slate-900', 'hover:bg-black', 'opacity-70', 'cursor-not-allowed');
-                                        btnSubmit.classList.add('bg-red-500', 'hover:bg-red-600');
-                                        btnSubmit.disabled = false;
-                                        btnSubmit.onclick = cancelTripSearch;
+                                if (data.success) {
+                                    if (tripType === 'ON_DEMAND') {
+                                        window.currentTripId = data.tripId;
+                                        const btnSubmit = document.getElementById('btn-submit-search');
+                                        if (btnSubmit) {
+                                            // Đổi nút thành nút Hủy tìm kiếm
+                                            btnSubmit.type = 'button';
+                                            btnSubmit.innerHTML = 'Hủy tìm kiếm <span class="material-symbols-outlined text-[20px]">cancel</span>';
+                                            btnSubmit.classList.remove('bg-slate-900', 'hover:bg-black', 'opacity-70', 'cursor-not-allowed');
+                                            btnSubmit.classList.add('bg-red-500', 'hover:bg-red-600');
+                                            btnSubmit.disabled = false;
+                                            btnSubmit.onclick = cancelTripSearch;
+                                        }
+                                    } else if (tripType === 'PRE_BOOK') {
+                                        window.currentPreBookTripId = data.tripId;
+                                        hasPreBookTrip = true;
+                                        tripData.PRE_BOOK.active = true;
+                                        const btnSubmit = document.getElementById('btn-submit-search');
+                                        if (btnSubmit) {
+                                            // Đổi nút thành nút Hủy đặt lịch
+                                            btnSubmit.type = 'button';
+                                            btnSubmit.innerHTML = 'Hủy đặt lịch <span class="material-symbols-outlined text-[20px]">cancel</span>';
+                                            btnSubmit.classList.remove('bg-slate-900', 'hover:bg-black', 'opacity-70', 'cursor-not-allowed');
+                                            btnSubmit.classList.add('bg-[#FF6D00]', 'hover:bg-orange-600');
+                                            btnSubmit.disabled = false;
+                                            btnSubmit.onclick = cancelPreBookTrip;
+                                        }
                                     }
                                 }
                             }).catch(error => {
@@ -983,6 +1000,27 @@
                                         isSearchingOnDemand = false;
                                         window.currentTripId = null;
                                         tripData.ON_DEMAND.active = false;
+                                        
+                                        // Xóa marker và đường đi
+                                        if (window.markerOnDemand) {
+                                            window.markerOnDemand.remove();
+                                            window.markerOnDemand = null;
+                                        }
+                                        if (map.getSource('route-on-demand')) {
+                                            map.removeLayer('route-on-demand');
+                                            map.removeSource('route-on-demand');
+                                        }
+                                        
+                                        // Reset fields
+                                        document.getElementById('pickup-input').value = "";
+                                        document.getElementById('dropoff-input').value = "";
+                                        document.getElementById('pickup-lat').value = "";
+                                        document.getElementById('pickup-lng').value = "";
+                                        document.getElementById('dropoff-lat').value = "";
+                                        document.getElementById('dropoff-lng').value = "";
+                                        document.getElementById('trip-price').value = "";
+                                        document.getElementById('trip-distance').value = "";
+                                        document.getElementById('price-estimation-box').classList.add('hidden');
                                         
                                         // Trả lại nút Tìm chuyến nếu đang ở tab ON_DEMAND
                                         const btnSubmit = document.getElementById('btn-submit-search');
@@ -1035,6 +1073,29 @@
                                         hasPreBookTrip = false;
                                         window.currentPreBookTripId = null;
                                         tripData.PRE_BOOK.active = false;
+                                        
+                                        // Xóa marker và đường đi
+                                        if (window.markerPreBook) {
+                                            window.markerPreBook.remove();
+                                            window.markerPreBook = null;
+                                        }
+                                        if (map.getSource('route-pre-book')) {
+                                            map.removeLayer('route-pre-book');
+                                            map.removeSource('route-pre-book');
+                                        }
+                                        
+                                        // Reset fields
+                                        document.getElementById('pickup-input').value = "";
+                                        document.getElementById('dropoff-input').value = "";
+                                        document.getElementById('pickup-lat').value = "";
+                                        document.getElementById('pickup-lng').value = "";
+                                        document.getElementById('dropoff-lat').value = "";
+                                        document.getElementById('dropoff-lng').value = "";
+                                        document.getElementById('trip-date').value = "";
+                                        document.getElementById('trip-time').value = "";
+                                        document.getElementById('trip-price').value = "";
+                                        document.getElementById('trip-distance').value = "";
+                                        document.getElementById('price-estimation-box').classList.add('hidden');
                                         
                                         // Reset nút bấm nếu đang ở tab PRE_BOOK
                                         const btnSubmit = document.getElementById('btn-submit-search');
@@ -1589,7 +1650,7 @@
                                     // Set Toggle UI
                                     bg.style.transform = 'translateX(100%)';
                                     btnPreBook.classList.remove('text-slate-500');
-                                    btnPreBook.classList.add('text-[#6200EE]');
+                                    btnPreBook.classList.add('text-[#FF6D00]');
                                     btnOnDemand.classList.remove('text-[#6200EE]');
                                     btnOnDemand.classList.add('text-slate-500');
 
@@ -1623,7 +1684,7 @@
                                         if (hasPreBookTrip) {
                                             btnSubmit.type = 'button';
                                             btnSubmit.innerHTML = 'Hủy đặt lịch <span class="material-symbols-outlined text-[20px]">cancel</span>';
-                                            btnSubmit.className = 'w-full bg-[#00BFA5] hover:bg-[#009688] text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                            btnSubmit.className = 'w-full bg-[#FF6D00] hover:bg-orange-600 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
                                             btnSubmit.disabled = false;
                                             btnSubmit.onclick = cancelPreBookTrip;
                                         } else {
@@ -1721,27 +1782,40 @@
                                                                             });
 
                                                                             // Xóa marker cũ nếu có
-                                                                            if (window.searchMarker) {
-                                                                                window.searchMarker.remove();
+                                                                            const isPrebook = document.getElementById('tripType') ? document.getElementById('tripType').value === 'PRE_BOOK' : false;
+                                                                            if (isPrebook && window.markerPreBook) {
+                                                                                window.markerPreBook.remove();
+                                                                            } else if (!isPrebook && window.markerOnDemand) {
+                                                                                window.markerOnDemand.remove();
                                                                             }
+
+                                                                            // Màu sắc động theo loại
+                                                                            const color1 = isPrebook ? 'bg-orange-500/30' : 'bg-purple-500/30';
+                                                                            const color2 = isPrebook ? 'bg-orange-500/40' : 'bg-purple-500/40';
+                                                                            const grad = isPrebook ? 'from-orange-400 to-orange-600' : 'from-purple-500 to-purple-700';
+                                                                            const shad = isPrebook ? 'shadow-[0_4px_15px_rgba(249,115,22,0.5)]' : 'shadow-[0_4px_15px_rgba(98,0,238,0.5)]';
+                                                                            const btm = isPrebook ? 'bg-orange-600' : 'bg-purple-700';
 
                                                                             // Tạo Custom Marker
                                                                             const searchMarkerEl = document.createElement('div');
                                                                             searchMarkerEl.className = 'relative flex items-center justify-center';
                                                                             searchMarkerEl.innerHTML = `
-                                                                                <div class="absolute w-24 h-24 bg-orange-500/30 rounded-full animate-ping"></div>
-                                                                                <div class="absolute w-12 h-12 bg-orange-500/40 rounded-full animate-pulse"></div>
+                                                                                <div class="absolute w-24 h-24 \${color1} rounded-full animate-ping"></div>
+                                                                                <div class="absolute w-12 h-12 \${color2} rounded-full animate-pulse"></div>
                                                                                 <div class="relative flex flex-col items-center">
-                                                                                    <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 border-[3px] border-white rounded-full shadow-[0_4px_15px_rgba(249,115,22,0.5)] z-10 flex items-center justify-center">
+                                                                                    <div class="w-8 h-8 bg-gradient-to-br \${grad} border-[3px] border-white rounded-full \${shad} z-10 flex items-center justify-center">
                                                                                         <div class="w-2 h-2 bg-white rounded-full shadow-inner"></div>
                                                                                     </div>
-                                                                                    <div class="w-1 h-3 bg-orange-600 -mt-1 rounded-b-full"></div>
+                                                                                    <div class="w-1 h-3 \${btm} -mt-1 rounded-b-full"></div>
                                                                                 </div>
                                                                             `;
 
-                                                                            window.searchMarker = new vietmapgl.Marker({ element: searchMarkerEl, offset: [0, -15] })
+                                                                            const marker = new vietmapgl.Marker({ element: searchMarkerEl, offset: [0, -15] })
                                                                                 .setLngLat([lng, lat])
                                                                                 .addTo(map);
+                                                                                
+                                                                            if (isPrebook) window.markerPreBook = marker;
+                                                                            else window.markerOnDemand = marker;
                                                                                 
                                                                             // Nếu cả 2 điểm đã được chọn, gọi hàm tính giá
                                                                             calculateRouteAndPrice();
@@ -1782,22 +1856,16 @@
                                     document.getElementById('distance-value').textContent = "Đang quét tuyến đường...";
                                     document.getElementById('duration-value').textContent = "";
                                     
-                                    const routeUrl = `https://maps.vietmap.vn/api/route?api-version=1.1&apikey=\${vietmapSearchApiKey}&point=\${pLat},\${pLng}&point=\${dLat},\${dLng}&vehicle=car`;
+                                    const contextPath = '${pageContext.request.contextPath}';
+                                    const routeUrl = `\${contextPath}/api/price-estimate?pLat=\${pLat}&pLng=\${pLng}&dLat=\${dLat}&dLng=\${dLng}`;
                                     
                                     fetch(routeUrl)
                                         .then(res => res.json())
                                         .then(data => {
-                                            if(data.paths && data.paths.length > 0) {
-                                                const distanceMeters = data.paths[0].distance;
-                                                const timeMs = data.paths[0].time;
-                                                
-                                                const distanceKm = (distanceMeters / 1000).toFixed(1);
-                                                const durationMins = Math.ceil(timeMs / 60000);
-                                                
-                                                // Tính giá: 10k mở cửa + 12k/km
-                                                const baseFare = 10000;
-                                                const perKmFare = 12000;
-                                                const totalPrice = baseFare + (distanceKm * perKmFare);
+                                            if(data.success) {
+                                                const distanceKm = data.distanceKm;
+                                                const durationMins = data.durationMins;
+                                                const totalPrice = data.totalPrice;
                                                 
                                                 // Hiển thị
                                                 document.getElementById('distance-value').textContent = `Quãng đường: \${distanceKm} km`;
@@ -1807,8 +1875,49 @@
                                                 // Lưu vào hidden input
                                                 document.getElementById('trip-price').value = totalPrice;
                                                 document.getElementById('trip-distance').value = distanceKm;
+                                                
+                                                // Vẽ đường đi trên bản đồ
+                                                const isPrebook = document.getElementById('tripType') ? document.getElementById('tripType').value === 'PRE_BOOK' : false;
+                                                const routeId = isPrebook ? 'route-pre-book' : 'route-on-demand';
+                                                const routeColor = isPrebook ? '#FF6D00' : '#6200EE';
+                                                
+                                                if (data.points) {
+                                                    if (map.getSource(routeId)) {
+                                                        map.getSource(routeId).setData(data.points);
+                                                    } else {
+                                                        map.addSource(routeId, {
+                                                            'type': 'geojson',
+                                                            'data': data.points
+                                                        });
+                                                        map.addLayer({
+                                                            'id': routeId,
+                                                            'type': 'line',
+                                                            'source': routeId,
+                                                            'layout': {
+                                                                'line-join': 'round',
+                                                                'line-cap': 'round'
+                                                            },
+                                                            'paint': {
+                                                                'line-color': routeColor,
+                                                                'line-width': 6,
+                                                                'line-opacity': 0.8
+                                                            }
+                                                        });
+                                                    }
+                                                    
+                                                    // Căn chỉnh bản đồ để vừa vặn với đường đi
+                                                    if (data.bbox) {
+                                                        map.fitBounds([
+                                                            [data.bbox[0], data.bbox[1]], // [minLng, minLat]
+                                                            [data.bbox[2], data.bbox[3]]  // [maxLng, maxLat]
+                                                        ], {
+                                                            padding: {top: 50, bottom: 50, left: 50, right: 400}, // Padding right để né cái panel
+                                                            duration: 1000
+                                                        });
+                                                    }
+                                                }
                                             } else {
-                                                document.getElementById('distance-value').textContent = "Không tìm thấy đường đi";
+                                                document.getElementById('distance-value').textContent = data.error || "Không tìm thấy đường đi";
                                                 document.getElementById('price-value').textContent = "Chưa rõ";
                                             }
                                         })
