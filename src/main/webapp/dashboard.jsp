@@ -1227,7 +1227,7 @@
                             // Khởi tạo bản đồ Vietmap
                             const map = new vietmapgl.Map({
                                 container: 'map', // id của thẻ div
-                                style: 'https://maps.vietmap.vn/api/maps/light/styles.json?apikey=' + vietmapMapApiKey, // giao diện sáng (premium)
+                                style: 'https://maps.vietmap.vn/maps/styles/tm/style.json?apikey=' + vietmapMapApiKey, // giao diện mặc định
                                 center: [105.8542, 21.0285], // Tọa độ mặc định (Hà Nội)
                                 zoom: 13,
                                 attributionControl: false, // Ẩn logo nếu muốn UI sạch hơn
@@ -1253,7 +1253,7 @@
                             window.userMarkerEl = markerEl;
 
                             // Khởi tạo đối tượng Marker của Vietmap (nhưng chưa add vào map)
-                            const userMarker = new vietmapgl.Marker(markerEl);
+                            const userMarker = new vietmapgl.Marker({ element: markerEl, offset: [0, 0] });
 
                             // Khi bản đồ load xong, ta sẽ lấy vị trí thực của user
                             map.on('load', () => {
@@ -1648,10 +1648,30 @@
                                                             if (feature.lat && feature.lng) {
                                                                 map.flyTo({
                                                                     center: [feature.lng, feature.lat],
-                                                                    zoom: 14,
+                                                                    zoom: 15,
                                                                     essential: true
                                                                 });
-                                                                new vietmapgl.Marker()
+
+                                                                // Xóa marker cũ nếu có
+                                                                if (window.searchMarker) {
+                                                                    window.searchMarker.remove();
+                                                                }
+
+                                                                // Tạo Custom Marker (Màu Cam có sóng nổi)
+                                                                const searchMarkerEl = document.createElement('div');
+                                                                searchMarkerEl.className = 'relative flex items-center justify-center';
+                                                                searchMarkerEl.innerHTML = `
+                                                                    <div class="absolute w-24 h-24 bg-orange-500/30 rounded-full animate-ping"></div>
+                                                                    <div class="absolute w-12 h-12 bg-orange-500/40 rounded-full animate-pulse"></div>
+                                                                    <div class="relative flex flex-col items-center">
+                                                                        <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 border-[3px] border-white rounded-full shadow-[0_4px_15px_rgba(249,115,22,0.5)] z-10 flex items-center justify-center">
+                                                                            <div class="w-2 h-2 bg-white rounded-full shadow-inner"></div>
+                                                                        </div>
+                                                                        <div class="w-1 h-3 bg-orange-600 -mt-1 rounded-b-full"></div>
+                                                                    </div>
+                                                                `;
+
+                                                                window.searchMarker = new vietmapgl.Marker({ element: searchMarkerEl, offset: [0, -15] })
                                                                     .setLngLat([feature.lng, feature.lat])
                                                                     .addTo(map);
                                                             }
