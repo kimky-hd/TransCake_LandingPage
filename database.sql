@@ -58,3 +58,16 @@ CREATE TABLE IF NOT EXISTS trips (
 
 -- Bổ sung cột vehicle_type sau này (Chạy lệnh này vào DB hiện tại)
 -- ALTER TABLE trips ADD COLUMN vehicle_type ENUM('MOTORBIKE', 'CAR') DEFAULT 'CAR';
+
+-- ========================================================
+-- Bảng: trip_blog_posts
+-- Mô tả: Lưu bài đăng chia sẻ chuyến đi lên cộng đồng
+-- ========================================================
+CREATE TABLE IF NOT EXISTS trip_blog_posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    trip_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE
+);

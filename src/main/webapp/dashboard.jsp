@@ -895,8 +895,41 @@
                                     }
                                 }
                             }
+                            
+                            // Đóng băng form nếu tab hiện tại đang có chuyến
+                            const currentTab = document.getElementById('tripType') ? document.getElementById('tripType').value : 'ON_DEMAND';
+                            if (currentTab === 'ON_DEMAND') {
+                                toggleFormInputs(isSearchingOnDemand);
+                            } else {
+                                toggleFormInputs(hasPreBookTrip);
+                            }
                         });
 
+
+                        function toggleFormInputs(disabled) {
+                            const fields = ['pickup-input', 'dropoff-input', 'note-input', 'trip-date', 'trip-time'];
+                            fields.forEach(id => {
+                                const el = document.getElementById(id);
+                                if (el) {
+                                    el.disabled = disabled;
+                                    if (disabled) {
+                                        el.classList.add('bg-slate-100', 'cursor-not-allowed', 'opacity-60');
+                                    } else {
+                                        el.classList.remove('bg-slate-100', 'cursor-not-allowed', 'opacity-60');
+                                    }
+                                }
+                            });
+                            
+                            const radios = document.querySelectorAll('input[name="vehicleType"]');
+                            radios.forEach(radio => {
+                                radio.disabled = disabled;
+                                if (disabled) {
+                                    radio.parentElement.classList.add('opacity-60', 'cursor-not-allowed');
+                                } else {
+                                    radio.parentElement.classList.remove('opacity-60', 'cursor-not-allowed');
+                                }
+                            });
+                        }
 
                         function handleTripSearch(event) {
                             event.preventDefault(); // Ngăn chặn load lại trang
@@ -956,6 +989,8 @@
                                 if (data.success) {
                                     if (tripType === 'ON_DEMAND') {
                                         window.currentTripId = data.tripId;
+                                        tripData.ON_DEMAND.active = true;
+                                        toggleFormInputs(true);
                                         const btnSubmit = document.getElementById('btn-submit-search');
                                         if (btnSubmit) {
                                             // Đổi nút thành nút Hủy tìm kiếm
@@ -970,6 +1005,7 @@
                                         window.currentPreBookTripId = data.tripId;
                                         hasPreBookTrip = true;
                                         tripData.PRE_BOOK.active = true;
+                                        toggleFormInputs(true);
                                         const btnSubmit = document.getElementById('btn-submit-search');
                                         if (btnSubmit) {
                                             // Đổi nút thành nút Hủy đặt lịch
@@ -1007,6 +1043,7 @@
                                         isSearchingOnDemand = false;
                                         window.currentTripId = null;
                                         tripData.ON_DEMAND.active = false;
+                                        toggleFormInputs(false);
                                         
                                         // Xóa marker và đường đi
                                         if (window.markerOnDemand) {
@@ -1080,6 +1117,7 @@
                                         hasPreBookTrip = false;
                                         window.currentPreBookTripId = null;
                                         tripData.PRE_BOOK.active = false;
+                                        toggleFormInputs(false);
                                         
                                         // Xóa marker và đường đi
                                         if (window.markerPreBook) {
@@ -1116,6 +1154,12 @@
                                             if (window.setBookingType) window.setBookingType('PRE_BOOK');
                                         }
                                         
+                                        // Ẩn loading state, hiện empty state
+                                        document.getElementById('loading-search-state').classList.add('hidden');
+                                        document.getElementById('loading-search-state').classList.remove('flex');
+                                        document.getElementById('empty-search-state').classList.remove('hidden');
+                                        document.getElementById('empty-search-state').classList.add('flex');
+
                                         // Ẩn mini popup đặt trước
                                         const prebookPopup = document.getElementById('mini-prebook-popup');
                                         if (prebookPopup) {
@@ -1644,13 +1688,25 @@
                                             btnSubmit.className = 'w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
                                             btnSubmit.disabled = false;
                                             btnSubmit.onclick = cancelTripSearch;
+                                            
+                                            document.getElementById('empty-search-state').classList.add('hidden');
+                                            document.getElementById('empty-search-state').classList.remove('flex');
+                                            document.getElementById('loading-search-state').classList.remove('hidden');
+                                            document.getElementById('loading-search-state').classList.add('flex');
                                         } else {
                                             btnSubmit.type = 'submit';
                                             btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
                                             btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
                                             btnSubmit.onclick = null;
                                             btnSubmit.disabled = false;
+                                            
+                                            document.getElementById('loading-search-state').classList.add('hidden');
+                                            document.getElementById('loading-search-state').classList.remove('flex');
+                                            document.getElementById('empty-search-state').classList.remove('hidden');
+                                            document.getElementById('empty-search-state').classList.add('flex');
                                         }
+                                        
+                                        toggleFormInputs(tripData.ON_DEMAND.active);
                                     }
 
                                 } else if (type === 'PRE_BOOK') {
@@ -1694,14 +1750,26 @@
                                             btnSubmit.className = 'w-full bg-[#FF6D00] hover:bg-orange-600 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
                                             btnSubmit.disabled = false;
                                             btnSubmit.onclick = cancelPreBookTrip;
+                                            
+                                            document.getElementById('empty-search-state').classList.add('hidden');
+                                            document.getElementById('empty-search-state').classList.remove('flex');
+                                            document.getElementById('loading-search-state').classList.remove('hidden');
+                                            document.getElementById('loading-search-state').classList.add('flex');
                                         } else {
                                             btnSubmit.type = 'submit';
                                             btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
                                             btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
                                             btnSubmit.onclick = null;
                                             btnSubmit.disabled = false;
+                                            
+                                            document.getElementById('loading-search-state').classList.add('hidden');
+                                            document.getElementById('loading-search-state').classList.remove('flex');
+                                            document.getElementById('empty-search-state').classList.remove('hidden');
+                                            document.getElementById('empty-search-state').classList.add('flex');
                                         }
                                     }
+                                    
+                                    toggleFormInputs(tripData.PRE_BOOK.active);
                                 }
                             };
 
