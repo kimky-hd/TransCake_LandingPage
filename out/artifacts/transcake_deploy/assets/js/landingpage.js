@@ -269,11 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (data.needsOnboarding && window.openOnboardingModal) {
                             window.openOnboardingModal();
                         } else {
-                            if (window.location.pathname.includes('dashboard')) {
-                                window.location.reload();
-                            } else {
-                                window.location.href = window.CONTEXT_PATH + '/dashboard';
-                            }
+                            window.location.href = window.CONTEXT_PATH + '/dashboard';
                         }
                     } else {
                         showToast(data.message, 'error');
@@ -321,11 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (data.needsOnboarding && window.openOnboardingModal) {
                             window.openOnboardingModal();
                         } else {
-                            if (window.location.pathname.includes('dashboard')) {
-                                window.location.reload();
-                            } else {
-                                window.location.href = window.CONTEXT_PATH + '/dashboard';
-                            }
+                            window.location.href = window.CONTEXT_PATH + '/dashboard';
                         }
                     } else {
                         showToast(data.message, 'error');

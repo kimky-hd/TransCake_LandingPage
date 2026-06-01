@@ -7,6 +7,13 @@
 <% 
     // Data is now provided by DashboardServlet
     Boolean isLoggedInAttr = (Boolean) request.getAttribute("isLoggedIn");
+    
+    // Nếu truy cập thẳng vào dashboard.jsp (isLoggedInAttr bị null do chưa qua Servlet), redirect về /dashboard
+    if (isLoggedInAttr == null) {
+        response.sendRedirect(request.getContextPath() + "/dashboard");
+        return;
+    }
+
     boolean isLoggedIn = (isLoggedInAttr != null && isLoggedInAttr);
     String fullName = (String) request.getAttribute("fullName");
     
@@ -352,6 +359,65 @@
                             </div>
                         </div>
 
+                        <!-- STATE 3: PROFILE VIEW -->
+                        <div id="sidebar-profile-view"
+                            class="transition-all duration-300 opacity-0 translate-x-10 absolute inset-x-0 top-0 p-6 pb-24 pointer-events-none flex flex-col items-center justify-start min-h-[400px]">
+                            
+                            <div class="w-full flex items-center mb-8">
+                                <button id="btn-back-from-profile" class="w-10 h-10 rounded-full bg-white hover:bg-slate-100 border border-slate-200 flex items-center justify-center shadow-sm transition-all relative z-10 cursor-pointer">
+                                    <span class="material-symbols-outlined text-slate-600">arrow_back</span>
+                                </button>
+                                <h3 class="flex-1 text-center font-bold text-lg text-slate-800 -ml-10">Hồ sơ cá nhân</h3>
+                            </div>
+                            
+                            <div class="flex flex-col items-center mb-8">
+                                <div class="w-24 h-24 text-slate-400 bg-slate-100 rounded-full border-[4px] border-white shadow-lg flex items-center justify-center mb-4 relative">
+                                     <span class="material-symbols-outlined text-[48px]">person</span>
+                                </div>
+                                <h3 class="font-bold text-xl text-slate-900 leading-tight mb-1"><%= fullName != null ? fullName : "Khách" %></h3>
+                                <p class="text-sm text-slate-500"><%= isLoggedIn ? "Thành viên Transcake" : "Chưa đăng nhập" %></p>
+                            </div>
+                            
+                            <% if (isLoggedIn) { %>
+                            <div class="w-full space-y-3 px-4 mt-auto pt-8 border-t border-slate-200/50">
+                                <!-- Other functions can be added here later -->
+                                <button id="profile-logout-btn" onclick="handleProfileLogout()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-bold text-sm py-3 rounded-xl border border-red-200 shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer relative z-50">
+                                    <span class="material-symbols-outlined text-[18px]">logout</span>
+                                    Đăng xuất
+                                </button>
+                                <script>
+                                    function handleProfileLogout() {
+                                        if (window.showConfirmModal) {
+                                            window.showConfirmModal('Đăng xuất', 'Bạn có chắc chắn muốn đăng xuất không? Bạn sẽ cần đăng nhập lại để tiếp tục sử dụng.', function() {
+                                                var ctx = window.CONTEXT_PATH || '';
+                                                var btn = document.getElementById('profile-logout-btn');
+                                                if(btn) { btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span> Đang xử lý...'; }
+                                                
+                                                fetch(ctx + '/api/logout', { method: 'POST' })
+                                                    .then(function(r) { return r.json(); })
+                                                    .then(function(d) {
+                                                        if(d.success) {
+                                                            if(window.showToast) window.showToast(d.message || 'Đăng xuất thành công!', 'success');
+                                                            setTimeout(function(){ window.location.href = ctx + '/dashboard'; }, 1000);
+                                                        } else {
+                                                            if(window.showToast) window.showToast(d.message || 'Đăng xuất thất bại', 'error');
+                                                            if(btn) { btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">logout</span> Đăng xuất'; }
+                                                        }
+                                                    })
+                                                    .catch(function() {
+                                                        if(window.showToast) window.showToast('Lỗi kết nối, đang chuyển hướng...', 'error');
+                                                        setTimeout(function(){ window.location.href = ctx + '/dashboard'; }, 1500);
+                                                    });
+                                            });
+                                        } else {
+                                            alert('Lỗi: Không tìm thấy hàm showConfirmModal!');
+                                        }
+                                    }
+                                </script>
+                            </div>
+                            <% } %>
+                        </div>
+
                     </div>
 
                     <!-- Navigation (Bottom Menu) -->
@@ -375,7 +441,8 @@
                                 <span class="material-symbols-outlined">article</span>
                             </button>
                             <button
-                                class="w-12 h-12 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors">
+                                class="w-12 h-12 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                                id="nav-profile" onclick="window.openProfileView(document.getElementById('passenger-view').classList.contains('opacity-0') ? 'driver' : 'passenger')">
                                 <span class="material-symbols-outlined">person</span>
                             </button>
                         </div>
@@ -1450,54 +1517,6 @@
                         <!-- Onboarding Modal -->
                         <jsp:include page="includes/onboarding_modal.jsp" />
 
-                        <!-- Logout Confirmation Modal (Bulletproof) -->
-                        <div id="logoutConfirmModal"
-                            style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 999999; align-items: center; justify-content: center; font-family: 'Inter', sans-serif;">
-                            <!-- Backdrop -->
-                            <div
-                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);">
-                            </div>
-
-                            <!-- Content -->
-                            <div
-                                style="background: white; border-radius: 1.5rem; padding: 1.5rem; position: relative; width: 90%; max-width: 24rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; align-items: center; text-align: center; animation: modalPop 0.3s ease-out forwards;">
-                                <style>
-                                    @keyframes modalPop {
-                                        0% {
-                                            opacity: 0;
-                                            transform: scale(0.95);
-                                        }
-
-                                        100% {
-                                            opacity: 1;
-                                            transform: scale(1);
-                                        }
-                                    }
-                                </style>
-                                <div
-                                    style="width: 4rem; height: 4rem; background: rgba(254, 226, 226, 0.5); border-radius: 9999px; display: flex; align-items: center; justify-content: center; color: #ef4444; margin-bottom: 1rem; border: 1px solid #fee2e2;">
-                                    <span class="material-symbols-outlined" style="font-size: 1.875rem;">logout</span>
-                                </div>
-                                <h3
-                                    style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; line-height: 1.2;">
-                                    Đăng xuất tài khoản?</h3>
-                                <p
-                                    style="font-size: 0.875rem; color: #64748b; font-weight: 500; margin-bottom: 1.5rem; line-height: 1.5;">
-                                    Bạn có chắc chắn muốn đăng xuất không? Bạn sẽ cần đăng nhập lại để tiếp tục sử dụng.
-                                </p>
-                                <div style="display: flex; gap: 0.75rem; width: 100%;">
-                                    <button type="button" id="btnCancelLogout"
-                                        style="flex: 1; padding: 0.75rem 1rem; background: #f1f5f9; color: #334155; font-weight: 700; border-radius: 0.75rem; font-size: 0.875rem; border: none; cursor: pointer; transition: background 0.2s;"
-                                        onmouseover="this.style.background='#e2e8f0'"
-                                        onmouseout="this.style.background='#f1f5f9'">Hủy bỏ</button>
-                                    <button type="button" id="btnConfirmLogout"
-                                        style="flex: 1; padding: 0.75rem 1rem; background: #ef4444; color: white; font-weight: 700; border-radius: 0.75rem; font-size: 0.875rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: none; cursor: pointer; transition: background 0.2s;"
-                                        onmouseover="this.style.background='#dc2626'"
-                                        onmouseout="this.style.background='#ef4444'">Đăng xuất</button>
-                                </div>
-                            </div>
-                        </div>
-
                         <script>
                             window.CONTEXT_PATH = '${pageContext.request.contextPath}';
                     <% if (!isLoggedIn) { %>
@@ -1509,131 +1528,63 @@
                                 });
                     <% } %>
 
-                                // Define functions globally on window
-                                window.showLogoutConfirmModal = function() {
-                                    console.log("[Logout] Opening confirmation modal");
-                                    const modal = document.getElementById('logoutConfirmModal');
-                                    if (modal) {
-                                        modal.style.setProperty('display', 'flex', 'important');
-                                    } else {
-                                        console.error("[Logout] Modal #logoutConfirmModal not found!");
-                                    }
-                                    const passDrop = document.getElementById('passenger-dropdown');
-                                    const drivDrop = document.getElementById('driver-dropdown');
-                                    if (passDrop) passDrop.classList.add('hidden');
-                                    if (drivDrop) drivDrop.classList.add('hidden');
-                                };
-
-                            window.closeLogoutConfirmModal = function () {
-                                console.log("[Logout] Closing confirmation modal");
-                                const modal = document.getElementById('logoutConfirmModal');
-                                if (modal) {
-                                    modal.style.setProperty('display', 'none', 'important');
-                                }
-                            };
-
-                            window.confirmLogout = function () {
-                                console.log("[Logout] confirmLogout triggered");
-                                const btn = document.getElementById('btnConfirmLogout');
-                                if (btn) {
-                                    btn.disabled = true;
-                                    btn.innerHTML = 'Đang đăng xuất...';
-                                }
-                                fetch(window.CONTEXT_PATH + '/api/logout', { method: 'POST' })
-                                    .then(res => {
-                                        if (!res.ok) throw new Error("HTTP error " + res.status);
-                                        return res.json();
-                                    })
-                                    .then(data => {
-                                        console.log("[Logout] Response received", data);
-                                        if (data.success) {
-                                            window.location.href = data.redirect || window.CONTEXT_PATH + '/dashboard.jsp';
-                                        } else {
-                                            showToast("Đăng xuất thất bại: " + data.message, "error");
-                                            if (btn) {
-                                                btn.disabled = false;
-                                                btn.innerHTML = 'Đăng xuất';
-                                            }
-                                        }
-                                    })
-                                    .catch(err => {
-                                        console.error("[Logout] error", err);
-                                        showToast("Đã xảy ra lỗi mạng khi đăng xuất. Trình duyệt sẽ tự tải lại.", "error");
-                                        setTimeout(() => { window.location.href = window.CONTEXT_PATH + '/dashboard.jsp'; }, 1500);
-                                    });
-                            };
-
                             // Bind dynamic events after DOM content is loaded
                             document.addEventListener('DOMContentLoaded', function () {
-                                console.log("[Logout] Initializing logout event listeners");
+                                window.openProfileView = function(role) {
+                                    const passView = document.getElementById('passenger-view');
+                                    const drvView = document.getElementById('driver-view');
+                                    const profView = document.getElementById('sidebar-profile-view');
+                                    
+                                    if (!profView) return;
+
+                                    if (role === 'passenger' && passView) {
+                                        passView.classList.replace('opacity-100', 'opacity-0');
+                                        passView.classList.replace('translate-x-0', '-translate-x-10');
+                                        passView.classList.add('pointer-events-none');
+                                    } else if (role === 'driver' && drvView) {
+                                        drvView.classList.replace('opacity-100', 'opacity-0');
+                                        drvView.classList.replace('translate-x-0', '-translate-x-10');
+                                        drvView.classList.add('pointer-events-none');
+                                    }
+                                    
+                                    profView.classList.replace('opacity-0', 'opacity-100');
+                                    profView.classList.replace('translate-x-10', 'translate-x-0');
+                                    profView.classList.remove('pointer-events-none');
+                                    
+                                    const backBtn = document.getElementById('btn-back-from-profile');
+                                    if (backBtn) {
+                                        backBtn.onclick = function() {
+                                            profView.classList.replace('opacity-100', 'opacity-0');
+                                            profView.classList.replace('translate-x-0', 'translate-x-10');
+                                            profView.classList.add('pointer-events-none');
+                                            
+                                            if (role === 'passenger' && passView) {
+                                                passView.classList.replace('opacity-0', 'opacity-100');
+                                                passView.classList.replace('-translate-x-10', 'translate-x-0');
+                                                passView.classList.remove('pointer-events-none');
+                                            } else if (role === 'driver' && drvView) {
+                                                drvView.classList.replace('opacity-0', 'opacity-100');
+                                                drvView.classList.replace('-translate-x-10', 'translate-x-0');
+                                                drvView.classList.remove('pointer-events-none');
+                                            }
+                                        };
+                                    }
+                                };
 
                                 // 1. Avatar Triggers
                                 const pAvatarTrigger = document.getElementById('passenger-avatar-trigger');
                                 if (pAvatarTrigger) {
                                     pAvatarTrigger.addEventListener('click', function (e) {
                                         e.stopPropagation();
-                                        const dropdown = document.getElementById('passenger-dropdown');
-                                        if (dropdown) dropdown.classList.toggle('hidden');
+                                        window.openProfileView('passenger');
                                     });
                                 }
                                 const dAvatarTrigger = document.getElementById('driver-avatar-trigger');
                                 if (dAvatarTrigger) {
                                     dAvatarTrigger.addEventListener('click', function (e) {
                                         e.stopPropagation();
-                                        const dropdown = document.getElementById('driver-dropdown');
-                                        if (dropdown) dropdown.classList.toggle('hidden');
+                                        window.openProfileView('driver');
                                     });
-                                }
-
-                                // 2. Dropdown Logout Buttons
-                                const pLogoutBtn = document.getElementById('passenger-logout-btn');
-                                if (pLogoutBtn) {
-                                    pLogoutBtn.addEventListener('click', function (e) {
-                                        console.log("[Logout] Passenger logout clicked");
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        window.showLogoutConfirmModal();
-                                    });
-                                }
-                                const dLogoutBtn = document.getElementById('driver-logout-btn');
-                                if (dLogoutBtn) {
-                                    dLogoutBtn.addEventListener('click', function (e) {
-                                        console.log("[Logout] Driver logout clicked");
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        window.showLogoutConfirmModal();
-                                    });
-                                }
-
-                                // 3. Modal buttons
-                                const cancelLogoutBtn = document.getElementById('btnCancelLogout');
-                                if (cancelLogoutBtn) {
-                                    cancelLogoutBtn.addEventListener('click', function (e) {
-                                        e.preventDefault();
-                                        window.closeLogoutConfirmModal();
-                                    });
-                                }
-                                const confirmLogoutBtn = document.getElementById('btnConfirmLogout');
-                                if (confirmLogoutBtn) {
-                                    confirmLogoutBtn.addEventListener('click', function (e) {
-                                        e.preventDefault();
-                                        window.confirmLogout();
-                                    });
-                                }
-                            });
-
-                            // 4. Global click listener to close dropdowns when clicking outside
-                            document.addEventListener('click', function (event) {
-                                const passDrop = document.getElementById('passenger-dropdown');
-                                const passContainer = document.getElementById('passenger-avatar-container');
-                                const drivDrop = document.getElementById('driver-dropdown');
-                                const drivContainer = document.getElementById('driver-avatar-container');
-
-                                if (passDrop && passContainer && !passContainer.contains(event.target)) {
-                                    passDrop.classList.add('hidden');
-                                }
-                                if (drivDrop && drivContainer && !drivContainer.contains(event.target)) {
-                                    drivDrop.classList.add('hidden');
                                 }
                             });
 
@@ -2014,6 +1965,7 @@
                             src="${pageContext.request.contextPath}/assets/js/toast.js?v=<%= System.currentTimeMillis() %>"></script>
                         <script
                             src="${pageContext.request.contextPath}/assets/js/landingpage.js?v=<%= System.currentTimeMillis() %>"></script>
+
             </body>
 
             </html>
