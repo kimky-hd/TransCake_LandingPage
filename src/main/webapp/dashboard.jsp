@@ -5,33 +5,22 @@
 <%@ page import="org.example.dao.TripDAO" %>
 <%@ page import="java.util.List" %>
 <% 
-    // Prevent browser caching of dashboard page
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-    response.setHeader("Pragma", "no-cache"); 
-    response.setDateHeader("Expires", 0); 
-    User user = (User) session.getAttribute("loggedInUser"); 
-    boolean isLoggedIn = (user != null); 
-    String fullName = isLoggedIn && user.getFullName() != null && !user.getFullName().trim().isEmpty() ? user.getFullName() : "Người dùng" ; 
+    // Data is now provided by DashboardServlet
+    Boolean isLoggedInAttr = (Boolean) request.getAttribute("isLoggedIn");
+    boolean isLoggedIn = (isLoggedInAttr != null && isLoggedInAttr);
+    String fullName = (String) request.getAttribute("fullName");
     
-    // Fetch community blog posts
-    TripDAO blogTripDAO = new TripDAO();
-    List<BlogPost> blogPosts = blogTripDAO.getAllActiveBlogPosts();
+    @SuppressWarnings("unchecked")
+    List<BlogPost> blogPosts = (List<BlogPost>) request.getAttribute("blogPosts");
     
-    // Kiểm tra xem người dùng có đang tìm chuyến đi ON_DEMAND nào không
-    Trip activeTrip = null;
-    Trip activePreBookTrip = null;
-    String preBookDateStr = "";
-    String preBookTimeStr = "";
-    if (isLoggedIn) {
-        activeTrip = blogTripDAO.getActiveOnDemandTrip(user.getId());
-        activePreBookTrip = blogTripDAO.getActivePreBookTrip(user.getId());
-        if (activePreBookTrip != null && activePreBookTrip.getScheduledTime() != null) {
-            java.text.SimpleDateFormat sdfDate = new java.text.SimpleDateFormat("yyyy-MM-dd");
-            java.text.SimpleDateFormat sdfTime = new java.text.SimpleDateFormat("HH:mm");
-            preBookDateStr = sdfDate.format(activePreBookTrip.getScheduledTime());
-            preBookTimeStr = sdfTime.format(activePreBookTrip.getScheduledTime());
-        }
-    }
+    Trip activeTrip = (Trip) request.getAttribute("activeTrip");
+    Trip activePreBookTrip = (Trip) request.getAttribute("activePreBookTrip");
+    
+    String preBookDateStr = (String) request.getAttribute("preBookDateStr");
+    String preBookTimeStr = (String) request.getAttribute("preBookTimeStr");
+    
+    if (preBookDateStr == null) preBookDateStr = "";
+    if (preBookTimeStr == null) preBookTimeStr = "";
 %>
             <!DOCTYPE html>
             <html lang="vi">

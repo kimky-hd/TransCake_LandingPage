@@ -26,7 +26,7 @@ public class TripSearchServlet extends HttpServlet {
         
         // Ensure user is logged in
         if (session == null || session.getAttribute("loggedInUser") == null) {
-            response.sendRedirect(request.getContextPath() + "/dashboard.jsp?error=not_logged_in");
+            response.sendRedirect(request.getContextPath() + "/dashboard?error=not_logged_in");
             return;
         }
 
@@ -41,7 +41,7 @@ public class TripSearchServlet extends HttpServlet {
 
         // Basic validation
         if (pickup == null || pickup.trim().isEmpty() || dropoff == null || dropoff.trim().isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/dashboard.jsp?error=missing_location");
+            response.sendRedirect(request.getContextPath() + "/dashboard?error=missing_location");
             return;
         }
 
@@ -49,7 +49,7 @@ public class TripSearchServlet extends HttpServlet {
 
         if ("PRE_BOOK".equals(tripType)) {
             if (date == null || date.isEmpty() || time == null || time.isEmpty()) {
-                response.sendRedirect(request.getContextPath() + "/dashboard.jsp?error=missing_datetime");
+                response.sendRedirect(request.getContextPath() + "/dashboard?error=missing_datetime");
                 return;
             }
             try {
@@ -58,7 +58,7 @@ public class TripSearchServlet extends HttpServlet {
                 LocalDateTime localDateTime = LocalDateTime.parse(dateTimeStr, formatter);
                 scheduledTimestamp = Timestamp.valueOf(localDateTime);
             } catch (Exception e) {
-                response.sendRedirect(request.getContextPath() + "/dashboard.jsp?error=invalid_datetime");
+                response.sendRedirect(request.getContextPath() + "/dashboard?error=invalid_datetime");
                 return;
             }
             // Kiểm tra trùng PRE_BOOK
@@ -68,7 +68,7 @@ public class TripSearchServlet extends HttpServlet {
                     response.getWriter().write("{\"success\": false, \"error\": \"Bạn đã có chuyến Đặt trước. Vui lòng hủy trước khi tạo mới!\"}");
                     return;
                 }
-                response.sendRedirect(request.getContextPath() + "/dashboard.jsp?error=limit_exceeded");
+                response.sendRedirect(request.getContextPath() + "/dashboard?error=limit_exceeded");
                 return;
             }
         } else {
@@ -80,7 +80,7 @@ public class TripSearchServlet extends HttpServlet {
                     response.getWriter().write("{\"success\": false, \"error\": \"Bạn đang tìm chuyến Đặt ngay. Vui lòng hủy trước khi tạo mới!\"}");
                     return;
                 }
-                response.sendRedirect(request.getContextPath() + "/dashboard.jsp?error=limit_exceeded");
+                response.sendRedirect(request.getContextPath() + "/dashboard?error=limit_exceeded");
                 return;
             }
         }
@@ -121,14 +121,14 @@ public class TripSearchServlet extends HttpServlet {
                 response.getWriter().write("{\"success\": true, \"tripId\": " + tripId + "}");
                 return;
             }
-            response.sendRedirect(request.getContextPath() + "/dashboard.jsp?success=trip_created");
+            response.sendRedirect(request.getContextPath() + "/dashboard?success=trip_created");
         } else {
             if ("true".equals(request.getParameter("ajax"))) {
                 response.setContentType("application/json");
                 response.getWriter().write("{\"success\": false}");
                 return;
             }
-            response.sendRedirect(request.getContextPath() + "/dashboard.jsp?error=db_error");
+            response.sendRedirect(request.getContextPath() + "/dashboard?error=db_error");
         }
     }
 }

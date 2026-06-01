@@ -269,10 +269,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (data.needsOnboarding && window.openOnboardingModal) {
                             window.openOnboardingModal();
                         } else {
-                            if (window.location.pathname.includes('dashboard.jsp')) {
+                            if (window.location.pathname.includes('dashboard')) {
                                 window.location.reload();
                             } else {
-                                window.location.href = window.CONTEXT_PATH + '/dashboard.jsp';
+                                window.location.href = window.CONTEXT_PATH + '/dashboard';
                             }
                         }
                     } else {
@@ -321,10 +321,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (data.needsOnboarding && window.openOnboardingModal) {
                             window.openOnboardingModal();
                         } else {
-                            if (window.location.pathname.includes('dashboard.jsp')) {
+                            if (window.location.pathname.includes('dashboard')) {
                                 window.location.reload();
                             } else {
-                                window.location.href = window.CONTEXT_PATH + '/dashboard.jsp';
+                                window.location.href = window.CONTEXT_PATH + '/dashboard';
                             }
                         }
                     } else {
