@@ -34,6 +34,7 @@ public class PriceCalculationServlet extends HttpServlet {
             String pLng = request.getParameter("pLng");
             String dLat = request.getParameter("dLat");
             String dLng = request.getParameter("dLng");
+            String vehicleType = request.getParameter("vehicleType"); // 'MOTORBIKE' or 'CAR'
             
             if (pLat == null || pLng == null || dLat == null || dLng == null) {
                 result.addProperty("success", false);
@@ -42,9 +43,14 @@ public class PriceCalculationServlet extends HttpServlet {
                 return;
             }
             
+            String vehicleParam = "car";
+            if ("MOTORBIKE".equalsIgnoreCase(vehicleType)) {
+                vehicleParam = "motorcycle";
+            }
+            
             String routeUrl = String.format(
-                "https://maps.vietmap.vn/api/route?api-version=1.1&apikey=%s&point=%s,%s&point=%s,%s&vehicle=car&points_encoded=false",
-                VIETMAP_API_KEY, pLat, pLng, dLat, dLng
+                "https://maps.vietmap.vn/api/route?api-version=1.1&apikey=%s&point=%s,%s&point=%s,%s&vehicle=%s&points_encoded=false",
+                VIETMAP_API_KEY, pLat, pLng, dLat, dLng, vehicleParam
             );
             
             URL url = new URL(routeUrl);
@@ -72,6 +78,12 @@ public class PriceCalculationServlet extends HttpServlet {
                     
                     double baseFare = 10000.0;
                     double perKmFare = 12000.0;
+                    
+                    if ("MOTORBIKE".equalsIgnoreCase(vehicleType)) {
+                        baseFare = 5000.0;
+                        perKmFare = 5000.0;
+                    }
+                    
                     double totalPrice = baseFare + (distanceKm * perKmFare);
                     
                     result.addProperty("success", true);

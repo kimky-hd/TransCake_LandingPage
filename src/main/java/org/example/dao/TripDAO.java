@@ -20,7 +20,7 @@ public class TripDAO {
      * @return ID của chuyến đi nếu thành công, -1 nếu thất bại
      */
     public int insertTrip(Trip trip) {
-        String sql = "INSERT INTO trips (passenger_id, pickup_location, dropoff_location, trip_type, scheduled_time, match_status, completion_status, note_for_driver, price, distance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO trips (passenger_id, pickup_location, dropoff_location, trip_type, scheduled_time, match_status, completion_status, note_for_driver, price, distance, vehicle_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
@@ -41,6 +41,11 @@ public class TripDAO {
                 ps.setDouble(10, trip.getDistance());
             } else {
                 ps.setNull(10, java.sql.Types.DECIMAL);
+            }
+            if (trip.getVehicleType() != null) {
+                ps.setString(11, trip.getVehicleType());
+            } else {
+                ps.setNull(11, java.sql.Types.VARCHAR);
             }
             
             int rowsAffected = ps.executeUpdate();
@@ -156,6 +161,7 @@ public class TripDAO {
                     trip.setDropoffLocation(rs.getString("dropoff_location"));
                     trip.setTripType(rs.getString("trip_type"));
                     trip.setMatchStatus(rs.getString("match_status"));
+                    trip.setVehicleType(rs.getString("vehicle_type"));
                     return trip;
                 }
             }
@@ -183,6 +189,7 @@ public class TripDAO {
                     trip.setTripType(rs.getString("trip_type"));
                     trip.setMatchStatus(rs.getString("match_status"));
                     trip.setScheduledTime(rs.getTimestamp("scheduled_time"));
+                    trip.setVehicleType(rs.getString("vehicle_type"));
                     return trip;
                 }
             }

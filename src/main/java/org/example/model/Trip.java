@@ -16,12 +16,13 @@ public class Trip {
     private Double price;
     private Double distance;
     private Timestamp createdAt;
+    private String vehicleType; // 'MOTORBIKE', 'CAR'
 
     // Constructors
     public Trip() {
     }
 
-    public Trip(int passengerId, String pickupLocation, String dropoffLocation, String tripType, Timestamp scheduledTime, String noteForDriver, Double price, Double distance) {
+    public Trip(int passengerId, String pickupLocation, String dropoffLocation, String tripType, Timestamp scheduledTime, String noteForDriver, Double price, Double distance, String vehicleType) {
         this.passengerId = passengerId;
         this.pickupLocation = pickupLocation;
         this.dropoffLocation = dropoffLocation;
@@ -32,9 +33,17 @@ public class Trip {
         this.noteForDriver = noteForDriver;
         this.price = price;
         this.distance = distance;
+        this.vehicleType = vehicleType;
     }
 
     // Getters and Setters
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
+    }
     public int getId() {
         return id;
     }

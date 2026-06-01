@@ -485,6 +485,24 @@
                                     <!-- End of Location Input Group -->
                                 </div>
                                 
+                                <!-- Vehicle Selection -->
+                                <div class="flex gap-3 w-full mt-1">
+                                    <label class="flex-1 cursor-pointer">
+                                        <input type="radio" name="vehicleType" value="MOTORBIKE" class="peer hidden" onchange="if(document.getElementById('pickup-lat').value && document.getElementById('dropoff-lat').value) calculateRouteAndPrice();">
+                                        <div class="flex items-center justify-center gap-2 p-3 bg-white border border-slate-200/80 rounded-xl shadow-sm peer-checked:border-[#6200EE] peer-checked:bg-purple-50 transition-colors">
+                                            <span class="material-symbols-outlined text-[20px] text-slate-500 peer-checked:text-[#6200EE]">two_wheeler</span>
+                                            <span class="text-sm font-semibold text-slate-600 peer-checked:text-[#6200EE]">Xe máy</span>
+                                        </div>
+                                    </label>
+                                    <label class="flex-1 cursor-pointer">
+                                        <input type="radio" name="vehicleType" value="CAR" class="peer hidden" checked onchange="if(document.getElementById('pickup-lat').value && document.getElementById('dropoff-lat').value) calculateRouteAndPrice();">
+                                        <div class="flex items-center justify-center gap-2 p-3 bg-white border border-slate-200/80 rounded-xl shadow-sm peer-checked:border-[#6200EE] peer-checked:bg-purple-50 transition-colors">
+                                            <span class="material-symbols-outlined text-[20px] text-slate-500 peer-checked:text-[#6200EE]">directions_car</span>
+                                            <span class="text-sm font-semibold text-slate-600 peer-checked:text-[#6200EE]">Ô tô</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                
                                 <!-- Price Estimation Box -->
                                 <div id="price-estimation-box" class="hidden w-full bg-orange-50/80 border border-orange-200 rounded-2xl p-4 shadow-sm transition-all duration-300 mt-2">
                                     <div class="flex justify-between items-center mb-1">
@@ -1857,7 +1875,8 @@
                                     document.getElementById('duration-value').textContent = "";
                                     
                                     const contextPath = '${pageContext.request.contextPath}';
-                                    const routeUrl = `\${contextPath}/api/price-estimate?pLat=\${pLat}&pLng=\${pLng}&dLat=\${dLat}&dLng=\${dLng}`;
+                                    const vehicleType = document.querySelector('input[name="vehicleType"]:checked').value;
+                                    const routeUrl = `\${contextPath}/api/price-estimate?pLat=\${pLat}&pLng=\${pLng}&dLat=\${dLat}&dLng=\${dLng}&vehicleType=\${vehicleType}`;
                                     
                                     fetch(routeUrl)
                                         .then(res => res.json())

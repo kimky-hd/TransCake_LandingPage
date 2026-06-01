@@ -55,3 +55,6 @@ CREATE TABLE IF NOT EXISTS trips (
     FOREIGN KEY (passenger_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE SET NULL
 );
+
+-- Bổ sung cột vehicle_type sau này (Chạy lệnh này vào DB hiện tại)
+-- ALTER TABLE trips ADD COLUMN vehicle_type ENUM('MOTORBIKE', 'CAR') DEFAULT 'CAR';

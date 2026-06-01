@@ -99,8 +99,11 @@ public class TripSearchServlet extends HttpServlet {
             System.err.println("Error parsing price/distance: " + e.getMessage());
         }
 
+        String vehicleType = request.getParameter("vehicleType");
+        if (vehicleType == null || vehicleType.isEmpty()) vehicleType = "CAR";
+
         // Create Trip Object (truyền đầy đủ dữ liệu)
-        Trip trip = new Trip(loggedInUser.getId(), pickup, dropoff, tripType, scheduledTimestamp, note, price, distance);
+        Trip trip = new Trip(loggedInUser.getId(), pickup, dropoff, tripType, scheduledTimestamp, note, price, distance, vehicleType);
         
         // Save to Database
         int tripId = tripDAO.insertTrip(trip);
