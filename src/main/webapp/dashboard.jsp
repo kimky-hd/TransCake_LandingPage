@@ -63,9 +63,9 @@
                     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
                     rel="stylesheet" />
 
-                <!-- Mapbox GL JS -->
-                <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
-                <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+                <!-- VietMap GL JS -->
+                <script src="https://unpkg.com/@vietmap/vietmap-gl-js@6.0.1/dist/vietmap-gl.js"></script>
+                <link href="https://unpkg.com/@vietmap/vietmap-gl-js@6.0.1/dist/vietmap-gl.css" rel="stylesheet" />
 
                 <style>
                     body {
@@ -1217,19 +1217,26 @@
                             }
 
                             // ==========================================
-                            // MAPBOX INITIALIZATION & GEOLOCATION
+                            // VIETMAP INITIALIZATION & GEOLOCATION
                             // ==========================================
 
-                            // Access token của bạn
-                            mapboxgl.accessToken = 'pk.eyJ1Ijoia2lta3l2dSIsImEiOiJjbXBrbjBsenkxaG8xMnJvcWE4Ymp2bHVkIn0.cqSefs1dwaF89hY4SlLUsQ';
+                            // Vietmap API Keys (Vietmap tách riêng key cho Map và Search)
+                            const vietmapMapApiKey = '7b895685ca3fbced0955461bcbbeb5b50cb8e5a2943fdc49';
+                            const vietmapSearchApiKey = '663154c8a54428313795b6799a4e6dc463c0f678b38f7648';
 
-                            // Khởi tạo bản đồ với style Outdoors
-                            const map = new mapboxgl.Map({
+                            // Khởi tạo bản đồ Vietmap
+                            const map = new vietmapgl.Map({
                                 container: 'map', // id của thẻ div
-                                style: 'mapbox://styles/mapbox/outdoors-v12', // giao diện Ngoài trời (địa hình, công viên)
+                                style: 'https://maps.vietmap.vn/api/maps/light/styles.json?apikey=' + vietmapMapApiKey, // giao diện sáng (premium)
                                 center: [105.8542, 21.0285], // Tọa độ mặc định (Hà Nội)
                                 zoom: 13,
-                                attributionControl: false // Ẩn logo mapbox nhỏ nếu muốn UI sạch hơn
+                                attributionControl: false, // Ẩn logo nếu muốn UI sạch hơn
+                                transformRequest: (url, resourceType) => {
+                                    if (url.indexOf('vietmap.vn') > -1 && url.indexOf('apikey=') === -1) {
+                                        return { url: url + (url.indexOf('?') === -1 ? '?' : '&') + 'apikey=' + vietmapMapApiKey };
+                                    }
+                                    return { url: url };
+                                }
                             });
                             window.mapInstance = map;
 
@@ -1245,8 +1252,8 @@
                             // Lưu lại để có thể đổi màu khi toggle role
                             window.userMarkerEl = markerEl;
 
-                            // Khởi tạo đối tượng Marker của Mapbox (nhưng chưa add vào map)
-                            const userMarker = new mapboxgl.Marker(markerEl);
+                            // Khởi tạo đối tượng Marker của Vietmap (nhưng chưa add vào map)
+                            const userMarker = new vietmapgl.Marker(markerEl);
 
                             // Khi bản đồ load xong, ta sẽ lấy vị trí thực của user
                             map.on('load', () => {
@@ -1609,45 +1616,46 @@
                                     }
 
                                     debounceTimer = setTimeout(() => {
-                                        // Tối ưu hóa: Thêm proximity (tọa độ người dùng) để ưu tiên hiển thị các kết quả ở gần vị trí hiện tại
-                                        const proximityParam = (typeof userLngLat !== 'undefined' && userLngLat && userLngLat.length === 2)
-                                            ? `&proximity=\${userLngLat[0]},\${userLngLat[1]}`
-                                            : `&proximity=105.8542,21.0285`; // Mặc định ở Hà Nội nếu chưa có vị trí
-
-                                        // Thêm fuzzyMatch=false để Mapbox không tự đoán sai dấu tiếng Việt (VD: gõ "sân" sẽ không ra "san hô")
-                                        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/\${encodeURIComponent(query)}.json?access_token=\${mapboxgl.accessToken}&country=vn&language=vi&types=poi,address,neighborhood,place&autocomplete=true&fuzzyMatch=false&limit=8\${proximityParam}`;
+                                        // Gọi API Search của Vietmap
+                                        const url = `https://maps.vietmap.vn/api/search/v3?apikey=\${vietmapSearchApiKey}&text=\${encodeURIComponent(query)}`;
 
                                         fetch(url)
                                             .then(response => response.json())
                                             .then(data => {
                                                 suggestionsContainer.innerHTML = '';
-                                                if (data.features && data.features.length > 0) {
-                                                    data.features.forEach(feature => {
-                                                        const mainText = feature.text || '';
-                                                        let fullAddress = feature.place_name || '';
+                                                if (data && data.length > 0) {
+                                                    data.slice(0, 8).forEach(feature => {
+                                                        const mainText = feature.name || '';
+                                                        let fullAddress = feature.display || feature.address || '';
 
-                                                        // Loại bỏ mã bưu điện 5 số của Việt Nam (VD: "12400, ") để địa chỉ đẹp hơn
-                                                        fullAddress = fullAddress.replace(/\b\d{5},\s*/g, '');
-
-                                                        const secondaryText = fullAddress.startsWith(mainText)
-                                                            ? fullAddress.substring(mainText.length).replace(/^,\s*/, '')
-                                                            : fullAddress;
+                                                        const secondaryText = fullAddress !== mainText ? fullAddress : '';
 
                                                         const div = document.createElement('div');
                                                         div.className = 'px-4 py-2 hover:bg-slate-100 cursor-pointer text-sm text-slate-700 border-b border-slate-100 last:border-0';
 
-                                                        // Viết tách HTML để tránh lỗi format của IDE làm hỏng thẻ <br>
+                                                        // Viết tách HTML, cần dùng backslash để tránh JSP EL
                                                         let suggestionHtml = `<strong>\${mainText}</strong>`;
                                                         if (secondaryText) {
                                                             suggestionHtml += `<br><span class="text-xs text-slate-500">\${secondaryText}</span>`;
                                                         }
                                                         div.innerHTML = suggestionHtml;
 
-                                                        div.addEventListener('click', () => {
+                                                        div.onclick = () => {
                                                             input.value = fullAddress;
                                                             suggestionsContainer.innerHTML = '';
                                                             suggestionsContainer.classList.add('hidden');
-                                                        });
+                                                            // Bay đến vị trí
+                                                            if (feature.lat && feature.lng) {
+                                                                map.flyTo({
+                                                                    center: [feature.lng, feature.lat],
+                                                                    zoom: 14,
+                                                                    essential: true
+                                                                });
+                                                                new vietmapgl.Marker()
+                                                                    .setLngLat([feature.lng, feature.lat])
+                                                                    .addTo(map);
+                                                            }
+                                                        };
                                                         suggestionsContainer.appendChild(div);
                                                     });
                                                     suggestionsContainer.classList.remove('hidden');
