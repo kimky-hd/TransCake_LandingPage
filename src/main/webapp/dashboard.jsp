@@ -1349,6 +1349,7 @@
                         <!-- Script to handle switching roles -->
                         <script>
                             const initialUserRole = '<%= request.getAttribute("userRole") != null ? request.getAttribute("userRole") : "passenger" %>';
+                            window.userFullName = '<%= request.getAttribute("fullName") != null && !request.getAttribute("fullName").equals("Người dùng") ? request.getAttribute("fullName") : "" %>';
                             
                             document.addEventListener('DOMContentLoaded', function() {
                                 if (initialUserRole === 'driver') {
@@ -1369,6 +1370,34 @@
                             }
 
                             function setRole(role) {
+                                // Kiểm tra nếu là hành khách muốn chuyển sang tài xế
+                                if (role === 'driver' && initialUserRole !== 'driver') {
+                                    if (window.showConfirmModal) {
+                                        window.showConfirmModal(
+                                            'Đăng ký Đối tác Tài xế', 
+                                            'Bạn cần bổ sung thông tin phương tiện để có thể chuyển sang tab này. Bạn có muốn điền thông tin đăng ký ngay không?', 
+                                            function() {
+                                                if (typeof window.openDriverUpgradeModal === 'function') {
+                                                    window.openDriverUpgradeModal();
+                                                } else if (typeof window.openOnboardingModal === 'function') {
+                                                    window.openOnboardingModal();
+                                                } else {
+                                                    const obModal = document.getElementById('onboardingModal');
+                                                    if (obModal) {
+                                                        obModal.classList.remove('hidden');
+                                                        if (typeof window.goToStep === 'function') {
+                                                            window.goToStep(1); 
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        );
+                                    } else {
+                                        alert('Vui lòng đăng ký thông tin tài xế!');
+                                    }
+                                    return; // Không chuyển tab
+                                }
+
                                 const toggleBg = document.getElementById('toggle-bg');
                                 const btnPassenger = document.getElementById('btn-passenger');
                                 const btnDriver = document.getElementById('btn-driver');

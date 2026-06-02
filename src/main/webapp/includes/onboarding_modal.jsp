@@ -347,7 +347,7 @@
                     </div>
 
                     <div class="mt-8 flex gap-3">
-                        <button type="button" onclick="goToStep(3)"
+                        <button type="button" id="step4BackBtn" onclick="goToStep(3)"
                             class="px-5 py-3.5 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
                             Quay lại
                         </button>
@@ -515,7 +515,8 @@
 
                 const fullNameInput = document.getElementById('fullName');
                 const fullName = fullNameInput ? fullNameInput.value.trim() : '';
-                if (!fullName) {
+                
+                if (!window.isDriverUpgrade && !fullName) {
                     showToast('Vui lòng nhập họ và tên của bạn.', 'warning');
                     goToStep(1);
                     if (btn) btn.innerHTML = 'Hoàn tất đăng ký';
@@ -525,9 +526,10 @@
                 const genderInput = document.querySelector('input[name="gender"]:checked');
                 const gender = genderInput ? genderInput.value : 'male';
                 const tags = Array.from(selectedTags);
-                const role = window.selectedRoleForSubmit || 'passenger';
+                const role = window.isDriverUpgrade ? 'driver' : (window.selectedRoleForSubmit || 'passenger');
 
                 let payload = {
+                    isDriverUpgrade: window.isDriverUpgrade || false,
                     fullName: fullName,
                     gender: gender,
                     role: role,
@@ -583,16 +585,27 @@
             };
 
             window.openOnboardingModal = function () {
+                window.isDriverUpgrade = false;
+                const step4BackBtn = document.getElementById('step4BackBtn');
+                if (step4BackBtn) step4BackBtn.classList.remove('hidden');
+                
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
                 goToStep(1);
 
-                // Reset fields
+                // Reset fields (chỉ reset nếu chưa có)
                 const fullNameInput = document.getElementById('fullName');
-                if (fullNameInput) fullNameInput.value = '';
+                if (fullNameInput && !fullNameInput.value && window.userFullName) {
+                    fullNameInput.value = window.userFullName;
+                } else if (fullNameInput && !fullNameInput.value) {
+                    fullNameInput.value = '';
+                }
 
                 const genderRadio = document.querySelector('input[name="gender"][value="male"]');
-                if (genderRadio) genderRadio.checked = true;
+                // Không reset gender nếu đã chọn
+                if (genderRadio && !document.querySelector('input[name="gender"]:checked')) {
+                    genderRadio.checked = true;
+                }
 
                 selectedTags.clear();
                 tags.forEach(tag => {
@@ -606,7 +619,7 @@
                 step2ContinueBtn.disabled = true;
                 step2ContinueBtn.classList.add('opacity-50', 'cursor-not-allowed');
                 step2ContinueBtn.classList.remove('hover:scale-[1.02]');
-                step2ContinueBtn.innerHTML = `Tiếp tục (0/4)`;
+                step2ContinueBtn.innerHTML = `Tiếp tục (<span id="tagCount">0</span>/4)`;
 
                 const allCards = document.querySelectorAll('.role-card');
                 allCards.forEach(c => {
@@ -615,6 +628,26 @@
                     c.classList.remove('ring-4', 'ring-primary/50', 'scale-[1.02]');
                 });
 
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                    backdrop.classList.add('opacity-100');
+                    content.classList.remove('opacity-0', 'scale-95');
+                    content.classList.add('opacity-100', 'scale-100');
+                }, 10);
+            };
+
+            window.openDriverUpgradeModal = function () {
+                window.isDriverUpgrade = true;
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                
+                const step4BackBtn = document.getElementById('step4BackBtn');
+                if (step4BackBtn) {
+                    step4BackBtn.classList.add('hidden');
+                }
+                
+                goToStep(4);
+                
                 setTimeout(() => {
                     backdrop.classList.remove('opacity-0');
                     backdrop.classList.add('opacity-100');

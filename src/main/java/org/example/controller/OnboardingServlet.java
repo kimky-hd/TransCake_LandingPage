@@ -69,6 +69,46 @@ public class OnboardingServlet extends HttpServlet {
             String vehicleName = (String) body.get("vehicleName");
             String licensePlate = (String) body.get("licensePlate");
 
+            Boolean isDriverUpgradeObj = (Boolean) body.get("isDriverUpgrade");
+            boolean isDriverUpgrade = isDriverUpgradeObj != null && isDriverUpgradeObj;
+
+            if (isDriverUpgrade) {
+                if (loggedInUser == null) {
+                    result.put("success", false);
+                    result.put("message", "Vui lòng đăng nhập.");
+                    response.getWriter().write(gson.toJson(result));
+                    return;
+                }
+                
+                if (vehicleName == null || vehicleName.trim().isEmpty() || licensePlate == null || licensePlate.trim().isEmpty()) {
+                    result.put("success", false);
+                    result.put("message", "Vui lòng điền tên xe và biển số xe.");
+                    response.getWriter().write(gson.toJson(result));
+                    return;
+                }
+                
+                boolean updated = userDAO.updateOnboardingProfile(loggedInUser.getId(), loggedInUser.getFullName(), loggedInUser.getGender(), "driver", loggedInUser.getHobbies());
+                if (updated) {
+                    loggedInUser.setRole("driver");
+                    session.setAttribute("loggedInUser", loggedInUser);
+                    
+                    DriverVehicleDAO vehicleDAO = new DriverVehicleDAO();
+                    DriverVehicle vehicle = new DriverVehicle(loggedInUser.getId(), vehicleType != null ? vehicleType : "MOTORBIKE", vehicleName, licensePlate);
+                    if (vehicleDAO.getVehicleByUserId(loggedInUser.getId()) == null) {
+                        vehicleDAO.registerVehicle(vehicle);
+                    } else {
+                        vehicleDAO.updateVehicle(vehicle);
+                    }
+                    result.put("success", true);
+                    result.put("message", "Đăng ký phương tiện thành công!");
+                } else {
+                    result.put("success", false);
+                    result.put("message", "Lỗi server khi lưu thông tin.");
+                }
+                response.getWriter().write(gson.toJson(result));
+                return;
+            }
+
             if (fullName == null || fullName.trim().isEmpty()) {
                 result.put("success", false);
                 result.put("message", "Vui lòng nhập họ và tên.");
