@@ -7,7 +7,11 @@ public class Trip {
     private int passengerId;
     private Integer driverId; // Can be null
     private String pickupLocation;
+    private Double pickupLat;
+    private Double pickupLng;
     private String dropoffLocation;
+    private Double dropoffLat;
+    private Double dropoffLng;
     private String tripType; // 'ON_DEMAND', 'PRE_BOOK'
     private Timestamp scheduledTime; // Can be null
     private String matchStatus; // 'PENDING', 'MATCHED', 'CANCELLED'
@@ -22,10 +26,14 @@ public class Trip {
     public Trip() {
     }
 
-    public Trip(int passengerId, String pickupLocation, String dropoffLocation, String tripType, Timestamp scheduledTime, String noteForDriver, Double price, Double distance, String vehicleType) {
+    public Trip(int passengerId, String pickupLocation, Double pickupLat, Double pickupLng, String dropoffLocation, Double dropoffLat, Double dropoffLng, String tripType, Timestamp scheduledTime, String noteForDriver, Double price, Double distance, String vehicleType) {
         this.passengerId = passengerId;
         this.pickupLocation = pickupLocation;
+        this.pickupLat = pickupLat;
+        this.pickupLng = pickupLng;
         this.dropoffLocation = dropoffLocation;
+        this.dropoffLat = dropoffLat;
+        this.dropoffLng = dropoffLng;
         this.tripType = tripType;
         this.scheduledTime = scheduledTime;
         this.matchStatus = "PENDING";
@@ -37,6 +45,17 @@ public class Trip {
     }
 
     // Getters and Setters
+    public Double getPickupLat() { return pickupLat; }
+    public void setPickupLat(Double pickupLat) { this.pickupLat = pickupLat; }
+
+    public Double getPickupLng() { return pickupLng; }
+    public void setPickupLng(Double pickupLng) { this.pickupLng = pickupLng; }
+
+    public Double getDropoffLat() { return dropoffLat; }
+    public void setDropoffLat(Double dropoffLat) { this.dropoffLat = dropoffLat; }
+
+    public Double getDropoffLng() { return dropoffLng; }
+    public void setDropoffLng(Double dropoffLng) { this.dropoffLng = dropoffLng; }
     public String getVehicleType() {
         return vehicleType;
     }

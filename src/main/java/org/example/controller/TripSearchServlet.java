@@ -102,8 +102,18 @@ public class TripSearchServlet extends HttpServlet {
         String vehicleType = request.getParameter("vehicleType");
         if (vehicleType == null || vehicleType.isEmpty()) vehicleType = "CAR";
 
+        Double pickupLat = null, pickupLng = null, dropoffLat = null, dropoffLng = null;
+        try {
+            if (request.getParameter("pickupLat") != null && !request.getParameter("pickupLat").isEmpty()) pickupLat = Double.parseDouble(request.getParameter("pickupLat"));
+            if (request.getParameter("pickupLng") != null && !request.getParameter("pickupLng").isEmpty()) pickupLng = Double.parseDouble(request.getParameter("pickupLng"));
+            if (request.getParameter("dropoffLat") != null && !request.getParameter("dropoffLat").isEmpty()) dropoffLat = Double.parseDouble(request.getParameter("dropoffLat"));
+            if (request.getParameter("dropoffLng") != null && !request.getParameter("dropoffLng").isEmpty()) dropoffLng = Double.parseDouble(request.getParameter("dropoffLng"));
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing coordinates: " + e.getMessage());
+        }
+
         // Create Trip Object (truyền đầy đủ dữ liệu)
-        Trip trip = new Trip(loggedInUser.getId(), pickup, dropoff, tripType, scheduledTimestamp, note, price, distance, vehicleType);
+        Trip trip = new Trip(loggedInUser.getId(), pickup, pickupLat, pickupLng, dropoff, dropoffLat, dropoffLng, tripType, scheduledTimestamp, note, price, distance, vehicleType);
         
         // Save to Database
         int tripId = tripDAO.insertTrip(trip);

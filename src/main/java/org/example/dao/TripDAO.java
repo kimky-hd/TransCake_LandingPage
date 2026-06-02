@@ -20,32 +20,36 @@ public class TripDAO {
      * @return ID của chuyến đi nếu thành công, -1 nếu thất bại
      */
     public int insertTrip(Trip trip) {
-        String sql = "INSERT INTO trips (passenger_id, pickup_location, dropoff_location, trip_type, scheduled_time, match_status, completion_status, note_for_driver, price, distance, vehicle_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO trips (passenger_id, pickup_location, pickup_lat, pickup_lng, dropoff_location, dropoff_lat, dropoff_lng, trip_type, scheduled_time, match_status, completion_status, note_for_driver, price, distance, vehicle_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             ps.setInt(1, trip.getPassengerId());
             ps.setString(2, trip.getPickupLocation());
-            ps.setString(3, trip.getDropoffLocation());
-            ps.setString(4, trip.getTripType());
-            ps.setTimestamp(5, trip.getScheduledTime());
-            ps.setString(6, trip.getMatchStatus());
-            ps.setString(7, trip.getCompletionStatus());
-            ps.setString(8, trip.getNoteForDriver());
+            if (trip.getPickupLat() != null) ps.setDouble(3, trip.getPickupLat()); else ps.setNull(3, java.sql.Types.DECIMAL);
+            if (trip.getPickupLng() != null) ps.setDouble(4, trip.getPickupLng()); else ps.setNull(4, java.sql.Types.DECIMAL);
+            ps.setString(5, trip.getDropoffLocation());
+            if (trip.getDropoffLat() != null) ps.setDouble(6, trip.getDropoffLat()); else ps.setNull(6, java.sql.Types.DECIMAL);
+            if (trip.getDropoffLng() != null) ps.setDouble(7, trip.getDropoffLng()); else ps.setNull(7, java.sql.Types.DECIMAL);
+            ps.setString(8, trip.getTripType());
+            ps.setTimestamp(9, trip.getScheduledTime());
+            ps.setString(10, trip.getMatchStatus());
+            ps.setString(11, trip.getCompletionStatus());
+            ps.setString(12, trip.getNoteForDriver());
             if (trip.getPrice() != null) {
-                ps.setDouble(9, trip.getPrice());
+                ps.setDouble(13, trip.getPrice());
             } else {
-                ps.setNull(9, java.sql.Types.DECIMAL);
+                ps.setNull(13, java.sql.Types.DECIMAL);
             }
             if (trip.getDistance() != null) {
-                ps.setDouble(10, trip.getDistance());
+                ps.setDouble(14, trip.getDistance());
             } else {
-                ps.setNull(10, java.sql.Types.DECIMAL);
+                ps.setNull(14, java.sql.Types.DECIMAL);
             }
             if (trip.getVehicleType() != null) {
-                ps.setString(11, trip.getVehicleType());
+                ps.setString(15, trip.getVehicleType());
             } else {
-                ps.setNull(11, java.sql.Types.VARCHAR);
+                ps.setNull(15, java.sql.Types.VARCHAR);
             }
             
             int rowsAffected = ps.executeUpdate();
@@ -158,7 +162,11 @@ public class TripDAO {
                     trip.setId(rs.getInt("id"));
                     trip.setPassengerId(rs.getInt("passenger_id"));
                     trip.setPickupLocation(rs.getString("pickup_location"));
+                    if (rs.getObject("pickup_lat") != null) trip.setPickupLat(rs.getDouble("pickup_lat"));
+                    if (rs.getObject("pickup_lng") != null) trip.setPickupLng(rs.getDouble("pickup_lng"));
                     trip.setDropoffLocation(rs.getString("dropoff_location"));
+                    if (rs.getObject("dropoff_lat") != null) trip.setDropoffLat(rs.getDouble("dropoff_lat"));
+                    if (rs.getObject("dropoff_lng") != null) trip.setDropoffLng(rs.getDouble("dropoff_lng"));
                     trip.setTripType(rs.getString("trip_type"));
                     trip.setMatchStatus(rs.getString("match_status"));
                     trip.setVehicleType(rs.getString("vehicle_type"));
@@ -185,7 +193,11 @@ public class TripDAO {
                     trip.setId(rs.getInt("id"));
                     trip.setPassengerId(rs.getInt("passenger_id"));
                     trip.setPickupLocation(rs.getString("pickup_location"));
+                    if (rs.getObject("pickup_lat") != null) trip.setPickupLat(rs.getDouble("pickup_lat"));
+                    if (rs.getObject("pickup_lng") != null) trip.setPickupLng(rs.getDouble("pickup_lng"));
                     trip.setDropoffLocation(rs.getString("dropoff_location"));
+                    if (rs.getObject("dropoff_lat") != null) trip.setDropoffLat(rs.getDouble("dropoff_lat"));
+                    if (rs.getObject("dropoff_lng") != null) trip.setDropoffLng(rs.getDouble("dropoff_lng"));
                     trip.setTripType(rs.getString("trip_type"));
                     trip.setMatchStatus(rs.getString("match_status"));
                     trip.setScheduledTime(rs.getTimestamp("scheduled_time"));
@@ -252,7 +264,11 @@ public class TripDAO {
                     trip.setId(rs.getInt("id"));
                     trip.setPassengerId(rs.getInt("passenger_id"));
                     trip.setPickupLocation(rs.getString("pickup_location"));
+                    if (rs.getObject("pickup_lat") != null) trip.setPickupLat(rs.getDouble("pickup_lat"));
+                    if (rs.getObject("pickup_lng") != null) trip.setPickupLng(rs.getDouble("pickup_lng"));
                     trip.setDropoffLocation(rs.getString("dropoff_location"));
+                    if (rs.getObject("dropoff_lat") != null) trip.setDropoffLat(rs.getDouble("dropoff_lat"));
+                    if (rs.getObject("dropoff_lng") != null) trip.setDropoffLng(rs.getDouble("dropoff_lng"));
                     trip.setTripType(rs.getString("trip_type"));
                     trip.setMatchStatus(rs.getString("match_status"));
                     trip.setCompletionStatus(rs.getString("completion_status"));

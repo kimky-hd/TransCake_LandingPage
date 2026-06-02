@@ -1051,7 +1051,12 @@
                                 },
                                 body: formData.toString()
                             })
-                            .then(response => response.json())
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
                             .then(data => {
                                 if (data.success) {
                                     if (tripType === 'ON_DEMAND') {
@@ -1084,10 +1089,32 @@
                                             btnSubmit.onclick = cancelPreBookTrip;
                                         }
                                     }
+                                } else {
+                                    showToast("Lỗi: " + (data.error || "Không thể tạo chuyến đi"), "error");
+                                    resetSearchUI();
                                 }
                             }).catch(error => {
                                 console.error("Lỗi khi gửi yêu cầu tìm chuyến:", error);
+                                showToast("Lỗi kết nối đến máy chủ. Hãy tải lại trang.", "error");
+                                resetSearchUI();
                             });
+                        }
+
+                        function resetSearchUI() {
+                            isSearchingOnDemand = false;
+                            document.getElementById('loading-search-state').classList.add('hidden');
+                            document.getElementById('loading-search-state').classList.remove('flex');
+                            document.getElementById('empty-search-state').classList.remove('hidden');
+                            document.getElementById('empty-search-state').classList.add('flex');
+                            
+                            const btnSubmit = document.getElementById('btn-submit-search');
+                            if (btnSubmit) {
+                                btnSubmit.type = 'submit';
+                                btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
+                                btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                btnSubmit.disabled = false;
+                                btnSubmit.onclick = null;
+                            }
                         }
 
                         function cancelTripSearch() {
