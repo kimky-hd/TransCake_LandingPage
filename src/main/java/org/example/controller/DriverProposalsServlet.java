@@ -59,8 +59,22 @@ public class DriverProposalsServlet extends HttpServlet {
             // Get pending trips matching vehicle type
             List<Trip> pendingTrips = tripDAO.getPendingTripsByVehicleType(vehicle.getVehicleType());
             
+            // Get driver coordinates from request (if available)
+            Double driverLat = null;
+            Double driverLng = null;
+            try {
+                if (request.getParameter("lat") != null) driverLat = Double.parseDouble(request.getParameter("lat"));
+                if (request.getParameter("lng") != null) driverLng = Double.parseDouble(request.getParameter("lng"));
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid driver coordinates passed to proposals api.");
+            }
+
+            // Rank trips using TripMatchingService
+            org.example.service.TripMatchingService matchingService = new org.example.service.TripMatchingService();
+            List<Trip> rankedTrips = matchingService.rankTripsForDriver(loggedInUser, pendingTrips, driverLat, driverLng);
+            
             result.put("success", true);
-            result.put("trips", pendingTrips);
+            result.put("trips", rankedTrips);
             
         } catch (Exception e) {
             e.printStackTrace();
