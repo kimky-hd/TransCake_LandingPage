@@ -288,7 +288,7 @@
                                 <!-- Quick Stats Grid -->
                                 <div class="grid grid-cols-2 gap-3">
                                     <!-- Card 1: Ride Requests -->
-                                    <div
+                                    <div onclick="toggleTripProposals()"
                                         class="bg-white/70 hover:bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm cursor-pointer transition-colors flex flex-col justify-between min-h-[100px] group">
                                         <span
                                             class="material-symbols-outlined text-slate-400 group-hover:text-red-500 transition-colors mb-2">person_add</span>
@@ -1967,6 +1967,145 @@
                         <script
                             src="${pageContext.request.contextPath}/assets/js/landingpage.js?v=<%= System.currentTimeMillis() %>"></script>
 
+                        <!-- Trip Proposals Panel -->
+                        <div id="trip-proposals-panel" class="fixed top-8 bottom-8 right-8 w-[400px] z-40 bg-white/90 backdrop-blur-xl border border-white/60 shadow-[0_30px_60px_rgba(0,0,0,0.15)] rounded-3xl overflow-hidden transition-all duration-500 transform translate-x-[150%] opacity-0 flex flex-col">
+                            <!-- Header -->
+                            <div class="p-6 pb-4 shrink-0 border-b border-slate-200/50 flex justify-between items-center bg-white/40">
+                                <div>
+                                    <h3 class="text-xl font-bold text-slate-800 tracking-tight">Chuyến đi dành cho bạn</h3>
+                                    <p class="text-[11px] font-semibold text-slate-500 mt-1 uppercase tracking-wider" id="proposals-vehicle-info">Đang tải phương tiện...</p>
+                                </div>
+                                <button onclick="toggleTripProposals()" class="w-10 h-10 rounded-full bg-white/80 hover:bg-white border border-slate-200 flex items-center justify-center shadow-sm transition-all text-slate-500 hover:text-slate-800">
+                                    <span class="material-symbols-outlined">close</span>
+                                </button>
+                            </div>
+
+                            <!-- List -->
+                            <div id="proposals-list" class="flex-1 overflow-y-auto panel-scroll p-4 space-y-4 bg-slate-50/50">
+                                <!-- Loading skeleton -->
+                                <div class="animate-pulse space-y-4">
+                                    <div class="h-32 bg-slate-200 rounded-2xl w-full"></div>
+                                    <div class="h-32 bg-slate-200 rounded-2xl w-full"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Trip Proposals Logic -->
+                        <script>
+                            function toggleTripProposals() {
+                                const panel = document.getElementById('trip-proposals-panel');
+                                const isHidden = panel.classList.contains('translate-x-[150%]');
+                                
+                                if (isHidden) {
+                                    // Open
+                                    panel.classList.remove('translate-x-[150%]', 'opacity-0');
+                                    panel.classList.add('translate-x-0', 'opacity-100');
+                                    loadTripProposals();
+                                } else {
+                                    // Close
+                                    panel.classList.remove('translate-x-0', 'opacity-100');
+                                    panel.classList.add('translate-x-[150%]', 'opacity-0');
+                                }
+                            }
+
+                            function loadTripProposals() {
+                                const listContainer = document.getElementById('proposals-list');
+                                listContainer.innerHTML = '<div class="flex justify-center p-8"><span class="material-symbols-outlined animate-spin text-primary text-3xl">sync</span></div>';
+                                
+                                fetch(window.CONTEXT_PATH + '/api/driver/proposals')
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            document.getElementById('proposals-vehicle-info').textContent = "Phương tiện phù hợp: " + data.trips[0]?.vehicleType || "Tất cả";
+                                            renderProposals(data.trips);
+                                        } else {
+                                            listContainer.innerHTML = `<div class="p-6 text-center text-slate-500"><span class="material-symbols-outlined text-4xl mb-2 text-slate-300">error</span><p class="text-sm font-medium">\${data.message}</p></div>`;
+                                        }
+                                    })
+                                    .catch(err => {
+                                        console.error(err);
+                                        listContainer.innerHTML = '<div class="p-6 text-center text-red-500"><p class="text-sm">Lỗi kết nối</p></div>';
+                                    });
+                            }
+
+                            function renderProposals(trips) {
+                                const listContainer = document.getElementById('proposals-list');
+                                if (!trips || trips.length === 0) {
+                                    listContainer.innerHTML = '<div class="flex flex-col items-center justify-center p-10 h-full text-slate-400"><span class="material-symbols-outlined text-5xl mb-3 text-slate-300">inbox</span><p class="font-medium">Chưa có cuốc xe nào</p></div>';
+                                    return;
+                                }
+
+                                let html = '';
+                                trips.forEach(trip => {
+                                    const priceStr = trip.price ? trip.price.toLocaleString('vi-VN') + ' đ' : 'Chưa rõ';
+                                    const distStr = trip.distance ? trip.distance + ' km' : '';
+                                    
+                                    html += `
+                                    <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden group">
+                                        <div class="flex justify-between items-start mb-3">
+                                            <span class="text-xs font-bold text-white bg-primary px-2 py-1 rounded-md">\${trip.tripType === 'ON_DEMAND' ? 'Ngay lập tức' : 'Đặt trước'}</span>
+                                            <span class="text-lg font-black text-[#FF6D00]">\${priceStr}</span>
+                                        </div>
+                                        
+                                        <div class="relative pl-6 mb-3">
+                                            <div class="absolute left-1.5 top-1.5 bottom-1.5 w-[2px] bg-slate-200"></div>
+                                            <div class="mb-3 relative">
+                                                <div class="absolute -left-6 top-0.5 w-3 h-3 rounded-full border-2 border-primary bg-white"></div>
+                                                <p class="text-sm font-semibold text-slate-700 line-clamp-2 leading-tight">\${trip.pickupLocation}</p>
+                                            </div>
+                                            <div class="relative">
+                                                <div class="absolute -left-[25px] top-0 w-3.5 h-3.5 rounded-full border-2 border-transparent text-[#FF6D00] flex items-center justify-center"><span class="material-symbols-outlined text-[16px]">location_on</span></div>
+                                                <p class="text-sm font-semibold text-slate-700 line-clamp-2 leading-tight">\${trip.dropoffLocation}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-center gap-4 text-xs font-medium text-slate-500 mb-4 bg-slate-50 p-2 rounded-lg">
+                                            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">route</span>\${distStr}</span>
+                                            \${trip.noteForDriver ? `<span class="flex items-center gap-1 text-orange-600 line-clamp-1"><span class="material-symbols-outlined text-[14px]">edit_note</span>\${trip.noteForDriver}</span>` : ''}
+                                        </div>
+                                        
+                                        <div class="flex gap-2">
+                                            <button onclick="acceptTrip(\${trip.id})" class="flex-1 bg-gradient-to-r from-[#FF6D00] to-[#FF9100] text-white py-2.5 rounded-xl font-bold shadow-md shadow-orange-500/20 hover:scale-[1.02] transition-transform text-sm">Nhận chuyến</button>
+                                            <button onclick="this.closest('.bg-white').style.display='none'" class="w-12 flex justify-center items-center bg-slate-100 text-slate-500 py-2.5 rounded-xl font-bold hover:bg-slate-200 transition-colors"><span class="material-symbols-outlined text-[18px]">close</span></button>
+                                        </div>
+                                    </div>
+                                    `;
+                                });
+                                listContainer.innerHTML = html;
+                            }
+
+                            function acceptTrip(tripId) {
+                                if (!window.showConfirmModal) {
+                                    alert('Xác nhận nhận chuyến đi này?');
+                                } else {
+                                    window.showConfirmModal('Nhận chuyến', 'Bạn có chắc chắn muốn nhận chuyến đi này?', function() {
+                                        executeAcceptTrip(tripId);
+                                    });
+                                    return;
+                                }
+                                executeAcceptTrip(tripId);
+                            }
+                            
+                            function executeAcceptTrip(tripId) {
+                                fetch(window.CONTEXT_PATH + '/api/driver/accept-trip', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ tripId: tripId })
+                                })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if(data.success) {
+                                        if(window.showToast) window.showToast(data.message, 'success');
+                                        loadTripProposals(); // Reload
+                                    } else {
+                                        if(window.showToast) window.showToast(data.message, 'error');
+                                    }
+                                })
+                                .catch(err => {
+                                    if(window.showToast) window.showToast('Lỗi mạng!', 'error');
+                                });
+                            }
+                        </script>
             </body>
 
             </html>

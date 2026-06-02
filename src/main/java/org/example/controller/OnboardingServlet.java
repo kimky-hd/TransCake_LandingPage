@@ -2,7 +2,9 @@ package org.example.controller;
 
 import com.google.gson.Gson;
 import org.example.dao.UserDAO;
+import org.example.dao.DriverVehicleDAO;
 import org.example.model.User;
+import org.example.model.DriverVehicle;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -61,6 +63,11 @@ public class OnboardingServlet extends HttpServlet {
             String gender = (String) body.get("gender");
             String role = (String) body.get("role");
             List<String> tags = (List<String>) body.get("tags");
+            
+            // Driver Vehicle Info
+            String vehicleType = (String) body.get("vehicleType");
+            String vehicleName = (String) body.get("vehicleName");
+            String licensePlate = (String) body.get("licensePlate");
 
             if (fullName == null || fullName.trim().isEmpty()) {
                 result.put("success", false);
@@ -102,6 +109,21 @@ public class OnboardingServlet extends HttpServlet {
             }
 
             if (isSuccess) {
+                // Nếu là tài xế, lưu thêm thông tin xe
+                if ("driver".equals(role)) {
+                    User finalUser = (User) session.getAttribute("loggedInUser");
+                    if (finalUser != null && vehicleType != null && vehicleName != null && licensePlate != null) {
+                        DriverVehicleDAO vehicleDAO = new DriverVehicleDAO();
+                        DriverVehicle vehicle = new DriverVehicle(finalUser.getId(), vehicleType, vehicleName, licensePlate);
+                        // Check if exists
+                        if (vehicleDAO.getVehicleByUserId(finalUser.getId()) == null) {
+                            vehicleDAO.registerVehicle(vehicle);
+                        } else {
+                            vehicleDAO.updateVehicle(vehicle);
+                        }
+                    }
+                }
+
                 result.put("success", true);
                 result.put("message", "Hoàn tất hồ sơ thành công!");
             } else {

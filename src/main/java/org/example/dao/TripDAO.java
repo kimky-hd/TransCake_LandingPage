@@ -236,4 +236,54 @@ public class TripDAO {
         }
         return posts;
     }
+
+    /**
+     * Lấy danh sách chuyến đi đang chờ theo loại phương tiện
+     */
+    public List<Trip> getPendingTripsByVehicleType(String vehicleType) {
+        List<Trip> trips = new ArrayList<>();
+        String sql = "SELECT * FROM trips WHERE match_status = 'PENDING' AND vehicle_type = ? ORDER BY id DESC";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, vehicleType);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Trip trip = new Trip();
+                    trip.setId(rs.getInt("id"));
+                    trip.setPassengerId(rs.getInt("passenger_id"));
+                    trip.setPickupLocation(rs.getString("pickup_location"));
+                    trip.setDropoffLocation(rs.getString("dropoff_location"));
+                    trip.setTripType(rs.getString("trip_type"));
+                    trip.setMatchStatus(rs.getString("match_status"));
+                    trip.setCompletionStatus(rs.getString("completion_status"));
+                    trip.setNoteForDriver(rs.getString("note_for_driver"));
+                    if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
+                    if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
+                    trip.setVehicleType(rs.getString("vehicle_type"));
+                    trip.setCreatedAt(rs.getTimestamp("created_at"));
+                    trips.add(trip);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi getPendingTripsByVehicleType: " + e.getMessage());
+        }
+        return trips;
+    }
+
+    /**
+     * Tài xế nhận chuyến đi
+     */
+    public boolean acceptTrip(int tripId, int driverId) {
+        // Sử dụng driver_id IS NULL để chống race condition (2 tài xế nhận cùng lúc)
+        String sql = "UPDATE trips SET match_status = 'MATCHED', completion_status = 'IN_PROGRESS', driver_id = ? WHERE id = ? AND match_status = 'PENDING' AND driver_id IS NULL";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, driverId);
+            ps.setInt(2, tripId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi acceptTrip: " + e.getMessage());
+        }
+        return false;
+    }
 }

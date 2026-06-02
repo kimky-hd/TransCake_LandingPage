@@ -304,6 +304,60 @@
                     </div>
                 </div>
 
+                <!-- STEP 4: Driver Vehicle -->
+                <div id="step4" class="step-container hidden-step">
+                    <h2 class="text-2xl md:text-[28px] font-extrabold text-primary mb-2 text-center">Đăng ký phương tiện</h2>
+                    <p class="text-sm text-slate-500 text-center mb-6">Thông tin này giúp chúng tôi đề xuất chuyến đi phù hợp nhất cho bạn.</p>
+
+                    <div class="space-y-4">
+                        <!-- Vehicle Type -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Loại phương tiện</label>
+                            <div class="flex gap-4">
+                                <label class="flex-1 cursor-pointer group">
+                                    <input type="radio" name="vehicleType" value="MOTORBIKE" class="peer sr-only" checked>
+                                    <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary font-bold text-sm text-slate-500 transition-all group-hover:bg-slate-50 shadow-sm flex flex-col items-center gap-1">
+                                        <span class="material-symbols-outlined text-[28px]">two_wheeler</span>
+                                        Xe máy
+                                    </div>
+                                </label>
+                                <label class="flex-1 cursor-pointer group">
+                                    <input type="radio" name="vehicleType" value="CAR" class="peer sr-only">
+                                    <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary font-bold text-sm text-slate-500 transition-all group-hover:bg-slate-50 shadow-sm flex flex-col items-center gap-1">
+                                        <span class="material-symbols-outlined text-[28px]">directions_car</span>
+                                        Ô tô
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Name -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Tên xe / Dòng xe</label>
+                            <input type="text" id="vehicleName" placeholder="VD: Honda Vision, Toyota Vios"
+                                class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm font-semibold text-slate-800 placeholder:text-slate-400">
+                        </div>
+
+                        <!-- License Plate -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Biển số xe</label>
+                            <input type="text" id="licensePlate" placeholder="VD: 29G1-24031"
+                                class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm font-semibold text-slate-800 placeholder:text-slate-400 uppercase">
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex gap-3">
+                        <button type="button" onclick="goToStep(3)"
+                            class="px-5 py-3.5 rounded-xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
+                            Quay lại
+                        </button>
+                        <button type="button" id="step4ContinueBtn" onclick="submitFinalOnboarding()"
+                            class="flex-1 bg-primary text-white py-3.5 rounded-xl font-bold shadow-lg shadow-primary/30 hover:scale-[1.02] transition-all">
+                            Hoàn tất đăng ký
+                        </button>
+                    </div>
+                </div>
+
         </div>
     </div>
 
@@ -317,6 +371,7 @@
             const step1 = document.getElementById('step1');
             const step2 = document.getElementById('step2');
             const step3 = document.getElementById('step3');
+            const step4 = document.getElementById('step4');
             const progressBar = document.getElementById('progressBar');
             const step2ContinueBtn = document.getElementById('step2ContinueBtn');
             const tagCountSpan = document.getElementById('tagCount');
@@ -338,6 +393,10 @@
                 step2.classList.add('hidden-step');
                 step3.classList.remove('active-step');
                 step3.classList.add('hidden-step');
+                if (step4) {
+                    step4.classList.remove('active-step');
+                    step4.classList.add('hidden-step');
+                }
 
                 // Scroll to top of modal content
                 document.querySelector('.custom-scrollbar').scrollTop = 0;
@@ -347,14 +406,18 @@
                 if (step === 1) {
                     step1.classList.remove('hidden-step');
                     step1.classList.add('active-step');
-                    progressBar.style.width = '33.33%';
+                    progressBar.style.width = '25%';
                 } else if (step === 2) {
                     step2.classList.remove('hidden-step');
                     step2.classList.add('active-step');
-                    progressBar.style.width = '66.66%';
+                    progressBar.style.width = '50%';
                 } else if (step === 3) {
                     step3.classList.remove('hidden-step');
                     step3.classList.add('active-step');
+                    progressBar.style.width = '75%';
+                } else if (step === 4) {
+                    step4.classList.remove('hidden-step');
+                    step4.classList.add('active-step');
                     progressBar.style.width = '100%';
                 }
             };
@@ -434,55 +497,84 @@
                 element.style.opacity = '1';
                 element.classList.add('ring-4', 'ring-primary/50', 'scale-[1.02]');
 
+                window.selectedRoleForSubmit = role;
+
+                if (role === 'driver') {
+                    // Nếu là tài xế thì mở step 4 để điền phương tiện
+                    setTimeout(() => goToStep(4), 300);
+                } else {
+                    // Hành khách thì submit luôn
+                    element.style.pointerEvents = 'none';
+                    window.submitFinalOnboarding();
+                }
+            };
+
+            window.submitFinalOnboarding = function() {
+                const btn = document.getElementById('step4ContinueBtn');
+                if (btn) btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span> Đang xử lý...';
+
                 const fullNameInput = document.getElementById('fullName');
                 const fullName = fullNameInput ? fullNameInput.value.trim() : '';
                 if (!fullName) {
                     showToast('Vui lòng nhập họ và tên của bạn.', 'warning');
-                    element.style.pointerEvents = 'auto';
-                    allCards.forEach(c => c.style.opacity = '1');
-                    element.classList.remove('ring-4', 'ring-primary/50', 'scale-[1.02]');
                     goToStep(1);
+                    if (btn) btn.innerHTML = 'Hoàn tất đăng ký';
                     return;
                 }
 
                 const genderInput = document.querySelector('input[name="gender"]:checked');
                 const gender = genderInput ? genderInput.value : 'male';
                 const tags = Array.from(selectedTags);
+                const role = window.selectedRoleForSubmit || 'passenger';
 
-                // Disable button logic UI here
-                element.style.pointerEvents = 'none';
+                let payload = {
+                    fullName: fullName,
+                    gender: gender,
+                    role: role,
+                    tags: tags
+                };
+
+                if (role === 'driver') {
+                    const vehicleTypeInput = document.querySelector('input[name="vehicleType"]:checked');
+                    const vehicleNameInput = document.getElementById('vehicleName');
+                    const licensePlateInput = document.getElementById('licensePlate');
+                    
+                    const vehicleName = vehicleNameInput ? vehicleNameInput.value.trim() : '';
+                    const licensePlate = licensePlateInput ? licensePlateInput.value.trim() : '';
+                    
+                    if (!vehicleName || !licensePlate) {
+                        showToast('Vui lòng điền tên xe và biển số xe.', 'warning');
+                        if (btn) btn.innerHTML = 'Hoàn tất đăng ký';
+                        return;
+                    }
+                    
+                    payload.vehicleType = vehicleTypeInput ? vehicleTypeInput.value : 'MOTORBIKE';
+                    payload.vehicleName = vehicleName;
+                    payload.licensePlate = licensePlate;
+                }
 
                 // Gọi API lưu Onboarding
                 fetch(window.CONTEXT_PATH + '/api/onboarding', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        fullName: fullName,
-                        gender: gender,
-                        role: role,
-                        tags: tags
-                    })
+                    body: JSON.stringify(payload)
                 })
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
-                            console.log("Onboarding lưu thành công!");
+                            showToast("Onboarding hoàn tất!", "success");
                             setTimeout(() => {
                                 finishAndRedirect();
                             }, 400);
                         } else {
                             showToast(data.message, 'error');
-                            element.style.pointerEvents = 'auto'; // Re-enable
-                            allCards.forEach(c => c.style.opacity = '1');
-                            element.classList.remove('ring-4', 'ring-primary/50', 'scale-[1.02]');
+                            if (btn) btn.innerHTML = 'Hoàn tất đăng ký';
                         }
                     })
                     .catch(err => {
                         console.error("Lỗi:", err);
                         showToast("Đã xảy ra lỗi hệ thống khi lưu thông tin.", "error");
-                        element.style.pointerEvents = 'auto';
-                        allCards.forEach(c => c.style.opacity = '1');
-                        element.classList.remove('ring-4', 'ring-primary/50', 'scale-[1.02]');
+                        if (btn) btn.innerHTML = 'Hoàn tất đăng ký';
                     });
             };
 
