@@ -1348,6 +1348,14 @@
 
                         <!-- Script to handle switching roles -->
                         <script>
+                            const initialUserRole = '<%= request.getAttribute("userRole") != null ? request.getAttribute("userRole") : "passenger" %>';
+                            
+                            document.addEventListener('DOMContentLoaded', function() {
+                                if (initialUserRole === 'driver') {
+                                    setRole('driver');
+                                }
+                            });
+
                             let userLngLat = [105.8542, 21.0285]; // Default: Hanoi
 
                             function recenterMap() {
