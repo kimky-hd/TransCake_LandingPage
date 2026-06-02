@@ -1571,6 +1571,7 @@
                                     }
                                 };
 
+
                                 // 1. Avatar Triggers
                                 const pAvatarTrigger = document.getElementById('passenger-avatar-trigger');
                                 if (pAvatarTrigger) {
