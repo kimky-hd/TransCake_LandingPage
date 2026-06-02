@@ -1431,8 +1431,8 @@
                             if (listEl) listEl.classList.add('hidden');
                             
                             let latQuery = "";
-                            if (window.userLngLat) {
-                                latQuery = "?lng=" + window.userLngLat[0] + "&lat=" + window.userLngLat[1];
+                            if (typeof userLngLat !== 'undefined' && userLngLat && userLngLat.length === 2) {
+                                latQuery = "?lng=" + userLngLat[0] + "&lat=" + userLngLat[1];
                             }
                             
                             fetch('${pageContext.request.contextPath}/api/driver/proposals' + latQuery)

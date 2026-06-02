@@ -31,6 +31,19 @@ public class TripMatchingService {
     public List<Trip> rankTripsForDriver(User driver, List<Trip> pendingTrips, Double driverLat, Double driverLng) {
         if (pendingTrips == null || pendingTrips.isEmpty()) return pendingTrips;
 
+        // Lọc các chuyến đi: Nếu là ON_DEMAND và khoảng cách > 2km thì loại bỏ
+        if (driverLat != null && driverLng != null) {
+            pendingTrips.removeIf(trip -> {
+                if ("ON_DEMAND".equals(trip.getTripType()) && trip.getPickupLat() != null && trip.getPickupLng() != null) {
+                    double dist = calculateDistance(driverLat, driverLng, trip.getPickupLat(), trip.getPickupLng());
+                    return dist > 2.0;
+                }
+                return false;
+            });
+        }
+
+        if (pendingTrips.isEmpty()) return pendingTrips;
+
         pendingTrips.sort((t1, t2) -> {
             double score1 = 0.0;
             double score2 = 0.0;
