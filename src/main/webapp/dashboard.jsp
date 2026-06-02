@@ -1502,51 +1502,61 @@
                         }
 
                         function acceptTrip(tripId) {
-                            if (confirm('Bạn có chắc chắn muốn nhận chuyến này không?')) {
-                                fetch('${pageContext.request.contextPath}/api/driver/accept', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                    body: 'tripId=' + tripId
-                                })
-                                .then(res => res.json())
-                                .then(data => {
-                                    if(data.success) {
-                                        showToast('Nhận chuyến thành công! Vui lòng liên hệ hành khách.', 'success');
-                                        
-                                        const searchBar = document.getElementById('bottom-search-bar');
-                                        if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
-                                            searchBar.classList.add('translate-y-[150%]');
-                                            searchBar.classList.add('opacity-0');
-                                            searchBar.classList.remove('translate-y-0');
-                                            searchBar.classList.remove('opacity-100');
-                                        }
-                                        
-                                        const tripPanel = document.getElementById('trip-proposals-panel');
-                                        if (tripPanel && !tripPanel.classList.contains('translate-y-[150%]')) {
-                                            tripPanel.classList.add('translate-y-[150%]');
-                                            tripPanel.classList.add('opacity-0');
-                                            tripPanel.classList.remove('translate-y-0');
-                                            tripPanel.classList.remove('opacity-100');
-                                        }
-
-                                        const blogBar = document.getElementById('bottom-blog-bar');
-                                        if (blogBar) {
-                                            blogBar.classList.remove('translate-y-[150%]');
-                                            blogBar.classList.remove('opacity-0');
-                                            blogBar.classList.add('translate-y-0');
-                                            blogBar.classList.add('opacity-100');
-                                        }
-                                        
-                                        fetchTripProposals(); // Reload list
-                                    } else {
-                                        showToast('Lỗi: ' + data.message, 'error');
-                                    }
-                                })
-                                .catch(err => {
-                                    console.error(err);
-                                    showToast('Lỗi kết nối máy chủ.', 'error');
+                            if (window.showConfirmModal) {
+                                window.showConfirmModal('Nhận chuyến', 'Bạn có chắc chắn muốn nhận chuyến này không?', function() {
+                                    executeAcceptTrip(tripId);
                                 });
+                            } else {
+                                if (confirm('Bạn có chắc chắn muốn nhận chuyến này không?')) {
+                                    executeAcceptTrip(tripId);
+                                }
                             }
+                        }
+
+                        function executeAcceptTrip(tripId) {
+                            fetch('${pageContext.request.contextPath}/api/driver/accept', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                body: 'tripId=' + tripId
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if(data.success) {
+                                    showToast('Nhận chuyến thành công! Vui lòng liên hệ hành khách.', 'success');
+                                    
+                                    const searchBar = document.getElementById('bottom-search-bar');
+                                    if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
+                                        searchBar.classList.add('translate-y-[150%]');
+                                        searchBar.classList.add('opacity-0');
+                                        searchBar.classList.remove('translate-y-0');
+                                        searchBar.classList.remove('opacity-100');
+                                    }
+                                    
+                                    const tripPanel = document.getElementById('trip-proposals-panel');
+                                    if (tripPanel && !tripPanel.classList.contains('translate-y-[150%]')) {
+                                        tripPanel.classList.add('translate-y-[150%]');
+                                        tripPanel.classList.add('opacity-0');
+                                        tripPanel.classList.remove('translate-y-0');
+                                        tripPanel.classList.remove('opacity-100');
+                                    }
+
+                                    const blogBar = document.getElementById('bottom-blog-bar');
+                                    if (blogBar) {
+                                        blogBar.classList.remove('translate-y-[150%]');
+                                        blogBar.classList.remove('opacity-0');
+                                        blogBar.classList.add('translate-y-0');
+                                        blogBar.classList.add('opacity-100');
+                                    }
+                                    
+                                    fetchTripProposals(); // Reload list
+                                } else {
+                                    showToast('Lỗi: ' + data.message, 'error');
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                showToast('Lỗi kết nối máy chủ.', 'error');
+                            });
                         }
 
                         function toggleBottomBlogBar() {
