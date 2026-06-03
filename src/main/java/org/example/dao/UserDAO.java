@@ -37,6 +37,32 @@ public class UserDAO {
         }
         return null;
     }
+    public User getUserById(int id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setPhoneNumber(rs.getString("phone_number"));
+                user.setStatus(rs.getString("status"));
+                user.setGender(rs.getString("gender"));
+                user.setRole(rs.getString("role"));
+                user.setHobbies(rs.getString("hobbies"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                user.setUpdatedAt(rs.getTimestamp("updated_at"));
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public boolean createUser(User user) {
         String sql = "INSERT INTO users (full_name, phone_number, password_hash) VALUES (?, ?, ?)";

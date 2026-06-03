@@ -149,10 +149,10 @@ public class TripDAO {
     }
 
     /**
-     * Lấy chuyến đi ON_DEMAND đang trong trạng thái chờ (PENDING)
+     * Lấy chuyến đi ON_DEMAND đang trong trạng thái chờ (PENDING) hoặc đã được nhận (MATCHED)
      */
     public Trip getActiveOnDemandTrip(int passengerId) {
-        String sql = "SELECT * FROM trips WHERE passenger_id = ? AND trip_type = 'ON_DEMAND' AND match_status = 'PENDING' ORDER BY id DESC LIMIT 1";
+        String sql = "SELECT * FROM trips WHERE passenger_id = ? AND trip_type = 'ON_DEMAND' AND match_status IN ('PENDING', 'MATCHED') AND completion_status IN ('NOT_STARTED', 'IN_PROGRESS') ORDER BY id DESC LIMIT 1";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, passengerId);
@@ -170,6 +170,7 @@ public class TripDAO {
                     trip.setTripType(rs.getString("trip_type"));
                     trip.setMatchStatus(rs.getString("match_status"));
                     trip.setVehicleType(rs.getString("vehicle_type"));
+                    if (rs.getObject("driver_id") != null) trip.setDriverId(rs.getInt("driver_id"));
                     return trip;
                 }
             }
@@ -180,10 +181,10 @@ public class TripDAO {
     }
 
     /**
-     * Lấy chuyến đi PRE_BOOK đang trong trạng thái chờ (PENDING)
+     * Lấy chuyến đi PRE_BOOK đang trong trạng thái chờ (PENDING) hoặc đã được nhận (MATCHED)
      */
     public Trip getActivePreBookTrip(int passengerId) {
-        String sql = "SELECT * FROM trips WHERE passenger_id = ? AND trip_type = 'PRE_BOOK' AND match_status = 'PENDING' ORDER BY id DESC LIMIT 1";
+        String sql = "SELECT * FROM trips WHERE passenger_id = ? AND trip_type = 'PRE_BOOK' AND match_status IN ('PENDING', 'MATCHED') AND completion_status IN ('NOT_STARTED', 'IN_PROGRESS') ORDER BY id DESC LIMIT 1";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, passengerId);
@@ -202,6 +203,7 @@ public class TripDAO {
                     trip.setMatchStatus(rs.getString("match_status"));
                     trip.setScheduledTime(rs.getTimestamp("scheduled_time"));
                     trip.setVehicleType(rs.getString("vehicle_type"));
+                    if (rs.getObject("driver_id") != null) trip.setDriverId(rs.getInt("driver_id"));
                     return trip;
                 }
             }

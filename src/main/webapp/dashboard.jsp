@@ -710,8 +710,40 @@
                                         <p class="text-sm text-slate-500 text-center max-w-[280px]">Chúng tôi đang tìm kiếm các chuyến xe có lộ trình phù hợp nhất với bạn.</p>
                                     </div>
                                 </div>
-                            </div>
 
+                                <!-- Matched Driver State -->
+                                <div id="matched-driver-state" class="absolute inset-0 hidden flex-col ml-4 z-10 bg-white">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <h4 class="font-bold text-slate-800 text-lg">Tài xế đã nhận chuyến</h4>
+                                        <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-sm">
+                                            <span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                            Đã xác nhận
+                                        </span>
+                                    </div>
+                                    <div class="flex-1 flex flex-col items-center justify-center p-6 bg-white border border-green-200/60 rounded-3xl shadow-sm">
+                                        <div class="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mb-4 border border-green-100 shadow-inner">
+                                            <span class="material-symbols-outlined text-[32px] text-green-500">local_taxi</span>
+                                        </div>
+                                        <h5 class="font-bold text-slate-800 text-lg mb-1" id="inline-driver-name">---</h5>
+                                        <p class="text-sm text-slate-500 font-medium mb-4" id="inline-driver-phone">---</p>
+                                        
+                                        <div class="w-full bg-slate-50 rounded-2xl p-4 flex flex-col gap-3">
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-xs text-slate-500">Phương tiện</span>
+                                                <span class="text-sm font-semibold text-[#6200EE]" id="inline-driver-vehicle">---</span>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-xs text-slate-500">Biển số</span>
+                                                <span class="px-2 py-0.5 bg-white border border-slate-200 rounded font-mono text-xs font-bold text-slate-700 shadow-sm" id="inline-driver-plate">---</span>
+                                            </div>
+                                            <div class="flex flex-col gap-1 mt-1">
+                                                <span class="text-xs text-slate-500">Sở thích</span>
+                                                <span class="text-xs text-slate-700" id="inline-driver-hobbies">---</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -755,6 +787,8 @@
                             </div>
                         </div>
                     </div>
+
+
 
                     <!-- Bottom Blog Bar (Right of Dynamic Island) -->
                     <div id="bottom-blog-bar"
@@ -961,6 +995,10 @@
                                 document.getElementById('empty-search-state').classList.remove('flex');
                                 
                                 document.getElementById('loading-search-state').classList.remove('hidden');
+if(document.getElementById('matched-driver-state')) {
+    document.getElementById('matched-driver-state').classList.add('hidden');
+    document.getElementById('matched-driver-state').classList.remove('flex');
+}
                                 document.getElementById('loading-search-state').classList.add('flex');
                                 
                                 // Giao diện form
@@ -1005,6 +1043,12 @@
                                 }
                             }
                             
+                            // Bắt đầu polling tìm tài xế nếu có chuyến đang hoạt động
+                            if (isSearchingOnDemand || hasPreBookTrip) {
+                                checkPassengerTripStatus(); // Check immediately to display matched driver info on reload
+                                passengerStatusInterval = setInterval(checkPassengerTripStatus, 5000);
+                            }
+
                             // Đóng băng form nếu tab hiện tại đang có chuyến
                             const currentTab = document.getElementById('tripType') ? document.getElementById('tripType').value : 'ON_DEMAND';
                             if (currentTab === 'ON_DEMAND') {
@@ -1080,6 +1124,10 @@
                             document.getElementById('empty-search-state').classList.remove('flex');
                             
                             document.getElementById('loading-search-state').classList.remove('hidden');
+if(document.getElementById('matched-driver-state')) {
+    document.getElementById('matched-driver-state').classList.add('hidden');
+    document.getElementById('matched-driver-state').classList.remove('flex');
+}
                             document.getElementById('loading-search-state').classList.add('flex');
                             
                             // Gửi data thực tế lên server (sử dụng x-www-form-urlencoded để tương thích với Servlet thông thường)
@@ -1147,6 +1195,10 @@
                             document.getElementById('loading-search-state').classList.add('hidden');
                             document.getElementById('loading-search-state').classList.remove('flex');
                             document.getElementById('empty-search-state').classList.remove('hidden');
+if(document.getElementById('matched-driver-state')) {
+    document.getElementById('matched-driver-state').classList.add('hidden');
+    document.getElementById('matched-driver-state').classList.remove('flex');
+}
                             document.getElementById('empty-search-state').classList.add('flex');
                             
                             const btnSubmit = document.getElementById('btn-submit-search');
@@ -1157,6 +1209,65 @@
                                 btnSubmit.disabled = false;
                                 btnSubmit.onclick = null;
                             }
+                        }
+
+                        let passengerStatusInterval = null;
+
+                        function checkPassengerTripStatus() {
+                            fetch('${pageContext.request.contextPath}/api/passenger/trip-status')
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.success && data.status === 'MATCHED' && data.driver) {
+                                        // Ẩn mini-search-popup và mini-prebook-popup
+                                        const searchPopup = document.getElementById('mini-search-popup');
+                                        if (searchPopup) {
+                                            searchPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                            searchPopup.classList.remove('translate-x-0', 'opacity-100');
+                                        }
+                                        const prebookPopup = document.getElementById('mini-prebook-popup');
+                                        if (prebookPopup) {
+                                            prebookPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                            prebookPopup.classList.remove('translate-x-0', 'opacity-100');
+                                        }
+
+                                        // Hiển thị matched-driver-state trong "Kết quả nổi bật"
+                                        document.getElementById('loading-search-state').classList.add('hidden');
+                                        document.getElementById('loading-search-state').classList.remove('flex');
+                                        
+                                        const matchedState = document.getElementById('matched-driver-state');
+                                        if (matchedState) {
+                                            document.getElementById('inline-driver-name').textContent = data.driver.fullName;
+                                            document.getElementById('inline-driver-phone').textContent = data.driver.phoneNumber;
+                                            document.getElementById('inline-driver-vehicle').textContent = data.driver.vehicleName + " (" + data.driver.vehicleType + ")";
+                                            document.getElementById('inline-driver-plate').textContent = data.driver.licensePlate;
+                                            document.getElementById('inline-driver-hobbies').textContent = data.driver.hobbies ? data.driver.hobbies : "Không có";
+                                            
+                                            matchedState.classList.remove('hidden');
+                                            matchedState.classList.add('flex');
+                                        }
+
+                                        // Thay đổi nút "Hủy tìm kiếm" thành "Chuyến đi sắp bắt đầu"
+                                        const btnSubmit = document.getElementById('btn-submit-search');
+                                        if (btnSubmit) {
+                                            btnSubmit.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
+                                            btnSubmit.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                            btnSubmit.onclick = null;
+                                        }
+                                        
+                                        // Dừng polling khi đã tìm thấy tài xế
+                                        if (passengerStatusInterval) {
+                                            clearInterval(passengerStatusInterval);
+                                            passengerStatusInterval = null;
+                                        }
+                                    } else if (data.success && data.status === 'NO_ACTIVE_TRIP') {
+                                        // Chuyến đi bị xoá hoặc huỷ từ đâu đó, có thể dọn giao diện, hoặc ngừng polling
+                                        if (passengerStatusInterval) {
+                                            clearInterval(passengerStatusInterval);
+                                            passengerStatusInterval = null;
+                                        }
+                                    }
+                                })
+                                .catch(err => console.error('Lỗi khi cập nhật trạng thái cuốc xe:', err));
                         }
 
                         function cancelTripSearch() {
@@ -1218,6 +1329,10 @@
                                         document.getElementById('loading-search-state').classList.add('hidden');
                                         document.getElementById('loading-search-state').classList.remove('flex');
                                         document.getElementById('empty-search-state').classList.remove('hidden');
+if(document.getElementById('matched-driver-state')) {
+    document.getElementById('matched-driver-state').classList.add('hidden');
+    document.getElementById('matched-driver-state').classList.remove('flex');
+}
                                         document.getElementById('empty-search-state').classList.add('flex');
                                         
                                         // Ẩn mini popup
@@ -1294,6 +1409,10 @@
                                         document.getElementById('loading-search-state').classList.add('hidden');
                                         document.getElementById('loading-search-state').classList.remove('flex');
                                         document.getElementById('empty-search-state').classList.remove('hidden');
+if(document.getElementById('matched-driver-state')) {
+    document.getElementById('matched-driver-state').classList.add('hidden');
+    document.getElementById('matched-driver-state').classList.remove('flex');
+}
                                         document.getElementById('empty-search-state').classList.add('flex');
 
                                         // Ẩn mini popup đặt trước
@@ -1514,10 +1633,10 @@
                         }
 
                         function executeAcceptTrip(tripId) {
-                            fetch('${pageContext.request.contextPath}/api/driver/accept', {
+                            fetch('${pageContext.request.contextPath}/api/driver/accept-trip', {
                                 method: 'POST',
-                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                body: 'tripId=' + tripId
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ tripId: tripId })
                             })
                             .then(res => res.json())
                             .then(data => {
@@ -1949,6 +2068,10 @@
                                             document.getElementById('empty-search-state').classList.add('hidden');
                                             document.getElementById('empty-search-state').classList.remove('flex');
                                             document.getElementById('loading-search-state').classList.remove('hidden');
+if(document.getElementById('matched-driver-state')) {
+    document.getElementById('matched-driver-state').classList.add('hidden');
+    document.getElementById('matched-driver-state').classList.remove('flex');
+}
                                             document.getElementById('loading-search-state').classList.add('flex');
                                         } else {
                                             btnSubmit.type = 'submit';
@@ -1960,6 +2083,10 @@
                                             document.getElementById('loading-search-state').classList.add('hidden');
                                             document.getElementById('loading-search-state').classList.remove('flex');
                                             document.getElementById('empty-search-state').classList.remove('hidden');
+if(document.getElementById('matched-driver-state')) {
+    document.getElementById('matched-driver-state').classList.add('hidden');
+    document.getElementById('matched-driver-state').classList.remove('flex');
+}
                                             document.getElementById('empty-search-state').classList.add('flex');
                                         }
                                         
@@ -2011,6 +2138,10 @@
                                             document.getElementById('empty-search-state').classList.add('hidden');
                                             document.getElementById('empty-search-state').classList.remove('flex');
                                             document.getElementById('loading-search-state').classList.remove('hidden');
+if(document.getElementById('matched-driver-state')) {
+    document.getElementById('matched-driver-state').classList.add('hidden');
+    document.getElementById('matched-driver-state').classList.remove('flex');
+}
                                             document.getElementById('loading-search-state').classList.add('flex');
                                         } else {
                                             btnSubmit.type = 'submit';
@@ -2022,6 +2153,10 @@
                                             document.getElementById('loading-search-state').classList.add('hidden');
                                             document.getElementById('loading-search-state').classList.remove('flex');
                                             document.getElementById('empty-search-state').classList.remove('hidden');
+if(document.getElementById('matched-driver-state')) {
+    document.getElementById('matched-driver-state').classList.add('hidden');
+    document.getElementById('matched-driver-state').classList.remove('flex');
+}
                                             document.getElementById('empty-search-state').classList.add('flex');
                                         }
                                     }
