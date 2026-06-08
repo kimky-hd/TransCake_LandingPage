@@ -128,6 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tabLogin.addEventListener('click', () => {
             loginForm.classList.remove('hidden');
             registerForm.classList.add('hidden');
+            document.getElementById('forgotPasswordForm')?.classList.add('hidden');
+            document.getElementById('resetPasswordForm')?.classList.add('hidden');
 
             tabLogin.classList.remove('text-slate-400', 'hover:text-slate-600');
             tabLogin.classList.add('text-[#6200EE]', 'border-b-2', 'border-[#6200EE]');
@@ -139,12 +141,35 @@ document.addEventListener('DOMContentLoaded', () => {
         tabRegister.addEventListener('click', () => {
             registerForm.classList.remove('hidden');
             loginForm.classList.add('hidden');
+            document.getElementById('forgotPasswordForm')?.classList.add('hidden');
+            document.getElementById('resetPasswordForm')?.classList.add('hidden');
 
             tabRegister.classList.remove('text-slate-400', 'hover:text-slate-600');
             tabRegister.classList.add('text-[#6200EE]', 'border-b-2', 'border-[#6200EE]');
 
             tabLogin.classList.remove('text-[#6200EE]', 'border-b-2', 'border-[#6200EE]');
             tabLogin.classList.add('text-slate-400', 'hover:text-slate-600');
+        });
+    }
+
+    // Forgot Password Form Toggle
+    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+    const backToLoginFromForgot = document.getElementById('backToLoginFromForgot');
+    const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+    
+    if (forgotPasswordLink && forgotPasswordForm && loginForm) {
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.classList.add('hidden');
+            forgotPasswordForm.classList.remove('hidden');
+        });
+    }
+
+    if (backToLoginFromForgot && forgotPasswordForm && loginForm) {
+        backToLoginFromForgot.addEventListener('click', (e) => {
+            e.preventDefault();
+            forgotPasswordForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
         });
     }
 
@@ -298,12 +323,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Login Submit
     if (loginBtn) {
         loginBtn.addEventListener('click', () => {
-            const phone = document.getElementById('loginPhone').value.trim();
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
 
-            if (!phone || !email || !password) {
-                showToast('Vui lòng nhập đủ số điện thoại, email và mật khẩu.', 'warning');
+            if (!email || !password) {
+                showToast('Vui lòng nhập đủ email và mật khẩu.', 'warning');
                 return;
             }
 
@@ -314,7 +338,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    phoneNumber: phone,
                     email: email,
                     password: password
                 })
@@ -324,10 +347,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.success) {
                         const welcomeMsg = data.userName ? ' Chào mừng bạn, ' + data.userName + '!' : '';
                         showToast(data.message + welcomeMsg, 'success');
-                        closeModal();
-                        if (data.needsOnboarding && window.openOnboardingModal) {
+                        
+                        if (data.needsPasswordReset) {
+                            // Hide login, show reset form
+                            loginForm.classList.add('hidden');
+                            document.getElementById('resetPasswordForm').classList.remove('hidden');
+                            loginBtn.disabled = false;
+                            loginBtn.innerText = 'Đăng nhập';
+                        } else if (data.needsOnboarding && window.openOnboardingModal) {
+                            closeModal();
                             window.openOnboardingModal();
                         } else {
+                            closeModal();
                             window.location.href = window.CONTEXT_PATH + '/dashboard';
                         }
                     } else {
@@ -342,6 +373,97 @@ document.addEventListener('DOMContentLoaded', () => {
                     loginBtn.disabled = false;
                     loginBtn.innerText = 'Đăng nhập';
                 });
+        });
+    }
+
+    // Forgot Password Submit
+    const submitForgotBtn = document.getElementById('submitForgotBtn');
+    if (submitForgotBtn) {
+        submitForgotBtn.addEventListener('click', () => {
+            const email = document.getElementById('forgotEmail').value.trim();
+            if (!email || !/^[A-Za-z0-9+_.-]+@(.+)$/.test(email)) {
+                showToast('Vui lòng nhập địa chỉ email hợp lệ.', 'error');
+                return;
+            }
+
+            submitForgotBtn.disabled = true;
+            submitForgotBtn.innerText = 'Đang gửi...';
+
+            fetch(window.CONTEXT_PATH + '/api/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    // Go back to login
+                    document.getElementById('forgotPasswordForm').classList.add('hidden');
+                    loginForm.classList.remove('hidden');
+                } else {
+                    showToast(data.message, 'error');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showToast('Lỗi máy chủ', 'error');
+            })
+            .finally(() => {
+                submitForgotBtn.disabled = false;
+                submitForgotBtn.innerText = 'Gửi mật khẩu mới';
+            });
+        });
+    }
+
+    // Reset Password Submit
+    const submitResetBtn = document.getElementById('submitResetBtn');
+    if (submitResetBtn) {
+        submitResetBtn.addEventListener('click', () => {
+            const newPassword = document.getElementById('resetNewPassword').value;
+            const confirmPassword = document.getElementById('resetConfirmPassword').value;
+
+            if (!newPassword || !confirmPassword) {
+                showToast('Vui lòng nhập đầy đủ mật khẩu mới.', 'warning');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showToast('Mật khẩu xác nhận không khớp.', 'error');
+                return;
+            }
+
+            submitResetBtn.disabled = true;
+            submitResetBtn.innerText = 'Đang cập nhật...';
+
+            fetch(window.CONTEXT_PATH + '/api/reset-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ newPassword: newPassword, confirmPassword: confirmPassword })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    if (data.needsOnboarding && window.openOnboardingModal) {
+                        closeModal();
+                        window.openOnboardingModal();
+                    } else {
+                        closeModal();
+                        window.location.href = window.CONTEXT_PATH + '/dashboard';
+                    }
+                } else {
+                    showToast(data.message, 'error');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showToast('Lỗi máy chủ', 'error');
+            })
+            .finally(() => {
+                submitResetBtn.disabled = false;
+                submitResetBtn.innerText = 'Lưu mật khẩu & Tiếp tục';
+            });
         });
     }
 });

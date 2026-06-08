@@ -44,12 +44,6 @@
                     <!-- Login Form -->
                     <form id="loginForm" class="space-y-2.5">
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Số
-                                điện thoại</label>
-                            <input type="tel" id="loginPhone" placeholder="Nhập số điện thoại của bạn"
-                                class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
-                        </div>
-                        <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Email</label>
                             <input type="email" id="loginEmail" placeholder="Nhập địa chỉ email của bạn"
                                 class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
@@ -58,7 +52,7 @@
                             <div class="flex items-center justify-between mb-1.5">
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Mật
                                     khẩu</label>
-                                <a href="#" class="text-xs font-semibold text-[#6200EE] hover:underline">Quên mật
+                                <a href="#" id="forgotPasswordLink" class="text-xs font-semibold text-[#6200EE] hover:underline">Quên mật
                                     khẩu?</a>
                             </div>
                             <input type="password" id="loginPassword" placeholder="Nhập mật khẩu"
@@ -110,6 +104,44 @@
                             đăng ký, bạn đồng ý với <a href="#" class="text-[#6200EE] hover:underline">Điều khoản dịch
                                 vụ</a> và <a href="#" class="text-[#6200EE] hover:underline">Chính sách bảo mật</a> của
                             chúng tôi.</p>
+                    </form>
+
+                    <!-- Forgot Password Form (Hidden initially) -->
+                    <form id="forgotPasswordForm" class="space-y-4 hidden mt-4">
+                        <div class="text-center mb-6">
+                            <h3 class="text-xl font-bold text-slate-800">Khôi phục mật khẩu</h3>
+                            <p class="text-sm text-slate-500 mt-2">Nhập email của bạn để nhận mật khẩu tạm thời</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Email</label>
+                            <input type="email" id="forgotEmail" placeholder="Nhập địa chỉ email đã đăng ký"
+                                class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
+                        </div>
+                        <button type="button" id="submitForgotBtn"
+                            class="w-full bg-[#6200EE] text-white py-3 rounded-xl font-bold shadow-lg shadow-purple-500/30 hover:scale-[1.02] transition-transform">Gửi mật khẩu mới</button>
+                        <div class="text-center mt-4">
+                            <a href="#" id="backToLoginFromForgot" class="text-sm font-semibold text-slate-500 hover:text-[#6200EE] transition-colors">Quay lại đăng nhập</a>
+                        </div>
+                    </form>
+
+                    <!-- Reset Password Form (Hidden initially) -->
+                    <form id="resetPasswordForm" class="space-y-4 hidden mt-4">
+                        <div class="text-center mb-6">
+                            <h3 class="text-xl font-bold text-slate-800">Cập nhật mật khẩu</h3>
+                            <p class="text-sm text-red-500 mt-2">Bạn đang đăng nhập bằng mật khẩu tạm thời. Vui lòng đổi mật khẩu để tiếp tục.</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Mật khẩu mới</label>
+                            <input type="password" id="resetNewPassword" placeholder="Nhập mật khẩu mới"
+                                class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Xác nhận mật khẩu mới</label>
+                            <input type="password" id="resetConfirmPassword" placeholder="Nhập lại mật khẩu mới"
+                                class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
+                        </div>
+                        <button type="button" id="submitResetBtn"
+                            class="w-full bg-[#FF6B00] text-white py-3 rounded-xl font-bold shadow-lg shadow-orange-500/30 hover:scale-[1.02] transition-transform">Lưu mật khẩu & Tiếp tục</button>
                     </form>
                 </div>
             </div>

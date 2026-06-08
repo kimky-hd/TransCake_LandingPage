@@ -180,4 +180,19 @@ public class UserDAO {
         }
         return false;
     }
+    public boolean updatePasswordAndStatus(int userId, String passwordHash, String status) {
+        String sql = "UPDATE users SET password_hash = ?, status = ? WHERE id = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, passwordHash);
+            ps.setString(2, status);
+            ps.setInt(3, userId);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

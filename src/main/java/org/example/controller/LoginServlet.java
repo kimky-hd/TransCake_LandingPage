@@ -28,19 +28,18 @@ public class LoginServlet extends HttpServlet {
 
         try {
             Map<String, String> body = gson.fromJson(request.getReader(), Map.class);
-            String phoneNumber = body.get("phoneNumber");
             String email = body.get("email");
             String password = body.get("password");
 
-            if (phoneNumber == null || email == null || password == null) {
+            if (email == null || password == null || email.trim().isEmpty() || password.trim().isEmpty()) {
                 result.put("success", false);
-                result.put("message", "Vui lòng nhập đủ số điện thoại, email và mật khẩu.");
+                result.put("message", "Vui lòng nhập đủ email và mật khẩu.");
                 response.getWriter().write(gson.toJson(result));
                 return;
             }
 
-            // Tìm user
-            User user = userDAO.findByPhoneAndEmail(phoneNumber, email);
+            // Tìm user bằng email
+            User user = userDAO.findByEmail(email);
             if (user == null || !BCrypt.checkpw(password, user.getPasswordHash())) {
                 result.put("success", false);
                 result.put("message", "Thông tin đăng nhập không chính xác.");
@@ -56,7 +55,11 @@ public class LoginServlet extends HttpServlet {
             String displayUser = (user.getFullName() != null && !user.getFullName().trim().isEmpty()) ? user.getFullName() : "Người dùng mới";
             result.put("userName", displayUser);
             
-            if (user.getRole() == null || user.getRole().trim().isEmpty()) {
+            // Check if user must reset password
+            if ("REQUIRE_RESET".equals(user.getStatus())) {
+                result.put("needsPasswordReset", true);
+                result.put("message", "Đăng nhập thành công! Yêu cầu đổi mật khẩu.");
+            } else if (user.getRole() == null || user.getRole().trim().isEmpty()) {
                 result.put("needsOnboarding", true);
                 result.put("message", "Đăng nhập thành công! Vui lòng hoàn tất hồ sơ.");
             } else {
