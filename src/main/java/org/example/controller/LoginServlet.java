@@ -29,20 +29,21 @@ public class LoginServlet extends HttpServlet {
         try {
             Map<String, String> body = gson.fromJson(request.getReader(), Map.class);
             String phoneNumber = body.get("phoneNumber");
+            String email = body.get("email");
             String password = body.get("password");
 
-            if (phoneNumber == null || password == null) {
+            if (phoneNumber == null || email == null || password == null) {
                 result.put("success", false);
-                result.put("message", "Vui lòng nhập đủ số điện thoại và mật khẩu.");
+                result.put("message", "Vui lòng nhập đủ số điện thoại, email và mật khẩu.");
                 response.getWriter().write(gson.toJson(result));
                 return;
             }
 
             // Tìm user
-            User user = userDAO.findByPhoneNumber(phoneNumber);
+            User user = userDAO.findByPhoneAndEmail(phoneNumber, email);
             if (user == null || !BCrypt.checkpw(password, user.getPasswordHash())) {
                 result.put("success", false);
-                result.put("message", "Số điện thoại hoặc mật khẩu không chính xác.");
+                result.put("message", "Thông tin đăng nhập không chính xác.");
                 response.getWriter().write(gson.toJson(result));
                 return;
             }

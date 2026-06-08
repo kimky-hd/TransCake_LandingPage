@@ -39,9 +39,10 @@ public class OnboardingServlet extends HttpServlet {
 
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         String pendingPhone = (String) session.getAttribute("pendingUserPhone");
+        String pendingEmail = (String) session.getAttribute("pendingUserEmail");
         String pendingPass = (String) session.getAttribute("pendingUserPass");
 
-        if (loggedInUser == null && (pendingPhone == null || pendingPass == null)) {
+        if (loggedInUser == null && (pendingPhone == null || pendingPass == null || pendingEmail == null)) {
             result.put("success", false);
             result.put("message", "Vui lòng đăng nhập hoặc đăng ký trước khi thực hiện.");
             response.getWriter().write(gson.toJson(result));
@@ -127,13 +128,14 @@ public class OnboardingServlet extends HttpServlet {
             String joinedHobbies = String.join(", ", tags);
             boolean isSuccess = false;
 
-            if (pendingPhone != null && pendingPass != null) {
+            if (pendingPhone != null && pendingEmail != null && pendingPass != null) {
                 // Luồng Đăng ký mới
-                isSuccess = userDAO.createUserWithOnboarding(pendingPhone, pendingPass, fullName, gender, role, joinedHobbies);
+                isSuccess = userDAO.createUserWithOnboarding(pendingPhone, pendingEmail, pendingPass, fullName, gender, role, joinedHobbies);
                 if (isSuccess) {
-                    User createdUser = userDAO.findByPhoneNumber(pendingPhone);
+                    User createdUser = userDAO.findByEmail(pendingEmail);
                     session.setAttribute("loggedInUser", createdUser);
                     session.removeAttribute("pendingUserPhone");
+                    session.removeAttribute("pendingUserEmail");
                     session.removeAttribute("pendingUserPass");
                 }
             } else if (loggedInUser != null) {

@@ -11,14 +11,15 @@ import java.sql.SQLException;
 public class OtpDAO {
 
     public boolean saveOtp(OtpCode otpCode) {
-        String sql = "INSERT INTO otp_codes (phone_number, otp_code, expires_at, is_used) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO otp_codes (phone_number, email, otp_code, expires_at, is_used) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setString(1, otpCode.getPhoneNumber());
-            ps.setString(2, otpCode.getOtpCode());
-            ps.setTimestamp(3, otpCode.getExpiresAt());
-            ps.setBoolean(4, otpCode.isUsed());
+            ps.setString(2, otpCode.getEmail());
+            ps.setString(3, otpCode.getOtpCode());
+            ps.setTimestamp(4, otpCode.getExpiresAt());
+            ps.setBoolean(5, otpCode.isUsed());
             
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -27,12 +28,12 @@ public class OtpDAO {
         }
     }
 
-    public boolean deleteOtpsByPhone(String phoneNumber) {
-        String sql = "DELETE FROM otp_codes WHERE phone_number = ?";
+    public boolean deleteOtpsByEmail(String email) {
+        String sql = "DELETE FROM otp_codes WHERE email = ?";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
-            ps.setString(1, phoneNumber);
+            ps.setString(1, email);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -40,18 +41,19 @@ public class OtpDAO {
         }
     }
 
-    public OtpCode getLatestValidOtp(String phoneNumber) {
-        String sql = "SELECT * FROM otp_codes WHERE phone_number = ? AND is_used = FALSE AND expires_at > NOW() ORDER BY created_at DESC LIMIT 1";
+    public OtpCode getLatestValidOtpByEmail(String email) {
+        String sql = "SELECT * FROM otp_codes WHERE email = ? AND is_used = FALSE AND expires_at > NOW() ORDER BY created_at DESC LIMIT 1";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
-            ps.setString(1, phoneNumber);
+            ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             
             if (rs.next()) {
                 OtpCode otp = new OtpCode();
                 otp.setId(rs.getInt("id"));
                 otp.setPhoneNumber(rs.getString("phone_number"));
+                otp.setEmail(rs.getString("email"));
                 otp.setOtpCode(rs.getString("otp_code"));
                 otp.setExpiresAt(rs.getTimestamp("expires_at"));
                 otp.setUsed(rs.getBoolean("is_used"));

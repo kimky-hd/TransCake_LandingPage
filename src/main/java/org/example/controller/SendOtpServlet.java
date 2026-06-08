@@ -3,6 +3,7 @@ package org.example.controller;
 import com.google.gson.Gson;
 import org.example.dao.OtpDAO;
 import org.example.model.OtpCode;
+import org.example.service.EmailService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -30,10 +31,18 @@ public class SendOtpServlet extends HttpServlet {
             // Đọc JSON body
             Map<String, String> body = gson.fromJson(request.getReader(), Map.class);
             String phoneNumber = body != null ? body.get("phoneNumber") : null;
+            String email = body != null ? body.get("email") : null;
 
             if (phoneNumber == null || !phoneNumber.matches("^(0[3|5|7|8|9])+([0-9]{8})$")) {
                 result.put("success", false);
                 result.put("message", "Số điện thoại không hợp lệ.");
+                response.getWriter().write(gson.toJson(result));
+                return;
+            }
+
+            if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                result.put("success", false);
+                result.put("message", "Email không hợp lệ.");
                 response.getWriter().write(gson.toJson(result));
                 return;
             }
@@ -44,18 +53,21 @@ public class SendOtpServlet extends HttpServlet {
             // Hạn sử dụng 5 phút
             Timestamp expiresAt = new Timestamp(System.currentTimeMillis() + (5 * 60 * 1000));
             
-            // Xóa các OTP cũ của số điện thoại này
-            otpDAO.deleteOtpsByPhone(phoneNumber);
-
-            OtpCode otp = new OtpCode(phoneNumber, otpCode, expiresAt);
+            // Xóa các OTP cũ của email này
+            otpDAO.deleteOtpsByEmail(email);
+            
+            OtpCode otp = new OtpCode(phoneNumber, email, otpCode, expiresAt);
             if (otpDAO.saveOtp(otp)) {
-                // In ra màn hình console của IDE theo yêu cầu
-                System.out.println("==================================================");
-                System.out.println("OTP of number " + phoneNumber + " is: " + otpCode);
-                System.out.println("==================================================");
+                // Gửi OTP qua Email
+                boolean emailSent = EmailService.sendOtpEmail(email, otpCode);
 
-                result.put("success", true);
-                result.put("message", "Mã OTP đã được gửi thành công.");
+                if (emailSent) {
+                    result.put("success", true);
+                    result.put("message", "Mã OTP đã được gửi đến email của bạn.");
+                } else {
+                    result.put("success", false);
+                    result.put("message", "Lỗi gửi email. Vui lòng thử lại sau.");
+                }
             } else {
                 result.put("success", false);
                 result.put("message", "Lỗi khi lưu OTP vào hệ thống.");

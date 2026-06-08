@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 public class OtpCode {
     private int id;
     private String phoneNumber;
+    private String email;
     private String otpCode;
     private Timestamp expiresAt;
     private boolean isUsed;
@@ -12,8 +13,9 @@ public class OtpCode {
 
     public OtpCode() {}
 
-    public OtpCode(String phoneNumber, String otpCode, Timestamp expiresAt) {
+    public OtpCode(String phoneNumber, String email, String otpCode, Timestamp expiresAt) {
         this.phoneNumber = phoneNumber;
+        this.email = email;
         this.otpCode = otpCode;
         this.expiresAt = expiresAt;
         this.isUsed = false;
@@ -25,6 +27,9 @@ public class OtpCode {
     
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
     
     public String getOtpCode() { return otpCode; }
     public void setOtpCode(String otpCode) { this.otpCode = otpCode; }

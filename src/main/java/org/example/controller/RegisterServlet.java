@@ -31,11 +31,13 @@ public class RegisterServlet extends HttpServlet {
         try {
             Map<String, String> body = gson.fromJson(request.getReader(), Map.class);
             String phoneNumber = body.get("phoneNumber");
+            String email = body.get("email");
             String otpCode = body.get("otpCode");
             String password = body.get("password");
 
             // Validate cơ bản
             if (phoneNumber == null || !phoneNumber.matches("^(0[3|5|7|8|9])+([0-9]{8})$") ||
+                email == null || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$") ||
                 otpCode == null || otpCode.length() != 6 ||
                 password == null || password.length() < 6) {
                 
@@ -53,8 +55,16 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
 
-            // Kiểm tra mã OTP
-            OtpCode latestOtp = otpDAO.getLatestValidOtp(phoneNumber);
+            // Kiểm tra email đã tồn tại chưa
+            if (userDAO.findByEmail(email) != null) {
+                result.put("success", false);
+                result.put("message", "Email này đã được đăng ký.");
+                response.getWriter().write(gson.toJson(result));
+                return;
+            }
+
+            // Kiểm tra mã OTP dựa trên email
+            OtpCode latestOtp = otpDAO.getLatestValidOtpByEmail(email);
             if (latestOtp == null || !latestOtp.getOtpCode().equals(otpCode)) {
                 result.put("success", false);
                 result.put("message", "Mã OTP không chính xác hoặc đã hết hạn.");
@@ -70,6 +80,7 @@ public class RegisterServlet extends HttpServlet {
             
             // Lưu tạm thông tin vào Session (không tạo User ngay lập tức)
             request.getSession().setAttribute("pendingUserPhone", phoneNumber);
+            request.getSession().setAttribute("pendingUserEmail", email);
             request.getSession().setAttribute("pendingUserPass", hashedPassword);
             
             // Trả về cờ yêu cầu onboarding

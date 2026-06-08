@@ -23,6 +23,7 @@ public class UserDAO {
                 user.setId(rs.getInt("id"));
                 user.setFullName(rs.getString("full_name"));
                 user.setPhoneNumber(rs.getString("phone_number"));
+                user.setEmail(rs.getString("email"));
                 user.setPasswordHash(rs.getString("password_hash"));
                 user.setStatus(rs.getString("status"));
                 user.setGender(rs.getString("gender"));
@@ -50,6 +51,66 @@ public class UserDAO {
                 user.setId(rs.getInt("id"));
                 user.setFullName(rs.getString("full_name"));
                 user.setPhoneNumber(rs.getString("phone_number"));
+                user.setEmail(rs.getString("email"));
+                user.setStatus(rs.getString("status"));
+                user.setGender(rs.getString("gender"));
+                user.setRole(rs.getString("role"));
+                user.setHobbies(rs.getString("hobbies"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                user.setUpdatedAt(rs.getTimestamp("updated_at"));
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User findByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setPhoneNumber(rs.getString("phone_number"));
+                user.setEmail(rs.getString("email"));
+                user.setPasswordHash(rs.getString("password_hash"));
+                user.setStatus(rs.getString("status"));
+                user.setGender(rs.getString("gender"));
+                user.setRole(rs.getString("role"));
+                user.setHobbies(rs.getString("hobbies"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                user.setUpdatedAt(rs.getTimestamp("updated_at"));
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User findByPhoneAndEmail(String phoneNumber, String email) {
+        String sql = "SELECT * FROM users WHERE phone_number = ? AND email = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, phoneNumber);
+            ps.setString(2, email);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setPhoneNumber(rs.getString("phone_number"));
+                user.setEmail(rs.getString("email"));
+                user.setPasswordHash(rs.getString("password_hash"));
                 user.setStatus(rs.getString("status"));
                 user.setGender(rs.getString("gender"));
                 user.setRole(rs.getString("role"));
@@ -81,17 +142,18 @@ public class UserDAO {
         }
     }
 
-    public boolean createUserWithOnboarding(String phoneNumber, String passwordHash, String fullName, String gender, String role, String hobbies) {
-        String sql = "INSERT INTO users (phone_number, password_hash, full_name, gender, role, hobbies) VALUES (?, ?, ?, ?, ?, ?)";
+    public boolean createUserWithOnboarding(String phoneNumber, String email, String passwordHash, String fullName, String gender, String role, String hobbies) {
+        String sql = "INSERT INTO users (phone_number, email, password_hash, full_name, gender, role, hobbies) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setString(1, phoneNumber);
-            ps.setString(2, passwordHash);
-            ps.setString(3, fullName);
-            ps.setString(4, gender);
-            ps.setString(5, role);
-            ps.setString(6, hobbies);
+            ps.setString(2, email);
+            ps.setString(3, passwordHash);
+            ps.setString(4, fullName);
+            ps.setString(5, gender);
+            ps.setString(6, role);
+            ps.setString(7, hobbies);
             
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;

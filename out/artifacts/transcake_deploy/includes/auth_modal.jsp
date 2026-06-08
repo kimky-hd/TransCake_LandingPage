@@ -50,6 +50,11 @@
                                 class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
                         </div>
                         <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Email</label>
+                            <input type="email" id="loginEmail" placeholder="Nhập địa chỉ email của bạn"
+                                class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
+                        </div>
+                        <div>
                             <div class="flex items-center justify-between mb-1.5">
                                 <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">Mật
                                     khẩu</label>
@@ -72,8 +77,13 @@
                         <div>
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Số
                                 điện thoại</label>
+                            <input type="tel" id="registerPhone" placeholder="Nhập số điện thoại"
+                                class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Email</label>
                             <div class="flex gap-2">
-                                <input type="tel" id="registerPhone" placeholder="Nhập số điện thoại"
+                                <input type="email" id="registerEmail" placeholder="Nhập email của bạn"
                                     class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#6200EE]/50 focus:border-[#6200EE] transition-all text-sm font-medium placeholder:text-slate-400">
                                 <button type="button" id="sendOtpBtn"
                                     class="whitespace-nowrap px-4 py-2.5 bg-slate-100 text-[#6200EE] hover:bg-[#6200EE] hover:text-white border border-slate-200 rounded-xl text-sm font-bold transition-colors shadow-sm">Gửi

@@ -190,8 +190,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sendOtpBtn) {
         sendOtpBtn.addEventListener('click', () => {
             const phone = document.getElementById('registerPhone').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            
             if (!phone || !/^(0[3|5|7|8|9])+([0-9]{8})$/.test(phone)) {
                 showToast('Vui lòng nhập số điện thoại hợp lệ (Ví dụ: 0912345678).', 'error');
+                return;
+            }
+
+            if (!email || !/^[A-Za-z0-9+_.-]+@(.+)$/.test(email)) {
+                showToast('Vui lòng nhập địa chỉ email hợp lệ.', 'error');
                 return;
             }
 
@@ -201,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fetch(window.CONTEXT_PATH + '/api/send-otp', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phoneNumber: phone })
+                body: JSON.stringify({ phoneNumber: phone, email: email })
             })
                 .then(res => res.json())
                 .then(data => {
@@ -241,10 +248,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (registerBtn) {
         registerBtn.addEventListener('click', () => {
             const phone = document.getElementById('registerPhone').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
             const otpCode = document.getElementById('registerOtp').value.trim();
             const password = document.getElementById('registerPassword').value;
 
-            if (!phone || !otpCode || !password) {
+            if (!phone || !email || !otpCode || !password) {
                 showToast('Vui lòng nhập đầy đủ thông tin đăng ký.', 'warning');
                 return;
             }
@@ -257,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     phoneNumber: phone,
+                    email: email,
                     otpCode: otpCode,
                     password: password
                 })
@@ -290,10 +299,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginBtn) {
         loginBtn.addEventListener('click', () => {
             const phone = document.getElementById('loginPhone').value.trim();
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
 
-            if (!phone || !password) {
-                showToast('Vui lòng nhập đủ số điện thoại và mật khẩu.', 'warning');
+            if (!phone || !email || !password) {
+                showToast('Vui lòng nhập đủ số điện thoại, email và mật khẩu.', 'warning');
                 return;
             }
 
@@ -305,6 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     phoneNumber: phone,
+                    email: email,
                     password: password
                 })
             })
