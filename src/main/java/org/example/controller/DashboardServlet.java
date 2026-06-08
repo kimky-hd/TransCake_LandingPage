@@ -56,10 +56,17 @@ public class DashboardServlet extends HttpServlet {
             }
         }
 
+        boolean hasVehicle = false;
+        if (isLoggedIn) {
+            org.example.dao.DriverVehicleDAO vehicleDAO = new org.example.dao.DriverVehicleDAO();
+            hasVehicle = (vehicleDAO.getVehicleByUserId(user.getId()) != null);
+        }
+
         // Set attributes for JSP
         request.setAttribute("isLoggedIn", isLoggedIn);
         request.setAttribute("fullName", fullName);
         request.setAttribute("userRole", isLoggedIn ? user.getRole() : "");
+        request.setAttribute("hasVehicle", hasVehicle);
         request.setAttribute("blogPosts", blogPosts);
         request.setAttribute("activeTrip", activeTrip);
         request.setAttribute("activePreBookTrip", activePreBookTrip);

@@ -1736,11 +1736,16 @@ if(document.getElementById('matched-driver-state')) {
                         <!-- Script to handle switching roles -->
                         <script>
                             const initialUserRole = '<%= request.getAttribute("userRole") != null ? request.getAttribute("userRole") : "passenger" %>';
+                            const hasVehicle = <%= request.getAttribute("hasVehicle") != null ? request.getAttribute("hasVehicle") : "false" %>;
+                            let currentUserRole = 'passenger'; // default UI state is passenger
                             window.userFullName = '<%= request.getAttribute("fullName") != null && !request.getAttribute("fullName").equals("Người dùng") ? request.getAttribute("fullName") : "" %>';
                             
                             document.addEventListener('DOMContentLoaded', function() {
                                 if (initialUserRole === 'driver') {
-                                    setRole('driver');
+                                    currentUserRole = 'driver';
+                                    setRole('driver', true);
+                                } else {
+                                    currentUserRole = 'passenger';
                                 }
                             });
 
@@ -1756,9 +1761,10 @@ if(document.getElementById('matched-driver-state')) {
                                 }
                             }
 
-                            function setRole(role) {
-                                // Kiểm tra nếu là hành khách muốn chuyển sang tài xế
-                                if (role === 'driver' && initialUserRole !== 'driver') {
+                            function setRole(role, bypassConfirm = false) {
+                                if (role === currentUserRole && !bypassConfirm) return;
+
+                                if (role === 'driver' && !hasVehicle) {
                                     if (window.showConfirmModal) {
                                         window.showConfirmModal(
                                             'Đăng ký Đối tác Tài xế', 
@@ -1783,6 +1789,46 @@ if(document.getElementById('matched-driver-state')) {
                                         alert('Vui lòng đăng ký thông tin tài xế!');
                                     }
                                     return; // Không chuyển tab
+                                }
+
+                                if (!bypassConfirm && role !== currentUserRole) {
+                                    if (window.showConfirmModal) {
+                                        window.showConfirmModal(
+                                            'Xác nhận chuyển đổi vai trò',
+                                            'CẢNH BÁO: Việc chuyển đổi vai trò sẽ khiến hệ thống HỦY toàn bộ chuyến xe bạn đang đặt (hoặc đang nhận). Bạn có chắc chắn muốn chuyển đổi?',
+                                            function() {
+                                                // Gọi API để thực hiện chuyển đổi
+                                                fetch('<%= request.getContextPath() %>/api/switch-role', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify({ newRole: role })
+                                                })
+                                                .then(res => {
+                                                    console.log("API Response status:", res.status);
+                                                    if (!res.ok) {
+                                                        throw new Error("HTTP error " + res.status);
+                                                    }
+                                                    return res.json();
+                                                })
+                                                .then(data => {
+                                                    if (data.success) {
+                                                        currentUserRole = role;
+                                                        setRole(role, true); // Gọi lại để đổi giao diện
+                                                        
+                                                        // Tải lại trang để xoá hẳn trạng thái rác và cập nhật db
+                                                        window.location.reload(); 
+                                                    } else {
+                                                        alert(data.message || 'Lỗi khi chuyển đổi vai trò');
+                                                    }
+                                                })
+                                                .catch(err => {
+                                                    console.error(err);
+                                                    alert('Lỗi kết nối mạng khi gọi API: ' + err.message);
+                                                });
+                                            }
+                                        );
+                                    }
+                                    return;
                                 }
 
                                 const toggleBg = document.getElementById('toggle-bg');
@@ -1817,9 +1863,13 @@ if(document.getElementById('matched-driver-state')) {
                                     drvView.classList.replace('translate-x-0', 'translate-x-10');
                                     drvView.classList.add('pointer-events-none');
 
-                                    // Update map marker colors
-                                    markerPulse.className = 'absolute w-20 h-20 bg-[#6200EE]/30 rounded-full animate-ping';
-                                    markerDot.className = 'relative w-8 h-8 bg-[#6200EE] border-[3px] border-white rounded-full shadow-xl';
+                                    // Update map marker colors (if marker exists)
+                                    if (window.userMarkerEl) {
+                                        const pulse = window.userMarkerEl.querySelector('.animate-ping');
+                                        const dot = window.userMarkerEl.querySelector('.shadow-xl');
+                                        if (pulse) pulse.className = 'absolute w-20 h-20 bg-[#6200EE]/30 rounded-full animate-ping';
+                                        if (dot) dot.className = 'relative w-8 h-8 bg-[#6200EE] border-[3px] border-white rounded-full shadow-xl';
+                                    }
 
                                     // Update nav active color
                                     navHome.classList.replace('text-[#FF6D00]', 'text-[#6200EE]');

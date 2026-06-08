@@ -90,6 +90,10 @@ public class OnboardingServlet extends HttpServlet {
                 
                 boolean updated = userDAO.updateOnboardingProfile(loggedInUser.getId(), loggedInUser.getFullName(), loggedInUser.getGender(), "driver", loggedInUser.getHobbies());
                 if (updated) {
+                    // Hủy tất cả các chuyến đi ở vai trò passenger cũ
+                    org.example.dao.TripDAO tripDAO = new org.example.dao.TripDAO();
+                    tripDAO.cancelAllTripsForUser(loggedInUser.getId(), "passenger");
+
                     loggedInUser.setRole("driver");
                     session.setAttribute("loggedInUser", loggedInUser);
                     
@@ -101,7 +105,7 @@ public class OnboardingServlet extends HttpServlet {
                         vehicleDAO.updateVehicle(vehicle);
                     }
                     result.put("success", true);
-                    result.put("message", "Đăng ký phương tiện thành công!");
+                    result.put("message", "Đăng ký phương tiện thành công! Các chuyến xe cũ đã bị hủy.");
                 } else {
                     result.put("success", false);
                     result.put("message", "Lỗi server khi lưu thông tin.");

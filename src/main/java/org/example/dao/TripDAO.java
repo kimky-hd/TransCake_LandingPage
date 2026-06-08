@@ -304,4 +304,32 @@ public class TripDAO {
         }
         return false;
     }
+
+    /**
+     * Hủy tất cả các chuyến đi của người dùng dựa trên vai trò cũ.
+     * @param userId ID của người dùng
+     * @param oldRole Vai trò cũ (passenger hoặc driver)
+     * @return true nếu thực thi SQL không bị lỗi (có thể không có dòng nào bị ảnh hưởng)
+     */
+    public boolean cancelAllTripsForUser(int userId, String oldRole) {
+        String sql;
+        if ("driver".equalsIgnoreCase(oldRole)) {
+            // Hủy các chuyến mà tài xế đã nhận
+            sql = "UPDATE trips SET match_status = 'CANCELLED' WHERE driver_id = ? AND match_status IN ('PENDING', 'MATCHED')";
+        } else {
+            // Hủy các chuyến mà hành khách đã đặt
+            sql = "UPDATE trips SET match_status = 'CANCELLED' WHERE passenger_id = ? AND match_status IN ('PENDING', 'MATCHED')";
+        }
+        
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, userId);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Lỗi cancelAllTripsForUser: " + e.getMessage());
+        }
+        return false;
+    }
 }
