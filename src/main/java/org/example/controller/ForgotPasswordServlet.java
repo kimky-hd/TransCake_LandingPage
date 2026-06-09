@@ -63,7 +63,7 @@ public class ForgotPasswordServlet extends HttpServlet {
 
             // Update DB with new password and status = REQUIRE_RESET
             boolean updated = userDAO.updatePasswordAndStatus(user.getId(), hashedPwd, "REQUIRE_RESET");
-            
+
             if (updated) {
                 boolean emailSent = EmailService.sendForgotPasswordEmail(email, randomPassword);
                 if (emailSent) {
