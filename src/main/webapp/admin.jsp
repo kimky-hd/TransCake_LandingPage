@@ -44,7 +44,7 @@
         </div>
         <div class="ml-auto flex items-center gap-4">
             <span class="text-blue-100 text-sm">Xin chào, Admin</span>
-            <a href="<%= request.getContextPath() %>/logout" class="text-white hover:text-blue-200 material-symbols-outlined">logout</a>
+            <a href="#" onclick="fetch('<%= request.getContextPath() %>/api/logout').then(() => window.location.href='<%= request.getContextPath() %>/'); return false;" class="text-white hover:text-blue-200 material-symbols-outlined">logout</a>
         </div>
     </header>
 
