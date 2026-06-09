@@ -1748,6 +1748,7 @@ if(document.getElementById('matched-driver-state')) {
                         <script>
                             const initialUserRole = '<%= request.getAttribute("userRole") != null ? request.getAttribute("userRole") : "passenger" %>';
                             const hasVehicle = <%= request.getAttribute("hasVehicle") != null ? request.getAttribute("hasVehicle") : "false" %>;
+                            window.verificationStatus = '<%= request.getAttribute("verificationStatus") != null ? request.getAttribute("verificationStatus") : "" %>';
                             let currentUserRole = 'passenger'; // default UI state is passenger
                             window.userFullName = '<%= request.getAttribute("fullName") != null && !request.getAttribute("fullName").equals("Người dùng") ? request.getAttribute("fullName") : "" %>';
                             
@@ -1775,11 +1776,19 @@ if(document.getElementById('matched-driver-state')) {
                             function setRole(role, bypassConfirm = false) {
                                 if (role === currentUserRole && !bypassConfirm) return;
 
-                                if (role === 'driver' && !hasVehicle) {
+                                if (role === 'driver' && (!hasVehicle || window.verificationStatus === 'REJECTED')) {
                                     if (window.showConfirmModal) {
+                                        let modalTitle = 'Đăng ký Đối tác Tài xế';
+                                        let modalMsg = 'Bạn cần bổ sung thông tin phương tiện để có thể chuyển sang tab này. Bạn có muốn điền thông tin đăng ký ngay không?';
+                                        
+                                        if (window.verificationStatus === 'REJECTED') {
+                                            modalTitle = 'Cập nhật lại Hồ sơ Đối tác';
+                                            modalMsg = 'Hồ sơ của bạn đã bị từ chối do không hợp lệ. Vui lòng điền lại thông tin và tải lên hình ảnh rõ nét, chính xác hơn để được phê duyệt.';
+                                        }
+
                                         window.showConfirmModal(
-                                            'Đăng ký Đối tác Tài xế', 
-                                            'Bạn cần bổ sung thông tin phương tiện để có thể chuyển sang tab này. Bạn có muốn điền thông tin đăng ký ngay không?', 
+                                            modalTitle, 
+                                            modalMsg, 
                                             function() {
                                                 if (typeof window.openDriverUpgradeModal === 'function') {
                                                     window.openDriverUpgradeModal();

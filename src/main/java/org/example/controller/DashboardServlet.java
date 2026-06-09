@@ -33,6 +33,12 @@ public class DashboardServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("loggedInUser");
         boolean isLoggedIn = (user != null);
+        
+        if (isLoggedIn && "admin".equalsIgnoreCase(user.getRole())) {
+            response.sendRedirect(request.getContextPath() + "/admintranscake");
+            return;
+        }
+
         String fullName = isLoggedIn && user.getFullName() != null && !user.getFullName().trim().isEmpty() ? user.getFullName() : "Người dùng";
 
         // Fetch community blog posts
