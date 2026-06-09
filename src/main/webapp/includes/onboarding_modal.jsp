@@ -572,15 +572,21 @@
                 formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
                 
                 try {
-                    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+                    const response = await fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD_NAME + '/image/upload', {
                         method: 'POST',
                         body: formData
                     });
                     const data = await response.json();
-                    return data.secure_url; // Link ảnh tĩnh trả về từ Cloudinary
+                    
+                    if (!response.ok) {
+                        console.error("Chi tiết lỗi từ Cloudinary:", data);
+                        throw new Error(data.error?.message || "Lỗi không xác định từ Cloudinary");
+                    }
+                    
+                    return data.secure_url;
                 } catch (error) {
                     console.error("Lỗi upload ảnh:", error);
-                    return null;
+                    throw error; // Ném lỗi ra ngoài để hàm cha bắt được và dừng form
                 }
             }
 
@@ -625,8 +631,20 @@
                     const licenseNumber = licenseNumberInput ? licenseNumberInput.value.trim() : '';
                     const vehicleColor = vehicleColorInput ? vehicleColorInput.value.trim() : '';
                     
+                    const idFrontFile = document.getElementById('idCardFront')?.files[0];
+                    const idBackFile = document.getElementById('idCardBack')?.files[0];
+                    const licenseFile = document.getElementById('licenseImage')?.files[0];
+                    const registrationFile = document.getElementById('vehicleRegistration')?.files[0];
+                    const avatarFile = document.getElementById('avatarImage')?.files[0];
+
                     if (!vehicleName || !licensePlate || !idCardNumber || !licenseNumber || !vehicleColor) {
                         showToast('Vui lòng điền đầy đủ thông tin chữ của tài xế.', 'warning');
+                        if (btn) btn.innerHTML = 'Hoàn tất đăng ký';
+                        return;
+                    }
+
+                    if (!idFrontFile || !idBackFile || !licenseFile || !registrationFile || !avatarFile) {
+                        showToast('Vui lòng tải lên đầy đủ 5 hình ảnh xác minh.', 'warning');
                         if (btn) btn.innerHTML = 'Hoàn tất đăng ký';
                         return;
                     }
@@ -643,19 +661,19 @@
                     
                     try {
                         const [idFrontUrl, idBackUrl, licenseUrl, registrationUrl, avatarUrl] = await Promise.all([
-                            uploadToCloudinary(document.getElementById('idCardFront')?.files[0]),
-                            uploadToCloudinary(document.getElementById('idCardBack')?.files[0]),
-                            uploadToCloudinary(document.getElementById('licenseImage')?.files[0]),
-                            uploadToCloudinary(document.getElementById('vehicleRegistration')?.files[0]),
-                            uploadToCloudinary(document.getElementById('avatarImage')?.files[0])
+                            uploadToCloudinary(idFrontFile),
+                            uploadToCloudinary(idBackFile),
+                            uploadToCloudinary(licenseFile),
+                            uploadToCloudinary(registrationFile),
+                            uploadToCloudinary(avatarFile)
                         ]);
                         
-                        // Gán link Cloudinary vào payload, nếu không có ảnh thì lấy URL mặc định
-                        payload.idCardFrontUrl = idFrontUrl || "https://via.placeholder.com/300x200.png?text=CCCD+Front";
-                        payload.idCardBackUrl = idBackUrl || "https://via.placeholder.com/300x200.png?text=CCCD+Back";
-                        payload.licenseImageUrl = licenseUrl || "https://via.placeholder.com/300x200.png?text=License";
-                        payload.vehicleRegistrationUrl = registrationUrl || "https://via.placeholder.com/300x200.png?text=Cavet";
-                        payload.avatarUrl = avatarUrl || "https://via.placeholder.com/150.png?text=Avatar";
+                        // Gán link Cloudinary vào payload
+                        payload.idCardFrontUrl = idFrontUrl;
+                        payload.idCardBackUrl = idBackUrl;
+                        payload.licenseImageUrl = licenseUrl;
+                        payload.vehicleRegistrationUrl = registrationUrl;
+                        payload.avatarUrl = avatarUrl;
                     } catch(err) {
                         console.error(err);
                         showToast("Đã có lỗi xảy ra khi tải ảnh lên Cloudinary.", "error");

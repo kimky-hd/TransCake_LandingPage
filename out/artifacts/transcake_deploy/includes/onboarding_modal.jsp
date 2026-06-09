@@ -338,11 +338,62 @@
                                 class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm font-semibold text-slate-800 placeholder:text-slate-400">
                         </div>
 
-                        <!-- License Plate -->
+                        <!-- ID Card Number -->
                         <div>
-                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Biển số xe</label>
-                            <input type="text" id="licensePlate" placeholder="VD: 29G1-24031"
-                                class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm font-semibold text-slate-800 placeholder:text-slate-400 uppercase">
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Số CMND/CCCD</label>
+                            <input type="text" id="idCardNumber" placeholder="Nhập số CMND hoặc CCCD 12 số"
+                                class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm font-semibold text-slate-800 placeholder:text-slate-400">
+                        </div>
+
+                        <!-- License Number -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Số Giấy phép lái xe</label>
+                            <input type="text" id="licenseNumber" placeholder="Nhập số GPLX"
+                                class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm font-semibold text-slate-800 placeholder:text-slate-400">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Vehicle Color -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Màu xe</label>
+                                <input type="text" id="vehicleColor" placeholder="VD: Trắng, Đen..."
+                                    class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm font-semibold text-slate-800 placeholder:text-slate-400">
+                            </div>
+                            
+                            <!-- License Plate -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Biển số xe</label>
+                                <input type="text" id="licensePlate" placeholder="VD: 29G1-24031"
+                                    class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all text-sm font-semibold text-slate-800 placeholder:text-slate-400 uppercase">
+                            </div>
+                        </div>
+
+                        <!-- Upload Images (Cloudinary) -->
+                        <div class="space-y-3 pt-3 border-t border-slate-200/60">
+                            <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Tải lên hình ảnh xác minh</h3>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ảnh CCCD (Mặt trước)</label>
+                                    <input type="file" id="idCardFront" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ảnh CCCD (Mặt sau)</label>
+                                    <input type="file" id="idCardBack" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ảnh GPLX</label>
+                                    <input type="file" id="licenseImage" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ảnh Cà vẹt xe</label>
+                                    <input type="file" id="vehicleRegistration" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer">
+                                </div>
+                                <div class="col-span-2">
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Ảnh chân dung (Avatar)</label>
+                                    <input type="file" id="avatarImage" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 transition-all cursor-pointer">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -509,7 +560,37 @@
                 }
             };
 
-            window.submitFinalOnboarding = function() {
+            // === CẤU HÌNH CLOUDINARY ===
+            // Thay thế 2 giá trị này bằng thông tin lấy từ Dashboard của Cloudinary
+            const CLOUDINARY_CLOUD_NAME = 'dfqjxzs2s'; 
+            const CLOUDINARY_UPLOAD_PRESET = 'transcake_upload'; 
+
+            async function uploadToCloudinary(file) {
+                if (!file) return null;
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                
+                try {
+                    const response = await fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD_NAME + '/image/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        console.error("Chi tiết lỗi từ Cloudinary:", data);
+                        throw new Error(data.error?.message || "Lỗi không xác định từ Cloudinary");
+                    }
+                    
+                    return data.secure_url;
+                } catch (error) {
+                    console.error("Lỗi upload ảnh:", error);
+                    throw error; // Ném lỗi ra ngoài để hàm cha bắt được và dừng form
+                }
+            }
+
+            window.submitFinalOnboarding = async function() {
                 const btn = document.getElementById('step4ContinueBtn');
                 if (btn) btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span> Đang xử lý...';
 
@@ -540,12 +621,30 @@
                     const vehicleTypeInput = document.querySelector('input[name="vehicleType"]:checked');
                     const vehicleNameInput = document.getElementById('vehicleName');
                     const licensePlateInput = document.getElementById('licensePlate');
+                    const idCardNumberInput = document.getElementById('idCardNumber');
+                    const licenseNumberInput = document.getElementById('licenseNumber');
+                    const vehicleColorInput = document.getElementById('vehicleColor');
                     
                     const vehicleName = vehicleNameInput ? vehicleNameInput.value.trim() : '';
                     const licensePlate = licensePlateInput ? licensePlateInput.value.trim() : '';
+                    const idCardNumber = idCardNumberInput ? idCardNumberInput.value.trim() : '';
+                    const licenseNumber = licenseNumberInput ? licenseNumberInput.value.trim() : '';
+                    const vehicleColor = vehicleColorInput ? vehicleColorInput.value.trim() : '';
                     
-                    if (!vehicleName || !licensePlate) {
-                        showToast('Vui lòng điền tên xe và biển số xe.', 'warning');
+                    const idFrontFile = document.getElementById('idCardFront')?.files[0];
+                    const idBackFile = document.getElementById('idCardBack')?.files[0];
+                    const licenseFile = document.getElementById('licenseImage')?.files[0];
+                    const registrationFile = document.getElementById('vehicleRegistration')?.files[0];
+                    const avatarFile = document.getElementById('avatarImage')?.files[0];
+
+                    if (!vehicleName || !licensePlate || !idCardNumber || !licenseNumber || !vehicleColor) {
+                        showToast('Vui lòng điền đầy đủ thông tin chữ của tài xế.', 'warning');
+                        if (btn) btn.innerHTML = 'Hoàn tất đăng ký';
+                        return;
+                    }
+
+                    if (!idFrontFile || !idBackFile || !licenseFile || !registrationFile || !avatarFile) {
+                        showToast('Vui lòng tải lên đầy đủ 5 hình ảnh xác minh.', 'warning');
                         if (btn) btn.innerHTML = 'Hoàn tất đăng ký';
                         return;
                     }
@@ -553,9 +652,39 @@
                     payload.vehicleType = vehicleTypeInput ? vehicleTypeInput.value : 'MOTORBIKE';
                     payload.vehicleName = vehicleName;
                     payload.licensePlate = licensePlate;
+                    payload.idCardNumber = idCardNumber;
+                    payload.licenseNumber = licenseNumber;
+                    payload.vehicleColor = vehicleColor;
+                    
+                    // XỬ LÝ UPLOAD ẢNH SONG SONG LÊN CLOUDINARY
+                    if (btn) btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span> Đang tải ảnh lên Cloud...';
+                    
+                    try {
+                        const [idFrontUrl, idBackUrl, licenseUrl, registrationUrl, avatarUrl] = await Promise.all([
+                            uploadToCloudinary(idFrontFile),
+                            uploadToCloudinary(idBackFile),
+                            uploadToCloudinary(licenseFile),
+                            uploadToCloudinary(registrationFile),
+                            uploadToCloudinary(avatarFile)
+                        ]);
+                        
+                        // Gán link Cloudinary vào payload
+                        payload.idCardFrontUrl = idFrontUrl;
+                        payload.idCardBackUrl = idBackUrl;
+                        payload.licenseImageUrl = licenseUrl;
+                        payload.vehicleRegistrationUrl = registrationUrl;
+                        payload.avatarUrl = avatarUrl;
+                    } catch(err) {
+                        console.error(err);
+                        showToast("Đã có lỗi xảy ra khi tải ảnh lên Cloudinary.", "error");
+                        if (btn) btn.innerHTML = 'Hoàn tất đăng ký';
+                        return;
+                    }
                 }
 
-                // Gọi API lưu Onboarding
+                if (btn) btn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span> Đang lưu hồ sơ...';
+
+                // Gọi API lưu Onboarding Backend
                 fetch(window.CONTEXT_PATH + '/api/onboarding', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
