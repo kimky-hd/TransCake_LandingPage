@@ -57,9 +57,14 @@ public class DashboardServlet extends HttpServlet {
         }
 
         boolean hasVehicle = false;
+        String verificationStatus = "NOT_REGISTERED";
         if (isLoggedIn) {
             org.example.dao.DriverVehicleDAO vehicleDAO = new org.example.dao.DriverVehicleDAO();
-            hasVehicle = (vehicleDAO.getVehicleByUserId(user.getId()) != null);
+            org.example.model.DriverVehicle vehicle = vehicleDAO.getVehicleByUserId(user.getId());
+            if (vehicle != null) {
+                hasVehicle = true;
+                verificationStatus = vehicle.getVerificationStatus() != null ? vehicle.getVerificationStatus() : "PENDING";
+            }
         }
 
         // Set attributes for JSP
@@ -67,6 +72,7 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("fullName", fullName);
         request.setAttribute("userRole", isLoggedIn ? user.getRole() : "");
         request.setAttribute("hasVehicle", hasVehicle);
+        request.setAttribute("verificationStatus", verificationStatus);
         request.setAttribute("blogPosts", blogPosts);
         request.setAttribute("activeTrip", activeTrip);
         request.setAttribute("activePreBookTrip", activePreBookTrip);

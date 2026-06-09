@@ -276,6 +276,16 @@
                                 </div>
                             </div>
 
+                            <% if (isLoggedIn && "PENDING".equals(request.getAttribute("verificationStatus"))) { %>
+                                <!-- Pending Verification State -->
+                                <div class="bg-orange-50 border border-orange-200 rounded-2xl p-5 mb-8 flex flex-col items-center text-center">
+                                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3">
+                                        <span class="material-symbols-outlined text-orange-500 text-2xl">hourglass_empty</span>
+                                    </div>
+                                    <h4 class="font-bold text-orange-800 text-base mb-1">Tài khoản đang chờ duyệt</h4>
+                                    <p class="text-sm text-orange-600">Thông tin xe của bạn đang được hệ thống kiểm duyệt. Quá trình này có thể mất tới 24h.</p>
+                                </div>
+                            <% } else { %>
                             <!-- Primary CTA -->
                             <button
                                 class="w-full bg-gradient-to-r from-[#FF6D00] to-[#FF9100] hover:from-[#E66200] hover:to-[#E68200] text-white font-bold text-lg py-4 rounded-2xl shadow-[0_10px_25px_rgba(255,109,0,0.35)] transition-all transform hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(255,109,0,0.4)] mb-8 flex items-center justify-center gap-2">
@@ -357,6 +367,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <% } %>
                         </div>
 
                         <!-- STATE 3: PROFILE VIEW -->

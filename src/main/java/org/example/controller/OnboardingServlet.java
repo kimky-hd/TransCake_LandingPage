@@ -69,6 +69,14 @@ public class OnboardingServlet extends HttpServlet {
             String vehicleType = (String) body.get("vehicleType");
             String vehicleName = (String) body.get("vehicleName");
             String licensePlate = (String) body.get("licensePlate");
+            String idCardNumber = (String) body.get("idCardNumber");
+            String idCardFrontUrl = (String) body.get("idCardFrontUrl");
+            String idCardBackUrl = (String) body.get("idCardBackUrl");
+            String avatarUrl = (String) body.get("avatarUrl");
+            String licenseNumber = (String) body.get("licenseNumber");
+            String licenseImageUrl = (String) body.get("licenseImageUrl");
+            String vehicleColor = (String) body.get("vehicleColor");
+            String vehicleRegistrationUrl = (String) body.get("vehicleRegistrationUrl");
 
             Boolean isDriverUpgradeObj = (Boolean) body.get("isDriverUpgrade");
             boolean isDriverUpgrade = isDriverUpgradeObj != null && isDriverUpgradeObj;
@@ -99,6 +107,16 @@ public class OnboardingServlet extends HttpServlet {
                     
                     DriverVehicleDAO vehicleDAO = new DriverVehicleDAO();
                     DriverVehicle vehicle = new DriverVehicle(loggedInUser.getId(), vehicleType != null ? vehicleType : "MOTORBIKE", vehicleName, licensePlate);
+                    vehicle.setIdCardNumber(idCardNumber);
+                    vehicle.setIdCardFrontUrl(idCardFrontUrl);
+                    vehicle.setIdCardBackUrl(idCardBackUrl);
+                    vehicle.setAvatarUrl(avatarUrl);
+                    vehicle.setLicenseNumber(licenseNumber);
+                    vehicle.setLicenseImageUrl(licenseImageUrl);
+                    vehicle.setVehicleColor(vehicleColor);
+                    vehicle.setVehicleRegistrationUrl(vehicleRegistrationUrl);
+                    vehicle.setVerificationStatus("PENDING");
+                    
                     if (vehicleDAO.getVehicleByUserId(loggedInUser.getId()) == null) {
                         vehicleDAO.registerVehicle(vehicle);
                     } else {
@@ -161,6 +179,16 @@ public class OnboardingServlet extends HttpServlet {
                     if (finalUser != null && vehicleType != null && vehicleName != null && licensePlate != null) {
                         DriverVehicleDAO vehicleDAO = new DriverVehicleDAO();
                         DriverVehicle vehicle = new DriverVehicle(finalUser.getId(), vehicleType, vehicleName, licensePlate);
+                        vehicle.setIdCardNumber(idCardNumber);
+                        vehicle.setIdCardFrontUrl(idCardFrontUrl);
+                        vehicle.setIdCardBackUrl(idCardBackUrl);
+                        vehicle.setAvatarUrl(avatarUrl);
+                        vehicle.setLicenseNumber(licenseNumber);
+                        vehicle.setLicenseImageUrl(licenseImageUrl);
+                        vehicle.setVehicleColor(vehicleColor);
+                        vehicle.setVehicleRegistrationUrl(vehicleRegistrationUrl);
+                        vehicle.setVerificationStatus("PENDING");
+                        
                         // Check if exists
                         if (vehicleDAO.getVehicleByUserId(finalUser.getId()) == null) {
                             vehicleDAO.registerVehicle(vehicle);
