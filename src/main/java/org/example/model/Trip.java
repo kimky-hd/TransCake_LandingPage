@@ -22,6 +22,12 @@ public class Trip {
     private Timestamp createdAt;
     private String vehicleType; // 'MOTORBIKE', 'CAR'
 
+    // Passenger details (joined from users table)
+    private String passengerName;
+    private String passengerPhone;
+    private String passengerGender;
+    private String passengerAvatar;
+
     // Constructors
     public Trip() {
     }
@@ -165,5 +171,37 @@ public class Trip {
 
     public void setDistance(Double distance) {
         this.distance = distance;
+    }
+
+    public String getPassengerName() {
+        return passengerName;
+    }
+
+    public void setPassengerName(String passengerName) {
+        this.passengerName = passengerName;
+    }
+
+    public String getPassengerPhone() {
+        return passengerPhone;
+    }
+
+    public void setPassengerPhone(String passengerPhone) {
+        this.passengerPhone = passengerPhone;
+    }
+
+    public String getPassengerGender() {
+        return passengerGender;
+    }
+
+    public void setPassengerGender(String passengerGender) {
+        this.passengerGender = passengerGender;
+    }
+
+    public String getPassengerAvatar() {
+        return passengerAvatar;
+    }
+
+    public void setPassengerAvatar(String passengerAvatar) {
+        this.passengerAvatar = passengerAvatar;
     }
 }

@@ -315,14 +315,14 @@
                             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Loại phương tiện</label>
                             <div class="flex gap-4">
                                 <label class="flex-1 cursor-pointer group">
-                                    <input type="radio" name="vehicleType" value="MOTORBIKE" class="peer sr-only" checked>
+                                    <input type="radio" name="onboardingVehicleType" value="MOTORBIKE" class="peer sr-only" checked>
                                     <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary font-bold text-sm text-slate-500 transition-all group-hover:bg-slate-50 shadow-sm flex flex-col items-center gap-1">
                                         <span class="material-symbols-outlined text-[28px]">two_wheeler</span>
                                         Xe máy
                                     </div>
                                 </label>
                                 <label class="flex-1 cursor-pointer group">
-                                    <input type="radio" name="vehicleType" value="CAR" class="peer sr-only">
+                                    <input type="radio" name="onboardingVehicleType" value="CAR" class="peer sr-only">
                                     <div class="text-center p-3 rounded-xl border border-slate-200 peer-checked:bg-primary/10 peer-checked:border-primary peer-checked:text-primary font-bold text-sm text-slate-500 transition-all group-hover:bg-slate-50 shadow-sm flex flex-col items-center gap-1">
                                         <span class="material-symbols-outlined text-[28px]">directions_car</span>
                                         Ô tô
@@ -618,7 +618,7 @@
                 };
 
                 if (role === 'driver') {
-                    const vehicleTypeInput = document.querySelector('input[name="vehicleType"]:checked');
+                    const vehicleTypeInput = document.querySelector('input[name="onboardingVehicleType"]:checked');
                     const vehicleNameInput = document.getElementById('vehicleName');
                     const licensePlateInput = document.getElementById('licensePlate');
                     const idCardNumberInput = document.getElementById('idCardNumber');

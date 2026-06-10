@@ -181,6 +181,47 @@ public class TripDAO {
     }
 
     /**
+     * Lấy chuyến đi đang thực hiện của Tài xế
+     */
+    public Trip getActiveTripForDriver(int driverId) {
+        String sql = "SELECT t.*, u.full_name, u.phone_number, u.gender FROM trips t JOIN users u ON t.passenger_id = u.id WHERE t.driver_id = ? AND t.match_status = 'MATCHED' AND t.completion_status IN ('NOT_STARTED', 'IN_PROGRESS') ORDER BY t.id DESC LIMIT 1";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, driverId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Trip trip = new Trip();
+                    trip.setId(rs.getInt("id"));
+                    trip.setPassengerId(rs.getInt("passenger_id"));
+                    trip.setPickupLocation(rs.getString("pickup_location"));
+                    if (rs.getObject("pickup_lat") != null) trip.setPickupLat(rs.getDouble("pickup_lat"));
+                    if (rs.getObject("pickup_lng") != null) trip.setPickupLng(rs.getDouble("pickup_lng"));
+                    trip.setDropoffLocation(rs.getString("dropoff_location"));
+                    if (rs.getObject("dropoff_lat") != null) trip.setDropoffLat(rs.getDouble("dropoff_lat"));
+                    if (rs.getObject("dropoff_lng") != null) trip.setDropoffLng(rs.getDouble("dropoff_lng"));
+                    trip.setTripType(rs.getString("trip_type"));
+                    trip.setMatchStatus(rs.getString("match_status"));
+                    trip.setCompletionStatus(rs.getString("completion_status"));
+                    trip.setNoteForDriver(rs.getString("note_for_driver"));
+                    if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
+                    if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
+                    trip.setVehicleType(rs.getString("vehicle_type"));
+                    trip.setCreatedAt(rs.getTimestamp("created_at"));
+                    
+                    trip.setPassengerName(rs.getString("full_name"));
+                    trip.setPassengerPhone(rs.getString("phone_number"));
+                    trip.setPassengerGender(rs.getString("gender"));
+                    
+                    return trip;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi getActiveTripForDriver: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
      * Lấy chuyến đi PRE_BOOK đang trong trạng thái chờ (PENDING) hoặc đã được nhận (MATCHED)
      */
     public Trip getActivePreBookTrip(int passengerId) {
@@ -256,7 +297,7 @@ public class TripDAO {
      */
     public List<Trip> getPendingTripsByVehicleType(String vehicleType) {
         List<Trip> trips = new ArrayList<>();
-        String sql = "SELECT * FROM trips WHERE match_status = 'PENDING' AND vehicle_type = ? ORDER BY id DESC";
+        String sql = "SELECT t.*, u.full_name, u.phone_number, u.gender FROM trips t JOIN users u ON t.passenger_id = u.id WHERE t.match_status = 'PENDING' AND t.vehicle_type = ? ORDER BY t.id DESC";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, vehicleType);
@@ -279,6 +320,12 @@ public class TripDAO {
                     if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
                     trip.setVehicleType(rs.getString("vehicle_type"));
                     trip.setCreatedAt(rs.getTimestamp("created_at"));
+                    
+                    // Passenger details
+                    trip.setPassengerName(rs.getString("full_name"));
+                    trip.setPassengerPhone(rs.getString("phone_number"));
+                    trip.setPassengerGender(rs.getString("gender"));
+                    
                     trips.add(trip);
                 }
             }

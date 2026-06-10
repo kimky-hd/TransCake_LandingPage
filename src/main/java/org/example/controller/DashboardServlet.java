@@ -47,12 +47,17 @@ public class DashboardServlet extends HttpServlet {
         // Check active trips
         Trip activeTrip = null;
         Trip activePreBookTrip = null;
+        Trip driverActiveTrip = null;
         String preBookDateStr = "";
         String preBookTimeStr = "";
 
         if (isLoggedIn) {
-            activeTrip = tripDAO.getActiveOnDemandTrip(user.getId());
-            activePreBookTrip = tripDAO.getActivePreBookTrip(user.getId());
+            if ("driver".equalsIgnoreCase(user.getRole())) {
+                driverActiveTrip = tripDAO.getActiveTripForDriver(user.getId());
+            } else {
+                activeTrip = tripDAO.getActiveOnDemandTrip(user.getId());
+                activePreBookTrip = tripDAO.getActivePreBookTrip(user.getId());
+            }
 
             if (activePreBookTrip != null && activePreBookTrip.getScheduledTime() != null) {
                 java.text.SimpleDateFormat sdfDate = new java.text.SimpleDateFormat("yyyy-MM-dd");
@@ -82,6 +87,7 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("blogPosts", blogPosts);
         request.setAttribute("activeTrip", activeTrip);
         request.setAttribute("activePreBookTrip", activePreBookTrip);
+        request.setAttribute("driverActiveTrip", driverActiveTrip);
         request.setAttribute("preBookDateStr", preBookDateStr);
         request.setAttribute("preBookTimeStr", preBookTimeStr);
 
