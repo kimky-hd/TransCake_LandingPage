@@ -1,8 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    boolean isLoggedIn = request.getAttribute("isLoggedIn") != null && (Boolean) request.getAttribute("isLoggedIn");
-    String fullName = (String) request.getAttribute("fullName");
-%>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!-- Scrollable Content Section -->
 <div
     class="flex-1 overflow-y-auto overflow-x-hidden panel-scroll relative bg-gradient-to-b from-white/40 to-transparent">
@@ -23,23 +20,25 @@
 
             </div>
             <div class="flex-1">
-                <% if (isLoggedIn) { %>
-                    <h3 class="font-bold text-lg text-slate-900 leading-tight">
-                        <%= fullName %>
-                    </h3>
-                    <div class="flex flex-col mt-1.5">
-                        <div class="flex items-center justify-between mb-1.5">
-                            <span
-                                class="text-[10px] font-bold text-[#6200EE] uppercase tracking-wider bg-purple-100 border border-purple-200 px-2 py-0.5 rounded-md">Điểm
-                                uy tín: 10</span>
+                <c:choose>
+                    <c:when test="${isLoggedIn}">
+                        <h3 class="font-bold text-lg text-slate-900 leading-tight">
+                            <c:out value="${fullName}" />
+                        </h3>
+                        <div class="flex flex-col mt-1.5">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span
+                                    class="text-[10px] font-bold text-[#6200EE] uppercase tracking-wider bg-purple-100 border border-purple-200 px-2 py-0.5 rounded-md">Điểm
+                                    uy tín: 10</span>
+                            </div>
+                            <div
+                                class="w-2/3 bg-purple-100 rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-[#6200EE] h-full rounded-full"
+                                    style="width: 100%"></div>
+                            </div>
                         </div>
-                        <div
-                            class="w-2/3 bg-purple-100 rounded-full h-1.5 overflow-hidden">
-                            <div class="bg-[#6200EE] h-full rounded-full"
-                                style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <% } else { %>
+                    </c:when>
+                    <c:otherwise>
                         <div class="flex flex-col justify-center h-full gap-1">
                             <button
                                 onclick="window.openAuthModal && window.openAuthModal()"
@@ -48,17 +47,14 @@
                             <p class="text-[11px] text-slate-500">để sử dụng đầy
                                 đủ tính năng</p>
                         </div>
-                        <% } %>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
 
         <!-- Primary CTA & Search Form -->
         <div class="mb-8 relative">
-            <button <% if (isLoggedIn) { %>
-                onclick="toggleBottomSearchBar()"
-                <% } else { %>
-                    onclick="window.openAuthModal && window.openAuthModal()"
-                    <% } %>
+            <button onclick="${isLoggedIn ? 'toggleBottomSearchBar()' : 'window.openAuthModal && window.openAuthModal()'}"
                         class="w-full bg-gradient-to-r from-[#6200EE]
                         to-[#8C3AFF]
                         hover:from-[#5000C8] hover:to-[#7A26F0] text-white
@@ -157,18 +153,20 @@
 
             </div>
             <div class="flex-1">
-                <% if (isLoggedIn) { %>
-                    <h3 class="font-bold text-lg text-slate-900 leading-tight">
-                        <%= fullName %>
-                    </h3>
-                    <div class="flex flex-col mt-1.5">
-                        <div class="flex items-center justify-between">
-                            <span
-                                class="text-[10px] font-bold text-[#FF6D00] uppercase tracking-wider bg-orange-100 border border-orange-200 px-2 py-0.5 rounded-md">Điểm
-                                uy tín: 10</span>
+                <c:choose>
+                    <c:when test="${isLoggedIn}">
+                        <h3 class="font-bold text-lg text-slate-900 leading-tight">
+                            <c:out value="${fullName}" />
+                        </h3>
+                        <div class="flex flex-col mt-1.5">
+                            <div class="flex items-center justify-between">
+                                <span
+                                    class="text-[10px] font-bold text-[#FF6D00] uppercase tracking-wider bg-orange-100 border border-orange-200 px-2 py-0.5 rounded-md">Điểm
+                                    uy tín: 10</span>
+                            </div>
                         </div>
-                    </div>
-                    <% } else { %>
+                    </c:when>
+                    <c:otherwise>
                         <div class="flex flex-col justify-center h-full gap-1">
                             <button
                                 onclick="window.openAuthModal && window.openAuthModal()"
@@ -177,27 +175,29 @@
                             <p class="text-[11px] text-slate-500">để sử dụng đầy
                                 đủ tính năng</p>
                         </div>
-                        <% } %>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
 
-        <% if (isLoggedIn && "PENDING"
-            .equals(request.getAttribute("verificationStatus"))) { %>
-            <!-- Pending Verification State -->
-            <div
-                class="bg-orange-50 border border-orange-200 rounded-2xl p-5 mb-8 flex flex-col items-center text-center">
+        <c:choose>
+            <c:when test="${isLoggedIn && verificationStatus == 'PENDING'}">
+                <!-- Pending Verification State -->
                 <div
-                    class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3">
-                    <span
-                        class="material-symbols-outlined text-orange-500 text-2xl">hourglass_empty</span>
+                    class="bg-orange-50 border border-orange-200 rounded-2xl p-5 mb-8 flex flex-col items-center text-center">
+                    <div
+                        class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mb-3">
+                        <span
+                            class="material-symbols-outlined text-orange-500 text-2xl">hourglass_empty</span>
+                    </div>
+                    <h4 class="font-bold text-orange-800 text-base mb-1">Tài khoản
+                        đang chờ duyệt</h4>
+                    <p class="text-sm text-orange-600">Thông tin xe của bạn đang
+                        được hệ thống kiểm duyệt. Quá trình này có thể mất tới 24h.
+                    </p>
                 </div>
-                <h4 class="font-bold text-orange-800 text-base mb-1">Tài khoản
-                    đang chờ duyệt</h4>
-                <p class="text-sm text-orange-600">Thông tin xe của bạn đang
-                    được hệ thống kiểm duyệt. Quá trình này có thể mất tới 24h.
-                </p>
-            </div>
-            <% } else { %>
+            </c:when>
+            <c:otherwise>
                 <!-- Primary CTA -->
                 <button
                     class="w-full bg-gradient-to-r from-[#FF6D00] to-[#FF9100] hover:from-[#E66200] hover:to-[#E68200] text-white font-bold text-lg py-4 rounded-2xl shadow-[0_10px_25px_rgba(255,109,0,0.35)] transition-all transform hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(255,109,0,0.4)] mb-8 flex items-center justify-center gap-2">
@@ -316,7 +316,8 @@
                         </div>
                     </div>
                 </div>
-                <% } %>
+            </c:otherwise>
+        </c:choose>
     </div>
 
     <!-- STATE 3: PROFILE VIEW -->
@@ -341,14 +342,14 @@
                     class="material-symbols-outlined text-[48px]">person</span>
             </div>
             <h3 class="font-bold text-xl text-slate-900 leading-tight mb-1">
-                <%= fullName !=null ? fullName : "Khách" %>
+                <c:out value="${not empty fullName ? fullName : 'Khách'}" />
             </h3>
             <p class="text-sm text-slate-500">
-                <%= isLoggedIn ? "Thành viên Transcake" : "Chưa đăng nhập" %>
+                <c:out value="${isLoggedIn ? 'Thành viên Transcake' : 'Chưa đăng nhập'}" />
             </p>
         </div>
 
-        <% if (isLoggedIn) { %>
+        <c:if test="${isLoggedIn}">
             <div
                 class="w-full space-y-3 px-4 mt-auto pt-8 border-t border-slate-200/50">
                 <!-- Other functions can be added here later -->
@@ -388,7 +389,7 @@
                     }
                 </script>
             </div>
-            <% } %>
+        </c:if>
     </div>
 
 </div>

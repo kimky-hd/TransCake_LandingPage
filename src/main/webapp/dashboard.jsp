@@ -1,37 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-    <%@ page import="org.example.model.User" %>
-        <%@ page import="org.example.model.BlogPost" %>
-            <%@ page import="org.example.model.Trip" %>
-                <%@ page import="org.example.dao.TripDAO" %>
-                    <%@ page import="java.util.List" %>
-                        <% 
-                            // Data is now provided by DashboardServlet 
-                            Boolean isLoggedInAttr=(Boolean) request.getAttribute("isLoggedIn"); 
-                            
-                            // Nếu truy cập thẳng vào dashboard.jsp (isLoggedInAttr bị null do chưa qua Servlet), redirect về /dashboard 
-                            if (isLoggedInAttr==null) {
-                                response.sendRedirect(request.getContextPath() + "/dashboard" ); 
-                                return; 
-                            } 
-                            boolean isLoggedIn=(isLoggedInAttr !=null && isLoggedInAttr); 
-                            String fullName=(String) request.getAttribute("fullName"); 
-                            
-                            // Bind local variables to request attributes for dynamic includes
-                            request.setAttribute("isLoggedIn", isLoggedIn);
-                            request.setAttribute("fullName", fullName); 
-                            
-                            @SuppressWarnings("unchecked") 
-                            List<BlogPost> blogPosts = (List<BlogPost>) request.getAttribute("blogPosts");
-
-                                Trip activeTrip = (Trip) request.getAttribute("activeTrip");
-                                Trip activePreBookTrip = (Trip) request.getAttribute("activePreBookTrip");
-
-                                String preBookDateStr = (String) request.getAttribute("preBookDateStr");
-                                String preBookTimeStr = (String) request.getAttribute("preBookTimeStr");
-
-                                if (preBookDateStr == null) preBookDateStr = "";
-                                if (preBookTimeStr == null) preBookTimeStr = "";
-                                %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<c:if test="${isLoggedIn == null}">
+    <c:redirect url="/dashboard" />
+</c:if>
                                 <!DOCTYPE html>
                                 <html lang="vi">
 
@@ -45,13 +17,13 @@
                                     <!-- Tailwind CSS -->
                                     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
                                     <script
-                                        src="${pageContext.request.contextPath}/assets/js/tailwind-config.js?v=<%= System.currentTimeMillis() %>"></script>
+                                        src="${pageContext.request.contextPath}/assets/js/tailwind-config.js?v=${cacheVersion}"></script>
 
                                     <!-- Custom CSS -->
                                     <link rel="stylesheet"
-                                        href="${pageContext.request.contextPath}/assets/css/styles.css?v=<%= System.currentTimeMillis() %>" />
+                                        href="${pageContext.request.contextPath}/assets/css/styles.css?v=${cacheVersion}" />
                                     <link rel="stylesheet"
-                                        href="${pageContext.request.contextPath}/assets/css/landingpage.css?v=<%= System.currentTimeMillis() %>" />
+                                        href="${pageContext.request.contextPath}/assets/css/landingpage.css?v=${cacheVersion}" />
 
                                     <!-- Google Fonts & Material Symbols -->
                                     <link
@@ -107,7 +79,7 @@
                                     </div>
 
                                     <!-- Bottom Trip Proposals Panel (Driver Only) -->
-                                    <% if (isLoggedIn) { %>
+                                    <c:if test="${isLoggedIn}">
                                         <!-- (Removed OLD trip-proposals-panel to resolve ID conflicts) -->
 
                                         <!-- Bottom Search Bar (Passenger) -->
@@ -529,52 +501,62 @@
                                                 class="flex flex-col lg:flex-row gap-8 flex-1 min-h-0 overflow-y-auto panel-scroll pr-2 relative">
                                                 <!-- Left: Blog Feed (2/3) -->
                                                 <div class="w-full lg:w-2/3 flex flex-col space-y-5 pb-4">
-                                                    <% if (blogPosts !=null && !blogPosts.isEmpty()) { 
-                                                        for (BlogPost post : blogPosts) { %>
-                                                        <div
-                                                            class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow mb-4">
-                                                            <div class="flex items-center gap-3 mb-4">
-                                                                <!-- Empty Avatar -->
+                                                    <c:choose>
+                                                        <c:when test="${not empty blogPosts}">
+                                                            <c:forEach var="post" items="${blogPosts}">
                                                                 <div
-                                                                    class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center shrink-0 text-slate-400">
-                                                                    <span
-                                                                        class="material-symbols-outlined text-[20px]">person</span>
-                                                                </div>
-                                                                <div>
-                                                                    <h5 class="font-bold text-slate-800 text-sm">
-                                                                        <%= post.getPassengerName() !=null ? post.getPassengerName() : "Người dùng ẩn danh" %>
-                                                                    </h5>
-                                                                    <p class="text-xs text-slate-500">
-                                                                        <%= post.getTripCreatedAt() !=null ? new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(post.getTripCreatedAt()) : "Mới đây" %>
-                                                                            • Nhóm Chia sẻ chuyến đi
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                            <p
-                                                                class="text-slate-700 text-sm mb-3 leading-relaxed whitespace-pre-line">
-                                                                <strong>
-                                                                    <%= post.getTitle() %>
-                                                                </strong>
+                                                                    class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow mb-4">
+                                                                    <div class="flex items-center gap-3 mb-4">
+                                                                        <!-- Empty Avatar -->
+                                                                        <div
+                                                                            class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center shrink-0 text-slate-400">
+                                                                            <span
+                                                                                class="material-symbols-outlined text-[20px]">person</span>
+                                                                        </div>
+                                                                        <div>
+                                                                            <h5 class="font-bold text-slate-800 text-sm">
+                                                                                <c:out value="${not empty post.passengerName ? post.passengerName : 'Người dùng ẩn danh'}" />
+                                                                            </h5>
+                                                                            <p class="text-xs text-slate-500">
+                                                                                <c:choose>
+                                                                                    <c:when test="${not empty post.tripCreatedAt}">
+                                                                                        <fmt:formatDate value="${post.tripCreatedAt}" pattern="dd/MM/yyyy HH:mm" />
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        Mới đây
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
+                                                                                    • Nhóm Chia sẻ chuyến đi
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <p
+                                                                        class="text-slate-700 text-sm mb-3 leading-relaxed whitespace-pre-line">
+                                                                        <strong>
+                                                                            <c:out value="${post.title}" />
+                                                                        </strong>
 
-                                                                <%= post.getContent() %>
-                                                            </p>
-                                                            <div
-                                                                class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
-                                                                <button
-                                                                    class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
-                                                                    <span
-                                                                        class="material-symbols-outlined text-[20px]">thumb_up</span>
-                                                                    Thích (0)
-                                                                </button>
-                                                                <button
-                                                                    class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
-                                                                    <span
-                                                                        class="material-symbols-outlined text-[20px]">chat_bubble</span>
-                                                                    Bình luận (0)
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        <% } } else { %>
+                                                                        <c:out value="${post.content}" />
+                                                                    </p>
+                                                                    <div
+                                                                        class="flex items-center gap-6 border-t border-slate-100/50 pt-3 mt-2">
+                                                                        <button
+                                                                            class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                                            <span
+                                                                                class="material-symbols-outlined text-[20px]">thumb_up</span>
+                                                                            Thích (0)
+                                                                        </button>
+                                                                        <button
+                                                                            class="flex items-center gap-2 text-slate-500 hover:text-[#6200EE] transition-colors text-sm font-medium">
+                                                                            <span
+                                                                                class="material-symbols-outlined text-[20px]">chat_bubble</span>
+                                                                            Bình luận (0)
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </c:forEach>
+                                                        </c:when>
+                                                        <c:otherwise>
                                                             <div
                                                                 class="text-center p-10 bg-white/50 border border-slate-200/80 rounded-3xl">
                                                                 <span
@@ -582,7 +564,8 @@
                                                                 <p class="text-slate-500 font-medium">Hiện chưa có bài
                                                                     đăng nào.</p>
                                                             </div>
-                                                            <% } %>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </div>
 
                                                 <!-- Right: Create Post & Friends (1/3) -->
@@ -697,24 +680,24 @@
                                         </div>
 
                                         <script>
-                                            let isSearchingOnDemand = <%= activeTrip != null ? "true" : "false" %>;
-                                            window.currentTripId = <%= activeTrip != null ? activeTrip.getId() : "null" %>;
+                                            let isSearchingOnDemand = ${not empty activeTrip};
+                                            window.currentTripId = ${not empty activeTrip ? activeTrip.id : 'null'};
 
-                                            let hasPreBookTrip = <%= activePreBookTrip != null ? "true" : "false" %>;
-                                            window.currentPreBookTripId = <%= activePreBookTrip != null ? activePreBookTrip.getId() : "null" %>;
+                                            let hasPreBookTrip = ${not empty activePreBookTrip};
+                                            window.currentPreBookTripId = ${not empty activePreBookTrip ? activePreBookTrip.id : 'null'};
 
                                             const tripData = {
                                                 ON_DEMAND: {
                                                     active: isSearchingOnDemand,
-                                                    pickup: "<%= activeTrip != null ? activeTrip.getPickupLocation() : "" %>",
-                                                    dropoff: "<%= activeTrip != null ? activeTrip.getDropoffLocation() : "" %>"
-                            },
+                                                    pickup: "${not empty activeTrip ? activeTrip.pickupLocation : ''}",
+                                                    dropoff: "${not empty activeTrip ? activeTrip.dropoffLocation : ''}"
+                                                },
                                                 PRE_BOOK: {
                                                     active: hasPreBookTrip,
-                                                    pickup: "<%= activePreBookTrip != null ? activePreBookTrip.getPickupLocation() : "" %>",
-                                                    dropoff: "<%= activePreBookTrip != null ? activePreBookTrip.getDropoffLocation() : "" %>",
-                                                    date: "<%= preBookDateStr %>",
-                                                    time: "<%= preBookTimeStr %>"
+                                                    pickup: "${not empty activePreBookTrip ? activePreBookTrip.pickupLocation : ''}",
+                                                    dropoff: "${not empty activePreBookTrip ? activePreBookTrip.dropoffLocation : ''}",
+                                                    date: "${preBookDateStr}",
+                                                    time: "${preBookTimeStr}"
                                                 }
                                             };
 
@@ -737,8 +720,8 @@
                                                     document.getElementById('dropoff-input').value = tripData.ON_DEMAND.dropoff;
 
                                                     // Giao diện popup
-                                                    document.getElementById('mini-popup-pickup').textContent = "<%= activeTrip != null ? activeTrip.getPickupLocation() : "" %>";
-                                                    document.getElementById('mini-popup-dropoff').textContent = "<%= activeTrip != null ? activeTrip.getDropoffLocation() : "" %>";
+                                                    document.getElementById('mini-popup-pickup').textContent = "${not empty activeTrip ? activeTrip.pickupLocation : ''}";
+                                                    document.getElementById('mini-popup-dropoff').textContent = "${not empty activeTrip ? activeTrip.dropoffLocation : ''}";
 
                                                     const btnSubmit = document.getElementById('btn-submit-search');
                                                     if (btnSubmit) {
@@ -751,8 +734,8 @@
                                                 }
 
                                                 if (hasPreBookTrip) {
-                                                    document.getElementById('mini-prebook-pickup').textContent = "<%= activePreBookTrip != null ? activePreBookTrip.getPickupLocation() : "" %>";
-                                                    document.getElementById('mini-prebook-dropoff').textContent = "<%= activePreBookTrip != null ? activePreBookTrip.getDropoffLocation() : "" %>";
+                                                    document.getElementById('mini-prebook-pickup').textContent = "${not empty activePreBookTrip ? activePreBookTrip.pickupLocation : ''}";
+                                                    document.getElementById('mini-prebook-dropoff').textContent = "${not empty activePreBookTrip ? activePreBookTrip.dropoffLocation : ''}";
                                                 }
 
                                                 // Hiển thị popup nếu khung search đang ẩn
@@ -1568,7 +1551,7 @@
                                                 }
                                             }
                                         </script>
-                                        <% } %>
+                                        </c:if>
 
                                             <!-- Locate Me Button -->
                                             <button onclick="recenterMap()"
@@ -1579,11 +1562,11 @@
 
                                             <!-- Script to handle switching roles -->
                                             <script>
-                                                const initialUserRole = '<%= request.getAttribute("userRole") != null ? request.getAttribute("userRole") : "passenger" %>';
-                                                const hasVehicle = <%= request.getAttribute("hasVehicle") != null ? request.getAttribute("hasVehicle") : "false" %>;
-                                                window.verificationStatus = '<%= request.getAttribute("verificationStatus") != null ? request.getAttribute("verificationStatus") : "" %>';
+                                                const initialUserRole = '${not empty userRole ? userRole : "passenger"}';
+                                                const hasVehicle = ${not empty hasVehicle ? hasVehicle : false};
+                                                window.verificationStatus = '${not empty verificationStatus ? verificationStatus : ""}';
                                                 let currentUserRole = 'passenger'; // default UI state is passenger
-                                                window.userFullName = '<%= request.getAttribute("fullName") != null && !request.getAttribute("fullName").equals("Người dùng") ? request.getAttribute("fullName") : "" %>';
+                                                window.userFullName = '${not empty fullName && fullName != "Người dùng" ? fullName : ""}';
 
                                                 document.addEventListener('DOMContentLoaded', function () {
                                                     if (initialUserRole === 'driver') {
@@ -1652,7 +1635,7 @@
                                                                 'CẢNH BÁO: Việc chuyển đổi vai trò sẽ khiến hệ thống HỦY toàn bộ chuyến xe bạn đang đặt (hoặc đang nhận). Bạn có chắc chắn muốn chuyển đổi?',
                                                                 function () {
                                                                     // Gọi API để thực hiện chuyển đổi
-                                                                    fetch('<%= request.getContextPath() %>/api/switch-role', {
+                                                                    fetch('${pageContext.request.contextPath}/api/switch-role', {
                                                                         method: 'POST',
                                                                         headers: { 'Content-Type': 'application/json' },
                                                                         body: JSON.stringify({ newRole: role })
@@ -1847,14 +1830,14 @@
 
                                             <script>
                                                 window.CONTEXT_PATH = '${pageContext.request.contextPath}';
-                    <% if (!isLoggedIn) { %>
+                    <c:if test="${!isLoggedIn}">
                                                     // Auto-open modal if not logged in
                                                     document.addEventListener('DOMContentLoaded', () => {
                                                         setTimeout(() => {
                                                             if (window.openAuthModal) window.openAuthModal();
                                                         }, 500);
                                                     });
-                    <% } %>
+                    </c:if>
 
                                                     // Bind dynamic events after DOM content is loaded
                                                     document.addEventListener('DOMContentLoaded', function () {
@@ -2307,9 +2290,9 @@
                                             </script>
                                             <!-- Toast Notification Utility -->
                                             <script
-                                                src="${pageContext.request.contextPath}/assets/js/toast.js?v=<%= System.currentTimeMillis() %>"></script>
+                                                src="${pageContext.request.contextPath}/assets/js/toast.js?v=${cacheVersion}"></script>
                                             <script
-                                                src="${pageContext.request.contextPath}/assets/js/landingpage.js?v=<%= System.currentTimeMillis() %>"></script>
+                                                src="${pageContext.request.contextPath}/assets/js/landingpage.js?v=${cacheVersion}"></script>
 
                                             <!-- Trip Proposals Panel (moved to body to avoid backdrop-blur stacking context) -->
                                     <div id="trip-proposals-panel"

@@ -1,6 +1,6 @@
-<%@ page import="org.example.model.AdminDriverDTO" %>
-<%@ page import="java.util.List" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -44,49 +44,49 @@
         </div>
         <div class="ml-auto flex items-center gap-4">
             <span class="text-blue-100 text-sm">Xin chào, Admin</span>
-            <a href="#" onclick="fetch('<%= request.getContextPath() %>/api/logout').then(() => window.location.href='<%= request.getContextPath() %>/'); return false;" class="text-white hover:text-blue-200 material-symbols-outlined">logout</a>
+            <a href="#" onclick="fetch('${pageContext.request.contextPath}/api/logout').then(() => window.location.href='${pageContext.request.contextPath}/'); return false;" class="text-white hover:text-blue-200 material-symbols-outlined">logout</a>
         </div>
     </header>
-
-    <%
-        List<AdminDriverDTO> pendingDrivers = (List<AdminDriverDTO>) request.getAttribute("pendingDrivers");
-        int count = (pendingDrivers != null) ? pendingDrivers.size() : 0;
-    %>
 
     <!-- Main Content -->
     <main class="pt-20 px-6 pb-12 max-w-7xl mx-auto">
         <div class="mb-6 flex items-center justify-between">
             <h2 class="text-2xl font-normal text-slate-800">Duyệt Hồ Sơ Đối Tác</h2>
             <div class="text-sm text-slate-500">
-                Hiển thị <span class="font-bold text-slate-700"><%= count %></span> hồ sơ chờ duyệt
+                Hiển thị <span class="font-bold text-slate-700">${fn:length(pendingDrivers)}</span> hồ sơ chờ duyệt
             </div>
         </div>
 
-        <% if (count == 0) { %>
-            <div class="fiori-card p-12 text-center flex flex-col items-center justify-center">
-                <span class="material-symbols-outlined text-6xl text-slate-300 mb-4">task_alt</span>
-                <h3 class="text-lg font-medium text-slate-700">Không có hồ sơ nào cần duyệt!</h3>
-                <p class="text-slate-500 mt-2">Tất cả tài xế đã được xử lý.</p>
-            </div>
-        <% } else { %>
+        <c:choose>
+            <c:when test="${empty pendingDrivers}">
+                <div class="fiori-card p-12 text-center flex flex-col items-center justify-center">
+                    <span class="material-symbols-outlined text-6xl text-slate-300 mb-4">task_alt</span>
+                    <h3 class="text-lg font-medium text-slate-700">Không có hồ sơ nào cần duyệt!</h3>
+                    <p class="text-slate-500 mt-2">Tất cả tài xế đã được xử lý.</p>
+                </div>
+            </c:when>
+            <c:otherwise>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <% for (AdminDriverDTO driver : pendingDrivers) { %>
+                <c:forEach var="driver" items="${pendingDrivers}">
                     <div class="fiori-card overflow-hidden flex flex-col">
                         <div class="border-b border-slate-100 p-5 flex items-start gap-4">
                             <div class="w-12 h-12 rounded-full bg-slate-200 overflow-hidden flex-shrink-0 border border-slate-300">
-                                <% if (driver.getAvatarUrl() != null && !driver.getAvatarUrl().isEmpty()) { %>
-                                    <img src="<%= driver.getAvatarUrl() %>" alt="Avatar" class="w-full h-full object-cover"/>
-                                <% } else { %>
-                                    <span class="material-symbols-outlined w-full h-full flex items-center justify-center text-slate-400">person</span>
-                                <% } %>
+                                <c:choose>
+                                    <c:when test="${not empty driver.avatarUrl}">
+                                        <img src="<c:out value='${driver.avatarUrl}' />" alt="Avatar" class="w-full h-full object-cover"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="material-symbols-outlined w-full h-full flex items-center justify-center text-slate-400">person</span>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                             <div class="flex-1">
-                                <h3 class="text-lg font-semibold text-slate-800 leading-tight"><%= driver.getFullName() %></h3>
+                                <h3 class="text-lg font-semibold text-slate-800 leading-tight"><c:out value="${driver.fullName}" /></h3>
                                 <div class="text-sm text-slate-500 mt-1 flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[16px]">mail</span> <%= driver.getEmail() %>
+                                    <span class="material-symbols-outlined text-[16px]">mail</span> <c:out value="${driver.email}" />
                                 </div>
                                 <div class="text-sm text-slate-500 mt-1 flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[16px]">call</span> <%= driver.getPhoneNumber() %>
+                                    <span class="material-symbols-outlined text-[16px]">call</span> <c:out value="${driver.phoneNumber}" />
                                 </div>
                             </div>
                             <span class="px-2 py-1 bg-amber-100 text-amber-700 text-xs font-semibold rounded-sm">PENDING</span>
@@ -96,19 +96,19 @@
                             <div class="grid grid-cols-2 gap-y-4 gap-x-2 text-sm mb-6">
                                 <div>
                                     <p class="text-slate-500 text-xs uppercase tracking-wider font-semibold mb-1">Loại Xe</p>
-                                    <p class="text-slate-800 font-medium"><%= driver.getVehicleType() %></p>
+                                    <p class="text-slate-800 font-medium"><c:out value="${driver.vehicleType}" /></p>
                                 </div>
                                 <div>
                                     <p class="text-slate-500 text-xs uppercase tracking-wider font-semibold mb-1">Dòng Xe</p>
-                                    <p class="text-slate-800 font-medium"><%= driver.getVehicleName() %> - <%= driver.getVehicleColor() %></p>
+                                    <p class="text-slate-800 font-medium"><c:out value="${driver.vehicleName}" /> - <c:out value="${driver.vehicleColor}" /></p>
                                 </div>
                                 <div>
                                     <p class="text-slate-500 text-xs uppercase tracking-wider font-semibold mb-1">Biển Số</p>
-                                    <p class="text-slate-800 font-medium"><%= driver.getLicensePlate() %></p>
+                                    <p class="text-slate-800 font-medium"><c:out value="${driver.licensePlate}" /></p>
                                 </div>
                                 <div>
                                     <p class="text-slate-500 text-xs uppercase tracking-wider font-semibold mb-1">Số CCCD / Bằng Lái</p>
-                                    <p class="text-slate-800 font-medium"><%= driver.getIdCardNumber() %> / <%= driver.getLicenseNumber() %></p>
+                                    <p class="text-slate-800 font-medium"><c:out value="${driver.idCardNumber}" /> / <c:out value="${driver.licenseNumber}" /></p>
                                 </div>
                             </div>
 
@@ -116,29 +116,29 @@
                             <div class="space-y-3">
                                 <p class="text-slate-500 text-xs uppercase tracking-wider font-semibold">Tài liệu đính kèm</p>
                                 <div class="grid grid-cols-4 gap-2">
-                                    <a href="<%= driver.getIdCardFrontUrl() %>" target="_blank" class="block aspect-[4/3] rounded bg-slate-200 overflow-hidden relative group cursor-pointer" title="CCCD Mặt trước">
-                                        <img src="<%= driver.getIdCardFrontUrl() %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform"/>
+                                    <a href="<c:out value='${driver.idCardFrontUrl}' />" target="_blank" class="block aspect-[4/3] rounded bg-slate-200 overflow-hidden relative group cursor-pointer" title="CCCD Mặt trước">
+                                        <img src="<c:out value='${driver.idCardFrontUrl}' />" class="w-full h-full object-cover group-hover:scale-110 transition-transform"/>
                                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                                             <span class="material-symbols-outlined text-white text-sm">open_in_new</span>
                                         </div>
                                         <div class="absolute bottom-0 left-0 right-0 bg-black/60 text-[10px] text-white px-1 py-0.5 text-center truncate">CCCD Trước</div>
                                     </a>
-                                    <a href="<%= driver.getIdCardBackUrl() %>" target="_blank" class="block aspect-[4/3] rounded bg-slate-200 overflow-hidden relative group cursor-pointer" title="CCCD Mặt sau">
-                                        <img src="<%= driver.getIdCardBackUrl() %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform"/>
+                                    <a href="<c:out value='${driver.idCardBackUrl}' />" target="_blank" class="block aspect-[4/3] rounded bg-slate-200 overflow-hidden relative group cursor-pointer" title="CCCD Mặt sau">
+                                        <img src="<c:out value='${driver.idCardBackUrl}' />" class="w-full h-full object-cover group-hover:scale-110 transition-transform"/>
                                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                                             <span class="material-symbols-outlined text-white text-sm">open_in_new</span>
                                         </div>
                                         <div class="absolute bottom-0 left-0 right-0 bg-black/60 text-[10px] text-white px-1 py-0.5 text-center truncate">CCCD Sau</div>
                                     </a>
-                                    <a href="<%= driver.getLicenseImageUrl() %>" target="_blank" class="block aspect-[4/3] rounded bg-slate-200 overflow-hidden relative group cursor-pointer" title="Giấy Phép Lái Xe">
-                                        <img src="<%= driver.getLicenseImageUrl() %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform"/>
+                                    <a href="<c:out value='${driver.licenseImageUrl}' />" target="_blank" class="block aspect-[4/3] rounded bg-slate-200 overflow-hidden relative group cursor-pointer" title="Giấy Phép Lái Xe">
+                                        <img src="<c:out value='${driver.licenseImageUrl}' />" class="w-full h-full object-cover group-hover:scale-110 transition-transform"/>
                                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                                             <span class="material-symbols-outlined text-white text-sm">open_in_new</span>
                                         </div>
                                         <div class="absolute bottom-0 left-0 right-0 bg-black/60 text-[10px] text-white px-1 py-0.5 text-center truncate">Bằng Lái</div>
                                     </a>
-                                    <a href="<%= driver.getVehicleRegistrationUrl() %>" target="_blank" class="block aspect-[4/3] rounded bg-slate-200 overflow-hidden relative group cursor-pointer" title="Cà Vẹt Xe">
-                                        <img src="<%= driver.getVehicleRegistrationUrl() %>" class="w-full h-full object-cover group-hover:scale-110 transition-transform"/>
+                                    <a href="<c:out value='${driver.vehicleRegistrationUrl}' />" target="_blank" class="block aspect-[4/3] rounded bg-slate-200 overflow-hidden relative group cursor-pointer" title="Cà Vẹt Xe">
+                                        <img src="<c:out value='${driver.vehicleRegistrationUrl}' />" class="w-full h-full object-cover group-hover:scale-110 transition-transform"/>
                                         <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                                             <span class="material-symbols-outlined text-white text-sm">open_in_new</span>
                                         </div>
@@ -149,20 +149,20 @@
                         </div>
 
                         <div class="border-t border-slate-100 p-4 bg-white flex justify-end gap-3 mt-auto">
-                            <form action="<%= request.getContextPath() %>/admintranscake" method="POST" class="inline">
-                                <input type="hidden" name="userId" value="<%= driver.getUserId() %>">
-                                <input type="hidden" name="email" value="<%= driver.getEmail() %>">
-                                <input type="hidden" name="driverName" value="<%= driver.getFullName() %>">
+                            <form action="${pageContext.request.contextPath}/admintranscake" method="POST" class="inline">
+                                <input type="hidden" name="userId" value="<c:out value='${driver.userId}' />">
+                                <input type="hidden" name="email" value="<c:out value='${driver.email}' />">
+                                <input type="hidden" name="driverName" value="<c:out value='${driver.fullName}' />">
                                 <input type="hidden" name="action" value="REJECT">
                                 <button type="submit" class="fiori-button btn-reject px-6 py-2 text-sm" onclick="return confirm('Bạn có chắc chắn muốn TỪ CHỐI hồ sơ này? Hệ thống sẽ gửi email yêu cầu tài xế nộp lại.');">
                                     Từ chối
                                 </button>
                             </form>
                             
-                            <form action="<%= request.getContextPath() %>/admintranscake" method="POST" class="inline">
-                                <input type="hidden" name="userId" value="<%= driver.getUserId() %>">
-                                <input type="hidden" name="email" value="<%= driver.getEmail() %>">
-                                <input type="hidden" name="driverName" value="<%= driver.getFullName() %>">
+                            <form action="${pageContext.request.contextPath}/admintranscake" method="POST" class="inline">
+                                <input type="hidden" name="userId" value="<c:out value='${driver.userId}' />">
+                                <input type="hidden" name="email" value="<c:out value='${driver.email}' />">
+                                <input type="hidden" name="driverName" value="<c:out value='${driver.fullName}' />">
                                 <input type="hidden" name="action" value="APPROVE">
                                 <button type="submit" class="fiori-button btn-approve px-6 py-2 text-sm" onclick="return confirm('Xác nhận DUYỆT hồ sơ tài xế này?');">
                                     Phê duyệt
@@ -170,9 +170,9 @@
                             </form>
                         </div>
                     </div>
-                <% } %>
-            </div>
-        <% } %>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
     </main>
 
 </body>

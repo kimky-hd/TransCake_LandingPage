@@ -90,6 +90,7 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("driverActiveTrip", driverActiveTrip);
         request.setAttribute("preBookDateStr", preBookDateStr);
         request.setAttribute("preBookTimeStr", preBookTimeStr);
+        request.setAttribute("cacheVersion", System.currentTimeMillis());
 
         // Forward to dashboard.jsp
         request.getRequestDispatcher("/dashboard.jsp").forward(request, response);
