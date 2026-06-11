@@ -411,6 +411,7 @@
 
         </div>
     </div>
+</div>
 
     <!-- Onboarding Modal Script -->
     <script>

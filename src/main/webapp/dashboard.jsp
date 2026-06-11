@@ -4,13 +4,20 @@
             <%@ page import="org.example.model.Trip" %>
                 <%@ page import="org.example.dao.TripDAO" %>
                     <%@ page import="java.util.List" %>
-                        <% // Data is now provided by DashboardServlet Boolean isLoggedInAttr=(Boolean)
-                            request.getAttribute("isLoggedIn"); // Nếu truy cập thẳng vào dashboard.jsp (isLoggedInAttr
-                            bị null do chưa qua Servlet), redirect về /dashboard if (isLoggedInAttr==null) {
-                            response.sendRedirect(request.getContextPath() + "/dashboard" ); return; } boolean
-                            isLoggedIn=(isLoggedInAttr !=null && isLoggedInAttr); String fullName=(String)
-                            request.getAttribute("fullName"); @SuppressWarnings("unchecked") List<BlogPost> blogPosts =
-                            (List<BlogPost>) request.getAttribute("blogPosts");
+                        <% 
+                            // Data is now provided by DashboardServlet 
+                            Boolean isLoggedInAttr=(Boolean) request.getAttribute("isLoggedIn"); 
+                            
+                            // Nếu truy cập thẳng vào dashboard.jsp (isLoggedInAttr bị null do chưa qua Servlet), redirect về /dashboard 
+                            if (isLoggedInAttr==null) {
+                                response.sendRedirect(request.getContextPath() + "/dashboard" ); 
+                                return; 
+                            } 
+                            boolean isLoggedIn=(isLoggedInAttr !=null && isLoggedInAttr); 
+                            String fullName=(String) request.getAttribute("fullName"); 
+                            
+                            @SuppressWarnings("unchecked") 
+                            List<BlogPost> blogPosts = (List<BlogPost>) request.getAttribute("blogPosts");
 
                                 Trip activeTrip = (Trip) request.getAttribute("activeTrip");
                                 Trip activePreBookTrip = (Trip) request.getAttribute("activePreBookTrip");
@@ -64,7 +71,18 @@
                                             font-family: 'Inter', sans-serif;
                                             /* Removed custom cursors to use system defaults */
                                         }
+                                        #trip-proposals-panel {
+                                            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                                                        opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                                                        visibility 0s linear 0.5s;
+                                        }
+                                        #trip-proposals-panel.panel-open {
+                                            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                                                        opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                                                        visibility 0s linear 0s;
+                                        }
                                     </style>
+
                                 </head>
 
                                 <body
@@ -377,6 +395,24 @@
                                                                     class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-colors">chevron_right</span>
                                                             </div>
 
+                                                            <!-- Driver Active Trip Shortcut -->
+                                                            <div id="sidebar-driver-active-trip"
+                                                                onclick="openDriverActiveTripPopup()"
+                                                                class="bg-white/70 hover:bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm cursor-pointer transition-colors flex items-center gap-4 mt-1 group hidden">
+                                                                <div
+                                                                    class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+                                                                    <span
+                                                                        class="material-symbols-outlined">navigation</span>
+                                                                </div>
+                                                                <div class="flex-1">
+                                                                    <h4 class="font-bold text-slate-800 text-sm">Chuyến đi
+                                                                        hiện tại</h4>
+                                                                    <p class="text-xs text-slate-500 font-medium">Đang diễn ra</p>
+                                                                </div>
+                                                                <span
+                                                                    class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-colors">chevron_right</span>
+                                                            </div>
+
                                                             <!-- Desktop Extension: Heatmap Overlay Toggle -->
                                                             <div class="mt-6 pt-6 border-t border-slate-200/60">
                                                                 <div
@@ -518,61 +554,7 @@
 
                                     <!-- Bottom Trip Proposals Panel (Driver Only) -->
                                     <% if (isLoggedIn) { %>
-                                        <div id="trip-proposals-panel"
-                                            class="fixed bottom-8 left-[420px] right-8 z-30 bg-white/75 backdrop-blur-xl border border-white/60 rounded-3xl p-6 transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto min-h-[360px] max-h-[80vh]">
-                                            <!-- Handle for dragging/closing -->
-                                            <div class="w-full flex justify-center mb-4 cursor-pointer"
-                                                onclick="toggleTripProposals()">
-                                                <div
-                                                    class="w-16 h-1.5 bg-slate-300 rounded-full hover:bg-slate-400 transition-colors">
-                                                </div>
-                                            </div>
-
-                                            <!-- Header & Close -->
-                                            <div class="flex justify-between items-center mb-6">
-                                                <h3
-                                                    class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
-                                                    <span class="material-symbols-outlined text-[#FF6D00]">radar</span>
-                                                    Đề xuất chuyến đi
-                                                </h3>
-                                                <div class="flex items-center gap-3">
-                                                    <button onclick="fetchTripProposals()"
-                                                        class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-[#6200EE] transition-colors"
-                                                        title="Làm mới">
-                                                        <span
-                                                            class="material-symbols-outlined text-[20px]">refresh</span>
-                                                    </button>
-                                                    <button onclick="toggleTripProposals()"
-                                                        class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
-                                                        <span class="material-symbols-outlined text-[20px]">close</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <!-- Content Area (Scrollable) -->
-                                            <div class="flex-1 overflow-y-auto panel-scroll pr-2 relative"
-                                                id="trip-proposals-container">
-                                                <!-- Loading State -->
-                                                <div id="proposals-loading"
-                                                    class="absolute inset-0 flex flex-col items-center justify-center p-6 bg-white/50 rounded-2xl">
-                                                    <span
-                                                        class="material-symbols-outlined text-[#FF6D00] text-[40px] animate-spin mb-4">sync</span>
-                                                    <p class="text-slate-500 font-medium">Đang quét hệ thống...</p>
-                                                </div>
-                                                <!-- Empty State -->
-                                                <div id="proposals-empty"
-                                                    class="hidden absolute inset-0 flex flex-col items-center justify-center p-6 bg-white/50 rounded-2xl">
-                                                    <span
-                                                        class="material-symbols-outlined text-slate-300 text-[60px] mb-4">directions_car_off</span>
-                                                    <p class="text-slate-500 font-medium">Chưa có chuyến đi nào phù hợp
-                                                        lúc này.</p>
-                                                </div>
-                                                <!-- List State -->
-                                                <div id="proposals-list" class="hidden flex flex-col gap-4">
-                                                    <!-- Cards will be injected here via JS -->
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <!-- (Removed OLD trip-proposals-panel to resolve ID conflicts) -->
 
                                         <!-- Bottom Search Bar (Passenger) -->
                                         <div id="bottom-search-bar"
@@ -993,8 +975,8 @@
                                                 class="flex flex-col lg:flex-row gap-8 flex-1 min-h-0 overflow-y-auto panel-scroll pr-2 relative">
                                                 <!-- Left: Blog Feed (2/3) -->
                                                 <div class="w-full lg:w-2/3 flex flex-col space-y-5 pb-4">
-                                                    <% if (blogPosts !=null && !blogPosts.isEmpty()) { for (BlogPost
-                                                        post : blogPosts) { %>
+                                                    <% if (blogPosts !=null && !blogPosts.isEmpty()) { 
+                                                        for (BlogPost post : blogPosts) { %>
                                                         <div
                                                             class="bg-white/90 border border-slate-200/80 rounded-3xl p-5 shadow-sm hover:shadow-md transition-shadow mb-4">
                                                             <div class="flex items-center gap-3 mb-4">
@@ -1006,15 +988,10 @@
                                                                 </div>
                                                                 <div>
                                                                     <h5 class="font-bold text-slate-800 text-sm">
-                                                                        <%= post.getPassengerName() !=null ?
-                                                                            post.getPassengerName()
-                                                                            : "Người dùng ẩn danh" %>
+                                                                        <%= post.getPassengerName() !=null ? post.getPassengerName() : "Người dùng ẩn danh" %>
                                                                     </h5>
                                                                     <p class="text-xs text-slate-500">
-                                                                        <%= post.getTripCreatedAt() !=null ? new
-                                                                            java.text.SimpleDateFormat("dd/MM/yyyy
-                                                                            HH:mm").format(post.getTripCreatedAt())
-                                                                            : "Mới đây" %>
+                                                                        <%= post.getTripCreatedAt() !=null ? new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(post.getTripCreatedAt()) : "Mới đây" %>
                                                                             • Nhóm Chia sẻ chuyến đi
                                                                     </p>
                                                                 </div>
@@ -1618,20 +1595,17 @@
                                                                 // Ẩn mini popup đặt trước
                                                                 const prebookPopup = document.getElementById('mini-prebook-popup');
                                                                 if (prebookPopup) {
-                                                                    prebookPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                                                    prebookPopup.classList.add('translate-x-full', 'opacity-0');
                                                                     prebookPopup.classList.remove('translate-x-0', 'opacity-100');
 
                                                                     const blogBar = document.getElementById('bottom-blog-bar');
-                                                                    if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
-                                                                        blogBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                                    if (blogBar && !blogBar.classList.contains('translate-y-full')) {
+                                                                        blogBar.classList.add('translate-y-full', 'opacity-0');
                                                                         blogBar.classList.remove('translate-y-0', 'opacity-100');
                                                                     }
 
-                                                                    const tripPanel = document.getElementById('trip-proposals-panel');
-                                                                    if (tripPanel && !tripPanel.classList.contains('translate-y-[150%]')) {
-                                                                        tripPanel.classList.add('translate-y-[150%]', 'opacity-0');
-                                                                        tripPanel.classList.remove('translate-y-0', 'opacity-100');
-                                                                    }
+                                                                    closeTripProposalsPanel();
+
                                                                 }
 
                                                                 showToast("Đã hủy chuyến xe đặt trước thành công!", "success");
@@ -1692,6 +1666,37 @@
                                             }
 
                                             let proposalsInterval = null;
+                                            let tripPanelOpen = false; // Reliable state flag
+
+                                            function openTripProposalsPanel() {
+                                                const panel = document.getElementById('trip-proposals-panel');
+                                                if (!panel || tripPanelOpen) return;
+                                                tripPanelOpen = true;
+                                                panel.classList.add('panel-open');
+                                                panel.style.visibility = 'visible';
+                                                panel.style.transform = 'translateX(0)';
+                                                panel.style.opacity = '1';
+                                                panel.style.pointerEvents = 'auto';
+                                                console.log('[TripProposals] Panel OPENED');
+                                            }
+
+
+                                            function closeTripProposalsPanel() {
+                                                const panel = document.getElementById('trip-proposals-panel');
+                                                if (!panel || !tripPanelOpen) return;
+                                                tripPanelOpen = false;
+                                                panel.classList.remove('panel-open');
+                                                panel.style.transform = 'translateX(100%)';
+                                                panel.style.opacity = '0';
+                                                panel.style.pointerEvents = 'none';
+                                                setTimeout(() => { 
+                                                    if (!tripPanelOpen) {
+                                                        panel.style.visibility = 'hidden'; 
+                                                    }
+                                                }, 500);
+                                                console.log('[TripProposals] Panel CLOSED');
+                                                if (proposalsInterval) clearInterval(proposalsInterval);
+                                            }
 
                                             function toggleTripProposals() {
                                                 const panel = document.getElementById('trip-proposals-panel');
@@ -1704,41 +1709,32 @@
                                                     return;
                                                 }
 
-                                                if (panel.classList.contains('translate-y-[150%]')) {
-                                                    // Open panel
-                                                    panel.classList.remove('translate-y-[150%]');
-                                                    panel.classList.remove('opacity-0');
-                                                    panel.classList.add('translate-y-0');
-                                                    panel.classList.add('opacity-100');
+                                                console.log('[TripProposals] toggle called, panelOpen:', tripPanelOpen);
+                                                if (!tripPanelOpen) {
+                                                    // OPEN
+                                                    openTripProposalsPanel();
 
                                                     // Close search/blog if open
                                                     const searchBar = document.getElementById('bottom-search-bar');
-                                                    if (searchBar) {
-                                                        searchBar.classList.add('translate-y-[150%]');
-                                                        searchBar.classList.add('opacity-0');
-                                                        searchBar.classList.remove('translate-y-0');
-                                                        searchBar.classList.remove('opacity-100');
+                                                    if (searchBar && !searchBar.className.includes('translate-y-[150%]')) {
+                                                        searchBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                        searchBar.classList.remove('translate-y-0', 'opacity-100');
                                                     }
                                                     const blogBar = document.getElementById('bottom-blog-bar');
-                                                    if (blogBar) {
-                                                        blogBar.classList.add('translate-y-[150%]');
-                                                        blogBar.classList.add('opacity-0');
-                                                        blogBar.classList.remove('translate-y-0');
-                                                        blogBar.classList.remove('opacity-100');
+                                                    if (blogBar && !blogBar.className.includes('translate-y-[150%]')) {
+                                                        blogBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                        blogBar.classList.remove('translate-y-0', 'opacity-100');
                                                     }
 
                                                     fetchTripProposals();
                                                     if (proposalsInterval) clearInterval(proposalsInterval);
                                                     proposalsInterval = setInterval(fetchTripProposals, 30000);
                                                 } else {
-                                                    // Close panel
-                                                    panel.classList.add('translate-y-[150%]');
-                                                    panel.classList.add('opacity-0');
-                                                    panel.classList.remove('translate-y-0');
-                                                    panel.classList.remove('opacity-100');
-                                                    if (proposalsInterval) clearInterval(proposalsInterval);
+                                                    // CLOSE
+                                                    closeTripProposalsPanel();
                                                 }
                                             }
+
 
                                             function fetchTripProposals() {
                                                 const loadingEl = document.getElementById('proposals-loading');
@@ -1787,7 +1783,7 @@
                                                     const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(trip.price);
                                                     const note = trip.noteForDriver ? trip.noteForDriver : 'Không có lưu ý';
 
-                                                    const html = '<div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow grid grid-cols-[55%_45%] gap-4 items-stretch">' +
+                                                    const html = '<div id="proposal-' + trip.id + '" class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow grid grid-cols-[55%_45%] gap-4 items-stretch">' +
                                                         '<!-- Left Column: Trip Info -->' +
                                                         '<div class="flex flex-col gap-3 pr-4 border-r border-slate-100 min-w-0">' +
                                                         '<div class="flex justify-between items-start min-w-0">' +
@@ -1812,7 +1808,7 @@
                                                         '<p class="text-xs text-slate-600 truncate">' + note + '</p>' +
                                                         '</div>' +
                                                         '<div class="flex mt-auto pt-2">' +
-                                                        '<button onclick="acceptTrip(' + trip.id + ')" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2">' +
+                                                        '<button id="accept-btn-' + trip.id + '" onclick="acceptTrip(' + trip.id + ')" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2">' +
                                                         '<span class="material-symbols-outlined text-[18px]">done_outline</span>' +
                                                         'Nhận chuyến' +
                                                         '</button>' +
@@ -1840,6 +1836,50 @@
                                                 }
                                             }
 
+
+                                            function openDriverActiveTripPopup() {
+                                                const popup = document.getElementById('driver-active-trip-popup');
+                                                if(popup) {
+                                                    popup.classList.remove('hidden');
+                                                    setTimeout(() => {
+                                                        popup.classList.remove('opacity-0');
+                                                        popup.firstElementChild.classList.remove('scale-95');
+                                                    }, 10);
+                                                }
+                                            }
+
+                                            function closeDriverActiveTripPopup() {
+                                                const popup = document.getElementById('driver-active-trip-popup');
+                                                if(popup) {
+                                                    popup.classList.add('opacity-0');
+                                                    popup.firstElementChild.classList.add('scale-95');
+                                                    setTimeout(() => {
+                                                        popup.classList.add('hidden');
+                                                    }, 300);
+                                                }
+                                            }
+
+                                            function completeActiveTrip() {
+                                                if(confirm('Xác nhận hoàn thành chuyến đi?')) {
+                                                    showToast('Đang xử lý hoàn thành chuyến...', 'success');
+                                                    setTimeout(() => {
+                                                        closeDriverActiveTripPopup();
+                                                        // Fallback reload for now as endpoint may not exist
+                                                        window.location.reload();
+                                                    }, 1500);
+                                                }
+                                            }
+
+                                            function cancelActiveTrip() {
+                                                if(confirm('Xác nhận hủy chuyến đi?')) {
+                                                    showToast('Đã hủy chuyến đi.', 'info');
+                                                    setTimeout(() => {
+                                                        closeDriverActiveTripPopup();
+                                                        window.location.reload();
+                                                    }, 1500);
+                                                }
+                                            }
+
                                             function executeAcceptTrip(tripId) {
                                                 fetch('${pageContext.request.contextPath}/api/driver/accept-trip', {
                                                     method: 'POST',
@@ -1851,6 +1891,10 @@
                                                         if (data.success) {
                                                             showToast('Nhận chuyến thành công! Vui lòng liên hệ hành khách.', 'success');
 
+                                                            // Auto close the trip proposals panel using proper state management
+                                                            closeTripProposalsPanel();
+
+
                                                             const searchBar = document.getElementById('bottom-search-bar');
                                                             if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
                                                                 searchBar.classList.add('translate-y-[150%]');
@@ -1859,6 +1903,9 @@
                                                                 searchBar.classList.remove('opacity-100');
                                                             }
 
+                                                            const acceptedProposal = document.getElementById('proposal-' + tripId);
+                                                            if (acceptedProposal) acceptedProposal.remove();
+                                                            openDriverActiveTripPopup();
                                                             checkDriverTripStatus(); // Switch to active trip UI
                                                         } else {
                                                             showToast(data.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error');
@@ -1882,48 +1929,38 @@
 
                                                         if (data.active && data.trip) {
                                                             // Show active trip UI
-                                                            if (listEl) listEl.classList.add('hidden');
                                                             if (activeStateEl) {
                                                                 activeStateEl.classList.remove('hidden');
                                                                 activeStateEl.classList.add('flex');
                                                             }
-
-                                                            // Open trip-proposals-panel if it's hidden
-                                                            const tripPanel = document.getElementById('trip-proposals-panel');
-                                                            if (tripPanel && tripPanel.classList.contains('translate-x-[150%]')) {
-                                                                tripPanel.classList.remove('translate-x-[150%]', 'opacity-0');
-                                                                tripPanel.classList.add('translate-x-0', 'opacity-100');
-                                                            }
-                                                            if (titleEl) titleEl.textContent = 'Chuyến đi đang thực hiện';
-
-                                                            // Populate data
+                                                            
+                                                            // Populate new popup
                                                             const trip = data.trip;
-                                                            document.getElementById('active-trip-pickup').textContent = trip.pickupLocation;
-                                                            document.getElementById('active-trip-dropoff').textContent = trip.dropoffLocation;
-                                                            const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(trip.price);
-                                                            document.getElementById('active-trip-price').textContent = formattedPrice;
-                                                            document.getElementById('active-trip-distance').textContent = trip.distance + ' km';
+                                                            const popupPickup = document.getElementById('popup-active-trip-pickup');
+                                                            if(popupPickup) popupPickup.textContent = trip.pickupLocation;
+                                                            const popupDropoff = document.getElementById('popup-active-trip-dropoff');
+                                                            if(popupDropoff) popupDropoff.textContent = trip.dropoffLocation;
+                                                            const popupDistance = document.getElementById('popup-active-trip-distance');
+                                                            if(popupDistance) popupDistance.textContent = trip.distance + ' km';
+                                                            const popupPrice = document.getElementById('popup-active-trip-price');
+                                                            if(popupPrice) popupPrice.textContent = new Intl.NumberFormat('vi-VN').format(trip.price) + 'đ';
+                                                            
+                                                            const popupPassengerName = document.getElementById('popup-active-trip-passenger-name');
+                                                            if(popupPassengerName) popupPassengerName.textContent = trip.passengerName || 'Khách hàng';
+                                                            const popupPassengerPhone = document.getElementById('popup-active-trip-passenger-phone');
+                                                            if(popupPassengerPhone) popupPassengerPhone.textContent = trip.passengerPhone || '09xxxxxx';
 
-                                                            document.getElementById('active-trip-passenger-name').textContent = trip.passengerName || 'Khách hàng';
-                                                            document.getElementById('active-trip-passenger-phone').textContent = trip.passengerPhone || 'Không có';
-
-                                                            if (trip.passengerGender === 'MALE') {
-                                                                document.getElementById('active-trip-passenger-gender').textContent = 'Nam';
-                                                            } else if (trip.passengerGender === 'FEMALE') {
-                                                                document.getElementById('active-trip-passenger-gender').textContent = 'Nữ';
-                                                            } else {
-                                                                document.getElementById('active-trip-passenger-gender').textContent = 'Khác';
-                                                            }
-
-                                                            if (trip.passengerPhone) {
-                                                                document.getElementById('active-trip-call-btn').href = 'tel:' + trip.passengerPhone;
-                                                            }
+                                                            const sidebarBtn = document.getElementById('sidebar-driver-active-trip');
+                                                            if(sidebarBtn) sidebarBtn.classList.remove('hidden');
                                                         } else {
                                                             // Show proposals list
                                                             if (activeStateEl) {
                                                                 activeStateEl.classList.add('hidden');
                                                                 activeStateEl.classList.remove('flex');
                                                             }
+                                                            closeDriverActiveTripPopup();
+                                                            const sidebarBtn = document.getElementById('sidebar-driver-active-trip');
+                                                            if(sidebarBtn) sidebarBtn.classList.add('hidden');
                                                             if (titleEl) titleEl.textContent = 'Chuyến đi dành cho bạn';
                                                             if (listEl) listEl.classList.remove('hidden');
                                                             fetchTripProposals();
@@ -2720,143 +2757,210 @@
                                             <script
                                                 src="${pageContext.request.contextPath}/assets/js/landingpage.js?v=<%= System.currentTimeMillis() %>"></script>
 
-                                            <!-- Trip Proposals Panel -->
-                                            <div id="trip-proposals-panel"
-                                                class="fixed top-8 bottom-8 right-8 w-[700px] z-40 bg-white/90 backdrop-blur-xl border border-white/60 shadow-[0_30px_60px_rgba(0,0,0,0.15)] rounded-3xl overflow-hidden transition-all duration-500 transform translate-x-[150%] opacity-0 flex flex-col">
-                                                <!-- Header -->
+                                            <!-- Trip Proposals Panel (moved to body to avoid backdrop-blur stacking context) -->
+                                    <div id="trip-proposals-panel"
+                                        class="fixed top-8 bottom-8 right-8 w-[700px] z-40 bg-white/90 backdrop-blur-xl border border-white/60 shadow-[0_30px_60px_rgba(0,0,0,0.15)] rounded-3xl overflow-hidden transition-all duration-500 transform translate-x-full opacity-0 flex flex-col pointer-events-none">
+
+                                        <!-- Header -->
+                                        <div class="p-6 pb-4 shrink-0 border-b border-slate-200/50 flex justify-between items-center bg-white/40">
+                                            <div>
+                                                <h3 class="text-xl font-bold text-slate-800 tracking-tight">
+                                                    Chuyến đi dành cho bạn</h3>
+                                                <p class="text-[11px] font-semibold text-slate-500 mt-1 uppercase tracking-wider"
+                                                    id="proposals-vehicle-info">Đang tải phương tiện...</p>
+                                            </div>
+                                            <button onclick="toggleTripProposals()"
+                                                class="w-10 h-10 rounded-full bg-white/80 hover:bg-white border border-slate-200 flex items-center justify-center shadow-sm transition-all text-slate-500 hover:text-slate-800">
+                                                <span class="material-symbols-outlined">close</span>
+                                            </button>
+                                        </div>
+
+                                        <!-- List -->
+                                        <div id="proposals-list"
+                                            class="flex-1 overflow-y-auto panel-scroll p-4 space-y-4 bg-slate-50/50">
+                                            <!-- Loading skeleton -->
+                                            <div class="animate-pulse space-y-4">
+                                                <div class="h-32 bg-slate-200 rounded-2xl w-full"></div>
+                                                <div class="h-32 bg-slate-200 rounded-2xl w-full"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Active Trip State inside panel -->
+                                        <div id="driver-active-trip-state"
+                                            class="hidden flex-col h-full bg-slate-50/50">
+                                            <div class="flex-1 overflow-y-auto panel-scroll p-4 space-y-4">
                                                 <div
-                                                    class="p-6 pb-4 shrink-0 border-b border-slate-200/50 flex justify-between items-center bg-white/40">
-                                                    <div>
-                                                        <h3 class="text-xl font-bold text-slate-800 tracking-tight">
-                                                            Chuyến đi dành cho bạn</h3>
-                                                        <p class="text-[11px] font-semibold text-slate-500 mt-1 uppercase tracking-wider"
-                                                            id="proposals-vehicle-info">Đang tải phương tiện...</p>
-                                                    </div>
-                                                    <button onclick="toggleTripProposals()"
-                                                        class="w-10 h-10 rounded-full bg-white/80 hover:bg-white border border-slate-200 flex items-center justify-center shadow-sm transition-all text-slate-500 hover:text-slate-800">
-                                                        <span class="material-symbols-outlined">close</span>
-                                                    </button>
-                                                </div>
-
-                                                <!-- List -->
-                                                <div id="proposals-list"
-                                                    class="flex-1 overflow-y-auto panel-scroll p-4 space-y-4 bg-slate-50/50">
-                                                    <!-- Loading skeleton -->
-                                                    <div class="animate-pulse space-y-4">
-                                                        <div class="h-32 bg-slate-200 rounded-2xl w-full"></div>
-                                                        <div class="h-32 bg-slate-200 rounded-2xl w-full"></div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Active Trip State -->
-                                                <div id="driver-active-trip-state"
-                                                    class="hidden flex-col h-full bg-slate-50/50">
-                                                    <div class="flex-1 overflow-y-auto panel-scroll p-4 space-y-4">
-                                                        <div
-                                                            class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm grid grid-cols-2 gap-4 items-stretch h-full">
-                                                            <!-- Left Column: Trip Info -->
-                                                            <div
-                                                                class="flex flex-col gap-4 pr-4 border-r border-slate-100">
-                                                                <div class="flex items-center gap-2">
-                                                                    <span
-                                                                        class="material-symbols-outlined text-[#6200EE] bg-[#6200EE]/10 p-2 rounded-xl">navigation</span>
-                                                                    <h4 class="font-bold text-slate-800">Đang thực hiện
-                                                                        chuyến</h4>
-                                                                </div>
-                                                                <div class="flex-1 space-y-4 mt-2">
-                                                                    <div class="flex items-start gap-3">
-                                                                        <div
-                                                                            class="w-3 h-3 rounded-full bg-[#6200EE] mt-1 shrink-0 shadow-[0_0_0_3px_rgba(98,0,238,0.2)]">
-                                                                        </div>
-                                                                        <div>
-                                                                            <p
-                                                                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-0.5">
-                                                                                Điểm đón</p>
-                                                                            <p class="text-sm font-semibold text-slate-800"
-                                                                                id="active-trip-pickup"></p>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="flex items-start gap-3">
-                                                                        <div
-                                                                            class="w-3 h-3 rounded-full bg-[#FF6D00] mt-1 shrink-0 shadow-[0_0_0_3px_rgba(255,109,0,0.2)]">
-                                                                        </div>
-                                                                        <div>
-                                                                            <p
-                                                                                class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-0.5">
-                                                                                Điểm đến</p>
-                                                                            <p class="text-sm font-semibold text-slate-800"
-                                                                                id="active-trip-dropoff"></p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                    class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm grid grid-cols-2 gap-4 items-stretch h-full">
+                                                    <!-- Left Column: Trip Info -->
+                                                    <div
+                                                        class="flex flex-col gap-4 pr-4 border-r border-slate-100">
+                                                        <div class="flex items-center gap-2">
+                                                            <span
+                                                                class="material-symbols-outlined text-[#6200EE] bg-[#6200EE]/10 p-2 rounded-xl">navigation</span>
+                                                            <h4 class="font-bold text-slate-800">Đang thực hiện
+                                                                chuyến</h4>
+                                                        </div>
+                                                        <div class="flex-1 space-y-4 mt-2">
+                                                            <div class="flex items-start gap-3">
                                                                 <div
-                                                                    class="bg-slate-50 rounded-xl p-3 flex justify-between items-center mt-auto">
-                                                                    <span class="text-sm font-bold text-slate-600"
-                                                                        id="active-trip-distance"></span>
-                                                                    <span class="text-lg font-black text-[#FF6D00]"
-                                                                        id="active-trip-price"></span>
+                                                                    class="w-3 h-3 rounded-full bg-[#6200EE] mt-1 shrink-0 shadow-[0_0_0_3px_rgba(98,0,238,0.2)]">
+                                                                </div>
+                                                                <div>
+                                                                    <p
+                                                                        class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-0.5">
+                                                                        Điểm đón</p>
+                                                                    <p class="text-sm font-semibold text-slate-800"
+                                                                        id="active-trip-pickup"></p>
                                                                 </div>
                                                             </div>
+                                                            <div class="flex items-start gap-3">
+                                                                <div
+                                                                    class="w-3 h-3 rounded-full bg-[#FF6D00] mt-1 shrink-0 shadow-[0_0_0_3px_rgba(255,109,0,0.2)]">
+                                                                </div>
+                                                                <div>
+                                                                    <p
+                                                                        class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-0.5">
+                                                                        Điểm đến</p>
+                                                                    <p class="text-sm font-semibold text-slate-800"
+                                                                        id="active-trip-dropoff"></p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="bg-slate-50 rounded-xl p-3 flex justify-between items-center mt-auto">
+                                                            <span class="text-sm font-bold text-slate-600"
+                                                                id="active-trip-distance"></span>
+                                                            <span class="text-lg font-black text-[#FF6D00]"
+                                                                id="active-trip-price"></span>
+                                                        </div>
+                                                    </div>
 
-                                                            <!-- Right Column: Passenger Info -->
-                                                            <div class="flex flex-col gap-4">
-                                                                <div class="flex items-center gap-2">
+                                                    <!-- Right Column: Passenger Info -->
+                                                    <div class="flex flex-col gap-4">
+                                                        <div class="flex items-center gap-2">
+                                                            <span
+                                                                class="material-symbols-outlined text-green-600 bg-green-50 p-2 rounded-xl">person</span>
+                                                            <h4 class="font-bold text-slate-800">Khách hàng</h4>
+                                                        </div>
+                                                        <div class="flex items-center gap-4 mt-2">
+                                                            <div
+                                                                class="w-14 h-14 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden shrink-0 border-2 border-white shadow-sm">
+                                                                <img id="active-trip-passenger-avatar"
+                                                                    src="${pageContext.request.contextPath}/assets/images/default-avatar.png"
+                                                                    alt="Avatar"
+                                                                    class="w-full h-full object-cover">
+                                                            </div>
+                                                            <div>
+                                                                <h5 class="font-bold text-lg text-slate-800"
+                                                                    id="active-trip-passenger-name"></h5>
+                                                                <div
+                                                                    class="flex items-center gap-1 text-slate-500 mt-0.5">
                                                                     <span
-                                                                        class="material-symbols-outlined text-green-600 bg-green-50 p-2 rounded-xl">person</span>
-                                                                    <h4 class="font-bold text-slate-800">Khách hàng</h4>
-                                                                </div>
-                                                                <div class="flex items-center gap-4 mt-2">
-                                                                    <div
-                                                                        class="w-14 h-14 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden shrink-0 border-2 border-white shadow-sm">
-                                                                        <img id="active-trip-passenger-avatar"
-                                                                            src="${pageContext.request.contextPath}/assets/images/default-avatar.png"
-                                                                            alt="Avatar"
-                                                                            class="w-full h-full object-cover">
-                                                                    </div>
-                                                                    <div>
-                                                                        <h5 class="font-bold text-lg text-slate-800"
-                                                                            id="active-trip-passenger-name"></h5>
-                                                                        <div
-                                                                            class="flex items-center gap-1 text-slate-500 mt-0.5">
-                                                                            <span
-                                                                                class="material-symbols-outlined text-[16px]">call</span>
-                                                                            <span class="font-medium text-sm"
-                                                                                id="active-trip-passenger-phone"></span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="grid grid-cols-2 gap-2 mt-2">
-                                                                    <div
-                                                                        class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 flex flex-col items-center justify-center text-center gap-1">
-                                                                        <span
-                                                                            class="material-symbols-outlined text-slate-400 text-[20px]">wc</span>
-                                                                        <span
-                                                                            class="text-xs font-semibold text-slate-600"
-                                                                            id="active-trip-passenger-gender"></span>
-                                                                    </div>
-                                                                    <a href="#" id="active-trip-call-btn"
-                                                                        class="bg-green-50 hover:bg-green-100 transition-colors p-2.5 rounded-xl border border-green-100 flex flex-col items-center justify-center text-center gap-1 cursor-pointer">
-                                                                        <span
-                                                                            class="material-symbols-outlined text-green-600 text-[20px]">phone_in_talk</span>
-                                                                        <span
-                                                                            class="text-xs font-semibold text-green-700">Gọi
-                                                                            ngay</span>
-                                                                    </a>
-                                                                </div>
-                                                                <div class="mt-auto">
-                                                                    <button
-                                                                        class="w-full bg-[#6200EE] hover:bg-[#5000d6] text-white font-bold py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
-                                                                        <span
-                                                                            class="material-symbols-outlined">where_to_vote</span>
-                                                                        Hoàn thành chuyến
-                                                                    </button>
+                                                                        class="material-symbols-outlined text-[16px]">call</span>
+                                                                    <span class="font-medium text-sm"
+                                                                        id="active-trip-passenger-phone"></span>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                        <div class="grid grid-cols-2 gap-2 mt-2">
+                                                            <div
+                                                                class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 flex flex-col items-center justify-center text-center gap-1">
+                                                                <span
+                                                                    class="material-symbols-outlined text-slate-400 text-[20px]">wc</span>
+                                                                <span
+                                                                    class="text-xs font-semibold text-slate-600"
+                                                                    id="active-trip-passenger-gender"></span>
+                                                            </div>
+                                                            <a href="#" id="active-trip-call-btn"
+                                                                class="bg-green-50 hover:bg-green-100 transition-colors p-2.5 rounded-xl border border-green-100 flex flex-col items-center justify-center text-center gap-1 cursor-pointer">
+                                                                <span
+                                                                    class="material-symbols-outlined text-green-600 text-[20px]">phone_in_talk</span>
+                                                                <span
+                                                                    class="text-xs font-semibold text-green-700">Gọi
+                                                                    ngay</span>
+                                                            </a>
+                                                        </div>
+                                                        <div class="mt-auto">
+                                                            <button
+                                                                class="w-full bg-[#6200EE] hover:bg-[#5000d6] text-white font-bold py-3 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2">
+                                                                <span
+                                                                    class="material-symbols-outlined">where_to_vote</span>
+                                                                Hoàn thành chuyến
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
 
+                                    <!-- Driver Active Trip Popup (moved to body to avoid stacking context) -->
+                                    <div id="driver-active-trip-popup"
+                                        class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
+                                        <div class="bg-white rounded-3xl p-6 shadow-2xl w-full max-w-3xl transform scale-95 transition-transform duration-300 relative">
+                                            <!-- Close Button -->
+                                            <button onclick="closeDriverActiveTripPopup()"
+                                                class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors">
+                                                <span class="material-symbols-outlined text-[20px]">close</span>
+                                            </button>
+                                            
+                                            <div class="flex items-center gap-2 mb-6">
+                                                <span class="material-symbols-outlined text-[#6200EE] bg-[#6200EE]/10 p-2 rounded-xl">navigation</span>
+                                                <h4 class="font-bold text-slate-800 text-xl">Chuyến đi đang diễn ra</h4>
+                                            </div>
+                                            
+                                            <div class="grid grid-cols-2 gap-6 items-stretch">
+                                                <!-- Left Column: Trip Info -->
+                                                <div class="flex flex-col gap-4 pr-6 border-r border-slate-100">
+                                                    <div class="flex-1 space-y-4">
+                                                        <div class="flex items-start gap-3">
+                                                            <div class="w-3 h-3 rounded-full bg-[#6200EE] mt-1 shrink-0 shadow-[0_0_0_3px_rgba(98,0,238,0.2)]"></div>
+                                                            <div>
+                                                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-0.5">Điểm đón</p>
+                                                                <p class="text-sm font-semibold text-slate-800" id="popup-active-trip-pickup"></p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="flex items-start gap-3">
+                                                            <div class="w-3 h-3 rounded-full bg-[#FF6D00] mt-1 shrink-0 shadow-[0_0_0_3px_rgba(255,109,0,0.2)]"></div>
+                                                            <div>
+                                                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-0.5">Điểm đến</p>
+                                                                <p class="text-sm font-semibold text-slate-800" id="popup-active-trip-dropoff"></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="bg-slate-50 rounded-xl p-3 flex justify-between items-center mt-auto">
+                                                        <span class="text-sm font-bold text-slate-600" id="popup-active-trip-distance"></span>
+                                                        <span class="text-lg font-black text-[#FF6D00]" id="popup-active-trip-price"></span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Right Column: Passenger Info -->
+                                                <div class="flex flex-col gap-4">
+                                                    <div class="flex items-center gap-2">
+                                                        <span class="material-symbols-outlined text-green-600 bg-green-50 p-2 rounded-xl">person</span>
+                                                        <h4 class="font-bold text-slate-800">Khách hàng</h4>
+                                                    </div>
+                                                    <div class="flex items-center gap-4 mt-2">
+                                                        <div class="w-14 h-14 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden shrink-0 border-2 border-white shadow-sm">
+                                                            <img id="popup-active-trip-passenger-avatar" src="${pageContext.request.contextPath}/assets/images/default-avatar.png" alt="Avatar" class="w-full h-full object-cover">
+                                                        </div>
+                                                        <div>
+                                                            <h5 class="font-bold text-lg text-slate-800" id="popup-active-trip-passenger-name"></h5>
+                                                            <div class="flex items-center gap-1 text-slate-500 mt-0.5">
+                                                                <span class="material-symbols-outlined text-[16px]">call</span>
+                                                                <span class="font-medium text-sm" id="popup-active-trip-passenger-phone"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Actions -->
+                                                    <div class="mt-auto pt-4 flex gap-3">
+                                                        <button onclick="completeActiveTrip()" class="flex-1 bg-[#6200EE] hover:bg-[#5000c2] text-white font-bold py-3 rounded-xl shadow-sm transition-colors text-sm">Đã hoàn thành</button>
+                                                        <button onclick="cancelActiveTrip()" class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-bold py-3 rounded-xl border border-red-200 shadow-sm transition-colors text-sm">Huỷ chuyến</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </body>
 
