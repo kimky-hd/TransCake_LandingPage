@@ -35,6 +35,20 @@ CREATE TABLE IF NOT EXISTS otp_codes (
 );
 
 -- ========================================================
+-- Bảng: driver_vehicles
+-- Mô tả: Lưu trữ thông tin xe của tài xế
+-- ========================================================
+CREATE TABLE IF NOT EXISTS driver_vehicles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    vehicle_type ENUM('MOTORBIKE', 'CAR') NOT NULL,
+    vehicle_name VARCHAR(100) NOT NULL,
+    license_plate VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- ========================================================
 -- Bảng: trips
 -- Mô tả: Lưu trữ thông tin chuyến đi của hành khách và tài xế
 -- ========================================================
@@ -42,8 +56,13 @@ CREATE TABLE IF NOT EXISTS trips (
     id INT AUTO_INCREMENT PRIMARY KEY,
     passenger_id INT NOT NULL,
     driver_id INT DEFAULT NULL,
+    driver_vehicle_id INT DEFAULT NULL,
     pickup_location VARCHAR(255) NOT NULL,
     dropoff_location VARCHAR(255) NOT NULL,
+    pickup_lat DECIMAL(10,8) DEFAULT NULL,
+    pickup_lng DECIMAL(11,8) DEFAULT NULL,
+    dropoff_lat DECIMAL(10,8) DEFAULT NULL,
+    dropoff_lng DECIMAL(11,8) DEFAULT NULL,
     trip_type ENUM('ON_DEMAND', 'PRE_BOOK') NOT NULL,
     scheduled_time TIMESTAMP NULL,
     match_status ENUM('PENDING', 'MATCHED', 'CANCELLED') DEFAULT 'PENDING',
@@ -53,7 +72,10 @@ CREATE TABLE IF NOT EXISTS trips (
     distance DECIMAL(10,2) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (passenger_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE SET NULL
+    FOREIGN KEY (driver_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (driver_vehicle_id) REFERENCES driver_vehicles(id) ON DELETE SET NULL,
+    INDEX idx_trips_match_status (match_status),
+    INDEX idx_trips_trip_type (trip_type)
 );
 
 -- Bổ sung cột vehicle_type sau này (Chạy lệnh này vào DB hiện tại)
@@ -70,18 +92,4 @@ CREATE TABLE IF NOT EXISTS trip_blog_posts (
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE
-);
-
--- ========================================================
--- Bảng: driver_vehicles
--- Mô tả: Lưu trữ thông tin xe của tài xế
--- ========================================================
-CREATE TABLE IF NOT EXISTS driver_vehicles (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    vehicle_type ENUM('MOTORBIKE', 'CAR') NOT NULL,
-    vehicle_name VARCHAR(100) NOT NULL,
-    license_plate VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
