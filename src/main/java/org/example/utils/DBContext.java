@@ -1,12 +1,14 @@
 package org.example.utils;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBContext {
+    private static final HikariDataSource dataSource;
 
-    public static Connection getConnection() throws SQLException {
+    static {
         // ĐỌC TÊN BIẾN (KEY) TRÊN RENDER - KHÔNG ĐƯỢC SỬA 3 DÒNG NÀY
         String url = System.getenv("DB_URL");
         String user = System.getenv("DB_USER");
@@ -19,12 +21,26 @@ public class DBContext {
             pass = "1234";
         }
 
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            return DriverManager.getConnection(url, user, pass);
-        } catch (ClassNotFoundException e) {
-            throw new SQLException("MySQL Driver not found!", e);
-        }
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        config.setJdbcUrl(url);
+        config.setUsername(user);
+        config.setPassword(pass);
+
+        // Pool Optimization Config
+        config.setMaximumPoolSize(10);
+        config.setMinimumIdle(5);
+
+        // MySQL standard cache optimizations
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
+        dataSource = new HikariDataSource(config);
+    }
+
+    public static Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
     }
 
     public static void main(String[] args) {
