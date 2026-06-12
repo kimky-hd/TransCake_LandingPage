@@ -893,6 +893,12 @@
                                                                     btnSubmit.onclick = cancelPreBookTrip;
                                                                 }
                                                             }
+                                                            
+                                                            // Bắt đầu polling ngay lập tức để cập nhật thông tin tài xế khi nhận chuyến
+                                                            if (!passengerStatusInterval) {
+                                                                checkPassengerTripStatus();
+                                                                passengerStatusInterval = setInterval(checkPassengerTripStatus, 5000);
+                                                            }
                                                         } else {
                                                             showToast("Lỗi: " + (data.error || "Không thể tạo chuyến đi"), "error");
                                                             resetSearchUI();
@@ -1006,6 +1012,12 @@
                                                                 tripData.ON_DEMAND.active = false;
                                                                 toggleFormInputs(false);
 
+                                                                // Dừng polling khi hủy chuyến đi
+                                                                if (passengerStatusInterval) {
+                                                                    clearInterval(passengerStatusInterval);
+                                                                    passengerStatusInterval = null;
+                                                                }
+
                                                                 // Xóa marker và đường đi
                                                                 if (window.markerOnDemand) {
                                                                     window.markerOnDemand.remove();
@@ -1083,6 +1095,12 @@
                                                                 window.currentPreBookTripId = null;
                                                                 tripData.PRE_BOOK.active = false;
                                                                 toggleFormInputs(false);
+
+                                                                // Dừng polling khi hủy chuyến xe đặt trước
+                                                                if (passengerStatusInterval) {
+                                                                    clearInterval(passengerStatusInterval);
+                                                                    passengerStatusInterval = null;
+                                                                }
 
                                                                 // Xóa marker và đường đi
                                                                 if (window.markerPreBook) {
