@@ -1087,8 +1087,20 @@
                                                                 matchedState.classList.remove('hidden');
                                                                 matchedState.classList.add('flex');
                                                             }
+                                                        } else if (data.success && data.status === 'IN_PROGRESS') {
+                                                            const btn = document.getElementById('btn-submit-search');
+                                                            if (btn) {
+                                                                btn.type = 'button';
+                                                                btn.innerHTML = 'Đang trong chuyến đi <span class="material-symbols-outlined text-[20px]">directions_car</span>';
+                                                                btn.className = 'w-full bg-[#FF6D00] text-white font-bold py-3.5 rounded-full flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                btn.disabled = true;
+                                                                btn.onclick = null;
+                                                            }
                                                         } else if (data.success && data.status === 'COMPLETED') {
-                                                            forceResetPassengerUI("Chuyến đi của bạn đã hoàn thành! Cảm ơn bạn.", "success");
+                                                            const dist = tripData[activeType].distance || 0;
+                                                            const price = tripData[activeType].price || 0;
+                                                            openTripSummaryModal('Chuyến đi hoàn tất!', 'Cảm ơn bạn đã sử dụng dịch vụ TransCake.', dist, price);
+                                                            forceResetPassengerUI("Chuyến đi của bạn đã hoàn thành!", "success");
                                                         } else if (data.success && data.status === 'CANCELLED') {
                                                             forceResetPassengerUI("Chuyến đi đã bị hủy bởi tài xế hoặc hệ thống.", "warning");
                                                         } else if (data.success && data.status === 'NO_ACTIVE_TRIP') {
@@ -1532,24 +1544,66 @@
                                                 }
                                             }
 
+                                            function startActiveTrip() {
+                                                if(confirm('Xác nhận bắt đầu chuyến đi? Hành khách sẽ được thông báo.')) {
+                                                    fetch('${pageContext.request.contextPath}/api/driver/start-trip', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify({ tripId: window.currentActiveTripId })
+                                                    })
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            showToast('Đã bắt đầu chuyến đi!', 'success');
+                                                            checkDriverTripStatus();
+                                                        } else {
+                                                            showToast(data.message, 'error');
+                                                        }
+                                                    }).catch(err => console.error(err));
+                                                }
+                                            }
+
                                             function completeActiveTrip() {
                                                 if(confirm('Xác nhận hoàn thành chuyến đi?')) {
-                                                    showToast('Đang xử lý hoàn thành chuyến...', 'success');
-                                                    setTimeout(() => {
-                                                        closeDriverActiveTripPopup();
-                                                        // Fallback reload for now as endpoint may not exist
-                                                        window.location.reload();
-                                                    }, 1500);
+                                                    fetch('${pageContext.request.contextPath}/api/driver/complete-trip', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify({ tripId: window.currentActiveTripId })
+                                                    })
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            showToast('Hoàn thành chuyến đi!', 'success');
+                                                            closeDriverActiveTripPopup();
+                                                            checkDriverTripStatus();
+                                                            // Hiển thị modal cho tài xế
+                                                            const dist = document.getElementById('popup-active-trip-distance').textContent.replace(' km','');
+                                                            const priceStr = document.getElementById('popup-active-trip-price').textContent.replace('đ','').replace(/\./g,'');
+                                                            openTripSummaryModal('Cuốc xe hoàn tất!', 'Bạn đã hoàn thành chuyến đi xuất sắc.', dist, parseInt(priceStr));
+                                                        } else {
+                                                            showToast(data.message, 'error');
+                                                        }
+                                                    }).catch(err => console.error(err));
                                                 }
                                             }
 
                                             function cancelActiveTrip() {
                                                 if(confirm('Xác nhận hủy chuyến đi?')) {
-                                                    showToast('Đã hủy chuyến đi.', 'info');
-                                                    setTimeout(() => {
-                                                        closeDriverActiveTripPopup();
-                                                        window.location.reload();
-                                                    }, 1500);
+                                                    fetch('${pageContext.request.contextPath}/api/driver/cancel-trip', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify({ tripId: window.currentActiveTripId })
+                                                    })
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            showToast('Đã hủy chuyến đi.', 'info');
+                                                            closeDriverActiveTripPopup();
+                                                            checkDriverTripStatus();
+                                                        } else {
+                                                            showToast(data.message, 'error');
+                                                        }
+                                                    }).catch(err => console.error(err));
                                                 }
                                             }
 
@@ -1606,6 +1660,21 @@
                                                         if (data.active && data.trip) {
                                                             // Populate new popup
                                                             const trip = data.trip;
+                                                            window.currentActiveTripId = trip.id;
+                                                            
+                                                            const btnStart = document.getElementById('btn-driver-start-trip');
+                                                            const btnComplete = document.getElementById('btn-driver-complete-trip');
+                                                            const btnCancel = document.getElementById('btn-driver-cancel-trip');
+                                                            if (trip.completionStatus === 'IN_PROGRESS') {
+                                                                if(btnStart) btnStart.classList.add('hidden');
+                                                                if(btnCancel) btnCancel.classList.add('hidden');
+                                                                if(btnComplete) btnComplete.classList.remove('hidden');
+                                                            } else {
+                                                                if(btnStart) btnStart.classList.remove('hidden');
+                                                                if(btnCancel) btnCancel.classList.remove('hidden');
+                                                                if(btnComplete) btnComplete.classList.add('hidden');
+                                                            }
+                                                            
                                                             const popupPickup = document.getElementById('popup-active-trip-pickup');
                                                             if(popupPickup) popupPickup.textContent = trip.pickupLocation;
                                                             const popupDropoff = document.getElementById('popup-active-trip-dropoff');
@@ -2601,15 +2670,66 @@
                                                         </div>
                                                     </div>
                                                     <!-- Actions -->
-                                                    <div class="mt-auto pt-4 flex gap-3">
-                                                        <button onclick="completeActiveTrip()" class="flex-1 bg-[#6200EE] hover:bg-[#5000c2] text-white font-bold py-3 rounded-xl shadow-sm transition-colors text-sm">Đã hoàn thành</button>
-                                                        <button onclick="cancelActiveTrip()" class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-bold py-3 rounded-xl border border-red-200 shadow-sm transition-colors text-sm">Huỷ chuyến</button>
+                                                    <div class="mt-auto pt-4 flex gap-3" id="driver-trip-actions">
+                                                        <button id="btn-driver-start-trip" onclick="startActiveTrip()" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-sm transition-colors text-sm">Bắt đầu chuyến</button>
+                                                        <button id="btn-driver-complete-trip" onclick="completeActiveTrip()" class="flex-1 bg-[#6200EE] hover:bg-[#5000c2] text-white font-bold py-3 rounded-xl shadow-sm transition-colors text-sm hidden">Đã hoàn thành</button>
+                                                        <button id="btn-driver-cancel-trip" onclick="cancelActiveTrip()" class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-bold py-3 rounded-xl border border-red-200 shadow-sm transition-colors text-sm">Huỷ chuyến</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
+                                    <!-- Trip Summary Modal -->
+                                    <div id="trip-summary-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] hidden items-center justify-center opacity-0 transition-all duration-300">
+                                        <div class="bg-white rounded-3xl w-full max-w-[400px] p-6 shadow-2xl transform scale-95 transition-all duration-300 mx-4">
+                                            <div class="text-center mb-6">
+                                                <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                    <span class="material-symbols-outlined text-3xl">check_circle</span>
+                                                </div>
+                                                <h3 class="text-2xl font-black text-slate-800" id="trip-summary-title">Chuyến đi hoàn tất!</h3>
+                                                <p class="text-slate-500 mt-2 text-sm" id="trip-summary-subtitle">Cảm ơn bạn đã sử dụng dịch vụ.</p>
+                                            </div>
+                                            
+                                            <div class="bg-slate-50 rounded-2xl p-4 mb-6 space-y-4 border border-slate-100">
+                                                <div class="flex justify-between items-center pb-4 border-b border-slate-200">
+                                                    <span class="text-slate-500 font-medium">Tổng quãng đường</span>
+                                                    <span class="text-slate-800 font-bold" id="trip-summary-distance">0 km</span>
+                                                </div>
+                                                <div class="flex justify-between items-center pt-2">
+                                                    <span class="text-slate-500 font-medium">Thanh toán (Tiền mặt)</span>
+                                                    <span class="text-[#FF6D00] font-black text-xl" id="trip-summary-price">0đ</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <button onclick="closeTripSummaryModal()" class="w-full bg-[#6200EE] hover:bg-[#5000c2] text-white font-bold py-3.5 rounded-xl transition-all shadow-[0_8px_20px_rgba(98,0,238,0.3)] text-lg">Đóng</button>
+                                        </div>
+                                    </div>
+                                    <script>
+                                    function openTripSummaryModal(title, subtitle, distance, price) {
+                                        document.getElementById('trip-summary-title').textContent = title;
+                                        document.getElementById('trip-summary-subtitle').textContent = subtitle;
+                                        document.getElementById('trip-summary-distance').textContent = distance + ' km';
+                                        document.getElementById('trip-summary-price').textContent = new Intl.NumberFormat('vi-VN').format(price) + 'đ';
+                                        
+                                        const modal = document.getElementById('trip-summary-modal');
+                                        modal.classList.remove('hidden');
+                                        modal.classList.add('flex');
+                                        setTimeout(() => {
+                                            modal.classList.remove('opacity-0');
+                                            modal.firstElementChild.classList.remove('scale-95');
+                                        }, 10);
+                                    }
+                                    function closeTripSummaryModal() {
+                                        const modal = document.getElementById('trip-summary-modal');
+                                        modal.classList.add('opacity-0');
+                                        modal.firstElementChild.classList.add('scale-95');
+                                        setTimeout(() => {
+                                            modal.classList.remove('flex');
+                                            modal.classList.add('hidden');
+                                        }, 300);
+                                    }
+                                    </script>
                                 </body>
 
                                 </html>

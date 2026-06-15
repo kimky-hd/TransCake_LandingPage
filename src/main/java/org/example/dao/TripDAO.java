@@ -405,4 +405,128 @@ public class TripDAO {
         }
         return false;
     }
+
+    public boolean startTripByDriver(int tripId, int driverId) {
+        String sql = "UPDATE trips SET completion_status = 'IN_PROGRESS' WHERE id = ? AND driver_id = ? AND match_status = 'MATCHED' AND completion_status = 'NOT_STARTED'";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, tripId);
+            ps.setInt(2, driverId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi startTripByDriver: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public java.util.List<Trip> getTripHistoryByPassenger(int passengerId) {
+        java.util.List<Trip> list = new java.util.ArrayList<>();
+        String sql = "SELECT * FROM trips WHERE passenger_id = ? AND (completion_status = 'COMPLETED' OR match_status = 'CANCELLED') ORDER BY id DESC";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, passengerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Trip trip = new Trip();
+                    trip.setId(rs.getInt("id"));
+                    trip.setPassengerId(rs.getInt("passenger_id"));
+                    trip.setPickupLocation(rs.getString("pickup_location"));
+                    trip.setDropoffLocation(rs.getString("dropoff_location"));
+                    trip.setTripType(rs.getString("trip_type"));
+                    trip.setMatchStatus(rs.getString("match_status"));
+                    trip.setCompletionStatus(rs.getString("completion_status"));
+                    trip.setVehicleType(rs.getString("vehicle_type"));
+                    if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
+                    if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
+                    trip.setCreatedAt(rs.getTimestamp("created_at"));
+                    list.add(trip);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi getTripHistoryByPassenger: " + e.getMessage());
+        }
+        return list;
+    }
+
+    public java.util.List<Trip> getTripHistoryByDriver(int driverId) {
+        java.util.List<Trip> list = new java.util.ArrayList<>();
+        String sql = "SELECT t.*, u.full_name, u.phone_number FROM trips t JOIN users u ON t.passenger_id = u.id WHERE t.driver_id = ? AND (t.completion_status = 'COMPLETED' OR t.match_status = 'CANCELLED') ORDER BY t.id DESC";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, driverId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Trip trip = new Trip();
+                    trip.setId(rs.getInt("id"));
+                    trip.setPassengerId(rs.getInt("passenger_id"));
+                    trip.setPickupLocation(rs.getString("pickup_location"));
+                    trip.setDropoffLocation(rs.getString("dropoff_location"));
+                    trip.setTripType(rs.getString("trip_type"));
+                    trip.setMatchStatus(rs.getString("match_status"));
+                    trip.setCompletionStatus(rs.getString("completion_status"));
+                    trip.setVehicleType(rs.getString("vehicle_type"));
+                    if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
+                    if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
+                    trip.setCreatedAt(rs.getTimestamp("created_at"));
+                    trip.setPassengerName(rs.getString("full_name"));
+                    trip.setPassengerPhone(rs.getString("phone_number"));
+                    list.add(trip);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi getTripHistoryByDriver: " + e.getMessage());
+        }
+        return list;
+    }
+    public boolean completeTripByDriver(int tripId, int driverId) {
+        String sql = "UPDATE trips SET completion_status = 'COMPLETED' WHERE id = ? AND driver_id = ? AND completion_status = 'IN_PROGRESS'";
+        try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, tripId);
+            ps.setInt(2, driverId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi completeTripByDriver: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public Trip getTripById(int id) {
+        String sql = "SELECT * FROM trips WHERE id = ?";
+        try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Trip trip = new Trip();
+                    trip.setId(rs.getInt("id"));
+                    trip.setPassengerId(rs.getInt("passenger_id"));
+                    trip.setPickupLocation(rs.getString("pickup_location"));
+                    trip.setDropoffLocation(rs.getString("dropoff_location"));
+                    trip.setTripType(rs.getString("trip_type"));
+                    trip.setMatchStatus(rs.getString("match_status"));
+                    trip.setCompletionStatus(rs.getString("completion_status"));
+                    trip.setVehicleType(rs.getString("vehicle_type"));
+                    if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
+                    if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
+                    trip.setCreatedAt(rs.getTimestamp("created_at"));
+                    trip.setDriverId(rs.getInt("driver_id"));
+                    return trip;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi getTripById: " + e.getMessage());
+        }
+        return null;
+    }
+
+    public boolean cancelTripByDriver(int tripId, int driverId) {
+        String sql = "UPDATE trips SET match_status = 'CANCELLED', completion_status = 'CANCELLED' WHERE id = ? AND driver_id = ?";
+        try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, tripId);
+            ps.setInt(2, driverId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi cancelTripByDriver: " + e.getMessage());
+            return false;
+        }
+    }
 }

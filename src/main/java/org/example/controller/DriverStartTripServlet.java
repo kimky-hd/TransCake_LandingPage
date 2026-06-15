@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/api/driver/accept-trip")
-public class DriverAcceptTripServlet extends HttpServlet {
+@WebServlet("/api/driver/start-trip")
+public class DriverStartTripServlet extends HttpServlet {
     private TripDAO tripDAO = new TripDAO();
     private Gson gson = new Gson();
 
@@ -36,7 +36,7 @@ public class DriverAcceptTripServlet extends HttpServlet {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (!"driver".equals(loggedInUser.getRole())) {
             result.put("success", false);
-            result.put("message", "Chỉ tài xế mới được nhận chuyến đi.");
+            result.put("message", "Chỉ tài xế mới được thao tác.");
             response.getWriter().write(gson.toJson(result));
             return;
         }
@@ -52,22 +52,14 @@ public class DriverAcceptTripServlet extends HttpServlet {
 
             int tripId = ((Double) body.get("tripId")).intValue();
 
-            // Kiểm tra xem tài xế có đang có chuyến nào dở dang không
-            if (tripDAO.getActiveTripForDriver(loggedInUser.getId()) != null) {
-                result.put("success", false);
-                result.put("message", "Bạn đang có một chuyến đi chưa hoàn thành. Không thể nhận thêm chuyến mới.");
-                response.getWriter().write(gson.toJson(result));
-                return;
-            }
-
-            boolean success = tripDAO.acceptTrip(tripId, loggedInUser.getId());
+            boolean success = tripDAO.startTripByDriver(tripId, loggedInUser.getId());
             
             if (success) {
                 result.put("success", true);
-                result.put("message", "Nhận chuyến thành công!");
+                result.put("message", "Bắt đầu chuyến đi thành công!");
             } else {
                 result.put("success", false);
-                result.put("message", "Không thể nhận chuyến đi này. Có thể chuyến đi đã bị hủy hoặc đã có người khác nhận.");
+                result.put("message", "Không thể bắt đầu chuyến đi này. Vui lòng kiểm tra lại trạng thái chuyến đi.");
             }
             
         } catch (Exception e) {

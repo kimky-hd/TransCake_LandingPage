@@ -42,16 +42,41 @@ public class PassengerTripStatusServlet extends HttpServlet {
         User loggedInUser = (User) session.getAttribute("loggedInUser");
 
         try {
-            // Check ON_DEMAND first
-            Trip activeTrip = tripDAO.getActiveOnDemandTrip(loggedInUser.getId());
+            String tripIdParam = request.getParameter("tripId");
+            Trip activeTrip = null;
+            
+            // Nếu có truyền tripId từ client lên, ưu tiên tìm đích danh cuốc đó
+            if (tripIdParam != null && !tripIdParam.trim().isEmpty()) {
+                try {
+                    int tripId = Integer.parseInt(tripIdParam);
+                    Trip t = tripDAO.getTripById(tripId);
+                    if (t != null && t.getPassengerId() == loggedInUser.getId()) {
+                        activeTrip = t;
+                    }
+                } catch (NumberFormatException e) {
+                    System.err.println("Invalid tripId param: " + tripIdParam);
+                }
+            }
+            
+            // Nếu không truyền hoặc không tìm thấy, fallback về query cũ
             if (activeTrip == null) {
-                // Fallback to PRE_BOOK
-                activeTrip = tripDAO.getActivePreBookTrip(loggedInUser.getId());
+                activeTrip = tripDAO.getActiveOnDemandTrip(loggedInUser.getId());
+                if (activeTrip == null) {
+                    activeTrip = tripDAO.getActivePreBookTrip(loggedInUser.getId());
+                }
             }
 
             if (activeTrip != null) {
                 result.put("success", true);
-                result.put("status", activeTrip.getMatchStatus());
+                
+                // Trả về trạng thái cụ thể để UI hiển thị đúng thông báo
+                if ("COMPLETED".equals(activeTrip.getCompletionStatus())) {
+                    result.put("status", "COMPLETED");
+                } else if ("CANCELLED".equals(activeTrip.getMatchStatus())) {
+                    result.put("status", "CANCELLED");
+                } else {
+                    result.put("status", activeTrip.getMatchStatus());
+                }
                 
                 if ("MATCHED".equals(activeTrip.getMatchStatus()) && activeTrip.getDriverId() != null) {
                     User driver = userDAO.getUserById(activeTrip.getDriverId());

@@ -72,7 +72,7 @@
         <!-- Expanded Desktop Features -->
         <div class="space-y-3">
             <!-- Recent Trips -->
-            <div
+            <div onclick="window.location.href='${pageContext.request.contextPath}/history'"
                 class="bg-white/70 hover:bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm cursor-pointer transition-colors flex items-center gap-4 group">
                 <div
                     class="w-10 h-10 rounded-full bg-purple-50 flex items-center justify-center text-[#6200EE] group-hover:scale-110 transition-transform">
@@ -249,7 +249,7 @@
                     </div>
 
                     <!-- Driver History -->
-                    <div
+                    <div onclick="window.location.href='${pageContext.request.contextPath}/history'"
                         class="bg-white/70 hover:bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm cursor-pointer transition-colors flex items-center gap-4 mt-1 group">
                         <div
                             class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-[#FF6D00] group-hover:scale-110 transition-transform">
