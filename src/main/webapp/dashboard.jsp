@@ -892,6 +892,18 @@
                                                             if (tripType === 'ON_DEMAND') {
                                                                 window.currentTripId = data.tripId;
                                                                 tripData.ON_DEMAND.active = true;
+                                                                tripData.ON_DEMAND.matchStatus = 'PENDING';
+                                                                tripData.ON_DEMAND.pickup = document.getElementById('pickup-input').value;
+                                                                tripData.ON_DEMAND.pickupLat = document.getElementById('pickup-lat').value;
+                                                                tripData.ON_DEMAND.pickupLng = document.getElementById('pickup-lng').value;
+                                                                tripData.ON_DEMAND.dropoff = document.getElementById('dropoff-input').value;
+                                                                tripData.ON_DEMAND.dropoffLat = document.getElementById('dropoff-lat').value;
+                                                                tripData.ON_DEMAND.dropoffLng = document.getElementById('dropoff-lng').value;
+                                                                tripData.ON_DEMAND.note = document.getElementById('note-input').value;
+                                                                const vtElem = document.querySelector('input[name="vehicleType"]:checked');
+                                                                if(vtElem) tripData.ON_DEMAND.vehicleType = vtElem.value;
+                                                                tripData.ON_DEMAND.price = document.getElementById('trip-price').value;
+                                                                tripData.ON_DEMAND.distance = document.getElementById('trip-distance').value;
                                                                 toggleFormInputs(true);
                                                                 const btnSubmit = document.getElementById('btn-submit-search');
                                                                 if (btnSubmit) {
@@ -907,6 +919,20 @@
                                                                 window.currentPreBookTripId = data.tripId;
                                                                 hasPreBookTrip = true;
                                                                 tripData.PRE_BOOK.active = true;
+                                                                tripData.PRE_BOOK.matchStatus = 'PENDING';
+                                                                tripData.PRE_BOOK.pickup = document.getElementById('pickup-input').value;
+                                                                tripData.PRE_BOOK.pickupLat = document.getElementById('pickup-lat').value;
+                                                                tripData.PRE_BOOK.pickupLng = document.getElementById('pickup-lng').value;
+                                                                tripData.PRE_BOOK.dropoff = document.getElementById('dropoff-input').value;
+                                                                tripData.PRE_BOOK.dropoffLat = document.getElementById('dropoff-lat').value;
+                                                                tripData.PRE_BOOK.dropoffLng = document.getElementById('dropoff-lng').value;
+                                                                tripData.PRE_BOOK.note = document.getElementById('note-input').value;
+                                                                const vtElem = document.querySelector('input[name="vehicleType"]:checked');
+                                                                if(vtElem) tripData.PRE_BOOK.vehicleType = vtElem.value;
+                                                                tripData.PRE_BOOK.price = document.getElementById('trip-price').value;
+                                                                tripData.PRE_BOOK.distance = document.getElementById('trip-distance').value;
+                                                                tripData.PRE_BOOK.date = document.getElementById('trip-date').value;
+                                                                tripData.PRE_BOOK.time = document.getElementById('trip-time').value;
                                                                 toggleFormInputs(true);
                                                                 const btnSubmit = document.getElementById('btn-submit-search');
                                                                 if (btnSubmit) {
@@ -959,69 +985,116 @@
 
                                             let passengerStatusInterval = null;
 
+                                            function forceResetPassengerUI(msg, msgType) {
+                                                if (msg) showToast(msg, msgType);
+                                                
+                                                isSearchingOnDemand = false;
+                                                hasPreBookTrip = false;
+                                                window.currentTripId = null;
+                                                window.currentPreBookTripId = null;
+                                                
+                                                tripData.ON_DEMAND.active = false;
+                                                tripData.ON_DEMAND.matchStatus = '';
+                                                tripData.ON_DEMAND.driver = null;
+                                                
+                                                tripData.PRE_BOOK.active = false;
+                                                tripData.PRE_BOOK.matchStatus = '';
+                                                tripData.PRE_BOOK.driver = null;
+                                            
+                                                toggleFormInputs(false);
+                                            
+                                                if (passengerStatusInterval) {
+                                                    clearInterval(passengerStatusInterval);
+                                                    passengerStatusInterval = null;
+                                                }
+                                            
+                                                if (window.markerOnDemand) {
+                                                    window.markerOnDemand.remove();
+                                                    window.markerOnDemand = null;
+                                                }
+                                                if (window.map && window.map.getSource && window.map.getSource('route-on-demand')) {
+                                                    window.map.removeLayer('route-on-demand');
+                                                    window.map.removeSource('route-on-demand');
+                                                }
+                                                document.getElementById('pickup-input').value = "";
+                                                document.getElementById('dropoff-input').value = "";
+                                                document.getElementById('pickup-lat').value = "";
+                                                document.getElementById('pickup-lng').value = "";
+                                                document.getElementById('dropoff-lat').value = "";
+                                                document.getElementById('dropoff-lng').value = "";
+                                                document.getElementById('trip-price').value = "";
+                                                document.getElementById('trip-distance').value = "";
+                                                if (document.getElementById('price-estimation-box')) {
+                                                    document.getElementById('price-estimation-box').classList.add('hidden');
+                                                }
+                                            
+                                                const btnSubmit = document.getElementById('btn-submit-search');
+                                                if (btnSubmit) {
+                                                    btnSubmit.type = 'submit';
+                                                    btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
+                                                    btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                                    btnSubmit.onclick = null;
+                                                    btnSubmit.disabled = false;
+                                                }
+                                            
+                                                const currentTab = document.getElementById('tripType') ? document.getElementById('tripType').value : 'ON_DEMAND';
+                                                if (window.setBookingType) window.setBookingType(currentTab);
+                                            
+                                                if (document.getElementById('loading-search-state')) {
+                                                    document.getElementById('loading-search-state').classList.add('hidden');
+                                                    document.getElementById('loading-search-state').classList.remove('flex');
+                                                }
+                                                const matchedState = document.getElementById('matched-driver-state');
+                                                if (matchedState) {
+                                                    matchedState.classList.add('hidden');
+                                                    matchedState.classList.remove('flex');
+                                                }
+                                                if (document.getElementById('empty-search-state')) {
+                                                    document.getElementById('empty-search-state').classList.remove('hidden');
+                                                    document.getElementById('empty-search-state').classList.add('flex');
+                                                }
+                                            }
+
                                             function checkPassengerTripStatus() {
-                                                fetch('${pageContext.request.contextPath}/api/passenger/trip-status')
+                                                const activeType = document.getElementById('tripType') ? document.getElementById('tripType').value : 'ON_DEMAND';
+                                                const tripId = activeType === 'ON_DEMAND' ? window.currentTripId : window.currentPreBookTripId;
+                                                if (!tripId) return;
+                                                fetch('${pageContext.request.contextPath}/api/passenger/trip-status?tripId=' + tripId)
                                                     .then(res => res.json())
                                                     .then(data => {
-                                                        if (data.success && data.status === 'MATCHED' && data.driver) {
-                                                            // === Lưu vào tripData để tab switching đọc lại đúng ===
-                                                            // Xác định trip type đang active
-                                                            const activeType = isSearchingOnDemand ? 'ON_DEMAND' : 'PRE_BOOK';
+                                                        if (data.success && data.status === 'MATCHED') {
+                                                            const btn = document.getElementById('btn-submit-search');
+                                                            if (btn) {
+                                                                btn.type = 'button';
+                                                                btn.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
+                                                                btn.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                btn.disabled = true;
+                                                                btn.onclick = null;
+                                                            }
                                                             tripData[activeType].matchStatus = 'MATCHED';
-                                                            tripData[activeType].driver = data.driver;
-
-                                                            // Ẩn mini-search-popup và mini-prebook-popup
-                                                            const searchPopup = document.getElementById('mini-search-popup');
-                                                            if (searchPopup) {
-                                                                searchPopup.classList.add('translate-x-[150%]', 'opacity-0');
-                                                                searchPopup.classList.remove('translate-x-0', 'opacity-100');
+                                                            if (data.driver) {
+                                                                tripData[activeType].driver = data.driver;
+                                                                document.getElementById('inline-driver-name').textContent = data.driver.fullName || '---';
+                                                                document.getElementById('inline-driver-phone').textContent = data.driver.phoneNumber || '---';
+                                                                document.getElementById('inline-driver-vehicle').textContent = (data.driver.vehicleName || '---') + " (" + (data.driver.vehicleType || '---') + ")";
+                                                                document.getElementById('inline-driver-plate').textContent = data.driver.licensePlate || '---';
+                                                                document.getElementById('inline-driver-hobbies').textContent = data.driver.hobbies || 'Không có';
                                                             }
-                                                            const prebookPopup = document.getElementById('mini-prebook-popup');
-                                                            if (prebookPopup) {
-                                                                prebookPopup.classList.add('translate-x-[150%]', 'opacity-0');
-                                                                prebookPopup.classList.remove('translate-x-0', 'opacity-100');
-                                                            }
-
-                                                            // Hiển thị matched-driver-state trong "Kết quả nổi bật"
-                                                            document.getElementById('loading-search-state').classList.add('hidden');
-                                                            document.getElementById('loading-search-state').classList.remove('flex');
-
                                                             const matchedState = document.getElementById('matched-driver-state');
                                                             if (matchedState) {
-                                                                document.getElementById('inline-driver-name').textContent = data.driver.fullName;
-                                                                document.getElementById('inline-driver-phone').textContent = data.driver.phoneNumber;
-                                                                document.getElementById('inline-driver-vehicle').textContent = data.driver.vehicleName + " (" + data.driver.vehicleType + ")";
-                                                                document.getElementById('inline-driver-plate').textContent = data.driver.licensePlate;
-                                                                document.getElementById('inline-driver-hobbies').textContent = data.driver.hobbies ? data.driver.hobbies : "Không có";
-
+                                                                document.getElementById('empty-search-state').classList.add('hidden');
+                                                                document.getElementById('loading-search-state').classList.add('hidden');
                                                                 matchedState.classList.remove('hidden');
                                                                 matchedState.classList.add('flex');
                                                             }
-
-                                                            // Thay đổi nút thành "Chuyến đi sắp bắt đầu" (disabled, xanh)
-                                                            const btnSubmit = document.getElementById('btn-submit-search');
-                                                            if (btnSubmit) {
-                                                                btnSubmit.type = 'button';
-                                                                btnSubmit.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
-                                                                btnSubmit.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
-                                                                btnSubmit.disabled = true;
-                                                                btnSubmit.onclick = null;
-                                                            }
-
-                                                            // Dừng polling khi đã tìm thấy tài xế
-                                                            if (passengerStatusInterval) {
-                                                                clearInterval(passengerStatusInterval);
-                                                                passengerStatusInterval = null;
-                                                            }
+                                                        } else if (data.success && data.status === 'COMPLETED') {
+                                                            forceResetPassengerUI("Chuyến đi của bạn đã hoàn thành! Cảm ơn bạn.", "success");
+                                                        } else if (data.success && data.status === 'CANCELLED') {
+                                                            forceResetPassengerUI("Chuyến đi đã bị hủy bởi tài xế hoặc hệ thống.", "warning");
                                                         } else if (data.success && data.status === 'NO_ACTIVE_TRIP') {
-                                                            // Chuyến đi bị xoá hoặc huỷ từ đâu đó
-                                                            if (passengerStatusInterval) {
-                                                                clearInterval(passengerStatusInterval);
-                                                                passengerStatusInterval = null;
-                                                            }
+                                                            forceResetPassengerUI("Không tìm thấy chuyến đi hoạt động nào.", "info");
                                                         }
-                                                    })
-                                                    .catch(err => console.error('Lỗi khi cập nhật trạng thái cuốc xe:', err));
+                                                    }).catch(err => console.error(err));
                                             }
 
                                             function cancelTripSearch() {
