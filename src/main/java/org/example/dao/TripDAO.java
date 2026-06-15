@@ -171,6 +171,9 @@ public class TripDAO {
                     trip.setMatchStatus(rs.getString("match_status"));
                     trip.setVehicleType(rs.getString("vehicle_type"));
                     if (rs.getObject("driver_id") != null) trip.setDriverId(rs.getInt("driver_id"));
+                    trip.setNoteForDriver(rs.getString("note_for_driver"));
+                    if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
+                    if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
                     return trip;
                 }
             }
@@ -245,6 +248,9 @@ public class TripDAO {
                     trip.setScheduledTime(rs.getTimestamp("scheduled_time"));
                     trip.setVehicleType(rs.getString("vehicle_type"));
                     if (rs.getObject("driver_id") != null) trip.setDriverId(rs.getInt("driver_id"));
+                    trip.setNoteForDriver(rs.getString("note_for_driver"));
+                    if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
+                    if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
                     return trip;
                 }
             }

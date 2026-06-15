@@ -690,14 +690,20 @@
                                                 ON_DEMAND: {
                                                     active: isSearchingOnDemand,
                                                     pickup: "${not empty activeTrip ? activeTrip.pickupLocation : ''}",
-                                                    dropoff: "${not empty activeTrip ? activeTrip.dropoffLocation : ''}"
+                                                    dropoff: "${not empty activeTrip ? activeTrip.dropoffLocation : ''}",
+                                                    vehicleType: "${not empty activeTrip ? activeTrip.vehicleType : 'MOTORBIKE'}",
+                                                    note: "${not empty activeTrip ? activeTrip.noteForDriver : ''}",
+                                                    matchStatus: "${not empty activeTrip ? activeTrip.matchStatus : ''}"
                                                 },
                                                 PRE_BOOK: {
                                                     active: hasPreBookTrip,
                                                     pickup: "${not empty activePreBookTrip ? activePreBookTrip.pickupLocation : ''}",
                                                     dropoff: "${not empty activePreBookTrip ? activePreBookTrip.dropoffLocation : ''}",
+                                                    vehicleType: "${not empty activePreBookTrip ? activePreBookTrip.vehicleType : 'MOTORBIKE'}",
+                                                    note: "${not empty activePreBookTrip ? activePreBookTrip.noteForDriver : ''}",
                                                     date: "${preBookDateStr}",
-                                                    time: "${preBookTimeStr}"
+                                                    time: "${preBookTimeStr}",
+                                                    matchStatus: "${not empty activePreBookTrip ? activePreBookTrip.matchStatus : ''}"
                                                 }
                                             };
 
@@ -715,21 +721,41 @@
                                                     }
                                                     document.getElementById('loading-search-state').classList.add('flex');
 
-                                                    // Giao diện form
+                                                    // Giao diện form - địa chỉ
                                                     document.getElementById('pickup-input').value = tripData.ON_DEMAND.pickup;
                                                     document.getElementById('dropoff-input').value = tripData.ON_DEMAND.dropoff;
+
+                                                    // Khôi phục loại phương tiện (radio button)
+                                                    const vTypeOD = tripData.ON_DEMAND.vehicleType;
+                                                    if (vTypeOD) {
+                                                        const radio = document.querySelector('input[name="vehicleType"][value="' + vTypeOD + '"]');
+                                                        if (radio) radio.checked = true;
+                                                    }
+
+                                                    // Khôi phục ghi chú cho tài xế
+                                                    const noteInputOD = document.getElementById('note-input');
+                                                    if (noteInputOD) noteInputOD.value = tripData.ON_DEMAND.note || '';
 
                                                     // Giao diện popup
                                                     document.getElementById('mini-popup-pickup').textContent = "${not empty activeTrip ? activeTrip.pickupLocation : ''}";
                                                     document.getElementById('mini-popup-dropoff').textContent = "${not empty activeTrip ? activeTrip.dropoffLocation : ''}";
 
+                                                    // Nút hành động
                                                     const btnSubmit = document.getElementById('btn-submit-search');
                                                     if (btnSubmit) {
-                                                        btnSubmit.type = 'button';
-                                                        btnSubmit.innerHTML = 'Hủy tìm kiếm <span class="material-symbols-outlined text-[20px]">cancel</span>';
-                                                        btnSubmit.className = 'w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
-                                                        btnSubmit.disabled = false;
-                                                        btnSubmit.onclick = cancelTripSearch;
+                                                        if (tripData.ON_DEMAND.matchStatus === 'MATCHED') {
+                                                            btnSubmit.type = 'button';
+                                                            btnSubmit.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
+                                                            btnSubmit.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                            btnSubmit.disabled = true;
+                                                            btnSubmit.onclick = null;
+                                                        } else {
+                                                            btnSubmit.type = 'button';
+                                                            btnSubmit.innerHTML = 'Hủy tìm kiếm <span class="material-symbols-outlined text-[20px]">cancel</span>';
+                                                            btnSubmit.className = 'w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                                            btnSubmit.disabled = false;
+                                                            btnSubmit.onclick = cancelTripSearch;
+                                                        }
                                                     }
                                                 }
 
@@ -1951,10 +1977,21 @@
                                                         if (tripData.ON_DEMAND.active) {
                                                             document.getElementById('pickup-input').value = tripData.ON_DEMAND.pickup;
                                                             document.getElementById('dropoff-input').value = tripData.ON_DEMAND.dropoff;
+                                                            // Khôi phục loại phương tiện
+                                                            const vt = tripData.ON_DEMAND.vehicleType;
+                                                            if (vt) {
+                                                                const r = document.querySelector('input[name="vehicleType"][value="' + vt + '"]');
+                                                                if (r) r.checked = true;
+                                                            }
+                                                            // Khôi phục ghi chú cho tài xế
+                                                            const ni = document.getElementById('note-input');
+                                                            if (ni) ni.value = tripData.ON_DEMAND.note || '';
                                                         } else if (tripData.PRE_BOOK.active) {
                                                             // Xóa form nếu tab cũ có active trip
                                                             document.getElementById('pickup-input').value = "";
                                                             document.getElementById('dropoff-input').value = "";
+                                                            const ni = document.getElementById('note-input');
+                                                            if (ni) ni.value = '';
                                                         }
 
                                                         // Chuyển nút về trạng thái Hủy nếu đang tìm kiếm ON_DEMAND
@@ -2019,12 +2056,23 @@
                                                             document.getElementById('dropoff-input').value = tripData.PRE_BOOK.dropoff;
                                                             document.getElementById('trip-date').value = tripData.PRE_BOOK.date;
                                                             document.getElementById('trip-time').value = tripData.PRE_BOOK.time;
+                                                            // Khôi phục loại phương tiện
+                                                            const vt = tripData.PRE_BOOK.vehicleType;
+                                                            if (vt) {
+                                                                const r = document.querySelector('input[name="vehicleType"][value="' + vt + '"]');
+                                                                if (r) r.checked = true;
+                                                            }
+                                                            // Khôi phục ghi chú cho tài xế
+                                                            const ni = document.getElementById('note-input');
+                                                            if (ni) ni.value = tripData.PRE_BOOK.note || '';
                                                         } else if (tripData.ON_DEMAND.active) {
                                                             // Xóa form nếu tab cũ có active trip
                                                             document.getElementById('pickup-input').value = "";
                                                             document.getElementById('dropoff-input').value = "";
                                                             document.getElementById('trip-date').value = "";
                                                             document.getElementById('trip-time').value = "";
+                                                            const ni = document.getElementById('note-input');
+                                                            if (ni) ni.value = '';
                                                         }
 
                                                         // Phục hồi nút Submit mặc định để đăng ký chuyến xe trước, hoặc Đổi sang hủy nếu đã có chuyến
