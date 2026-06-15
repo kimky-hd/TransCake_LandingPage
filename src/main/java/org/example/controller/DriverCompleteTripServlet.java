@@ -61,7 +61,7 @@ public class DriverCompleteTripServlet extends HttpServlet {
                 result.put("success", false);
                 result.put("message", "Không thể hoàn thành chuyến đi này. Chuyến đi không tồn tại hoặc bạn không phải là tài xế của chuyến đi.");
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             result.put("success", false);
