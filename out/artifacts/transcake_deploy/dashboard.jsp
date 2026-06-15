@@ -1588,23 +1588,62 @@
                                             }
 
                                             function cancelActiveTrip() {
-                                                if(confirm('Xác nhận hủy chuyến đi?')) {
-                                                    fetch('${pageContext.request.contextPath}/api/driver/cancel-trip', {
-                                                        method: 'POST',
-                                                        headers: { 'Content-Type': 'application/json' },
-                                                        body: JSON.stringify({ tripId: window.currentActiveTripId })
-                                                    })
-                                                    .then(res => res.json())
-                                                    .then(data => {
-                                                        if (data.success) {
-                                                            showToast('Đã hủy chuyến đi.', 'info');
-                                                            closeDriverActiveTripPopup();
-                                                            checkDriverTripStatus();
-                                                        } else {
-                                                            showToast(data.message, 'error');
-                                                        }
-                                                    }).catch(err => console.error(err));
+                                                const modal = document.getElementById('driver-cancel-reason-modal');
+                                                if(modal) {
+                                                    modal.classList.remove('hidden');
+                                                    modal.classList.add('flex');
                                                 }
+                                            }
+                                            
+                                            function submitDriverCancelTrip() {
+                                                const reasonSelect = document.querySelector('input[name="cancel_reason"]:checked');
+                                                if (!reasonSelect) {
+                                                    if(window.showToast) window.showToast('Vui lòng chọn lý do hủy chuyến.', 'warning');
+                                                    return;
+                                                }
+                                                const cancelReason = reasonSelect.value;
+
+                                                const btn = document.getElementById('btn-submit-cancel-reason');
+                                                if(btn) {
+                                                    btn.disabled = true;
+                                                    btn.innerHTML = 'Đang xử lý...';
+                                                }
+
+                                                fetch('${pageContext.request.contextPath}/api/driver/cancel-trip', {
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body: JSON.stringify({ tripId: window.currentActiveTripId, cancelReason: cancelReason })
+                                                })
+                                                .then(res => res.json())
+                                                .then(data => {
+                                                    closeDriverCancelReasonModal();
+                                                    if (data.success) {
+                                                        if(window.showToast) window.showToast('Đã hủy chuyến đi.', 'info');
+                                                        closeDriverActiveTripPopup();
+                                                        checkDriverTripStatus();
+                                                    } else {
+                                                        if(window.showToast) window.showToast(data.message, 'error');
+                                                    }
+                                                }).catch(err => {
+                                                    console.error(err);
+                                                    closeDriverCancelReasonModal();
+                                                });
+                                            }
+
+                                            function closeDriverCancelReasonModal() {
+                                                const modal = document.getElementById('driver-cancel-reason-modal');
+                                                if(modal) {
+                                                    modal.classList.add('hidden');
+                                                    modal.classList.remove('flex');
+                                                }
+                                                const btn = document.getElementById('btn-submit-cancel-reason');
+                                                if (btn) {
+                                                    btn.disabled = false;
+                                                    btn.innerHTML = 'Xác nhận hủy chuyến';
+                                                }
+                                                // Reset radio buttons
+                                                const radios = document.querySelectorAll('input[name="cancel_reason"]');
+                                                radios.forEach(r => r.checked = false);
                                             }
 
                                             function executeAcceptTrip(tripId) {
@@ -1667,7 +1706,7 @@
                                                             const btnCancel = document.getElementById('btn-driver-cancel-trip');
                                                             if (trip.completionStatus === 'IN_PROGRESS') {
                                                                 if(btnStart) btnStart.classList.add('hidden');
-                                                                if(btnCancel) btnCancel.classList.add('hidden');
+                                                                if(btnCancel) btnCancel.classList.remove('hidden');
                                                                 if(btnComplete) btnComplete.classList.remove('hidden');
                                                             } else {
                                                                 if(btnStart) btnStart.classList.remove('hidden');
@@ -2677,6 +2716,45 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Driver Cancel Reason Modal -->
+                                    <div id="driver-cancel-reason-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[110] hidden items-center justify-center transition-all duration-300">
+                                        <div class="bg-white rounded-3xl w-full max-w-[400px] p-6 shadow-2xl mx-4">
+                                            <div class="flex justify-between items-center mb-6">
+                                                <h3 class="text-xl font-bold text-slate-800">Lý do hủy chuyến</h3>
+                                                <button onclick="closeDriverCancelReasonModal()" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                                                    <span class="material-symbols-outlined text-[20px]">close</span>
+                                                </button>
+                                            </div>
+                                            
+                                            <div class="space-y-3 mb-6">
+                                                <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
+                                                    <input type="radio" name="cancel_reason" value="Khách không xuất hiện" class="w-5 h-5 text-red-500 border-slate-300 focus:ring-red-500">
+                                                    <span class="text-sm font-medium text-slate-700">Khách không xuất hiện</span>
+                                                </label>
+                                                <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
+                                                    <input type="radio" name="cancel_reason" value="Không thể liên lạc được với khách" class="w-5 h-5 text-red-500 border-slate-300 focus:ring-red-500">
+                                                    <span class="text-sm font-medium text-slate-700">Không liên lạc được với khách</span>
+                                                </label>
+                                                <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
+                                                    <input type="radio" name="cancel_reason" value="Kẹt xe, không thể di chuyển" class="w-5 h-5 text-red-500 border-slate-300 focus:ring-red-500">
+                                                    <span class="text-sm font-medium text-slate-700">Kẹt xe, không thể di chuyển</span>
+                                                </label>
+                                                <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
+                                                    <input type="radio" name="cancel_reason" value="Xe gặp sự cố hỏng hóc" class="w-5 h-5 text-red-500 border-slate-300 focus:ring-red-500">
+                                                    <span class="text-sm font-medium text-slate-700">Xe gặp sự cố hỏng hóc</span>
+                                                </label>
+                                                <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50 transition-colors">
+                                                    <input type="radio" name="cancel_reason" value="Lý do khác" class="w-5 h-5 text-red-500 border-slate-300 focus:ring-red-500">
+                                                    <span class="text-sm font-medium text-slate-700">Lý do khác</span>
+                                                </label>
+                                            </div>
+                                            
+                                            <button id="btn-submit-cancel-reason" onclick="submitDriverCancelTrip()" class="w-full bg-red-50 hover:bg-red-100 text-red-600 font-bold py-3.5 rounded-xl border border-red-200 transition-colors flex items-center justify-center gap-2">
+                                                Xác nhận hủy chuyến
+                                            </button>
                                         </div>
                                     </div>
 

@@ -518,11 +518,12 @@ public class TripDAO {
         return null;
     }
 
-    public boolean cancelTripByDriver(int tripId, int driverId) {
-        String sql = "UPDATE trips SET match_status = 'CANCELLED', completion_status = 'CANCELLED' WHERE id = ? AND driver_id = ?";
+    public boolean cancelTripByDriver(int tripId, int driverId, String cancelReason) {
+        String sql = "UPDATE trips SET match_status = 'CANCELLED', completion_status = 'FAILED', cancel_reason = ? WHERE id = ? AND driver_id = ?";
         try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setInt(1, tripId);
-            ps.setInt(2, driverId);
+            ps.setString(1, cancelReason);
+            ps.setInt(2, tripId);
+            ps.setInt(3, driverId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Lỗi cancelTripByDriver: " + e.getMessage());

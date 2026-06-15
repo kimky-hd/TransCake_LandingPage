@@ -51,8 +51,9 @@ public class DriverCancelTripServlet extends HttpServlet {
             }
 
             int tripId = ((Double) body.get("tripId")).intValue();
+            String cancelReason = body.containsKey("cancelReason") ? (String) body.get("cancelReason") : "Không có lý do cụ thể";
 
-            boolean success = tripDAO.cancelTripByDriver(tripId, loggedInUser.getId());
+            boolean success = tripDAO.cancelTripByDriver(tripId, loggedInUser.getId(), cancelReason);
             
             if (success) {
                 result.put("success", true);

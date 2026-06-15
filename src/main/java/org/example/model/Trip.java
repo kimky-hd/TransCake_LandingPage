@@ -21,6 +21,7 @@ public class Trip {
     private Double distance;
     private Timestamp createdAt;
     private String vehicleType; // 'MOTORBIKE', 'CAR'
+    private String cancelReason;
 
     // Passenger details (joined from users table)
     private String passengerName;
@@ -204,4 +205,13 @@ public class Trip {
     public void setPassengerAvatar(String passengerAvatar) {
         this.passengerAvatar = passengerAvatar;
     }
+
+    public String getCancelReason() {
+        return cancelReason;
+    }
+
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
+    }
 }
+
