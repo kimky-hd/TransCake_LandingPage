@@ -964,6 +964,12 @@
                                                     .then(res => res.json())
                                                     .then(data => {
                                                         if (data.success && data.status === 'MATCHED' && data.driver) {
+                                                            // === Lưu vào tripData để tab switching đọc lại đúng ===
+                                                            // Xác định trip type đang active
+                                                            const activeType = isSearchingOnDemand ? 'ON_DEMAND' : 'PRE_BOOK';
+                                                            tripData[activeType].matchStatus = 'MATCHED';
+                                                            tripData[activeType].driver = data.driver;
+
                                                             // Ẩn mini-search-popup và mini-prebook-popup
                                                             const searchPopup = document.getElementById('mini-search-popup');
                                                             if (searchPopup) {
@@ -992,11 +998,13 @@
                                                                 matchedState.classList.add('flex');
                                                             }
 
-                                                            // Thay đổi nút "Hủy tìm kiếm" thành "Chuyến đi sắp bắt đầu"
+                                                            // Thay đổi nút thành "Chuyến đi sắp bắt đầu" (disabled, xanh)
                                                             const btnSubmit = document.getElementById('btn-submit-search');
                                                             if (btnSubmit) {
+                                                                btnSubmit.type = 'button';
                                                                 btnSubmit.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
                                                                 btnSubmit.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                btnSubmit.disabled = true;
                                                                 btnSubmit.onclick = null;
                                                             }
 
@@ -1006,7 +1014,7 @@
                                                                 passengerStatusInterval = null;
                                                             }
                                                         } else if (data.success && data.status === 'NO_ACTIVE_TRIP') {
-                                                            // Chuyến đi bị xoá hoặc huỷ từ đâu đó, có thể dọn giao diện, hoặc ngừng polling
+                                                            // Chuyến đi bị xoá hoặc huỷ từ đâu đó
                                                             if (passengerStatusInterval) {
                                                                 clearInterval(passengerStatusInterval);
                                                                 passengerStatusInterval = null;
@@ -1019,6 +1027,12 @@
                                             function cancelTripSearch() {
                                                 if (!window.currentTripId) {
                                                     showToast("Đang xử lý, vui lòng thử lại sau giây lát.", "warning");
+                                                    return;
+                                                }
+
+                                                // Chặn hủy nếu đã MATCHED
+                                                if (tripData.ON_DEMAND.matchStatus === 'MATCHED') {
+                                                    showToast("Chuyến đi đã được tài xế nhận. Bạn không thể hủy chuyến này.", "error");
                                                     return;
                                                 }
 
@@ -1036,6 +1050,8 @@
                                                                 isSearchingOnDemand = false;
                                                                 window.currentTripId = null;
                                                                 tripData.ON_DEMAND.active = false;
+                                                                tripData.ON_DEMAND.matchStatus = '';
+                                                                tripData.ON_DEMAND.driver = null;
                                                                 toggleFormInputs(false);
 
                                                                 // Dừng polling khi hủy chuyến đi
@@ -1072,6 +1088,7 @@
                                                                     btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
                                                                     btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
                                                                     btnSubmit.onclick = null;
+                                                                    btnSubmit.disabled = false;
 
                                                                     // Gọi lại setBookingType để làm sạch form
                                                                     if (window.setBookingType) window.setBookingType('ON_DEMAND');
@@ -1095,6 +1112,8 @@
                                                                 }
 
                                                                 showToast("Đã hủy chuyến đi thành công!", "success");
+                                                            } else if (data.blocked) {
+                                                                showToast(data.error || "Không thể hủy: Chuyến đi đã được tài xế nhận.", "error");
                                                             } else {
                                                                 showToast("Lỗi khi hủy chuyến: " + (data.error || "Không xác định"), "error");
                                                             }
@@ -1994,25 +2013,54 @@
                                                             if (ni) ni.value = '';
                                                         }
 
-                                                        // Chuyển nút về trạng thái Hủy nếu đang tìm kiếm ON_DEMAND
+                                                        // Nút hành động căn cứ trạng thái thực tế
                                                         const btnSubmit = document.getElementById('btn-submit-search');
                                                         if (btnSubmit) {
                                                             if (isSearchingOnDemand) {
-                                                                btnSubmit.type = 'button';
-                                                                btnSubmit.innerHTML = 'Hủy tìm kiếm <span class="material-symbols-outlined text-[20px]">cancel</span>';
-                                                                btnSubmit.className = 'w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
-                                                                btnSubmit.disabled = false;
-                                                                btnSubmit.onclick = cancelTripSearch;
+                                                                if (tripData.ON_DEMAND.matchStatus === 'MATCHED') {
+                                                                    // Đã ghép tài xế → nút xanh disabled
+                                                                    btnSubmit.type = 'button';
+                                                                    btnSubmit.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
+                                                                    btnSubmit.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                    btnSubmit.disabled = true;
+                                                                    btnSubmit.onclick = null;
 
-                                                                document.getElementById('empty-search-state').classList.add('hidden');
-                                                                document.getElementById('empty-search-state').classList.remove('flex');
-                                                                document.getElementById('loading-search-state').classList.remove('hidden');
-                                                                if (document.getElementById('matched-driver-state')) {
-                                                                    document.getElementById('matched-driver-state').classList.add('hidden');
-                                                                    document.getElementById('matched-driver-state').classList.remove('flex');
+                                                                    // Hiển thị thông tin tài xế nếu đã lưu
+                                                                    const matchedState = document.getElementById('matched-driver-state');
+                                                                    document.getElementById('empty-search-state').classList.add('hidden');
+                                                                    document.getElementById('empty-search-state').classList.remove('flex');
+                                                                    document.getElementById('loading-search-state').classList.add('hidden');
+                                                                    document.getElementById('loading-search-state').classList.remove('flex');
+                                                                    if (matchedState) {
+                                                                        if (tripData.ON_DEMAND.driver) {
+                                                                            document.getElementById('inline-driver-name').textContent = tripData.ON_DEMAND.driver.fullName || '';
+                                                                            document.getElementById('inline-driver-phone').textContent = tripData.ON_DEMAND.driver.phoneNumber || '';
+                                                                            document.getElementById('inline-driver-vehicle').textContent = (tripData.ON_DEMAND.driver.vehicleName || '') + " (" + (tripData.ON_DEMAND.driver.vehicleType || '') + ")";
+                                                                            document.getElementById('inline-driver-plate').textContent = tripData.ON_DEMAND.driver.licensePlate || '';
+                                                                            document.getElementById('inline-driver-hobbies').textContent = tripData.ON_DEMAND.driver.hobbies || 'Không có';
+                                                                        }
+                                                                        matchedState.classList.remove('hidden');
+                                                                        matchedState.classList.add('flex');
+                                                                    }
+                                                                } else {
+                                                                    // Đang tìm kiếm (PENDING) → nút đỏ hủy
+                                                                    btnSubmit.type = 'button';
+                                                                    btnSubmit.innerHTML = 'Hủy tìm kiếm <span class="material-symbols-outlined text-[20px]">cancel</span>';
+                                                                    btnSubmit.className = 'w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                                                    btnSubmit.disabled = false;
+                                                                    btnSubmit.onclick = cancelTripSearch;
+
+                                                                    document.getElementById('empty-search-state').classList.add('hidden');
+                                                                    document.getElementById('empty-search-state').classList.remove('flex');
+                                                                    document.getElementById('loading-search-state').classList.remove('hidden');
+                                                                    if (document.getElementById('matched-driver-state')) {
+                                                                        document.getElementById('matched-driver-state').classList.add('hidden');
+                                                                        document.getElementById('matched-driver-state').classList.remove('flex');
+                                                                    }
+                                                                    document.getElementById('loading-search-state').classList.add('flex');
                                                                 }
-                                                                document.getElementById('loading-search-state').classList.add('flex');
                                                             } else {
+                                                                // Không có chuyến ON_DEMAND → nút Tìm chuyến
                                                                 btnSubmit.type = 'submit';
                                                                 btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
                                                                 btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
@@ -2075,25 +2123,54 @@
                                                             if (ni) ni.value = '';
                                                         }
 
-                                                        // Phục hồi nút Submit mặc định để đăng ký chuyến xe trước, hoặc Đổi sang hủy nếu đã có chuyến
+                                                        // Nút hành động căn cứ trạng thái thực tế
                                                         const btnSubmit = document.getElementById('btn-submit-search');
                                                         if (btnSubmit) {
                                                             if (hasPreBookTrip) {
-                                                                btnSubmit.type = 'button';
-                                                                btnSubmit.innerHTML = 'Hủy đặt lịch <span class="material-symbols-outlined text-[20px]">cancel</span>';
-                                                                btnSubmit.className = 'w-full bg-[#FF6D00] hover:bg-orange-600 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
-                                                                btnSubmit.disabled = false;
-                                                                btnSubmit.onclick = cancelPreBookTrip;
+                                                                if (tripData.PRE_BOOK.matchStatus === 'MATCHED') {
+                                                                    // Đã ghép tài xế → nút xanh disabled
+                                                                    btnSubmit.type = 'button';
+                                                                    btnSubmit.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
+                                                                    btnSubmit.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                    btnSubmit.disabled = true;
+                                                                    btnSubmit.onclick = null;
 
-                                                                document.getElementById('empty-search-state').classList.add('hidden');
-                                                                document.getElementById('empty-search-state').classList.remove('flex');
-                                                                document.getElementById('loading-search-state').classList.remove('hidden');
-                                                                if (document.getElementById('matched-driver-state')) {
-                                                                    document.getElementById('matched-driver-state').classList.add('hidden');
-                                                                    document.getElementById('matched-driver-state').classList.remove('flex');
+                                                                    // Hiển thị matched-driver-state
+                                                                    const matchedState = document.getElementById('matched-driver-state');
+                                                                    document.getElementById('empty-search-state').classList.add('hidden');
+                                                                    document.getElementById('empty-search-state').classList.remove('flex');
+                                                                    document.getElementById('loading-search-state').classList.add('hidden');
+                                                                    document.getElementById('loading-search-state').classList.remove('flex');
+                                                                    if (matchedState) {
+                                                                        if (tripData.PRE_BOOK.driver) {
+                                                                            document.getElementById('inline-driver-name').textContent = tripData.PRE_BOOK.driver.fullName || '';
+                                                                            document.getElementById('inline-driver-phone').textContent = tripData.PRE_BOOK.driver.phoneNumber || '';
+                                                                            document.getElementById('inline-driver-vehicle').textContent = (tripData.PRE_BOOK.driver.vehicleName || '') + " (" + (tripData.PRE_BOOK.driver.vehicleType || '') + ")";
+                                                                            document.getElementById('inline-driver-plate').textContent = tripData.PRE_BOOK.driver.licensePlate || '';
+                                                                            document.getElementById('inline-driver-hobbies').textContent = tripData.PRE_BOOK.driver.hobbies || 'Không có';
+                                                                        }
+                                                                        matchedState.classList.remove('hidden');
+                                                                        matchedState.classList.add('flex');
+                                                                    }
+                                                                } else {
+                                                                    // Đang chờ (PENDING) → nút cam hủy
+                                                                    btnSubmit.type = 'button';
+                                                                    btnSubmit.innerHTML = 'Hủy đặt lịch <span class="material-symbols-outlined text-[20px]">cancel</span>';
+                                                                    btnSubmit.className = 'w-full bg-[#FF6D00] hover:bg-orange-600 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';
+                                                                    btnSubmit.disabled = false;
+                                                                    btnSubmit.onclick = cancelPreBookTrip;
+
+                                                                    document.getElementById('empty-search-state').classList.add('hidden');
+                                                                    document.getElementById('empty-search-state').classList.remove('flex');
+                                                                    document.getElementById('loading-search-state').classList.remove('hidden');
+                                                                    if (document.getElementById('matched-driver-state')) {
+                                                                        document.getElementById('matched-driver-state').classList.add('hidden');
+                                                                        document.getElementById('matched-driver-state').classList.remove('flex');
+                                                                    }
+                                                                    document.getElementById('loading-search-state').classList.add('flex');
                                                                 }
-                                                                document.getElementById('loading-search-state').classList.add('flex');
                                                             } else {
+                                                                // Không có chuyến PRE_BOOK → nút Tìm chuyến
                                                                 btnSubmit.type = 'submit';
                                                                 btnSubmit.innerHTML = 'Tìm chuyến <span class="material-symbols-outlined text-[20px]">arrow_forward</span>';
                                                                 btnSubmit.className = 'w-full bg-slate-900 hover:bg-black text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(0,0,0,0.15)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.25)] flex items-center justify-center gap-2 text-lg mt-auto';

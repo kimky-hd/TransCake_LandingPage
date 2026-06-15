@@ -130,6 +130,26 @@ public class TripDAO {
     }
 
     /**
+     * Lấy trạng thái match_status của một chuyến đi theo ID
+     * @return match_status string, hoặc null nếu không tìm thấy
+     */
+    public String getTripMatchStatus(int tripId) {
+        String sql = "SELECT match_status FROM trips WHERE id = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, tripId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("match_status");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi getTripMatchStatus: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
      * Hủy chuyến đi (Cập nhật match_status = CANCELLED)
      * @param tripId ID của chuyến đi
      * @return true nếu thành công
