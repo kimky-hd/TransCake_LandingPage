@@ -1525,7 +1525,7 @@
                                                 }
                                             }
 
-                                            let proposalsInterval = null;
+                                            // OLD proposalsInterval removed
                                             let tripPanelOpen = false; // Reliable state flag
 
                                             function openTripProposalsPanel() {
@@ -1587,8 +1587,6 @@
                                                     }
 
                                                     fetchTripProposals();
-                                                    if (proposalsInterval) clearInterval(proposalsInterval);
-                                                    proposalsInterval = setInterval(fetchTripProposals, 30000);
                                                 } else {
                                                     // CLOSE
                                                     closeTripProposalsPanel();
@@ -1876,6 +1874,17 @@
 
                                             let driverStatusInterval = null;
 
+                                            function startDriverStatusPolling() {
+                                                if (driverStatusInterval) clearInterval(driverStatusInterval);
+                                                checkDriverTripStatus();
+                                                driverStatusInterval = setInterval(checkDriverTripStatus, 10000);
+                                            }
+
+                                            function stopDriverStatusPolling() {
+                                                if (driverStatusInterval) clearInterval(driverStatusInterval);
+                                                driverStatusInterval = null;
+                                            }
+
                                             function checkDriverTripStatus() {
                                                 fetch('${pageContext.request.contextPath}/api/driver/active-trip')
                                                     .then(res => res.json())
@@ -2011,7 +2020,7 @@
                                                     if (initialUserRole === 'driver') {
                                                         currentUserRole = 'driver';
                                                         setRole('driver', true);
-                                                        checkDriverTripStatus();
+                                                        startDriverStatusPolling();
                                                     } else {
                                                         currentUserRole = 'passenger';
                                                     }
@@ -2132,6 +2141,7 @@
                                                     const navHome = document.getElementById('nav-home');
 
                                                     if (role === 'passenger') {
+                                                        stopDriverStatusPolling();
                                                         // UI Toggle position
                                                         toggleBg.style.transform = 'translateX(0)';
 
@@ -2164,6 +2174,7 @@
                                                         navHome.classList.replace('bg-orange-50', 'bg-purple-50');
 
                                                     } else {
+                                                        startDriverStatusPolling();
                                                         // UI Toggle position
                                                         toggleBg.style.transform = 'translateX(100%)';
 
