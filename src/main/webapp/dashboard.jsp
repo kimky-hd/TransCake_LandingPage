@@ -113,13 +113,44 @@
                                         <jsp:include page="includes/sidebar.jsp" />
                                     </div>
 
+                                    <!-- Bottom Navigation Menu (Always visible) -->
+                                    <div id="bottom-navigation"
+                                        class="fixed bottom-0 left-0 right-0 p-4 pb-safe md:absolute md:w-[380px] md:left-8 md:bottom-8 md:rounded-b-3xl bg-white/95 md:bg-white/40 backdrop-blur-xl border-t md:border-none border-slate-200/60 z-50 pointer-events-auto transition-transform duration-500">
+                                        <div class="flex items-center justify-around">
+                                            <button
+                                                class="w-12 h-12 flex items-center justify-center rounded-xl bg-purple-50 text-[#6200EE] shadow-sm transition-colors relative"
+                                                id="nav-home" onclick="switchTab('nav-home')">
+                                                <span class="material-symbols-outlined font-bold">home</span>
+                                                <span
+                                                    class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                                            </button>
+                                            <button
+                                                class="w-12 h-12 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                                                id="nav-search"
+                                                onclick="${isLoggedIn ? 'switchTab(\'nav-search\')' : 'window.openAuthModal && window.openAuthModal()'}">
+                                                <span class="material-symbols-outlined">search</span>
+                                            </button>
+                                            <button
+                                                class="w-12 h-12 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                                                id="nav-blog" onclick="switchTab('nav-blog')">
+                                                <span class="material-symbols-outlined">article</span>
+                                            </button>
+                                            <button
+                                                class="w-12 h-12 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                                                id="nav-profile"
+                                                onclick="switchTab('nav-profile')">
+                                                <span class="material-symbols-outlined">person</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <!-- Bottom Trip Proposals Panel (Driver Only) -->
                                     <c:if test="${isLoggedIn}">
                                         <!-- (Removed OLD trip-proposals-panel to resolve ID conflicts) -->
 
                                         <!-- Bottom Search Bar (Passenger) -->
                                         <div id="bottom-search-bar"
-                                            class="fixed bottom-0 left-0 right-0 md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white md:bg-white/75 backdrop-blur-xl border-t border-slate-200 md:border-white/60 md:rounded-3xl p-3 md:p-6 transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto max-h-[52vh] md:min-h-[360px] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:shadow-none pb-safe">
+                                            class="fixed bottom-[88px] left-0 right-0 md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white md:bg-white/75 backdrop-blur-xl border-t border-slate-200 md:border-white/60 md:rounded-3xl p-3 md:p-6 transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto max-h-[52vh] md:min-h-[360px] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:shadow-none pb-safe">
 
                                             <!-- Handle for dragging/closing -->
                                             <div class="w-full flex justify-center mb-2 md:mb-4 cursor-pointer shrink-0"
@@ -502,7 +533,7 @@
 
                                         <!-- Bottom Blog Bar (Right of Dynamic Island) -->
                                         <div id="bottom-blog-bar"
-                                            class="fixed inset-0 md:inset-auto md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white/95 md:bg-white/75 backdrop-blur-xl border-none md:border md:border-white/60 rounded-none md:rounded-3xl p-4 pt-10 md:p-6 transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto md:max-h-[80vh] md:min-h-[360px] pb-safe shadow-none">
+                                            class="fixed inset-0 md:inset-auto md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white/95 md:bg-white/75 backdrop-blur-xl border-none md:border md:border-white/60 rounded-none md:rounded-3xl p-4 pt-10 md:p-6 pb-[100px] md:pb-safe transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto md:max-h-[80vh] md:min-h-[360px] shadow-none">
 
                                             <!-- Handle for dragging/closing -->
                                             <div class="hidden md:flex w-full justify-center mb-4 cursor-pointer shrink-0"
@@ -515,8 +546,8 @@
                                             <!-- Header & Close -->
                                             <div class="flex justify-between items-center mb-6 shrink-0">
                                                 <div class="flex items-center gap-2">
-                                                    <button onclick="toggleBottomBlogBar()"
-                                                        class="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors mr-1">
+                                                    <button onclick="switchTab('nav-home')"
+                                                        class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors mr-1">
                                                         <span class="material-symbols-outlined">arrow_back</span>
                                                     </button>
                                                     <h3
@@ -526,10 +557,6 @@
                                                         Cộng đồng & Chia sẻ
                                                     </h3>
                                                 </div>
-                                                <button onclick="toggleBottomBlogBar()"
-                                                    class="hidden md:flex w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 items-center justify-center text-slate-600 transition-colors">
-                                                    <span class="material-symbols-outlined text-[20px]">close</span>
-                                                </button>
                                             </div>
 
                                             <!-- Split Layout -->
@@ -1341,15 +1368,85 @@
                                                 });
                                             }
 
-                                            function closeMobileMap() {
+                                            function setActiveTab(tabId) {
+                                                const tabs = ['nav-home', 'nav-search', 'nav-blog', 'nav-profile'];
+                                                tabs.forEach(id => {
+                                                    const btn = document.getElementById(id);
+                                                    if (btn) {
+                                                        if (id === tabId) {
+                                                            btn.classList.remove('text-slate-400', 'hover:bg-slate-100', 'hover:text-slate-600');
+                                                            btn.classList.add('bg-purple-50', 'text-[#6200EE]', 'shadow-sm');
+                                                        } else {
+                                                            btn.classList.remove('bg-purple-50', 'text-[#6200EE]', 'shadow-sm');
+                                                            btn.classList.add('text-slate-400', 'hover:bg-slate-100', 'hover:text-slate-600');
+                                                        }
+                                                    }
+                                                });
+                                            }
+
+                                            function switchTab(tabId) {
                                                 const searchBar = document.getElementById('bottom-search-bar');
-                                                if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
-                                                    toggleBottomSearchBar();
-                                                } else {
-                                                    document.getElementById('dynamic-island')?.classList.remove('mobile-hidden');
-                                                    document.getElementById('btn-locate-me')?.classList.add('hidden');
-                                                    document.getElementById('btn-locate-me')?.classList.remove('flex');
+                                                const blogBar = document.getElementById('bottom-blog-bar');
+                                                const profView = document.getElementById('sidebar-profile-view');
+
+                                                // Helper to always reset profile to Home view
+                                                const resetProfileToHome = () => {
+                                                    if (profView && !profView.classList.contains('opacity-0')) {
+                                                        document.getElementById('btn-back-from-profile')?.click();
+                                                    }
+                                                };
+
+                                                if (tabId === 'nav-home') {
+                                                    if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
+                                                        toggleBottomSearchBar();
+                                                    }
+                                                    if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
+                                                        toggleBottomBlogBar();
+                                                    }
+                                                    resetProfileToHome();
+                                                    setActiveTab('nav-home');
                                                 }
+                                                else if (tabId === 'nav-search') {
+                                                    resetProfileToHome();
+                                                    if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
+                                                        toggleBottomBlogBar();
+                                                    }
+                                                    if (searchBar && searchBar.classList.contains('translate-y-[150%]')) {
+                                                        toggleBottomSearchBar();
+                                                    } else {
+                                                        setActiveTab('nav-search');
+                                                    }
+                                                }
+                                                else if (tabId === 'nav-blog') {
+                                                    resetProfileToHome();
+                                                    if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
+                                                        toggleBottomSearchBar();
+                                                    }
+                                                    if (blogBar && blogBar.classList.contains('translate-y-[150%]')) {
+                                                        toggleBottomBlogBar();
+                                                    } else {
+                                                        setActiveTab('nav-blog');
+                                                    }
+                                                }
+                                                else if (tabId === 'nav-profile') {
+                                                    if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
+                                                        toggleBottomSearchBar();
+                                                    }
+                                                    if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
+                                                        toggleBottomBlogBar();
+                                                    }
+                                                    
+                                                    if (window.openProfileView && profView && profView.classList.contains('opacity-0')) {
+                                                        const drvView = document.getElementById('driver-view');
+                                                        const role = (drvView && !drvView.classList.contains('opacity-0') && !drvView.classList.contains('pointer-events-none')) ? 'driver' : 'passenger';
+                                                        window.openProfileView(role);
+                                                    }
+                                                    setActiveTab('nav-profile');
+                                                }
+                                            }
+
+                                            function closeMobileMap() {
+                                                switchTab('nav-home');
                                             }
 
                                             function toggleBottomSearchBar() {
@@ -1358,6 +1455,7 @@
 
                                                 if (searchBar) {
                                                     if (searchBar.classList.contains('translate-y-[150%]')) {
+                                                        setActiveTab('nav-search');
                                                         // Close blog bar if open
                                                         if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
                                                             blogBar.classList.add('translate-y-[150%]', 'opacity-0');
@@ -1393,6 +1491,7 @@
                                                             prebookPopup.classList.remove('translate-x-0', 'opacity-100');
                                                         }
                                                     } else {
+                                                        setActiveTab('nav-home');
                                                         searchBar.classList.add('translate-y-[150%]');
                                                         searchBar.classList.add('opacity-0');
                                                         searchBar.classList.remove('translate-y-0');
@@ -1821,6 +1920,7 @@
                                                 if (blogBar) {
                                                     if (blogBar.classList.contains('translate-y-[150%]')) {
                                                         // Đang ẩn -> Mở lên
+                                                        setActiveTab('nav-blog');
                                                         // Đóng search bar nếu đang mở
                                                         if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
                                                             searchBar.classList.add('translate-y-[150%]', 'opacity-0');
@@ -1844,6 +1944,7 @@
                                                         }
                                                     } else {
                                                         // Đang mở -> Đóng lại
+                                                        setActiveTab('nav-home');
                                                         blogBar.classList.add('translate-y-[150%]', 'opacity-0');
                                                         blogBar.classList.remove('translate-y-0', 'opacity-100');
                                                         document.getElementById('dynamic-island')?.classList.remove('mobile-hidden');
@@ -2198,6 +2299,7 @@
                                                                         drvView.classList.replace('-translate-x-10', 'translate-x-0');
                                                                         drvView.classList.remove('pointer-events-none');
                                                                     }
+                                                                    setActiveTab('nav-home');
                                                                 };
                                                             }
                                                         };

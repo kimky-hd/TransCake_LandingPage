@@ -394,32 +394,4 @@
 
 </div>
 
-<!-- Navigation (Bottom Menu) -->
-<div
-    class="absolute bottom-0 left-0 right-0 p-4 pb-safe md:p-4 bg-white/90 backdrop-blur-lg border-t border-slate-200/60 z-30 pointer-events-auto">
-    <div class="flex items-center justify-around">
-        <button
-            class="w-12 h-12 flex items-center justify-center rounded-xl bg-purple-50 text-[#6200EE] shadow-sm transition-colors relative"
-            id="nav-home">
-            <span class="material-symbols-outlined font-bold">home</span>
-            <span
-                class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
-        </button>
-        <button
-            class="w-12 h-12 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
-            onclick="document.getElementById('dynamic-island')?.classList.add('mobile-hidden')">
-            <span class="material-symbols-outlined">map</span>
-        </button>
-        <button
-            class="w-12 h-12 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
-            id="nav-blog" onclick="toggleBottomBlogBar()">
-            <span class="material-symbols-outlined">article</span>
-        </button>
-        <button
-            class="w-12 h-12 flex items-center justify-center rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
-            id="nav-profile"
-            onclick="window.openProfileView(document.getElementById('passenger-view').classList.contains('opacity-0') ? 'driver' : 'passenger')">
-            <span class="material-symbols-outlined">person</span>
-        </button>
-    </div>
-</div>
+
