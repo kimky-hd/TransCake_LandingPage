@@ -444,56 +444,58 @@
 
                                         <!-- Mini Search Popup (Top Right) -->
                                         <div id="mini-search-popup"
-                                            class="fixed top-20 md:top-24 left-4 right-4 md:left-auto md:right-8 z-40 bg-white/95 md:bg-white/90 backdrop-blur-md border border-[#6200EE]/30 rounded-xl md:rounded-2xl p-2.5 md:p-4 shadow-[0_4px_15px_rgba(98,0,238,0.1)] md:shadow-[0_8px_30px_rgba(98,0,238,0.15)] transition-all duration-500 transform translate-y-[-150%] md:translate-y-0 md:translate-x-[150%] opacity-0 flex items-center gap-3 md:gap-4 w-auto md:w-[320px] cursor-pointer hover:bg-white"
+                                            class="fixed top-20 md:top-24 right-4 md:left-auto md:right-8 z-40 bg-white/95 md:bg-white/90 backdrop-blur-md border border-[#6200EE]/30 rounded-full md:rounded-2xl p-1.5 pr-3 md:p-4 shadow-sm md:shadow-[0_8px_30px_rgba(98,0,238,0.15)] transition-all duration-500 transform md:translate-y-0 translate-x-[150%] opacity-0 flex items-center gap-2 md:gap-4 w-auto md:w-[320px] cursor-pointer hover:bg-white"
                                             onclick="toggleBottomSearchBar(); if(window.setBookingType) window.setBookingType('ON_DEMAND');">
-                                            <div class="relative w-8 h-8 md:w-10 md:h-10 shrink-0">
+                                            <div class="relative w-6 h-6 md:w-10 md:h-10 shrink-0">
                                                 <div class="absolute inset-0 bg-[#6200EE]/20 rounded-full animate-ping">
                                                 </div>
                                                 <div
-                                                    class="absolute inset-0 bg-white border-2 border-[#6200EE] rounded-full flex items-center justify-center shadow-inner">
-                                                    <div class="w-3 h-3 md:w-4 md:h-4 bg-[#6200EE] rounded-full"></div>
+                                                    class="absolute inset-0 bg-white border border-[#6200EE] md:border-2 rounded-full flex items-center justify-center shadow-inner">
+                                                    <div class="w-2.5 h-2.5 md:w-4 md:h-4 bg-[#6200EE] rounded-full"></div>
                                                 </div>
                                             </div>
                                             <div class="flex-1">
-                                                <h4 class="text-xs md:text-sm font-bold text-slate-800">Đang tìm chuyến
+                                                <h4 class="text-[11px] md:text-sm font-bold text-slate-800 leading-none md:leading-tight">Đang tìm chuyến
                                                 </h4>
-                                                <p class="text-[10px] md:text-xs text-slate-500 mt-0.5">Bấm để xem hoặc
+                                                <p class="hidden md:block text-xs text-slate-500 mt-0.5">Bấm để xem hoặc
                                                     hủy</p>
                                             </div>
                                             <span
-                                                class="material-symbols-outlined text-slate-400 text-[18px] md:text-[20px]">chevron_right</span>
+                                                class="hidden md:block material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
                                         </div>
 
                                         <!-- Mini Prebook Popup (Top Right, Below OnDemand) -->
                                         <div id="mini-prebook-popup"
-                                            class="fixed top-32 md:top-48 left-4 right-4 md:left-auto md:right-8 z-40 bg-white/95 md:bg-white/90 backdrop-blur-md border border-[#FF6D00]/30 rounded-xl md:rounded-2xl p-2.5 md:p-4 shadow-[0_4px_15px_rgba(255,109,0,0.1)] md:shadow-[0_8px_30px_rgba(255,109,0,0.15)] transition-all duration-500 transform translate-y-[-150%] md:translate-y-0 md:translate-x-[150%] opacity-0 flex items-center gap-3 md:gap-4 w-auto md:w-[320px] cursor-pointer hover:bg-white"
+                                            class="fixed top-32 md:top-48 right-4 md:left-auto md:right-8 z-40 bg-white/95 md:bg-white/90 backdrop-blur-md border border-[#FF6D00]/30 rounded-full md:rounded-2xl p-1.5 pr-3 md:p-4 shadow-sm md:shadow-[0_8px_30px_rgba(255,109,0,0.15)] transition-all duration-500 transform md:translate-y-0 translate-x-[150%] opacity-0 flex items-center gap-2 md:gap-4 w-auto md:w-[320px] cursor-pointer hover:bg-white"
                                             onclick="toggleBottomSearchBar(); if(window.setBookingType) window.setBookingType('PRE_BOOK');">
-                                            <div class="relative w-8 h-8 md:w-10 md:h-10 shrink-0">
+                                            <div class="relative w-6 h-6 md:w-10 md:h-10 shrink-0">
                                                 <div
                                                     class="absolute inset-0 bg-[#FF6D00]/20 rounded-full animate-pulse">
                                                 </div>
                                                 <div
-                                                    class="absolute inset-0 bg-white border-2 border-[#FF6D00] rounded-full flex items-center justify-center shadow-inner">
+                                                    class="absolute inset-0 bg-white border border-[#FF6D00] md:border-2 rounded-full flex items-center justify-center shadow-inner">
                                                     <span
-                                                        class="material-symbols-outlined text-[#FF6D00] text-[16px] md:text-[20px]">schedule</span>
+                                                        class="material-symbols-outlined text-[#FF6D00] text-[12px] md:text-[20px]">schedule</span>
                                                 </div>
                                             </div>
                                             <div class="flex-1 min-w-0">
-                                                <h6 class="text-xs md:text-sm font-bold text-[#FF6D00] mb-0.5 md:mb-1">Chuyến đi đã đặt trước
+                                                <h6 class="text-[11px] md:text-sm font-bold text-[#FF6D00] leading-none md:leading-tight mb-0 md:mb-1">Chuyến đặt trước
                                                 </h6>
-                                                <div class="flex items-center gap-1 text-[10px] md:text-xs text-slate-600 truncate">
+                                                <div class="hidden md:flex items-center gap-1 text-[10px] md:text-xs text-slate-600 truncate">
                                                     <div
                                                         class="w-1.5 h-1.5 rounded-full border-[2px] border-[#FF6D00] bg-white shrink-0">
                                                     </div>
                                                     <span id="mini-prebook-pickup" class="truncate"></span>
                                                 </div>
                                                 <div
-                                                    class="flex items-center gap-1 text-[10px] md:text-xs text-slate-600 truncate mt-0.5">
+                                                    class="hidden md:flex items-center gap-1 text-[10px] md:text-xs text-slate-600 truncate mt-0.5">
                                                     <span
                                                         class="material-symbols-outlined text-[#FF6D00] text-[10px] md:text-[12px] shrink-0">location_on</span>
                                                     <span id="mini-prebook-dropoff" class="truncate"></span>
                                                 </div>
                                             </div>
+                                            <span
+                                                class="hidden md:block material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
                                         </div>
 
 
@@ -1353,6 +1355,10 @@
                                                         document.getElementById('dynamic-island')?.classList.add('mobile-hidden');
                                                         // Map thu nhỏ để không bị che bởi bottom sheet
                                                         document.getElementById('map')?.classList.remove('map-fullscreen');
+                                                        
+                                                        // Hiện nút định vị
+                                                        document.getElementById('btn-locate-me')?.classList.remove('hidden');
+                                                        document.getElementById('btn-locate-me')?.classList.add('flex');
 
                                                         // Ẩn mini popups khi mở search bar
                                                         const miniPopup = document.getElementById('mini-search-popup');
@@ -1372,6 +1378,10 @@
                                                         searchBar.classList.remove('opacity-100');
                                                         document.getElementById('dynamic-island')?.classList.remove('mobile-hidden');
                                                         document.getElementById('map')?.classList.add('map-fullscreen');
+
+                                                        // Ẩn nút định vị
+                                                        document.getElementById('btn-locate-me')?.classList.add('hidden');
+                                                        document.getElementById('btn-locate-me')?.classList.remove('flex');
 
                                                         // Hiện mini popups nếu đang tìm kiếm
                                                         const miniPopup = document.getElementById('mini-search-popup');
@@ -1834,11 +1844,11 @@
                                         </script>
                                         </c:if>
 
-                                            <!-- Locate Me Button -->
-                                            <button onclick="recenterMap()"
-                                                class="absolute bottom-8 right-8 z-20 w-14 h-14 bg-white text-slate-700 hover:text-[#6200EE] rounded-full shadow-[0_8px_20px_rgba(0,0,0,0.15)] flex items-center justify-center transition-all hover:scale-105 border border-slate-200"
+                                            <!-- Locate Me Button (Hidden on Mobile Home Screen) -->
+                                            <button onclick="recenterMap()" id="btn-locate-me"
+                                                class="hidden md:flex absolute bottom-[55vh] md:bottom-8 right-4 md:right-8 z-20 w-10 h-10 md:w-14 md:h-14 bg-white text-slate-700 hover:text-[#6200EE] rounded-full shadow-lg md:shadow-[0_8px_20px_rgba(0,0,0,0.15)] items-center justify-center transition-all hover:scale-105 border border-slate-200"
                                                 title="Vị trí của tôi">
-                                                <span class="material-symbols-outlined text-[28px]">my_location</span>
+                                                <span class="material-symbols-outlined text-[20px] md:text-[28px]">my_location</span>
                                             </button>
 
                                             <!-- Script to handle switching roles -->
