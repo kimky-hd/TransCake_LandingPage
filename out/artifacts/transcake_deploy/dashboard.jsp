@@ -98,7 +98,7 @@
                                     <div id="map" class="absolute inset-0 z-0"></div>
                                     
                                     <!-- Mobile Floating Back Button (Visible when island is hidden) -->
-                                    <button onclick="document.getElementById('dynamic-island')?.classList.remove('mobile-hidden')" 
+                                    <button onclick="closeMobileMap()" 
                                         class="fixed top-4 left-4 z-10 w-10 h-10 bg-white rounded-full shadow-md flex md:hidden items-center justify-center text-slate-800 hover:bg-slate-100 transition-colors">
                                         <span class="material-symbols-outlined">arrow_back</span>
                                     </button>
@@ -119,7 +119,7 @@
 
                                         <!-- Bottom Search Bar (Passenger) -->
                                         <div id="bottom-search-bar"
-                                            class="fixed bottom-0 left-0 right-0 md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white md:bg-white/75 backdrop-blur-xl border-t border-slate-200 md:border-white/60 md:rounded-3xl p-3 md:p-6 transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto max-h-[52vh] md:min-h-[360px] overflow-y-auto panel-scroll shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:shadow-none">
+                                            class="fixed bottom-0 left-0 right-0 md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white md:bg-white/75 backdrop-blur-xl border-t border-slate-200 md:border-white/60 md:rounded-3xl p-3 md:p-6 transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto max-h-[52vh] md:min-h-[360px] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:shadow-none pb-safe">
 
                                             <!-- Handle for dragging/closing -->
                                             <div class="w-full flex justify-center mb-2 md:mb-4 cursor-pointer shrink-0"
@@ -140,7 +140,7 @@
                                             </div>
 
                                             <!-- Split Layout: Left (Form) | Right (Results) -->
-                                            <div class="flex flex-col lg:flex-row gap-3 md:gap-8 flex-1 h-full">
+                                            <div class="flex flex-col lg:flex-row gap-3 md:gap-8 flex-1 min-h-0 overflow-y-auto panel-scroll pr-1 pb-4">
 
                                                 <!-- LEFT: Search Form -->
                                                 <form id="trip-search-form"
@@ -502,10 +502,10 @@
 
                                         <!-- Bottom Blog Bar (Right of Dynamic Island) -->
                                         <div id="bottom-blog-bar"
-                                            class="fixed bottom-0 left-0 right-0 md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white/95 md:bg-white/75 backdrop-blur-xl border border-t border-slate-200 md:border-white/60 rounded-t-3xl md:rounded-3xl p-4 md:p-6 transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto max-h-[85vh] md:max-h-[80vh] min-h-[50vh] md:min-h-[360px] pb-safe shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:shadow-none">
+                                            class="fixed inset-0 md:inset-auto md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white/95 md:bg-white/75 backdrop-blur-xl border-none md:border md:border-white/60 rounded-none md:rounded-3xl p-4 pt-10 md:p-6 transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto md:max-h-[80vh] md:min-h-[360px] pb-safe shadow-none">
 
                                             <!-- Handle for dragging/closing -->
-                                            <div class="w-full flex justify-center mb-4 cursor-pointer shrink-0"
+                                            <div class="hidden md:flex w-full justify-center mb-4 cursor-pointer shrink-0"
                                                 onclick="toggleBottomBlogBar()">
                                                 <div
                                                     class="w-16 h-1.5 bg-slate-300 rounded-full hover:bg-slate-400 transition-colors">
@@ -514,15 +514,20 @@
 
                                             <!-- Header & Close -->
                                             <div class="flex justify-between items-center mb-6 shrink-0">
-                                                <h3
-                                                    class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
-                                                    <span
-                                                        class="material-symbols-outlined text-[#6200EE]">diversity_3</span>
-                                                    Cộng đồng &
-                                                    Chia sẻ
-                                                </h3>
+                                                <div class="flex items-center gap-2">
+                                                    <button onclick="toggleBottomBlogBar()"
+                                                        class="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors mr-1">
+                                                        <span class="material-symbols-outlined">arrow_back</span>
+                                                    </button>
+                                                    <h3
+                                                        class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                                                        <span
+                                                            class="hidden md:block material-symbols-outlined text-[#6200EE]">diversity_3</span>
+                                                        Cộng đồng & Chia sẻ
+                                                    </h3>
+                                                </div>
                                                 <button onclick="toggleBottomBlogBar()"
-                                                    class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
+                                                    class="hidden md:flex w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 items-center justify-center text-slate-600 transition-colors">
                                                     <span class="material-symbols-outlined text-[20px]">close</span>
                                                 </button>
                                             </div>
@@ -1336,6 +1341,17 @@
                                                 });
                                             }
 
+                                            function closeMobileMap() {
+                                                const searchBar = document.getElementById('bottom-search-bar');
+                                                if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
+                                                    toggleBottomSearchBar();
+                                                } else {
+                                                    document.getElementById('dynamic-island')?.classList.remove('mobile-hidden');
+                                                    document.getElementById('btn-locate-me')?.classList.add('hidden');
+                                                    document.getElementById('btn-locate-me')?.classList.remove('flex');
+                                                }
+                                            }
+
                                             function toggleBottomSearchBar() {
                                                 const searchBar = document.getElementById('bottom-search-bar');
                                                 const blogBar = document.getElementById('bottom-blog-bar');
@@ -1353,6 +1369,11 @@
                                                         searchBar.classList.add('translate-y-0');
                                                         searchBar.classList.add('opacity-100');
                                                         document.getElementById('dynamic-island')?.classList.add('mobile-hidden');
+                                                        
+                                                        // Khởi tạo map trên mobile nếu chưa có
+                                                        if (typeof initVietMapIfNeeded === 'function') {
+                                                            initVietMapIfNeeded();
+                                                        }
                                                         // Map thu nhỏ để không bị che bởi bottom sheet
                                                         document.getElementById('map')?.classList.remove('map-fullscreen');
                                                         
@@ -2037,80 +2058,88 @@
                                                     }
                                                 }
 
-                                                // ==========================================
-                                                // VIETMAP INITIALIZATION & GEOLOCATION
-                                                // ==========================================
+                                                function initVietMapIfNeeded() {
+                                                    if (window.mapInstance) return;
 
-                                                // Vietmap API Keys (Vietmap tách riêng key cho Map và Search)
-                                                const vietmapMapApiKey = '7b895685ca3fbced0955461bcbbeb5b50cb8e5a2943fdc49';
-                                                const vietmapSearchApiKey = '663154c8a54428313795b6799a4e6dc463c0f678b38f7648';
+                                                    // ==========================================
+                                                    // VIETMAP INITIALIZATION & GEOLOCATION
+                                                    // ==========================================
 
-                                                // Khởi tạo bản đồ Vietmap
-                                                const map = new vietmapgl.Map({
-                                                    container: 'map', // id của thẻ div
-                                                    style: 'https://maps.vietmap.vn/maps/styles/tm/style.json?apikey=' + vietmapMapApiKey, // giao diện mặc định
-                                                    center: [105.8542, 21.0285], // Tọa độ mặc định (Hà Nội)
-                                                    zoom: 13,
-                                                    attributionControl: false, // Ẩn logo nếu muốn UI sạch hơn
-                                                    transformRequest: (url, resourceType) => {
-                                                        if (url.indexOf('vietmap.vn') > -1 && url.indexOf('apikey=') === -1) {
-                                                            return { url: url + (url.indexOf('?') === -1 ? '?' : '&') + 'apikey=' + vietmapMapApiKey };
-                                                        }
-                                                        return { url: url };
-                                                    }
-                                                });
-                                                window.mapInstance = map;
-
-                                                // Tạo DOM element cho Custom Marker
-                                                const markerEl = document.createElement('div');
-                                                markerEl.className = 'relative flex items-center justify-center';
-                                                markerEl.innerHTML = `
-            <div class="absolute w-20 h-20 bg-[#6200EE]/30 rounded-full animate-ping"></div>
-            <div class="relative w-8 h-8 bg-[#6200EE] border-[3px] border-white rounded-full shadow-xl">
-                <div class="absolute inset-0 rounded-full border border-black/10"></div>
-            </div>
-        `;
-                                                // Lưu lại để có thể đổi màu khi toggle role
-                                                window.userMarkerEl = markerEl;
-
-                                                // Khởi tạo đối tượng Marker của Vietmap (nhưng chưa add vào map)
-                                                const userMarker = new vietmapgl.Marker({ element: markerEl, offset: [0, 0] });
-
-                                                // Khi bản đồ load xong, ta sẽ lấy vị trí thực của user
-                                                map.on('load', () => {
-                                                    if (navigator.geolocation) {
-                                                        // Yêu cầu quyền truy cập vị trí và lấy tọa độ
-                                                        navigator.geolocation.getCurrentPosition(
-                                                            (position) => {
-                                                                const lng = position.coords.longitude;
-                                                                const lat = position.coords.latitude;
-                                                                userLngLat = [lng, lat]; // Cập nhật vị trí toàn cục
-
-                                                                // Di chuyển bản đồ (FlyTo) tới vị trí của user với hiệu ứng mượt
-                                                                map.flyTo({
-                                                                    center: [lng, lat],
-                                                                    zoom: 15,
-                                                                    speed: 1.2
-                                                                });
-
-                                                                // Đặt custom marker lên vị trí của user
-                                                                userMarker.setLngLat([lng, lat]).addTo(map);
-                                                            },
-                                                            (error) => {
-                                                                console.error("Lỗi khi lấy vị trí: ", error.message);
-                                                                // Nếu user từ chối, marker có thể được đặt ở tọa độ mặc định
-                                                                userMarker.setLngLat([105.8542, 21.0285]).addTo(map);
-                                                            },
-                                                            {
-                                                                enableHighAccuracy: true,
-                                                                timeout: 5000,
-                                                                maximumAge: 0
+                                                    // Vietmap API Keys (Vietmap tách riêng key cho Map và Search)
+                                                    const vietmapMapApiKey = '7b895685ca3fbced0955461bcbbeb5b50cb8e5a2943fdc49';
+                                                    
+                                                    // Khởi tạo bản đồ Vietmap
+                                                    const map = new vietmapgl.Map({
+                                                        container: 'map', // id của thẻ div
+                                                        style: 'https://maps.vietmap.vn/maps/styles/tm/style.json?apikey=' + vietmapMapApiKey, // giao diện mặc định
+                                                        center: [105.8542, 21.0285], // Tọa độ mặc định (Hà Nội)
+                                                        zoom: 13,
+                                                        attributionControl: false, // Ẩn logo nếu muốn UI sạch hơn
+                                                        transformRequest: (url, resourceType) => {
+                                                            if (url.indexOf('vietmap.vn') > -1 && url.indexOf('apikey=') === -1) {
+                                                                return { url: url + (url.indexOf('?') === -1 ? '?' : '&') + 'apikey=' + vietmapMapApiKey };
                                                             }
-                                                        );
-                                                    } else {
-                                                        console.log("Trình duyệt không hỗ trợ Geolocation.");
-                                                    }
-                                                });
+                                                            return { url: url };
+                                                        }
+                                                    });
+                                                    window.mapInstance = map;
+
+                                                    // Tạo DOM element cho Custom Marker
+                                                    const markerEl = document.createElement('div');
+                                                    markerEl.className = 'relative flex items-center justify-center';
+                                                    markerEl.innerHTML = `
+                <div class="absolute w-20 h-20 bg-[#6200EE]/30 rounded-full animate-ping"></div>
+                <div class="relative w-8 h-8 bg-[#6200EE] border-[3px] border-white rounded-full shadow-xl">
+                    <div class="absolute inset-0 rounded-full border border-black/10"></div>
+                </div>
+            `;
+                                                    // Lưu lại để có thể đổi màu khi toggle role
+                                                    window.userMarkerEl = markerEl;
+
+                                                    // Khởi tạo đối tượng Marker của Vietmap (nhưng chưa add vào map)
+                                                    const userMarker = new vietmapgl.Marker({ element: markerEl, offset: [0, 0] });
+
+                                                    // Khi bản đồ load xong, ta sẽ lấy vị trí thực của user
+                                                    map.on('load', () => {
+                                                        if (navigator.geolocation) {
+                                                            // Yêu cầu quyền truy cập vị trí và lấy tọa độ
+                                                            navigator.geolocation.getCurrentPosition(
+                                                                (position) => {
+                                                                    const lng = position.coords.longitude;
+                                                                    const lat = position.coords.latitude;
+                                                                    userLngLat = [lng, lat]; // Cập nhật vị trí toàn cục
+
+                                                                    // Di chuyển bản đồ (FlyTo) tới vị trí của user với hiệu ứng mượt
+                                                                    map.flyTo({
+                                                                        center: [lng, lat],
+                                                                        zoom: 15,
+                                                                        speed: 1.2
+                                                                    });
+
+                                                                    // Đặt custom marker lên vị trí của user
+                                                                    userMarker.setLngLat([lng, lat]).addTo(map);
+                                                                },
+                                                                (error) => {
+                                                                    console.error("Lỗi khi lấy vị trí: ", error.message);
+                                                                    // Nếu user từ chối, marker có thể được đặt ở tọa độ mặc định
+                                                                    userMarker.setLngLat([105.8542, 21.0285]).addTo(map);
+                                                                },
+                                                                {
+                                                                    enableHighAccuracy: true,
+                                                                    timeout: 5000,
+                                                                    maximumAge: 0
+                                                                }
+                                                            );
+                                                        } else {
+                                                            console.log("Trình duyệt không hỗ trợ Geolocation.");
+                                                        }
+                                                    });
+                                                }
+
+                                                // Only init map immediately on Desktop. On mobile, init lazily when searching trip.
+                                                if (window.innerWidth >= 768) {
+                                                    initVietMapIfNeeded();
+                                                }
 
                                             </script>
 
