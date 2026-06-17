@@ -20,7 +20,7 @@
                         href="#contact">Contact us</a>
                 </div>
                 <div class="flex items-center gap-3">
-                    <a href="${pageContext.request.contextPath}/dashboard.jsp"
+                    <a href="${pageContext.request.contextPath}/dashboard"
                         class="hidden sm:block bg-accent text-white px-4 sm:px-6 py-2 rounded-full font-bold text-xs sm:text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40 text-center">
                         Trải nghiệm ngay
                     </a>
@@ -57,10 +57,10 @@
                         href="#pricing" onclick="closeMobileMenu()">Bảng giá</a>
                     <a class="nav-link text-lg font-semibold text-slate-700 hover:text-primary transition-colors py-3 border-b border-slate-100"
                         href="#contact" onclick="closeMobileMenu()">Contact us</a>
-                    <button
-                        class="mt-6 bg-accent text-white px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40 w-full">
-                        Tải ứng dụng
-                    </button>
+                    <a href="${pageContext.request.contextPath}/dashboard"
+                        class="block text-center mt-6 bg-accent text-white px-6 py-3 rounded-full font-bold text-sm hover:scale-105 transition-transform shadow-md shadow-accent/40 w-full">
+                        Trải nghiệm ngay
+                    </a>
                 </div>
             </div>
         </header>

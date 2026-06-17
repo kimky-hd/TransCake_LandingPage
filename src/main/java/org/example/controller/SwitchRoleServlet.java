@@ -74,6 +74,7 @@ public class SwitchRoleServlet extends HttpServlet {
                 result.put("message", "Lỗi server khi cập nhật vai trò.");
             }
 
+
         } catch (Exception e) {
             e.printStackTrace();
             result.put("success", false);

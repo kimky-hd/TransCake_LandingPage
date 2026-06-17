@@ -6,6 +6,7 @@
         <meta charset="utf-8" />
         <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <title>Transcake - Next Gen Social Ride Hailing</title>
+        <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/img/transcake-04.png" />
 
         <!-- Tailwind CSS -->
         <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -158,19 +159,11 @@
                 <p class="text-white/70 text-xs sm:text-sm font-medium mb-5 sm:mb-8 tracking-wide">
                     kết nối, minh bạch, cá nhân hóa.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mt-2">
-                    <button>
-                        <div class="flex gap-3">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
-                                alt="App Store" class="h-10 cursor-pointer hover:opacity-80 transition-opacity">
-                        </div>
-                    </button>
-                    <button>
-                        <div class="flex gap-3">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                                alt="Google Play" class="h-10 cursor-pointer hover:opacity-80 transition-opacity">
-                        </div>
-                    </button>
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mt-6">
+                    <a href="${pageContext.request.contextPath}/dashboard"
+                        class="bg-[#FF6D00] text-white px-8 py-3.5 rounded-full font-bold shadow-lg shadow-orange-500/30 hover:bg-orange-600 transition-all hover:-translate-y-1 text-lg flex items-center justify-center gap-2">
+                        Trải nghiệm ngay <span class="material-symbols-outlined">arrow_forward</span>
+                    </a>
                 </div>
                 <!-- Mobile-only trust badges -->
                 <div class="md:hidden flex flex-wrap justify-center gap-2 mt-5 pt-4 border-t border-white/10">
@@ -1003,131 +996,7 @@
                         Lựa chọn hành trình theo cách của bạn.
                     </h2>
 
-                    <!-- Toggle Switch (Top Center) -->
-                    <div class="flex items-center justify-center gap-4 text-sm font-semibold select-none">
-                        <span class="text-slate-900 transition-colors" id="label-monthly">Gói Tháng</span>
-                        <button id="billing-toggle"
-                            class="w-14 h-8 bg-slate-200 rounded-full relative transition-colors duration-300 focus:outline-none">
-                            <div id="toggle-circle"
-                                class="w-6 h-6 bg-white rounded-full absolute top-1 left-1 shadow-md transition-transform duration-300">
-                            </div>
-                        </button>
-                        <span class="text-slate-500 transition-colors" id="label-yearly">Gói Năm <span
-                                class="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full ml-1 font-bold">Tiết kiệm 20%</span></span>
-                    </div>
-                </div>
 
-                <!-- Pricing Cards Container -->
-                <div class="grid md:grid-cols-2 gap-8 md:gap-12 max-w-4xl mx-auto mb-20 relative z-10">
-
-                    <!-- Card 1 - Transcake Standard (Left) -->
-                    <div
-                        class="bg-white border border-slate-200 rounded-[2rem] p-8 md:p-10 flex flex-col hover:shadow-xl transition-shadow duration-300">
-                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Transcake Standard</h3>
-                        <p class="text-slate-500 text-sm mb-6 h-10">Dành cho nhu cầu di chuyển an toàn và kết nối cơ bản.</p>
-                        
-                        <div class="text-4xl font-black text-slate-900 mb-8 pb-8 border-b border-slate-100 flex items-baseline gap-1 relative overflow-hidden h-[80px]">
-                            <!-- Standard Monthly Price -->
-                            <div id="price-standard-monthly" class="absolute top-0 left-0 transition-all duration-500 ease-in-out">
-                                49.000 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
-                            </div>
-                            <!-- Standard Yearly Price -->
-                            <div id="price-standard-yearly" class="absolute top-[100%] left-0 transition-all duration-500 ease-in-out opacity-0">
-                                469.000 <span class="text-lg text-slate-500 font-medium">VNĐ / năm</span>
-                            </div>
-                        </div>
-
-                        <ul class="space-y-4 mb-10 flex-1">
-                            <li class="flex items-start gap-3">
-                                <div class="w-5 h-5 rounded-full border-2 border-[#6200EE] flex items-center justify-center shrink-0 mt-0.5">
-                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#6200EE] rotate-45 mb-1"></div>
-                                </div>
-                                <span class="text-slate-700 font-medium">Quyền truy cập mạng lưới đặt xe và ghép chuyến.</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="w-5 h-5 rounded-full border-2 border-[#6200EE] flex items-center justify-center shrink-0 mt-0.5">
-                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#6200EE] rotate-45 mb-1"></div>
-                                </div>
-                                <span class="text-slate-700 font-medium">Tham gia vào mạng lướt mạng xã hội Transcake cơ bản.</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="w-5 h-5 rounded-full border-2 border-[#6200EE] flex items-center justify-center shrink-0 mt-0.5">
-                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#6200EE] rotate-45 mb-1"></div>
-                                </div>
-                                <span class="text-slate-700 font-medium">Đặt xe không cọc, thanh toán trực tiếp cho tài xế.</span>
-                            </li>
-                        </ul>
-                        <a href="#"
-                            class="block w-full text-center py-4 rounded-xl border-2 border-[#6200EE] text-[#6200EE] font-bold hover:bg-purple-50 transition-all">
-                            Đăng ký Standard
-                        </a>
-                    </div>
-
-                    <!-- Card 2 - Transcake Pro (Right - Highlighted) -->
-                    <div
-                        class="bg-white border-2 border-[#FF6D00] rounded-[2rem] p-8 md:p-10 flex flex-col relative shadow-[0_20px_50px_rgba(255,109,0,0.15)] md:scale-105 z-10 transition-transform duration-300">
-                        <div
-                            class="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#FF6D00] text-white text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
-                            PHỔ BIẾN NHẤT
-                        </div>
-                        <h3 class="text-2xl font-bold text-[#FF6D00] mb-2">Transcake Pro</h3>
-                        <p class="text-slate-500 text-sm mb-6 h-10">Dành cho trải nghiệm cá nhân hóa và mạng xã hội di chuyển.</p>
-
-                        <div class="text-4xl font-black text-[#FF6D00] mb-8 pb-8 border-b border-slate-100 flex items-baseline gap-1 relative overflow-hidden h-[80px]">
-                            <!-- Pro Monthly Price -->
-                            <div id="price-pro-monthly" class="absolute top-0 left-0 transition-all duration-500 ease-in-out">
-                                89.000 <span class="text-lg text-slate-500 font-medium">VNĐ / tháng</span>
-                            </div>
-                            <!-- Pro Yearly Price -->
-                            <div id="price-pro-yearly" class="absolute top-[100%] left-0 transition-all duration-500 ease-in-out opacity-0">
-                                849.000 <span class="text-lg text-slate-500 font-medium">VNĐ / năm</span>
-                            </div>
-                        </div>
-
-                        <ul class="space-y-4 mb-10 flex-1">
-                            <li class="flex items-start gap-3">
-                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
-                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
-                                </div>
-                                <span class="text-slate-700 font-medium">Toàn bộ đặc quyền của gói Standard.</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
-                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
-                                </div>
-                                <span class="text-slate-700 font-medium">Ưu tiên ghép chuyến nhanh nhất.</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
-                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
-                                </div>
-                                <span class="text-slate-700 font-medium">Vibe Matching: Thuật toán chọn tài xế dựa trên thông tin cá nhân hóa</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
-                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
-                                </div>
-                                <span class="text-slate-700 font-medium">Tính năng an toàn nâng cao: lựa chọn tài xế cùng giới tính & Tự động gửi cảnh báo cho người thân nếu đi sai lộ trình.</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
-                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
-                                </div>
-                                <span class="text-slate-700 font-medium">Trải nghiệm không gian ứng dụng cá nhân hóa.</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <div class="w-5 h-5 rounded-full border-2 border-[#FF6D00] flex items-center justify-center shrink-0 mt-0.5">
-                                    <div class="w-2 h-3 border-r-2 border-b-2 border-[#FF6D00] rotate-45 mb-1"></div>
-                                </div>
-                                <span class="text-slate-700 font-medium">Bản đồ mạng xã hội chia sẻ vị trí thời gian thực với bạn bè </span>
-                            </li>
-                        </ul>
-                        <a href="#"
-                            class="block w-full text-center py-4 rounded-xl bg-[#FF6D00] text-white font-bold hover:bg-[#E65C00] shadow-xl shadow-orange-500/20 transition-all hover:-translate-y-1">
-                            Nâng cấp Pro ngay
-                        </a>
-                    </div>
-                </div>
                 <!-- Driver Commission Banner (B2B/Partners) -->
                 <div
                     class="max-w-4xl mx-auto rounded-3xl p-8 md:p-10 relative overflow-hidden backdrop-blur-xl bg-purple-50/80 border border-purple-100 shadow-[0_10px_30px_rgba(98,0,238,0.05)] text-left">
@@ -1166,69 +1035,7 @@
                     </a>
                 </div>
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', () => {
-                        const toggleBtn = document.getElementById('billing-toggle');
-                        const toggleCircle = document.getElementById('toggle-circle');
-                        const labelMonthly = document.getElementById('label-monthly');
-                        const labelYearly = document.getElementById('label-yearly');
 
-                        const priceStandardMonthly = document.getElementById('price-standard-monthly');
-                        const priceStandardYearly = document.getElementById('price-standard-yearly');
-                        const priceProMonthly = document.getElementById('price-pro-monthly');
-                        const priceProYearly = document.getElementById('price-pro-yearly');
-
-                        let isYearly = false;
-
-                        toggleBtn.addEventListener('click', () => {
-                            isYearly = !isYearly;
-
-                            if (isYearly) {
-                                toggleCircle.style.transform = 'translateX(24px)';
-                                toggleBtn.classList.remove('bg-slate-200');
-                                toggleBtn.classList.add('bg-[#6200EE]');
-
-                                labelMonthly.classList.remove('text-slate-900');
-                                labelMonthly.classList.add('text-slate-500');
-                                labelYearly.classList.remove('text-slate-500');
-                                labelYearly.classList.add('text-slate-900');
-
-                                // Standard Price Animation
-                                priceStandardMonthly.style.transform = 'translateY(-100%)';
-                                priceStandardMonthly.style.opacity = '0';
-                                priceStandardYearly.style.transform = 'translateY(-100%)';
-                                priceStandardYearly.style.opacity = '1';
-
-                                // Pro Price Animation
-                                priceProMonthly.style.transform = 'translateY(-100%)';
-                                priceProMonthly.style.opacity = '0';
-                                priceProYearly.style.transform = 'translateY(-100%)';
-                                priceProYearly.style.opacity = '1';
-                            } else {
-                                toggleCircle.style.transform = 'translateX(0)';
-                                toggleBtn.classList.remove('bg-[#6200EE]');
-                                toggleBtn.classList.add('bg-slate-200');
-
-                                labelMonthly.classList.remove('text-slate-500');
-                                labelMonthly.classList.add('text-slate-900');
-                                labelYearly.classList.remove('text-slate-900');
-                                labelYearly.classList.add('text-slate-500');
-
-                                // Standard Price Animation
-                                priceStandardMonthly.style.transform = 'translateY(0)';
-                                priceStandardMonthly.style.opacity = '1';
-                                priceStandardYearly.style.transform = 'translateY(0)';
-                                priceStandardYearly.style.opacity = '0';
-
-                                // Pro Price Animation
-                                priceProMonthly.style.transform = 'translateY(0)';
-                                priceProMonthly.style.opacity = '1';
-                                priceProYearly.style.transform = 'translateY(0)';
-                                priceProYearly.style.opacity = '0';
-                            }
-                        });
-                    });
-                </script>
             </div>
         </section>
 
@@ -1419,16 +1226,10 @@
                         <br /> theo cách của bạn?
                     </h2>
                     <div class="flex gap-4 mb-4">
-                        <!-- Button in exact mockup style -->
-                        <button
-                            class="bg-[#FF6B00] text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-orange-500/30 hover:bg-orange-600 transition-colors">Tải
-                            ứng dụng</button>
-                    </div>
-                    <div class="flex gap-3">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
-                            alt="App Store" class="h-10 cursor-pointer hover:opacity-80 transition-opacity">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                            alt="Google Play" class="h-10 cursor-pointer hover:opacity-80 transition-opacity">
+                        <a href="${pageContext.request.contextPath}/dashboard"
+                            class="bg-[#FF6D00] text-white px-8 py-3.5 rounded-full font-bold shadow-lg shadow-orange-500/30 hover:bg-orange-600 transition-all hover:-translate-y-1 text-lg flex items-center gap-2">
+                            Trải nghiệm ngay <span class="material-symbols-outlined">arrow_forward</span>
+                        </a>
                     </div>
                 </div>
 
