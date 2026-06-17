@@ -752,18 +752,18 @@
                                             const tripData = {
                                                 ON_DEMAND: {
                                                     active: isSearchingOnDemand,
-                                                    pickup: "${not empty activeTrip ? activeTrip.pickupLocation : ''}",
-                                                    dropoff: "${not empty activeTrip ? activeTrip.dropoffLocation : ''}",
+                                                    pickup: `${not empty activeTrip ? activeTrip.pickupLocation : ''}`,
+                                                    dropoff: `${not empty activeTrip ? activeTrip.dropoffLocation : ''}`,
                                                     vehicleType: "${not empty activeTrip ? activeTrip.vehicleType : 'MOTORBIKE'}",
-                                                    note: "${not empty activeTrip ? activeTrip.noteForDriver : ''}",
+                                                    note: `${not empty activeTrip ? activeTrip.noteForDriver : ''}`,
                                                     matchStatus: "${not empty activeTrip ? activeTrip.matchStatus : ''}"
                                                 },
                                                 PRE_BOOK: {
                                                     active: hasPreBookTrip,
-                                                    pickup: "${not empty activePreBookTrip ? activePreBookTrip.pickupLocation : ''}",
-                                                    dropoff: "${not empty activePreBookTrip ? activePreBookTrip.dropoffLocation : ''}",
+                                                    pickup: `${not empty activePreBookTrip ? activePreBookTrip.pickupLocation : ''}`,
+                                                    dropoff: `${not empty activePreBookTrip ? activePreBookTrip.dropoffLocation : ''}`,
                                                     vehicleType: "${not empty activePreBookTrip ? activePreBookTrip.vehicleType : 'MOTORBIKE'}",
-                                                    note: "${not empty activePreBookTrip ? activePreBookTrip.noteForDriver : ''}",
+                                                    note: `${not empty activePreBookTrip ? activePreBookTrip.noteForDriver : ''}`,
                                                     date: "${preBookDateStr}",
                                                     time: "${preBookTimeStr}",
                                                     matchStatus: "${not empty activePreBookTrip ? activePreBookTrip.matchStatus : ''}"
@@ -801,9 +801,9 @@
 
                                                     // Giao diện popup
                                                     const miniPickup = document.getElementById('mini-popup-pickup');
-                                                    if (miniPickup) miniPickup.textContent = "${not empty activeTrip ? activeTrip.pickupLocation : ''}";
+                                                    if (miniPickup) miniPickup.textContent = `${not empty activeTrip ? activeTrip.pickupLocation : ''}`;
                                                     const miniDropoff = document.getElementById('mini-popup-dropoff');
-                                                    if (miniDropoff) miniDropoff.textContent = "${not empty activeTrip ? activeTrip.dropoffLocation : ''}";
+                                                    if (miniDropoff) miniDropoff.textContent = `${not empty activeTrip ? activeTrip.dropoffLocation : ''}`;
 
                                                     // Nút hành động
                                                     const btnSubmit = document.getElementById('btn-submit-search');
@@ -1020,6 +1020,9 @@
                                                             }
                                                         } else {
                                                             showToast("Lỗi: " + (data.error || "Không thể tạo chuyến đi"), "error");
+                                                            if (data.error && (data.error.includes("Bạn đang tìm chuyến Đặt ngay") || data.error.includes("Bạn đã có chuyến Đặt trước"))) {
+                                                                setTimeout(() => { window.location.reload(); }, 1500);
+                                                            }
                                                             resetSearchUI();
                                                         }
                                                     }).catch(error => {

@@ -192,6 +192,7 @@ public class TripDAO {
                     trip.setVehicleType(rs.getString("vehicle_type"));
                     if (rs.getObject("driver_id") != null) trip.setDriverId(rs.getInt("driver_id"));
                     trip.setNoteForDriver(rs.getString("note_for_driver"));
+                    trip.setCompletionStatus(rs.getString("completion_status"));
                     if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
                     if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
                     return trip;
@@ -269,6 +270,7 @@ public class TripDAO {
                     trip.setVehicleType(rs.getString("vehicle_type"));
                     if (rs.getObject("driver_id") != null) trip.setDriverId(rs.getInt("driver_id"));
                     trip.setNoteForDriver(rs.getString("note_for_driver"));
+                    trip.setCompletionStatus(rs.getString("completion_status"));
                     if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
                     if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
                     return trip;
