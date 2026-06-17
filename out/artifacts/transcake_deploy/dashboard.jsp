@@ -2848,9 +2848,9 @@
                                                 <h4 class="font-bold text-slate-800 text-xl">Chuyến đi đang diễn ra</h4>
                                             </div>
                                             
-                                            <div class="grid grid-cols-2 gap-6 items-stretch">
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-stretch">
                                                 <!-- Left Column: Trip Info -->
-                                                <div class="flex flex-col gap-4 pr-6 border-r border-slate-100">
+                                                <div class="flex flex-col gap-4 md:pr-6 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0">
                                                     <div class="flex-1 space-y-4">
                                                         <div class="flex items-start gap-3">
                                                             <div class="w-3 h-3 rounded-full bg-[#6200EE] mt-1 shrink-0 shadow-[0_0_0_3px_rgba(98,0,238,0.2)]"></div>
