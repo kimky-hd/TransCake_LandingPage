@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!-- Header Section -->
-<div class="p-6 pb-4 shrink-0 border-b border-slate-200/50 bg-white/40">
+<div class="p-4 pt-safe md:p-6 md:pb-4 shrink-0 border-b border-slate-200/50 bg-white md:bg-white/40 z-30 pointer-events-auto">
     <div class="flex items-center justify-between mb-6">
         <!-- Logo -->
         <div class="flex items-center relative h-8 w-28">

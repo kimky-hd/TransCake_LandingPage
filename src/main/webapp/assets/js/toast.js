@@ -8,8 +8,8 @@ window.showToast = function(message, type = 'info') {
     if (!container) {
         container = document.createElement('div');
         container.id = 'toast-container';
-        // Positioned at top-right, fixed, above all overlays (z-[9999])
-        container.className = 'fixed top-5 right-5 z-[9999] flex flex-col gap-3 pointer-events-none';
+        // Positioned at top, responsive width
+        container.className = 'fixed top-4 left-4 right-4 md:left-auto md:right-5 md:top-5 z-[9999] flex flex-col items-center md:items-end gap-2 md:gap-3 pointer-events-none';
         document.body.appendChild(container);
     }
 
@@ -35,32 +35,32 @@ window.showToast = function(message, type = 'info') {
         iconSvg = `<svg class="w-6 h-6 text-[#6d28d9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
     }
 
-    // Initial state: translated out of view (translate-x-[120%]) and transparent
-    toast.className = `flex items-center gap-3.5 min-w-[320px] max-w-sm px-5 py-4 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] transform transition-all duration-300 translate-x-[120%] opacity-0 pointer-events-auto ${typeClasses}`;
+    // Initial state: translated out of view (translate-y-[-120%] on mobile, translate-x-[120%] on desktop)
+    toast.className = `flex items-center gap-2 md:gap-3.5 w-full md:w-auto min-w-[260px] md:min-w-[320px] max-w-sm px-3 py-2.5 md:px-5 md:py-4 rounded-xl shadow-[0_5px_20px_rgba(0,0,0,0.1)] md:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] transform transition-all duration-300 -translate-y-[150%] md:translate-y-0 md:translate-x-[120%] opacity-0 pointer-events-auto ${typeClasses}`;
     
     toast.innerHTML = `
-        <div class="flex-shrink-0">${iconSvg}</div>
-        <div class="text-[14px] font-semibold flex-1 leading-snug">${message}</div>
-        <button class="flex-shrink-0 text-slate-400 hover:text-slate-600 transition-colors ml-2" onclick="this.parentElement.remove()">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        <div class="flex-shrink-0 scale-75 md:scale-100">${iconSvg}</div>
+        <div class="text-xs md:text-[14px] font-semibold flex-1 leading-snug">${message}</div>
+        <button class="flex-shrink-0 text-slate-400 hover:text-slate-600 transition-colors ml-1 md:ml-2" onclick="this.parentElement.remove()">
+            <svg class="w-3.5 h-3.5 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
     `;
 
     container.appendChild(toast);
 
-    // 3. Animate in (slide in from right)
+    // 3. Animate in
     // Small delay ensures DOM is updated before animation starts
     setTimeout(() => {
-        toast.classList.remove('translate-x-[120%]', 'opacity-0');
-        toast.classList.add('translate-x-0', 'opacity-100');
+        toast.classList.remove('-translate-y-[150%]', 'md:translate-x-[120%]', 'opacity-0');
+        toast.classList.add('translate-y-0', 'md:translate-x-0', 'opacity-100');
     }, 10);
 
     // 4. Auto-remove after 4 seconds
     setTimeout(() => {
         // Only animate out if it wasn't manually closed already
         if (toast.parentElement) {
-            toast.classList.remove('translate-x-0', 'opacity-100');
-            toast.classList.add('translate-x-[120%]', 'opacity-0');
+            toast.classList.remove('translate-y-0', 'md:translate-x-0', 'opacity-100');
+            toast.classList.add('-translate-y-[150%]', 'md:translate-x-[120%]', 'opacity-0');
             
             // Wait for animation to finish before removing from DOM
             setTimeout(() => {
