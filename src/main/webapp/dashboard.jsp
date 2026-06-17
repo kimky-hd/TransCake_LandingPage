@@ -2846,7 +2846,7 @@
 
                                             <!-- Trip Proposals Panel (moved to body to avoid backdrop-blur stacking context) -->
                                     <div id="trip-proposals-panel"
-                                        class="fixed bottom-0 left-0 right-0 md:bottom-8 md:left-[420px] md:right-8 z-40 bg-white/95 md:bg-white/90 backdrop-blur-xl border-t md:border border-white/60 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] md:shadow-[0_30px_60px_rgba(0,0,0,0.15)] rounded-t-3xl md:rounded-3xl overflow-hidden transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto min-h-[50vh] max-h-[80vh] pointer-events-none pb-safe">
+                                        class="fixed bottom-0 left-0 right-0 md:bottom-8 md:left-[420px] md:right-8 z-40 bg-white/95 md:bg-white/90 backdrop-blur-xl border-t md:border border-white/60 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] md:shadow-[0_30px_60px_rgba(0,0,0,0.15)] rounded-t-3xl md:rounded-3xl overflow-hidden transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto h-[75vh] pointer-events-none pb-safe">
 
                                         <!-- Handle for dragging/closing -->
                                         <div class="w-full flex justify-center mb-2 cursor-pointer shrink-0 mt-4" onclick="toggleTripProposals()">
@@ -2869,7 +2869,7 @@
 
                                         <!-- List -->
                                         <div id="proposals-list"
-                                            class="flex-1 overflow-y-auto panel-scroll p-4 space-y-4 bg-slate-50/50">
+                                            class="flex-1 min-h-0 overflow-y-auto overscroll-contain panel-scroll p-4 pb-28 md:pb-4 space-y-4 bg-slate-50/50">
                                             <!-- Loading skeleton -->
                                             <div class="animate-pulse space-y-4">
                                                 <div class="h-32 bg-slate-200 rounded-2xl w-full"></div>
