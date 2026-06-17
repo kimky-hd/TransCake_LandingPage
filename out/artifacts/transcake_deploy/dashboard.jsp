@@ -9,7 +9,7 @@
 
                                 <head>
                                     <meta charset="utf-8" />
-                                    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+                                    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
                                     <title>Transcake - Dashboard</title>
                                     <link rel="icon" type="image/png"
                                         href="${pageContext.request.contextPath}/img/transcake-04.png" />
@@ -222,7 +222,7 @@
                                                                 <input type="text" id="pickup-input" name="pickup"
                                                                     required autocomplete="off"
                                                                     placeholder="Điểm đón (VD: 123 Nguyễn Trãi)"
-                                                                    class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-medium placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                                                    class="w-full pr-4 py-2.5 bg-transparent text-base font-medium placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none">
                                                             </div>
                                                             <div id="pickup-suggestions"
                                                                 class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden hidden max-h-48 panel-scroll overflow-y-auto">
@@ -241,7 +241,7 @@
                                                                 <input type="text" id="dropoff-input" name="dropoff"
                                                                     required autocomplete="off"
                                                                     placeholder="Điểm đến (VD: Sân bay Nội Bài)"
-                                                                    class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-medium placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                                                    class="w-full pr-4 py-2.5 bg-transparent text-base font-medium placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none">
                                                             </div>
                                                             <div id="dropoff-suggestions"
                                                                 class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden hidden max-h-48 panel-scroll overflow-y-auto">
@@ -309,7 +309,7 @@
                                                             </div>
                                                             <textarea id="note-input" name="note" rows="2"
                                                                 placeholder="Lưu ý cho tài xế (VD: Đứng ở cổng chính, tôi mang nhiều đồ...)"
-                                                                class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none resize-none"></textarea>
+                                                                class="w-full pr-4 py-2.5 bg-transparent text-base placeholder:text-slate-400 text-slate-700 border-none focus:ring-0 focus:outline-none resize-none"></textarea>
                                                         </div>
                                                     </div>
 
@@ -325,7 +325,7 @@
                                                                         class="material-symbols-outlined text-[18px]">calendar_today</span>
                                                                 </div>
                                                                 <input type="date" name="date" id="trip-date"
-                                                                    class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-semibold text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                                                    class="w-full pr-4 py-2.5 bg-transparent text-base font-semibold text-slate-700 border-none focus:ring-0 focus:outline-none">
                                                             </div>
                                                             <div
                                                                 class="relative flex-1 bg-white border border-slate-200/80 rounded-full overflow-hidden shadow-sm flex items-center hover:border-[#6200EE]/50 transition-colors">
@@ -335,7 +335,7 @@
                                                                         class="material-symbols-outlined text-[18px]">schedule</span>
                                                                 </div>
                                                                 <input type="time" name="time" id="trip-time"
-                                                                    class="w-full pr-4 py-2.5 bg-transparent text-sm sm:text-base font-semibold text-slate-700 border-none focus:ring-0 focus:outline-none">
+                                                                    class="w-full pr-4 py-2.5 bg-transparent text-base font-semibold text-slate-700 border-none focus:ring-0 focus:outline-none">
                                                             </div>
                                                         </div>
 
