@@ -756,7 +756,9 @@
                                                     dropoff: `${not empty activeTrip ? activeTrip.dropoffLocation : ''}`,
                                                     vehicleType: "${not empty activeTrip ? activeTrip.vehicleType : 'MOTORBIKE'}",
                                                     note: `${not empty activeTrip ? activeTrip.noteForDriver : ''}`,
-                                                    matchStatus: "${not empty activeTrip ? activeTrip.matchStatus : ''}"
+                                                    matchStatus: "${not empty activeTrip ? activeTrip.matchStatus : ''}",
+                                                    distance: ${not empty activeTrip and not empty activeTrip.distance ? activeTrip.distance : 0},
+                                                    price: ${not empty activeTrip and not empty activeTrip.price ? activeTrip.price : 0}
                                                 },
                                                 PRE_BOOK: {
                                                     active: hasPreBookTrip,
@@ -766,7 +768,9 @@
                                                     note: `${not empty activePreBookTrip ? activePreBookTrip.noteForDriver : ''}`,
                                                     date: "${preBookDateStr}",
                                                     time: "${preBookTimeStr}",
-                                                    matchStatus: "${not empty activePreBookTrip ? activePreBookTrip.matchStatus : ''}"
+                                                    matchStatus: "${not empty activePreBookTrip ? activePreBookTrip.matchStatus : ''}",
+                                                    distance: ${not empty activePreBookTrip and not empty activePreBookTrip.distance ? activePreBookTrip.distance : 0},
+                                                    price: ${not empty activePreBookTrip and not empty activePreBookTrip.price ? activePreBookTrip.price : 0}
                                                 }
                                             };
 
@@ -1716,7 +1720,7 @@
                                             }
 
                                             function startActiveTrip() {
-                                                if(confirm('Xác nhận bắt đầu chuyến đi? Hành khách sẽ được thông báo.')) {
+                                                const doStart = () => {
                                                     fetch('${pageContext.request.contextPath}/api/driver/start-trip', {
                                                         method: 'POST',
                                                         headers: { 'Content-Type': 'application/json' },
@@ -1731,11 +1735,19 @@
                                                             showToast(data.message, 'error');
                                                         }
                                                     }).catch(err => console.error(err));
+                                                };
+
+                                                if (window.showConfirmModal) {
+                                                    window.showConfirmModal('Bắt đầu chuyến đi', 'Xác nhận bắt đầu chuyến đi? Hành khách sẽ được thông báo.', doStart);
+                                                } else {
+                                                    if (confirm('Xác nhận bắt đầu chuyến đi? Hành khách sẽ được thông báo.')) {
+                                                        doStart();
+                                                    }
                                                 }
                                             }
 
                                             function completeActiveTrip() {
-                                                if(confirm('Xác nhận hoàn thành chuyến đi?')) {
+                                                const doComplete = () => {
                                                     fetch('${pageContext.request.contextPath}/api/driver/complete-trip', {
                                                         method: 'POST',
                                                         headers: { 'Content-Type': 'application/json' },
@@ -1755,6 +1767,14 @@
                                                             showToast(data.message, 'error');
                                                         }
                                                     }).catch(err => console.error(err));
+                                                };
+
+                                                if (window.showConfirmModal) {
+                                                    window.showConfirmModal('Hoàn thành chuyến đi', 'Xác nhận hoàn thành chuyến đi?', doComplete);
+                                                } else {
+                                                    if (confirm('Xác nhận hoàn thành chuyến đi?')) {
+                                                        doComplete();
+                                                    }
                                                 }
                                             }
 
@@ -2042,7 +2062,11 @@
                                                                 }
                                                             );
                                                         } else {
-                                                            alert('Vui lòng đăng ký thông tin tài xế!');
+                                                            if (window.showToast) {
+                                                                window.showToast('Vui lòng đăng ký thông tin tài xế!', 'warning');
+                                                            } else {
+                                                                alert('Vui lòng đăng ký thông tin tài xế!');
+                                                            }
                                                         }
                                                         return; // Không chuyển tab
                                                     }
@@ -2074,12 +2098,20 @@
                                                                                 // Tải lại trang để xoá hẳn trạng thái rác và cập nhật db
                                                                                 window.location.reload();
                                                                             } else {
-                                                                                alert(data.message || 'Lỗi khi chuyển đổi vai trò');
+                                                                                if (window.showToast) {
+                                                                                    window.showToast(data.message || 'Lỗi khi chuyển đổi vai trò', 'error');
+                                                                                } else {
+                                                                                    alert(data.message || 'Lỗi khi chuyển đổi vai trò');
+                                                                                }
                                                                             }
                                                                         })
                                                                         .catch(err => {
                                                                             console.error(err);
-                                                                            alert('Lỗi kết nối mạng khi gọi API: ' + err.message);
+                                                                            if (window.showToast) {
+                                                                                window.showToast('Lỗi kết nối mạng khi gọi API: ' + err.message, 'error');
+                                                                            } else {
+                                                                                alert('Lỗi kết nối mạng khi gọi API: ' + err.message);
+                                                                            }
                                                                         });
                                                                 }
                                                             );
