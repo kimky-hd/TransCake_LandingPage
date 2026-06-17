@@ -1975,6 +1975,9 @@
 
                                             <!-- Script to handle switching roles -->
                                             <script>
+                                                const vietmapSearchApiKey = '663154c8a54428313795b6799a4e6dc463c0f678b38f7648';
+                                                const vietmapMapApiKey = '7b895685ca3fbced0955461bcbbeb5b50cb8e5a2943fdc49';
+                                                let map; // Global map instance
                                                 const initialUserRole = '${not empty userRole ? userRole : "passenger"}';
                                                 const hasVehicle = ${not empty hasVehicle ? hasVehicle : false};
                                                 window.verificationStatus = '${not empty verificationStatus ? verificationStatus : ""}';
@@ -2166,11 +2169,10 @@
                                                     // VIETMAP INITIALIZATION & GEOLOCATION
                                                     // ==========================================
 
-                                                    // Vietmap API Keys (Vietmap tách riêng key cho Map và Search)
-                                                    const vietmapMapApiKey = '7b895685ca3fbced0955461bcbbeb5b50cb8e5a2943fdc49';
+                                                    // ==========================================
                                                     
                                                     // Khởi tạo bản đồ Vietmap
-                                                    const map = new vietmapgl.Map({
+                                                    map = new vietmapgl.Map({
                                                         container: 'map', // id của thẻ div
                                                         style: 'https://maps.vietmap.vn/maps/styles/tm/style.json?apikey=' + vietmapMapApiKey, // giao diện mặc định
                                                         center: [105.8542, 21.0285], // Tọa độ mặc định (Hà Nội)
