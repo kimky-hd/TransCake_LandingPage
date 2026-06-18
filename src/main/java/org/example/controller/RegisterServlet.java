@@ -63,6 +63,7 @@ public class RegisterServlet extends HttpServlet {
                 return;
             }
 
+
             // Kiểm tra mã OTP dựa trên email
             OtpCode latestOtp = otpDAO.getLatestValidOtpByEmail(email);
             if (latestOtp == null || !latestOtp.getOtpCode().equals(otpCode)) {
