@@ -55,6 +55,10 @@ public class DriverCompleteTripServlet extends HttpServlet {
             boolean success = tripDAO.completeTripByDriver(tripId, loggedInUser.getId());
             
             if (success) {
+                org.example.model.Trip tripInfo = tripDAO.getTripById(tripId);
+                if (tripInfo != null) {
+                    org.example.websocket.TripWebSocketEndpoint.sendMessageToUser("passenger", (long) tripInfo.getPassengerId(), "TRIP_COMPLETED", null);
+                }
                 result.put("success", true);
                 result.put("message", "Hoàn thành chuyến đi thành công!");
             } else {

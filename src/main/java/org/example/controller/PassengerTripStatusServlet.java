@@ -74,6 +74,8 @@ public class PassengerTripStatusServlet extends HttpServlet {
                     result.put("status", "COMPLETED");
                 } else if ("CANCELLED".equals(activeTrip.getMatchStatus())) {
                     result.put("status", "CANCELLED");
+                } else if ("IN_PROGRESS".equals(activeTrip.getCompletionStatus())) {
+                    result.put("status", "IN_PROGRESS");
                 } else {
                     result.put("status", activeTrip.getMatchStatus());
                 }

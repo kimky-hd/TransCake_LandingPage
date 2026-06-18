@@ -762,6 +762,75 @@
                                         </div>
 
                                         <script>
+                                            // --- WEBSOCKET INITIALIZATION ---
+                                            const wsUrl = (window.location.protocol === 'https:' ? 'wss://' : 'ws://') + window.location.host + '${pageContext.request.contextPath}/ws/trip';
+                                            let tripWs = null;
+                                            let wsReconnectTimer = null;
+
+                                            function connectTripWebSocket() {
+                                                tripWs = new WebSocket(wsUrl);
+
+                                                tripWs.onopen = function() {
+                                                    console.log("[WS] Connected to Trip WebSocket");
+                                                    if (wsReconnectTimer) { clearTimeout(wsReconnectTimer); wsReconnectTimer = null; }
+                                                    tripWs.send(JSON.stringify({
+                                                        action: "auth",
+                                                        userId: ${loggedInUser.id},
+                                                        role: "${loggedInUser.role}"
+                                                    }));
+                                                };
+
+                                                tripWs.onmessage = function(event) {
+                                                    const msg = JSON.parse(event.data);
+                                                    console.log("[WS] Message received:", msg);
+                                                    const currentRole = "${loggedInUser.role}";
+                                                    
+                                                    if (msg.action === "NEW_ON_DEMAND_TRIP") {
+                                                        if (currentRole === "driver") {
+                                                            if (typeof fetchTripProposals === "function") fetchTripProposals();
+                                                        }
+                                                    } else if (msg.action === "NEW_PRE_BOOK_TRIP") {
+                                                        if (currentRole === "driver") {
+                                                            if (typeof fetchTripProposals === "function") fetchTripProposals();
+                                                            if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
+                                                        }
+                                                    } else if (msg.action === "TRIP_CANCELLED") {
+                                                        if (currentRole === "driver") {
+                                                            if (typeof fetchTripProposals === "function") fetchTripProposals();
+                                                            if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
+                                                            if (typeof checkDriverTripStatus === "function") checkDriverTripStatus();
+                                                        }
+                                                    } else if (msg.action === "TRIP_ACCEPTED") {
+                                                        if (currentRole === "passenger") {
+                                                            if (typeof checkPassengerTripStatus === "function") checkPassengerTripStatus();
+                                                            if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
+                                                        }
+                                                        if (currentRole === "driver") {
+                                                            // Refresh proposals and active trip for the accepting driver
+                                                            if (typeof checkDriverTripStatus === "function") checkDriverTripStatus();
+                                                            if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
+                                                        }
+                                                    } else if (msg.action === "TRIP_STARTED" || msg.action === "TRIP_COMPLETED" || msg.action === "TRIP_CANCELLED_BY_DRIVER") {
+                                                        if (currentRole === "passenger") {
+                                                            if (typeof checkPassengerTripStatus === "function") checkPassengerTripStatus();
+                                                            if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
+                                                        }
+                                                    }
+                                                };
+
+                                                tripWs.onclose = function() {
+                                                    console.log("[WS] Disconnected. Reconnecting in 3s...");
+                                                    wsReconnectTimer = setTimeout(connectTripWebSocket, 3000);
+                                                };
+
+                                                tripWs.onerror = function(err) {
+                                                    console.error("[WS] Error:", err);
+                                                    tripWs.close();
+                                                };
+                                            }
+                                            connectTripWebSocket();
+                                            // --------------------------------
+
                                             let isSearchingOnDemand = ${not empty activeTrip};
                                             window.currentTripId = ${not empty activeTrip ? activeTrip.id : 'null'};
 
@@ -874,7 +943,7 @@
                                                 // Bắt đầu polling tìm tài xế nếu có chuyến đang hoạt động
                                                 if (isSearchingOnDemand || hasPreBookTrip) {
                                                     checkPassengerTripStatus(); // Check immediately to display matched driver info on reload
-                                                    passengerStatusInterval = setInterval(checkPassengerTripStatus, 5000);
+                                                    passengerStatusInterval = setInterval(checkPassengerTripStatus, 15000); // Fallback polling mỗi 15s
                                                 }
 
                                                 // Đóng băng form nếu tab hiện tại đang có chuyến
@@ -1039,7 +1108,7 @@
                                                             // Bắt đầu polling ngay lập tức để cập nhật thông tin tài xế khi nhận chuyến
                                                             if (!passengerStatusInterval) {
                                                                 checkPassengerTripStatus();
-                                                                passengerStatusInterval = setInterval(checkPassengerTripStatus, 5000);
+                                                                passengerStatusInterval = setInterval(checkPassengerTripStatus, 15000);
                                                             }
                                                         } else {
                                                             showToast("Lỗi: " + (data.error || "Không thể tạo chuyến đi"), "error");
@@ -1078,25 +1147,31 @@
 
                                             let passengerStatusInterval = null;
 
-                                            function forceResetPassengerUI(msg, msgType) {
+                                            function forceResetPassengerUI(msg, msgType, tripTypeToReset) {
                                                 if (msg) showToast(msg, msgType);
                                                 
-                                                isSearchingOnDemand = false;
-                                                hasPreBookTrip = false;
-                                                window.currentTripId = null;
-                                                window.currentPreBookTripId = null;
+                                                if (!tripTypeToReset || tripTypeToReset === 'ON_DEMAND') {
+                                                    isSearchingOnDemand = false;
+                                                    window.currentTripId = null;
+                                                    tripData.ON_DEMAND.active = false;
+                                                    tripData.ON_DEMAND.matchStatus = '';
+                                                    tripData.ON_DEMAND.driver = null;
+                                                }
                                                 
-                                                tripData.ON_DEMAND.active = false;
-                                                tripData.ON_DEMAND.matchStatus = '';
-                                                tripData.ON_DEMAND.driver = null;
-                                                
-                                                tripData.PRE_BOOK.active = false;
-                                                tripData.PRE_BOOK.matchStatus = '';
-                                                tripData.PRE_BOOK.driver = null;
+                                                if (!tripTypeToReset || tripTypeToReset === 'PRE_BOOK') {
+                                                    hasPreBookTrip = false;
+                                                    window.currentPreBookTripId = null;
+                                                    tripData.PRE_BOOK.active = false;
+                                                    tripData.PRE_BOOK.matchStatus = '';
+                                                    tripData.PRE_BOOK.driver = null;
+                                                }
                                             
-                                                toggleFormInputs(false);
+                                                // Only unlock forms if BOTH are false
+                                                if (!isSearchingOnDemand && !hasPreBookTrip) {
+                                                    toggleFormInputs(false);
+                                                }
                                             
-                                                if (passengerStatusInterval) {
+                                                if (!isSearchingOnDemand && !hasPreBookTrip && passengerStatusInterval) {
                                                     clearInterval(passengerStatusInterval);
                                                     passengerStatusInterval = null;
                                                 }
@@ -1149,55 +1224,88 @@
                                             }
 
                                             function checkPassengerTripStatus() {
-                                                const activeType = document.getElementById('tripType') ? document.getElementById('tripType').value : 'ON_DEMAND';
-                                                const tripId = activeType === 'ON_DEMAND' ? window.currentTripId : window.currentPreBookTripId;
+                                                // Kiểm tra cả 2 loại chuyến (ON_DEMAND và PRE_BOOK) nếu cả 2 tồn tại
+                                                if (window.currentTripId) {
+                                                    _checkOneTripStatus(window.currentTripId, 'ON_DEMAND');
+                                                }
+                                                if (window.currentPreBookTripId) {
+                                                    _checkOneTripStatus(window.currentPreBookTripId, 'PRE_BOOK');
+                                                }
+                                            }
+                                            
+                                            function _checkOneTripStatus(tripId, tripType) {
                                                 if (!tripId) return;
+                                                const activeType = document.getElementById('tripType') ? document.getElementById('tripType').value : 'ON_DEMAND';
                                                 fetch('${pageContext.request.contextPath}/api/passenger/trip-status?tripId=' + tripId)
                                                     .then(res => res.json())
                                                     .then(data => {
+                                                        const isActiveTab = (tripType === activeType);
+                                                        
                                                         if (data.success && data.status === 'MATCHED') {
-                                                            const btn = document.getElementById('btn-submit-search');
-                                                            if (btn) {
-                                                                btn.type = 'button';
-                                                                btn.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
-                                                                btn.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
-                                                                btn.disabled = true;
-                                                                btn.onclick = null;
-                                                            }
-                                                            tripData[activeType].matchStatus = 'MATCHED';
+                                                            tripData[tripType].matchStatus = 'MATCHED';
                                                             if (data.driver) {
-                                                                tripData[activeType].driver = data.driver;
-                                                                document.getElementById('inline-driver-name').textContent = data.driver.fullName || '---';
-                                                                document.getElementById('inline-driver-phone').textContent = data.driver.phoneNumber || '---';
-                                                                document.getElementById('inline-driver-vehicle').textContent = (data.driver.vehicleName || '---') + " (" + (data.driver.vehicleType || '---') + ")";
-                                                                document.getElementById('inline-driver-plate').textContent = data.driver.licensePlate || '---';
-                                                                document.getElementById('inline-driver-hobbies').textContent = data.driver.hobbies || 'Không có';
+                                                                tripData[tripType].driver = data.driver;
                                                             }
-                                                            const matchedState = document.getElementById('matched-driver-state');
-                                                            if (matchedState) {
-                                                                document.getElementById('empty-search-state').classList.add('hidden');
-                                                                document.getElementById('loading-search-state').classList.add('hidden');
-                                                                matchedState.classList.remove('hidden');
-                                                                matchedState.classList.add('flex');
+                                                            
+                                                            if (isActiveTab) {
+                                                                const btn = document.getElementById('btn-submit-search');
+                                                                if (btn) {
+                                                                    btn.type = 'button';
+                                                                    btn.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
+                                                                    btn.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                    btn.disabled = true;
+                                                                    btn.onclick = null;
+                                                                }
+                                                                
+                                                                if (data.driver) {
+                                                                    document.getElementById('inline-driver-name').textContent = data.driver.fullName || '---';
+                                                                    document.getElementById('inline-driver-phone').textContent = data.driver.phoneNumber || '---';
+                                                                    document.getElementById('inline-driver-vehicle').textContent = (data.driver.vehicleName || '---') + " (" + (data.driver.vehicleType || '---') + ")";
+                                                                    document.getElementById('inline-driver-plate').textContent = data.driver.licensePlate || '---';
+                                                                    document.getElementById('inline-driver-hobbies').textContent = data.driver.hobbies || 'Không có';
+                                                                }
+                                                                
+                                                                const matchedState = document.getElementById('matched-driver-state');
+                                                                if (matchedState) {
+                                                                    document.getElementById('empty-search-state').classList.add('hidden');
+                                                                    document.getElementById('loading-search-state').classList.add('hidden');
+                                                                    matchedState.classList.remove('hidden');
+                                                                    matchedState.classList.add('flex');
+                                                                }
+                                                            } else {
+                                                                if (window.showToast) window.showToast('Tài xế đã nhận chuyến ' + (tripType === 'PRE_BOOK' ? 'Hẹn trước' : 'Đặt ngay') + ' của bạn!', 'info');
                                                             }
                                                         } else if (data.success && data.status === 'IN_PROGRESS') {
-                                                            const btn = document.getElementById('btn-submit-search');
-                                                            if (btn) {
-                                                                btn.type = 'button';
-                                                                btn.innerHTML = 'Đang trong chuyến đi <span class="material-symbols-outlined text-[20px]">directions_car</span>';
-                                                                btn.className = 'w-full bg-[#FF6D00] text-white font-bold py-3.5 rounded-full flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
-                                                                btn.disabled = true;
-                                                                btn.onclick = null;
+                                                            tripData[tripType].matchStatus = 'IN_PROGRESS';
+                                                            if (isActiveTab) {
+                                                                const btn = document.getElementById('btn-submit-search');
+                                                                if (btn) {
+                                                                    btn.type = 'button';
+                                                                    btn.innerHTML = 'Đang trong chuyến đi <span class="material-symbols-outlined text-[20px]">directions_car</span>';
+                                                                    btn.className = 'w-full bg-[#FF6D00] text-white font-bold py-3.5 rounded-full flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                    btn.disabled = true;
+                                                                    btn.onclick = null;
+                                                                }
+                                                                
+                                                                // Đảm bảo UI hiển thị thông tin tài xế
+                                                                const matchedState = document.getElementById('matched-driver-state');
+                                                                if (matchedState) {
+                                                                    document.getElementById('empty-search-state').classList.add('hidden');
+                                                                    document.getElementById('loading-search-state').classList.add('hidden');
+                                                                    matchedState.classList.remove('hidden');
+                                                                    matchedState.classList.add('flex');
+                                                                }
                                                             }
                                                         } else if (data.success && data.status === 'COMPLETED') {
-                                                            const dist = tripData[activeType].distance || 0;
-                                                            const price = tripData[activeType].price || 0;
+                                                            const dist = tripData[tripType].distance || 0;
+                                                            const price = tripData[tripType].price || 0;
                                                             openTripSummaryModal('Chuyến đi hoàn tất!', 'Cảm ơn bạn đã sử dụng dịch vụ TransCake.', dist, price);
-                                                            forceResetPassengerUI("Chuyến đi của bạn đã hoàn thành!", "success");
+                                                            forceResetPassengerUI("Chuyến đi của bạn đã hoàn thành!", "success", tripType);
                                                         } else if (data.success && data.status === 'CANCELLED') {
-                                                            forceResetPassengerUI("Chuyến đi đã bị hủy bởi tài xế hoặc hệ thống.", "warning");
+                                                            forceResetPassengerUI("Chuyến đi đã bị hủy bởi tài xế hoặc hệ thống.", "warning", tripType);
                                                         } else if (data.success && data.status === 'NO_ACTIVE_TRIP') {
-                                                            forceResetPassengerUI("Không tìm thấy chuyến đi hoạt động nào.", "info");
+                                                            // Chỉ xử lý NO_ACTIVE_TRIP khi load lại, có thể bỏ qua nếu là polling
+                                                            // forceResetPassengerUI("Không tìm thấy chuyến đi hoạt động nào.", "info", tripType);
                                                         }
                                                     }).catch(err => console.error(err));
                                             }
@@ -1700,17 +1808,21 @@
                                                         
                                                         if (data.success && data.trips && data.trips.length > 0) {
                                                             renderUpcomingTrips(data.trips, data.role);
-                                                            if (counterEl) counterEl.textContent = data.trips.length + " chuyến chờ đi";
-                                                            if (miniPopup) {
-                                                                miniPopup.classList.remove('translate-x-[150%]', 'opacity-0');
-                                                                miniPopup.classList.add('translate-x-0', 'opacity-100');
+                                                            if (data.role === 'passenger') {
+                                                                if (counterEl) counterEl.textContent = data.trips.length + " chuyến chờ đi";
+                                                                if (miniPopup) {
+                                                                    miniPopup.classList.remove('translate-x-[150%]', 'opacity-0');
+                                                                    miniPopup.classList.add('translate-x-0', 'opacity-100');
+                                                                }
                                                             }
                                                         } else {
                                                             renderUpcomingTrips([], data.role);
-                                                            if (counterEl) counterEl.textContent = "0 chuyến chờ đi";
-                                                            if (miniPopup) {
-                                                                miniPopup.classList.add('translate-x-[150%]', 'opacity-0');
-                                                                miniPopup.classList.remove('translate-x-0', 'opacity-100');
+                                                            if (data.role === 'passenger') {
+                                                                if (counterEl) counterEl.textContent = "0 chuyến chờ đi";
+                                                                if (miniPopup) {
+                                                                    miniPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                                                    miniPopup.classList.remove('translate-x-0', 'opacity-100');
+                                                                }
                                                             }
                                                         }
                                                     })
@@ -1718,15 +1830,42 @@
                                             }
 
                                             function renderUpcomingTrips(trips, role) {
-                                                const list = document.getElementById('upcoming-trips-list');
-                                                const empty = document.getElementById('upcoming-trips-empty');
+                                                const listId = role === 'driver' ? 'sidebar-upcoming-trips-list' : 'upcoming-trips-list';
+                                                const emptyId = role === 'driver' ? 'sidebar-upcoming-trips-empty' : 'upcoming-trips-empty';
+                                                
+                                                const list = document.getElementById(listId);
+                                                const empty = document.getElementById(emptyId);
                                                 if (!list) return;
+
+                                                const counterEl = document.getElementById('mini-upcoming-trips-counter');
+                                                const miniPopup = document.getElementById('mini-upcoming-trips-popup');
 
                                                 if (!trips || trips.length === 0) {
                                                     list.innerHTML = '';
+                                                    list.classList.add('hidden');
+                                                    list.classList.remove('flex');
                                                     if (empty) empty.classList.remove('hidden');
-                                                    list.appendChild(empty);
+                                                    if (role === 'passenger') {
+                                                        if (counterEl) counterEl.textContent = "0 chuyến chờ đi";
+                                                        if (miniPopup) {
+                                                            miniPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                                            miniPopup.classList.remove('translate-x-0', 'opacity-100');
+                                                        }
+                                                    }
                                                     return;
+                                                }
+
+                                                if (empty) empty.classList.add('hidden');
+                                                list.classList.remove('hidden');
+                                                list.classList.add('flex');
+                                                list.innerHTML = '';
+
+                                                if (role === 'passenger') {
+                                                    if (counterEl) counterEl.textContent = trips.length + " chuyến chờ đi";
+                                                    if (miniPopup) {
+                                                        miniPopup.classList.remove('translate-x-[150%]', 'opacity-0');
+                                                        miniPopup.classList.add('translate-x-0', 'opacity-100');
+                                                    }
                                                 }
 
                                                 if (empty) empty.classList.add('hidden');
@@ -1932,25 +2071,11 @@
 
 
                                             function openDriverActiveTripPopup() {
-                                                const popup = document.getElementById('driver-active-trip-popup');
-                                                if(popup) {
-                                                    popup.classList.remove('hidden');
-                                                    setTimeout(() => {
-                                                        popup.classList.remove('opacity-0');
-                                                        popup.firstElementChild.classList.remove('scale-95');
-                                                    }, 10);
-                                                }
+                                                // Function deprecated, UI is now static in sidebar
                                             }
 
                                             function closeDriverActiveTripPopup() {
-                                                const popup = document.getElementById('driver-active-trip-popup');
-                                                if(popup) {
-                                                    popup.classList.add('opacity-0');
-                                                    popup.firstElementChild.classList.add('scale-95');
-                                                    setTimeout(() => {
-                                                        popup.classList.add('hidden');
-                                                    }, 300);
-                                                }
+                                                // Function deprecated, UI is now static in sidebar
                                             }
 
                                             function startActiveTrip() {
@@ -1991,12 +2116,13 @@
                                                     .then(data => {
                                                         if (data.success) {
                                                             showToast('Hoàn thành chuyến đi!', 'success');
-                                                            closeDriverActiveTripPopup();
                                                             checkDriverTripStatus();
                                                             // Hiển thị modal cho tài xế
-                                                            const dist = document.getElementById('popup-active-trip-distance').textContent.replace(' km','');
-                                                            const priceStr = document.getElementById('popup-active-trip-price').textContent.replace('đ','').replace(/\./g,'');
-                                                            openTripSummaryModal('Cuốc xe hoàn tất!', 'Bạn đã hoàn thành chuyến đi xuất sắc.', dist, parseInt(priceStr));
+                                                            const distEl = document.getElementById('sidebar-active-trip-distance');
+                                                            const priceEl = document.getElementById('sidebar-active-trip-price');
+                                                            const dist = distEl ? distEl.textContent.replace(' km','') : '0';
+                                                            const priceStr = priceEl ? priceEl.textContent.replace('đ','').replace(/\./g,'').replace(/,/g,'') : '0';
+                                                            openTripSummaryModal('Cuốc xe hoàn tất!', 'Bạn đã hoàn thành chuyến đi xuất sắc.', dist, parseInt(priceStr) || 0);
                                                         } else {
                                                             showToast(data.message, 'error');
                                                         }
@@ -2044,8 +2170,8 @@
                                                     closeDriverCancelReasonModal();
                                                     if (data.success) {
                                                         if(window.showToast) window.showToast('Đã hủy chuyến đi.', 'info');
-                                                        closeDriverActiveTripPopup();
                                                         checkDriverTripStatus();
+                                                        fetchUpcomingTrips();
                                                     } else {
                                                         if(window.showToast) window.showToast(data.message, 'error');
                                                     }
@@ -2096,7 +2222,6 @@
 
                                                             const acceptedProposal = document.getElementById('proposal-' + tripId);
                                                             if (acceptedProposal) acceptedProposal.remove();
-                                                            openDriverActiveTripPopup();
                                                             checkDriverTripStatus(); // Switch to active trip UI
                                                         } else {
                                                             showToast(data.message || 'Có lỗi xảy ra, vui lòng thử lại.', 'error');
@@ -2113,7 +2238,7 @@
                                             function startDriverStatusPolling() {
                                                 if (driverStatusInterval) clearInterval(driverStatusInterval);
                                                 checkDriverTripStatus();
-                                                driverStatusInterval = setInterval(checkDriverTripStatus, 10000);
+                                                driverStatusInterval = setInterval(checkDriverTripStatus, 15000); // Fallback polling mỗi 15s
                                             }
 
                                             function stopDriverStatusPolling() {
@@ -2125,32 +2250,36 @@
                                                 fetch('${pageContext.request.contextPath}/api/driver/active-trip')
                                                     .then(res => res.json())
                                                     .then(data => {
-                                                        const listEl = document.getElementById('proposals-list');
-                                                        const titleEl = document.getElementById('trip-proposals-title');
-                                                        const sidebarBtn = document.getElementById('sidebar-driver-active-trip');
-
-                                                        if (titleEl) titleEl.textContent = 'Chuyến đi dành cho bạn';
-                                                        if (listEl) listEl.classList.remove('hidden');
+                                                        const emptyTripUI = document.getElementById('sidebar-active-trip-empty');
+                                                        const activeTripUI = document.getElementById('sidebar-active-trip-content');
 
                                                         if (data.active && data.trip) {
-                                                            // Populate new popup
                                                             const trip = data.trip;
                                                             window.currentActiveTripId = trip.id;
                                                             
-                                                            const badgeEl = document.getElementById('popup-active-trip-type-badge');
+                                                            if (emptyTripUI) emptyTripUI.classList.add('hidden');
+                                                            if (activeTripUI) {
+                                                                activeTripUI.classList.remove('hidden');
+                                                                activeTripUI.classList.add('flex');
+                                                            }
+                                                            
+                                                            // Badge loại chuyến
+                                                            const badgeEl = document.getElementById('sidebar-active-trip-type-badge');
                                                             if (badgeEl) {
+                                                                badgeEl.classList.remove('hidden');
                                                                 if (trip.tripType === 'PRE_BOOK') {
                                                                     badgeEl.textContent = 'Hẹn trước';
-                                                                    badgeEl.className = 'ml-2 px-2 py-1 text-xs font-bold rounded-lg bg-orange-100 text-orange-600';
+                                                                    badgeEl.className = 'px-2 py-0.5 text-[10px] font-bold rounded bg-orange-100 text-orange-600';
                                                                 } else {
                                                                     badgeEl.textContent = 'Đặt ngay';
-                                                                    badgeEl.className = 'ml-2 px-2 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-600';
+                                                                    badgeEl.className = 'px-2 py-0.5 text-[10px] font-bold rounded bg-slate-100 text-slate-600';
                                                                 }
                                                             }
                                                             
-                                                            const btnStart = document.getElementById('btn-driver-start-trip');
-                                                            const btnComplete = document.getElementById('btn-driver-complete-trip');
-                                                            const btnCancel = document.getElementById('btn-driver-cancel-trip');
+                                                            // Nút hành động
+                                                            const btnStart = document.getElementById('btn-sidebar-driver-start-trip');
+                                                            const btnComplete = document.getElementById('btn-sidebar-driver-complete-trip');
+                                                            const btnCancel = document.getElementById('btn-sidebar-driver-cancel-trip');
                                                             if (trip.completionStatus === 'IN_PROGRESS') {
                                                                 if(btnStart) btnStart.classList.add('hidden');
                                                                 if(btnCancel) btnCancel.classList.remove('hidden');
@@ -2161,31 +2290,39 @@
                                                                 if(btnComplete) btnComplete.classList.add('hidden');
                                                             }
                                                             
-                                                            const popupPickup = document.getElementById('popup-active-trip-pickup');
-                                                            if(popupPickup) popupPickup.textContent = trip.pickupLocation;
-                                                            const popupDropoff = document.getElementById('popup-active-trip-dropoff');
-                                                            if(popupDropoff) popupDropoff.textContent = trip.dropoffLocation;
-                                                            const popupDistance = document.getElementById('popup-active-trip-distance');
-                                                            if(popupDistance) popupDistance.textContent = trip.distance + ' km';
-                                                            const popupPrice = document.getElementById('popup-active-trip-price');
-                                                            if(popupPrice) popupPrice.textContent = new Intl.NumberFormat('vi-VN').format(trip.price) + 'đ';
+                                                            // Dữ liệu chuyến đi -> sidebar (SỬA: dùng sidebar-active-trip-* thay vì popup-active-trip-*)
+                                                            const elPickup = document.getElementById('sidebar-active-trip-pickup');
+                                                            if(elPickup) elPickup.textContent = trip.pickupLocation || 'N/A';
+                                                            const elDropoff = document.getElementById('sidebar-active-trip-dropoff');
+                                                            if(elDropoff) elDropoff.textContent = trip.dropoffLocation || 'N/A';
+                                                            const elDistance = document.getElementById('sidebar-active-trip-distance');
+                                                            if(elDistance) elDistance.textContent = (trip.distance || 0) + ' km';
+                                                            const elPrice = document.getElementById('sidebar-active-trip-price');
+                                                            if(elPrice) elPrice.textContent = new Intl.NumberFormat('vi-VN').format(trip.price || 0) + 'đ';
                                                             
-                                                            const popupPassengerName = document.getElementById('popup-active-trip-passenger-name');
-                                                            if(popupPassengerName) popupPassengerName.textContent = trip.passengerName || 'Khách hàng';
-                                                            const popupPassengerPhone = document.getElementById('popup-active-trip-passenger-phone');
-                                                            if(popupPassengerPhone) popupPassengerPhone.textContent = trip.passengerPhone || '09xxxxxx';
+                                                            // Thông tin hành khách
+                                                            const elPassengerName = document.getElementById('sidebar-active-trip-passenger-name');
+                                                            if(elPassengerName) elPassengerName.textContent = trip.passengerName || 'Khách hàng';
+                                                            const elPassengerPhone = document.getElementById('sidebar-active-trip-passenger-phone');
+                                                            if(elPassengerPhone) elPassengerPhone.textContent = trip.passengerPhone || '09xxxxxx';
                                                             
-                                                            const popupPassengerAvatar = document.getElementById('popup-active-trip-passenger-avatar');
-                                                            if(popupPassengerAvatar) {
-                                                                popupPassengerAvatar.src = (trip.passengerAvatar && trip.passengerAvatar.trim() !== '') 
+                                                            const elPassengerAvatar = document.getElementById('sidebar-active-trip-passenger-avatar');
+                                                            if(elPassengerAvatar) {
+                                                                elPassengerAvatar.src = (trip.passengerAvatar && trip.passengerAvatar.trim() !== '') 
                                                                     ? trip.passengerAvatar 
                                                                     : '${pageContext.request.contextPath}/img/default-avatar.svg';
                                                             }
-
-                                                            if(sidebarBtn) sidebarBtn.classList.remove('hidden');
                                                         } else {
-                                                            closeDriverActiveTripPopup();
-                                                            if(sidebarBtn) sidebarBtn.classList.add('hidden');
+                                                            // Không có chuyến đi -> hiện Empty State
+                                                            window.currentActiveTripId = null;
+                                                            if (emptyTripUI) emptyTripUI.classList.remove('hidden');
+                                                            if (activeTripUI) {
+                                                                activeTripUI.classList.add('hidden');
+                                                                activeTripUI.classList.remove('flex');
+                                                            }
+                                                            // Reset badge
+                                                            const badgeEl = document.getElementById('sidebar-active-trip-type-badge');
+                                                            if (badgeEl) badgeEl.classList.add('hidden');
                                                         }
                                                         
                                                         // Always fetch proposals for the list
@@ -2695,11 +2832,18 @@
                                                         const btnSubmit = document.getElementById('btn-submit-search');
                                                         if (btnSubmit) {
                                                             if (isSearchingOnDemand) {
-                                                                if (tripData.ON_DEMAND.matchStatus === 'MATCHED') {
-                                                                    // Đã ghép tài xế → nút xanh disabled
+                                                                        if (tripData.ON_DEMAND.matchStatus === 'MATCHED' || tripData.ON_DEMAND.matchStatus === 'IN_PROGRESS') {
+                                                                    // Đã ghép tài xế hoặc đang đi → vô hiệu hóa nút
                                                                     btnSubmit.type = 'button';
-                                                                    btnSubmit.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
-                                                                    btnSubmit.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                    
+                                                                    if (tripData.ON_DEMAND.matchStatus === 'IN_PROGRESS') {
+                                                                        btnSubmit.innerHTML = 'Đang trong chuyến đi <span class="material-symbols-outlined text-[20px]">directions_car</span>';
+                                                                        btnSubmit.className = 'w-full bg-[#FF6D00] text-white font-bold py-3.5 rounded-full flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                    } else {
+                                                                        btnSubmit.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
+                                                                        btnSubmit.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                    }
+                                                                    
                                                                     btnSubmit.disabled = true;
                                                                     btnSubmit.onclick = null;
 
@@ -2805,11 +2949,18 @@
                                                         const btnSubmit = document.getElementById('btn-submit-search');
                                                         if (btnSubmit) {
                                                             if (hasPreBookTrip) {
-                                                                if (tripData.PRE_BOOK.matchStatus === 'MATCHED') {
+                                                                    if (tripData.PRE_BOOK.matchStatus === 'MATCHED' || tripData.PRE_BOOK.matchStatus === 'IN_PROGRESS') {
                                                                     // Đã ghép tài xế → nút xanh disabled
                                                                     btnSubmit.type = 'button';
-                                                                    btnSubmit.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
-                                                                    btnSubmit.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                    
+                                                                    if (tripData.PRE_BOOK.matchStatus === 'IN_PROGRESS') {
+                                                                        btnSubmit.innerHTML = 'Đang trong chuyến đi <span class="material-symbols-outlined text-[20px]">directions_car</span>';
+                                                                        btnSubmit.className = 'w-full bg-[#FF6D00] text-white font-bold py-3.5 rounded-full flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                    } else {
+                                                                        btnSubmit.innerHTML = 'Chuyến đi sắp bắt đầu <span class="material-symbols-outlined text-[20px]">check_circle</span>';
+                                                                        btnSubmit.className = 'w-full bg-green-500 text-white font-bold py-3.5 rounded-full transition-all shadow-[0_8px_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 text-lg mt-auto cursor-not-allowed';
+                                                                    }
+                                                                    
                                                                     btnSubmit.disabled = true;
                                                                     btnSubmit.onclick = null;
 
@@ -3182,75 +3333,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Driver Active Trip Popup (moved to body to avoid stacking context) -->
-                                    <div id="driver-active-trip-popup"
-                                        class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
-                                        <div class="bg-white rounded-3xl p-6 shadow-2xl w-full max-w-3xl transform scale-95 transition-transform duration-300 relative">
-                                            <!-- Close Button -->
-                                            <button onclick="closeDriverActiveTripPopup()"
-                                                class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors">
-                                                <span class="material-symbols-outlined text-[20px]">close</span>
-                                            </button>
-                                            
-                                            <div class="flex items-center gap-2 mb-6">
-                                                <span class="material-symbols-outlined text-[#6200EE] bg-[#6200EE]/10 p-2 rounded-xl">navigation</span>
-                                                <h4 class="font-bold text-slate-800 text-xl">Chuyến đi đang diễn ra</h4>
-                                                <span id="popup-active-trip-type-badge" class="ml-2 px-2 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-600">Đặt ngay</span>
-                                            </div>
-                                            
-                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-stretch">
-                                                <!-- Left Column: Trip Info -->
-                                                <div class="flex flex-col gap-4 md:pr-6 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0">
-                                                    <div class="flex-1 space-y-4">
-                                                        <div class="flex items-start gap-3">
-                                                            <div class="w-3 h-3 rounded-full bg-[#6200EE] mt-1 shrink-0 shadow-[0_0_0_3px_rgba(98,0,238,0.2)]"></div>
-                                                            <div>
-                                                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-0.5">Điểm đón</p>
-                                                                <p class="text-sm font-semibold text-slate-800" id="popup-active-trip-pickup"></p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex items-start gap-3">
-                                                            <div class="w-3 h-3 rounded-full bg-[#FF6D00] mt-1 shrink-0 shadow-[0_0_0_3px_rgba(255,109,0,0.2)]"></div>
-                                                            <div>
-                                                                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-0.5">Điểm đến</p>
-                                                                <p class="text-sm font-semibold text-slate-800" id="popup-active-trip-dropoff"></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="bg-slate-50 rounded-xl p-3 flex justify-between items-center mt-auto">
-                                                        <span class="text-sm font-bold text-slate-600" id="popup-active-trip-distance"></span>
-                                                        <span class="text-lg font-black text-[#FF6D00]" id="popup-active-trip-price"></span>
-                                                    </div>
-                                                </div>
-                                                
-                                                <!-- Right Column: Passenger Info -->
-                                                <div class="flex flex-col gap-4">
-                                                    <div class="flex items-center gap-2">
-                                                        <span class="material-symbols-outlined text-green-600 bg-green-50 p-2 rounded-xl">person</span>
-                                                        <h4 class="font-bold text-slate-800">Khách hàng</h4>
-                                                    </div>
-                                                    <div class="flex items-center gap-4 mt-2">
-                                                        <div class="w-14 h-14 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden shrink-0 border-2 border-white shadow-sm">
-                                                            <img id="popup-active-trip-passenger-avatar" src="${pageContext.request.contextPath}/img/default-avatar.svg" alt="Avatar" class="w-full h-full object-cover">
-                                                        </div>
-                                                        <div>
-                                                            <h5 class="font-bold text-lg text-slate-800" id="popup-active-trip-passenger-name"></h5>
-                                                            <div class="flex items-center gap-1 text-slate-500 mt-0.5">
-                                                                <span class="material-symbols-outlined text-[16px]">call</span>
-                                                                <span class="font-medium text-sm" id="popup-active-trip-passenger-phone"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Actions -->
-                                                    <div class="mt-auto pt-4 flex gap-3" id="driver-trip-actions">
-                                                        <button id="btn-driver-start-trip" onclick="startActiveTrip()" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-sm transition-colors text-sm">Bắt đầu chuyến</button>
-                                                        <button id="btn-driver-complete-trip" onclick="completeActiveTrip()" class="flex-1 bg-[#6200EE] hover:bg-[#5000c2] text-white font-bold py-3 rounded-xl shadow-sm transition-colors text-sm hidden">Đã hoàn thành</button>
-                                                        <button id="btn-driver-cancel-trip" onclick="cancelActiveTrip()" class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-bold py-3 rounded-xl border border-red-200 shadow-sm transition-colors text-sm">Huỷ chuyến</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <!-- Driver Active Trip Popup (Removed - UI is now in sidebar) -->
 
                                     <!-- Driver Cancel Reason Modal -->
                                     <div id="driver-cancel-reason-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[110] hidden items-center justify-center transition-all duration-300">

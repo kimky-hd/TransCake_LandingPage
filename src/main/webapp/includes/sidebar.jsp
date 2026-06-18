@@ -266,22 +266,81 @@
                             class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-colors">chevron_right</span>
                     </div>
 
-                    <!-- Driver Active Trip Shortcut -->
-                    <div id="sidebar-driver-active-trip"
-                        onclick="openDriverActiveTripPopup()"
-                        class="bg-white/70 hover:bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm cursor-pointer transition-colors flex items-center gap-4 mt-1 group hidden">
-                        <div
-                            class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
-                            <span
-                                class="material-symbols-outlined">navigation</span>
+                    <!-- Chuyến đi hiện tại Section -->
+                    <div class="mt-4 pt-4 border-t border-slate-200/60">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                                <span class="material-symbols-outlined text-blue-600 text-lg">navigation</span>
+                                Chuyến đi hiện tại
+                            </h4>
+                            <span id="sidebar-active-trip-type-badge" class="hidden px-2 py-0.5 text-[10px] font-bold rounded bg-slate-100 text-slate-600">Đặt ngay</span>
                         </div>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-slate-800 text-sm">Chuyến đi
-                                hiện tại</h4>
-                            <p class="text-xs text-slate-500 font-medium">Đang diễn ra</p>
+                        
+                        <!-- Empty State -->
+                        <div id="sidebar-active-trip-empty" class="bg-white/70 p-4 rounded-xl border border-slate-200/60 flex flex-col items-center justify-center text-center">
+                            <span class="material-symbols-outlined text-slate-300 text-3xl mb-2">location_off</span>
+                            <p class="text-xs font-medium text-slate-500">Hiện không có chuyến xe nào đang chạy.</p>
                         </div>
-                        <span
-                            class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-colors">chevron_right</span>
+
+                        <!-- Active State -->
+                        <div id="sidebar-active-trip-content" class="hidden bg-white/70 p-4 rounded-xl border border-slate-200/60 flex flex-col gap-3">
+                            <div class="flex items-center gap-3 border-b border-slate-100 pb-2">
+                                <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center overflow-hidden shrink-0">
+                                    <img id="sidebar-active-trip-passenger-avatar" src="${pageContext.request.contextPath}/img/default-avatar.svg" alt="Avatar" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <h5 class="font-bold text-sm text-slate-800 truncate" id="sidebar-active-trip-passenger-name">Tên khách hàng</h5>
+                                    <p class="text-xs text-slate-500 font-medium truncate" id="sidebar-active-trip-passenger-phone">Số điện thoại</p>
+                                </div>
+                                <div class="text-right shrink-0">
+                                    <p class="text-xs font-bold text-[#FF6D00]" id="sidebar-active-trip-price">0đ</p>
+                                    <p class="text-[10px] font-medium text-slate-500" id="sidebar-active-trip-distance">0 km</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-2 relative">
+                                <div class="absolute left-1.5 top-3 bottom-3 w-px bg-slate-200"></div>
+                                <div class="flex items-start gap-2 relative z-10">
+                                    <div class="w-3 h-3 rounded-full bg-[#6200EE] mt-0.5 shrink-0 shadow-[0_0_0_2px_white]"></div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[10px] font-bold text-slate-500 uppercase leading-none">Điểm đón</p>
+                                        <p class="text-xs font-semibold text-slate-800 truncate" id="sidebar-active-trip-pickup">Địa chỉ đón</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2 relative z-10 mt-1">
+                                    <div class="w-3 h-3 rounded-full bg-[#FF6D00] mt-0.5 shrink-0 shadow-[0_0_0_2px_white]"></div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-[10px] font-bold text-slate-500 uppercase leading-none">Điểm đến</p>
+                                        <p class="text-xs font-semibold text-slate-800 truncate" id="sidebar-active-trip-dropoff">Địa chỉ đến</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-1 flex gap-2" id="sidebar-driver-trip-actions">
+                                <button id="btn-sidebar-driver-start-trip" onclick="startActiveTrip()" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg text-xs shadow-sm transition-colors flex justify-center items-center gap-1"><span class="material-symbols-outlined text-[14px]">play_arrow</span> Bắt đầu</button>
+                                <button id="btn-sidebar-driver-complete-trip" onclick="completeActiveTrip()" class="flex-1 bg-[#6200EE] hover:bg-[#5000c2] text-white font-bold py-2 rounded-lg text-xs shadow-sm transition-colors hidden flex justify-center items-center gap-1"><span class="material-symbols-outlined text-[14px]">check</span> Hoàn thành</button>
+                                <button id="btn-sidebar-driver-cancel-trip" onclick="cancelActiveTrip()" class="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-bold py-2 rounded-lg text-xs border border-red-200 transition-colors flex justify-center items-center gap-1"><span class="material-symbols-outlined text-[14px]">close</span> Hủy</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lịch trình sắp tới Section -->
+                    <div class="mt-4 pt-4 border-t border-slate-200/60">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                                <span class="material-symbols-outlined text-orange-500 text-lg">calendar_month</span>
+                                Lịch trình sắp tới
+                            </h4>
+                        </div>
+                        
+                        <!-- Empty State -->
+                        <div id="sidebar-upcoming-trips-empty" class="bg-white/70 p-4 rounded-xl border border-slate-200/60 flex flex-col items-center justify-center text-center">
+                            <span class="material-symbols-outlined text-slate-300 text-3xl mb-2">event_busy</span>
+                            <p class="text-xs font-medium text-slate-500">Chưa có lịch trình nào sắp tới.</p>
+                        </div>
+
+                        <!-- Active State (List) -->
+                        <div id="sidebar-upcoming-trips-list" class="hidden flex-col gap-3 max-h-[300px] overflow-y-auto panel-scroll pr-1">
+                            <!-- JS will inject upcoming trips here -->
+                        </div>
                     </div>
 
                     <!-- Desktop Extension: Heatmap Overlay Toggle -->

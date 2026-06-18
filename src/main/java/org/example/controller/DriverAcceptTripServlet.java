@@ -73,6 +73,8 @@ public class DriverAcceptTripServlet extends HttpServlet {
                 // PRE_BOOK: Cho phép nhận mà KHÔNG khóa tài xế, giữ NOT_STARTED
                 success = tripDAO.acceptPreBookTrip(tripId, loggedInUser.getId());
                 if (success) {
+                    org.example.websocket.TripWebSocketEndpoint.sendMessageToUser("passenger", (long) tripInfo.getPassengerId(), "TRIP_ACCEPTED", null);
+                    org.example.websocket.TripWebSocketEndpoint.broadcastToAllDrivers("TRIP_ACCEPTED", null);
                     result.put("success", true);
                     result.put("message", "Đã nhận chuyến đặt trước! Xem trong mục Lịch trình sắp tới.");
                 } else {
@@ -89,6 +91,8 @@ public class DriverAcceptTripServlet extends HttpServlet {
                 }
                 success = tripDAO.acceptTrip(tripId, loggedInUser.getId());
                 if (success) {
+                    org.example.websocket.TripWebSocketEndpoint.sendMessageToUser("passenger", (long) tripInfo.getPassengerId(), "TRIP_ACCEPTED", null);
+                    org.example.websocket.TripWebSocketEndpoint.broadcastToAllDrivers("TRIP_ACCEPTED", null);
                     result.put("success", true);
                     result.put("message", "Nhận chuyến thành công!");
                 } else {

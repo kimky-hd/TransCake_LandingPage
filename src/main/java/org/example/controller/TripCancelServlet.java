@@ -34,6 +34,9 @@ public class TripCancelServlet extends HttpServlet {
             }
 
             boolean success = tripDAO.cancelTrip(tripId);
+            if (success) {
+                org.example.websocket.TripWebSocketEndpoint.broadcastToAllDrivers("TRIP_CANCELLED", null);
+            }
             response.getWriter().write("{\"success\": " + success + "}");
         } catch (Exception e) {
             response.getWriter().write("{\"success\": false, \"error\": \"" + e.getMessage() + "\"}");

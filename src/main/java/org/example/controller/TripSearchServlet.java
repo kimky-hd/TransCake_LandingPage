@@ -119,6 +119,13 @@ public class TripSearchServlet extends HttpServlet {
         int tripId = tripDAO.insertTrip(trip);
         
         if (tripId > 0) {
+            // Broadcast via WebSocket
+            if ("PRE_BOOK".equals(tripType)) {
+                org.example.websocket.TripWebSocketEndpoint.broadcastToAllDrivers("NEW_PRE_BOOK_TRIP", null);
+            } else {
+                org.example.websocket.TripWebSocketEndpoint.broadcastToAllDrivers("NEW_ON_DEMAND_TRIP", null);
+            }
+
             // Hybrid Logic: Automatically generate blog post for PRE_BOOK if requested
             if ("PRE_BOOK".equals(tripType) && "true".equals(shareToBlog)) {
                 String title = "Tìm bạn đường từ " + pickup + " đến " + dropoff;

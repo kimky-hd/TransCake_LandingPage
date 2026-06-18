@@ -74,6 +74,7 @@ public class StartPreBookTripServlet extends HttpServlet {
             boolean success = tripDAO.startTripByDriver(tripId, user.getId());
 
             if (success) {
+                org.example.websocket.TripWebSocketEndpoint.sendMessageToUser("passenger", (long) trip.getPassengerId(), "TRIP_STARTED", null);
                 result.put("success", true);
                 result.put("message", "Đã bắt đầu chuyến đi!");
             } else {
