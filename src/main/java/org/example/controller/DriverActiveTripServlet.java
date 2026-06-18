@@ -38,7 +38,14 @@ public class DriverActiveTripServlet extends HttpServlet {
             return;
         }
 
-        Trip activeTrip = tripDAO.getActiveTripForDriver(user.getId());
+        // Ưu tiên 1: Lấy chuyến đi đang IN_PROGRESS (dù là Đặt ngay hay Hẹn trước)
+        Trip activeTrip = tripDAO.getInProgressTripForDriver(user.getId());
+        
+        // Ưu tiên 2: Nếu không có chuyến nào đang chạy, ưu tiên trả về chuyến ON_DEMAND (NOT_STARTED)
+        if (activeTrip == null) {
+            activeTrip = tripDAO.getActiveOnDemandTripForDriver(user.getId());
+        }
+        // Lưu ý: Không trả về chuyến PRE_BOOK (NOT_STARTED) ở API này vì nó đã hiển thị ở phần Lịch trình sắp tới.
         
         JsonObject json = new JsonObject();
         if (activeTrip != null) {

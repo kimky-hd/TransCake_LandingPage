@@ -52,7 +52,10 @@ public class DashboardServlet extends HttpServlet {
         String preBookTimeStr = "";
 
         if (isLoggedIn) {
-            driverActiveTrip = tripDAO.getActiveTripForDriver(user.getId());
+            driverActiveTrip = tripDAO.getInProgressTripForDriver(user.getId());
+            if (driverActiveTrip == null) {
+                driverActiveTrip = tripDAO.getActiveOnDemandTripForDriver(user.getId());
+            }
             activeTrip = tripDAO.getActiveOnDemandTrip(user.getId());
             activePreBookTrip = tripDAO.getActivePreBookTrip(user.getId());
 

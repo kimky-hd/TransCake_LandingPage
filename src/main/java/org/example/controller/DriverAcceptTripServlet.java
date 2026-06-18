@@ -52,22 +52,49 @@ public class DriverAcceptTripServlet extends HttpServlet {
 
             int tripId = ((Double) body.get("tripId")).intValue();
 
-            // Kiểm tra xem tài xế có đang có chuyến nào dở dang không
-            if (tripDAO.getActiveTripForDriver(loggedInUser.getId()) != null) {
+            // Kiểm tra loại chuyến đi để xử lý khác nhau
+            org.example.model.Trip tripInfo = tripDAO.getTripById(tripId);
+            if (tripInfo == null) {
                 result.put("success", false);
-                result.put("message", "Bạn đang có một chuyến đi chưa hoàn thành. Không thể nhận thêm chuyến mới.");
+                result.put("message", "Chuyến đi không tồn tại.");
                 response.getWriter().write(gson.toJson(result));
                 return;
             }
 
-            boolean success = tripDAO.acceptTrip(tripId, loggedInUser.getId());
-            
-            if (success) {
-                result.put("success", true);
-                result.put("message", "Nhận chuyến thành công!");
+            boolean success;
+            if ("PRE_BOOK".equals(tripInfo.getTripType())) {
+                // Kiểm tra tài xế đã nhận 1 chuyến PRE_BOOK chưa
+                if (tripDAO.getActivePreBookTripForDriver(loggedInUser.getId()) != null) {
+                    result.put("success", false);
+                    result.put("message", "Bạn đã nhận một chuyến hẹn trước. Bạn không thể nhận thêm chuyến hẹn trước nào khác.");
+                    response.getWriter().write(gson.toJson(result));
+                    return;
+                }
+                // PRE_BOOK: Cho phép nhận mà KHÔNG khóa tài xế, giữ NOT_STARTED
+                success = tripDAO.acceptPreBookTrip(tripId, loggedInUser.getId());
+                if (success) {
+                    result.put("success", true);
+                    result.put("message", "Đã nhận chuyến đặt trước! Xem trong mục Lịch trình sắp tới.");
+                } else {
+                    result.put("success", false);
+                    result.put("message", "Không thể nhận chuyến. Chuyến đã bị hủy hoặc đã có người khác nhận.");
+                }
             } else {
-                result.put("success", false);
-                result.put("message", "Không thể nhận chuyến đi này. Có thể chuyến đi đã bị hủy hoặc đã có người khác nhận.");
+                // ON_DEMAND: Kiểm tra tài xế có đang chạy chuyến ON_DEMAND nào không
+                if (tripDAO.getActiveOnDemandTripForDriver(loggedInUser.getId()) != null) {
+                    result.put("success", false);
+                    result.put("message", "Bạn đang có một chuyến đi đặt ngay chưa hoàn thành. Không thể nhận thêm chuyến mới.");
+                    response.getWriter().write(gson.toJson(result));
+                    return;
+                }
+                success = tripDAO.acceptTrip(tripId, loggedInUser.getId());
+                if (success) {
+                    result.put("success", true);
+                    result.put("message", "Nhận chuyến thành công!");
+                } else {
+                    result.put("success", false);
+                    result.put("message", "Không thể nhận chuyến đi này. Có thể chuyến đi đã bị hủy hoặc đã có người khác nhận.");
+                }
             }
             
         } catch (Exception e) {

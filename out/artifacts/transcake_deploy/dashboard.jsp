@@ -529,6 +529,25 @@
                                                 class="hidden md:block material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
                                         </div>
 
+                                        <!-- Mini Upcoming Trips Popup (Top Right, Below Prebook) -->
+                                        <div id="mini-upcoming-trips-popup"
+                                            class="fixed top-44 md:top-72 right-4 md:left-auto md:right-8 z-40 bg-white/95 md:bg-white/90 backdrop-blur-md border border-[#4CAF50]/30 rounded-full md:rounded-2xl p-1.5 pr-3 md:p-4 shadow-sm md:shadow-[0_8px_30px_rgba(76,175,80,0.15)] transition-all duration-500 transform md:translate-y-0 translate-x-[150%] opacity-0 flex items-center gap-2 md:gap-4 w-auto md:w-[320px] cursor-pointer hover:bg-white"
+                                            onclick="toggleUpcomingTripsPanel()">
+                                            <div class="relative w-6 h-6 md:w-10 md:h-10 shrink-0">
+                                                <div class="absolute inset-0 bg-[#4CAF50]/20 rounded-full animate-pulse"></div>
+                                                <div class="absolute inset-0 bg-white border border-[#4CAF50] md:border-2 rounded-full flex items-center justify-center shadow-inner">
+                                                    <span class="material-symbols-outlined text-[#4CAF50] text-[12px] md:text-[20px]">event_available</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <h6 class="text-[11px] md:text-sm font-bold text-[#4CAF50] leading-none md:leading-tight mb-0 md:mb-1">Lịch trình sắp tới
+                                                </h6>
+                                                <div class="hidden md:flex items-center gap-1 text-[10px] md:text-xs text-slate-600 truncate">
+                                                    <span id="mini-upcoming-trips-count" class="truncate font-semibold">0 chuyến chờ đi</span>
+                                                </div>
+                                            </div>
+                                            <span class="hidden md:block material-symbols-outlined text-slate-400 text-[20px]">keyboard_arrow_up</span>
+                                        </div>
 
 
                                         <!-- Bottom Blog Bar (Right of Dynamic Island) -->
@@ -1616,10 +1635,13 @@
 
                                                         if (data.success && data.trips && data.trips.length > 0) {
                                                             if (listEl) listEl.classList.remove('hidden');
-                                                            renderTripProposals(data.trips);
+                                                            window.currentProposals = data.trips;
+                                                            renderTripProposals();
                                                             // Update UI counter
                                                             if (counterEl) counterEl.textContent = data.trips.length + " chuyến đang chờ";
                                                         } else {
+                                                            window.currentProposals = [];
+                                                            renderTripProposals();
                                                             if (emptyEl) emptyEl.classList.remove('hidden');
                                                             if (counterEl) counterEl.textContent = "0 chuyến đang chờ";
                                                         }
@@ -1633,10 +1655,224 @@
                                                     });
                                             }
 
-                                            function renderTripProposals(trips) {
+                                            let upcomingTripsPanelOpen = false;
+                                            function openUpcomingTripsPanel() {
+                                                const panel = document.getElementById('upcoming-trips-panel');
+                                                if (!panel || upcomingTripsPanelOpen) return;
+                                                upcomingTripsPanelOpen = true;
+                                                panel.style.visibility = 'visible';
+                                                panel.style.transform = 'translateY(0)';
+                                                panel.style.opacity = '1';
+                                                panel.style.pointerEvents = 'auto';
+                                                fetchUpcomingTrips();
+                                            }
+
+                                            function closeUpcomingTripsPanel() {
+                                                const panel = document.getElementById('upcoming-trips-panel');
+                                                if (!panel || !upcomingTripsPanelOpen) return;
+                                                upcomingTripsPanelOpen = false;
+                                                panel.style.transform = 'translateY(150%)';
+                                                panel.style.opacity = '0';
+                                                panel.style.pointerEvents = 'none';
+                                                setTimeout(() => { 
+                                                    if (!upcomingTripsPanelOpen) {
+                                                        panel.style.visibility = 'hidden'; 
+                                                    }
+                                                }, 500);
+                                            }
+
+                                            function toggleUpcomingTripsPanel() {
+                                                if (!upcomingTripsPanelOpen) {
+                                                    openUpcomingTripsPanel();
+                                                    // Close other panels
+                                                    closeTripProposalsPanel();
+                                                } else {
+                                                    closeUpcomingTripsPanel();
+                                                }
+                                            }
+
+                                            function fetchUpcomingTrips() {
+                                                fetch('${pageContext.request.contextPath}/api/upcoming-trips')
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        const counterEl = document.getElementById('mini-upcoming-trips-count');
+                                                        const miniPopup = document.getElementById('mini-upcoming-trips-popup');
+                                                        
+                                                        if (data.success && data.trips && data.trips.length > 0) {
+                                                            renderUpcomingTrips(data.trips, data.role);
+                                                            if (counterEl) counterEl.textContent = data.trips.length + " chuyến chờ đi";
+                                                            if (miniPopup) {
+                                                                miniPopup.classList.remove('translate-x-[150%]', 'opacity-0');
+                                                                miniPopup.classList.add('translate-x-0', 'opacity-100');
+                                                            }
+                                                        } else {
+                                                            renderUpcomingTrips([], data.role);
+                                                            if (counterEl) counterEl.textContent = "0 chuyến chờ đi";
+                                                            if (miniPopup) {
+                                                                miniPopup.classList.add('translate-x-[150%]', 'opacity-0');
+                                                                miniPopup.classList.remove('translate-x-0', 'opacity-100');
+                                                            }
+                                                        }
+                                                    })
+                                                    .catch(err => console.error("Lỗi lấy danh sách lịch trình:", err));
+                                            }
+
+                                            function renderUpcomingTrips(trips, role) {
+                                                const list = document.getElementById('upcoming-trips-list');
+                                                const empty = document.getElementById('upcoming-trips-empty');
+                                                if (!list) return;
+
+                                                if (!trips || trips.length === 0) {
+                                                    list.innerHTML = '';
+                                                    if (empty) empty.classList.remove('hidden');
+                                                    list.appendChild(empty);
+                                                    return;
+                                                }
+
+                                                if (empty) empty.classList.add('hidden');
+                                                list.innerHTML = '';
+
+                                                trips.forEach(trip => {
+                                                    const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(trip.price);
+                                                    const formattedDate = trip.scheduledTime ? new Date(trip.scheduledTime).toLocaleString('vi-VN') : 'Không xác định';
+                                                    const contactName = trip.passengerName || 'Chưa cập nhật';
+                                                    const contactPhone = trip.passengerPhone || 'Chưa cập nhật';
+
+                                                    let actionBtnHtml = '<div class="flex gap-2 mt-4">';
+                                                    if (role === 'driver') {
+                                                        actionBtnHtml += '<button onclick="startPreBookTrip(' + trip.id + ')" class="flex-1 bg-[#4CAF50] hover:bg-green-600 text-white font-bold py-2.5 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2">' +
+                                                                        '<span class="material-symbols-outlined text-[18px]">play_arrow</span>Bắt đầu</button>';
+                                                        actionBtnHtml += '<button onclick="cancelUpcomingTrip(' + trip.id + ', \'driver\')" class="flex-1 bg-red-100 hover:bg-red-200 text-red-600 font-bold py-2.5 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2">' +
+                                                                        '<span class="material-symbols-outlined text-[18px]">cancel</span>Hủy chuyến</button>';
+                                                    } else {
+                                                        actionBtnHtml += '<button onclick="cancelUpcomingTrip(' + trip.id + ', \'passenger\')" class="w-full bg-red-100 hover:bg-red-200 text-red-600 font-bold py-2.5 rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2">' +
+                                                                        '<span class="material-symbols-outlined text-[18px]">cancel</span>Hủy chuyến</button>';
+                                                    }
+                                                    actionBtnHtml += '</div>';
+                                                    if (role === 'passenger') {
+                                                        actionBtnHtml += '<div class="mt-2 text-center text-sm text-slate-500 font-medium">Tài xế sẽ liên hệ bạn khi đến nơi</div>';
+                                                    }
+
+                                                    const html = '<div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-3">' +
+                                                        '<div class="flex justify-between items-start">' +
+                                                            '<div class="flex items-center gap-2 text-sm font-bold text-[#4CAF50] bg-green-50 px-3 py-1 rounded-lg">' +
+                                                                '<span class="material-symbols-outlined text-[16px]">schedule</span>' + formattedDate +
+                                                            '</div>' +
+                                                            '<div class="text-right">' +
+                                                                '<p class="text-lg font-black text-[#FF6D00] whitespace-nowrap">' + formattedPrice + '</p>' +
+                                                            '</div>' +
+                                                        '</div>' +
+                                                        '<div class="flex flex-col gap-2 mt-2">' +
+                                                            '<div class="flex items-start gap-2">' +
+                                                                '<div class="w-2.5 h-2.5 rounded-full bg-[#6200EE] shrink-0 mt-1.5"></div>' +
+                                                                '<p class="text-sm font-bold text-slate-800">' + trip.pickupLocation + '</p>' +
+                                                            '</div>' +
+                                                            '<div class="flex items-start gap-2">' +
+                                                                '<span class="material-symbols-outlined text-[#FF6D00] text-[14px] shrink-0 mt-0.5">location_on</span>' +
+                                                                '<p class="text-sm font-bold text-slate-800">' + trip.dropoffLocation + '</p>' +
+                                                            '</div>' +
+                                                        '</div>' +
+                                                        '<div class="bg-slate-50 p-3 rounded-xl flex items-center gap-3 mt-1">' +
+                                                            '<div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center shrink-0">' +
+                                                                '<span class="material-symbols-outlined text-slate-500">person</span>' +
+                                                            '</div>' +
+                                                            '<div>' +
+                                                                '<p class="text-xs font-semibold text-slate-500">Liên hệ (' + (role === 'driver' ? 'Khách hàng' : 'Tài xế') + ')</p>' +
+                                                                '<p class="text-sm font-bold text-slate-800">' + contactName + ' - ' + contactPhone + '</p>' +
+                                                            '</div>' +
+                                                        '</div>' + actionBtnHtml +
+                                                    '</div>';
+                                                    list.insertAdjacentHTML('beforeend', html);
+                                                });
+                                            }
+
+                                            function startPreBookTrip(tripId) {
+                                                if (confirm('Bắt đầu chạy chuyến này? Khách hàng sẽ nhận được thông báo.')) {
+                                                    fetch('${pageContext.request.contextPath}/api/driver/start-prebook-trip', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify({ tripId: tripId })
+                                                    })
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            showToast(data.message, "success");
+                                                            closeUpcomingTripsPanel();
+                                                            // Refresh active trip status
+                                                            checkDriverTripStatus();
+                                                        } else {
+                                                            showToast(data.message, "error");
+                                                        }
+                                                    })
+                                                    .catch(err => {
+                                                        console.error(err);
+                                                        showToast("Lỗi hệ thống khi bắt đầu chuyến đi.", "error");
+                                                    });
+                                                }
+                                            }
+
+                                            function cancelUpcomingTrip(tripId, role) {
+                                                let message = role === 'driver' ? 'Bạn có chắc chắn muốn hủy chuyến hẹn trước này? Khách hàng sẽ nhận được thông báo.' : 'Bạn có chắc chắn muốn hủy chuyến hẹn trước này?';
+                                                if (confirm(message)) {
+                                                    fetch('${pageContext.request.contextPath}/trip-cancel', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                                        body: 'tripId=' + tripId
+                                                    })
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        if (data.success) {
+                                                            showToast('Đã hủy chuyến.', "success");
+                                                            fetchUpcomingTrips();
+                                                            // Force refresh passenger status to clear form if passenger
+                                                            if (typeof forceResetPassengerUI === 'function' && role === 'passenger') {
+                                                                checkPassengerTripStatus();
+                                                            }
+                                                        } else {
+                                                            showToast(data.error || 'Có lỗi xảy ra, vui lòng thử lại.', "error");
+                                                        }
+                                                    })
+                                                    .catch(err => {
+                                                        console.error(err);
+                                                        showToast("Lỗi hệ thống khi hủy chuyến đi.", "error");
+                                                    });
+                                                }
+                                            }
+
+                                            let currentProposalTab = 'ON_DEMAND';
+
+                                            function switchProposalTab(type) {
+                                                currentProposalTab = type;
+                                                const btnOnDemand = document.getElementById('tab-proposals-ondemand');
+                                                const btnPreBook = document.getElementById('tab-proposals-prebook');
+                                                if (type === 'ON_DEMAND') {
+                                                    btnOnDemand.className = 'flex-1 py-2 text-sm font-bold rounded-md bg-white text-[#6200EE] shadow-sm transition-all';
+                                                    btnPreBook.className = 'flex-1 py-2 text-sm font-bold rounded-md text-slate-500 hover:text-slate-800 transition-all';
+                                                } else {
+                                                    btnPreBook.className = 'flex-1 py-2 text-sm font-bold rounded-md bg-white text-[#6200EE] shadow-sm transition-all';
+                                                    btnOnDemand.className = 'flex-1 py-2 text-sm font-bold rounded-md text-slate-500 hover:text-slate-800 transition-all';
+                                                }
+                                                renderTripProposals();
+                                            }
+
+                                            function renderTripProposals() {
                                                 const list = document.getElementById('proposals-list');
+                                                const counterEl = document.getElementById('trip-proposals-counter');
                                                 if (!list) return;
                                                 list.innerHTML = '';
+                                                
+                                                const allTrips = window.currentProposals || [];
+                                                const trips = allTrips.filter(t => (t.tripType || 'ON_DEMAND') === currentProposalTab);
+                                                
+                                                if (counterEl) {
+                                                    counterEl.textContent = trips.length + " chuyến đang chờ";
+                                                }
+
+                                                if (trips.length === 0) {
+                                                    list.innerHTML = '<div class="flex flex-col items-center justify-center h-full gap-3 mt-10"><span class="material-symbols-outlined text-slate-300 text-5xl">inbox</span><p class="text-slate-500 font-medium">Không có chuyến ' + (currentProposalTab === 'ON_DEMAND' ? 'đặt ngay' : 'hẹn trước') + ' nào</p></div>';
+                                                    return;
+                                                }
+
                                                 trips.forEach(trip => {
                                                     const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(trip.price);
                                                     const note = trip.noteForDriver ? trip.noteForDriver : 'Không có lưu ý';
@@ -1901,6 +2137,17 @@
                                                             const trip = data.trip;
                                                             window.currentActiveTripId = trip.id;
                                                             
+                                                            const badgeEl = document.getElementById('popup-active-trip-type-badge');
+                                                            if (badgeEl) {
+                                                                if (trip.tripType === 'PRE_BOOK') {
+                                                                    badgeEl.textContent = 'Hẹn trước';
+                                                                    badgeEl.className = 'ml-2 px-2 py-1 text-xs font-bold rounded-lg bg-orange-100 text-orange-600';
+                                                                } else {
+                                                                    badgeEl.textContent = 'Đặt ngay';
+                                                                    badgeEl.className = 'ml-2 px-2 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-600';
+                                                                }
+                                                            }
+                                                            
                                                             const btnStart = document.getElementById('btn-driver-start-trip');
                                                             const btnComplete = document.getElementById('btn-driver-complete-trip');
                                                             const btnCancel = document.getElementById('btn-driver-cancel-trip');
@@ -2026,6 +2273,9 @@
                                                                 // If driver, fetch proposals immediately with the new location
                                                                 if (currentUserRole === 'driver') {
                                                                     fetchTripProposals();
+                                                                    fetchUpcomingTrips();
+                                                                } else if (currentUserRole === 'passenger') {
+                                                                    fetchUpcomingTrips();
                                                                 }
                                                             },
                                                             (error) => {
@@ -2873,17 +3123,24 @@
                                         </div>
 
                                         <!-- Header -->
-                                        <div class="p-6 pt-2 pb-4 shrink-0 border-b border-slate-200/50 flex justify-between items-center bg-white/40">
-                                            <div>
-                                                <h3 class="text-xl font-bold text-slate-800 tracking-tight">
-                                                    Chuyến đi dành cho bạn</h3>
-                                                <p class="text-[11px] font-semibold text-slate-500 mt-1 uppercase tracking-wider"
-                                                    id="proposals-vehicle-info">Đang tải phương tiện...</p>
+                                        <div class="p-6 pt-2 pb-4 shrink-0 border-b border-slate-200/50 flex flex-col gap-4 bg-white/40">
+                                            <div class="flex justify-between items-center">
+                                                <div>
+                                                    <h3 class="text-xl font-bold text-slate-800 tracking-tight">
+                                                        Chuyến đi dành cho bạn</h3>
+                                                    <p class="text-[11px] font-semibold text-slate-500 mt-1 uppercase tracking-wider"
+                                                        id="proposals-vehicle-info">Đang tải phương tiện...</p>
+                                                </div>
+                                                <button onclick="toggleTripProposals()"
+                                                    class="w-10 h-10 rounded-full bg-white/80 hover:bg-white border border-slate-200 flex items-center justify-center shadow-sm transition-all text-slate-500 hover:text-slate-800">
+                                                    <span class="material-symbols-outlined">close</span>
+                                                </button>
                                             </div>
-                                            <button onclick="toggleTripProposals()"
-                                                class="w-10 h-10 rounded-full bg-white/80 hover:bg-white border border-slate-200 flex items-center justify-center shadow-sm transition-all text-slate-500 hover:text-slate-800">
-                                                <span class="material-symbols-outlined">close</span>
-                                            </button>
+                                            <!-- Tabs -->
+                                            <div class="flex gap-2 p-1 bg-slate-100 rounded-lg">
+                                                <button onclick="switchProposalTab('ON_DEMAND')" id="tab-proposals-ondemand" class="flex-1 py-2 text-sm font-bold rounded-md bg-white text-[#6200EE] shadow-sm transition-all">Đặt ngay</button>
+                                                <button onclick="switchProposalTab('PRE_BOOK')" id="tab-proposals-prebook" class="flex-1 py-2 text-sm font-bold rounded-md text-slate-500 hover:text-slate-800 transition-all">Hẹn trước</button>
+                                            </div>
                                         </div>
 
                                         <!-- List -->
@@ -2896,6 +3153,33 @@
                                             </div>
                                         </div>
 
+                                    </div>
+
+                                    <!-- Upcoming Trips Panel -->
+                                    <div id="upcoming-trips-panel"
+                                        class="fixed bottom-0 left-0 right-0 md:bottom-8 md:left-[420px] md:right-8 z-40 bg-white/95 md:bg-white/90 backdrop-blur-xl border-t md:border border-white/60 shadow-[0_-10px_30px_rgba(0,0,0,0.1)] md:shadow-[0_30px_60px_rgba(0,0,0,0.15)] rounded-t-3xl md:rounded-3xl overflow-hidden transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto h-[75vh] pointer-events-none pb-safe">
+                                        <div class="w-full flex justify-center mb-2 cursor-pointer shrink-0 mt-4" onclick="toggleUpcomingTripsPanel()">
+                                            <div class="w-16 h-1.5 bg-slate-300 rounded-full hover:bg-slate-400 transition-colors"></div>
+                                        </div>
+                                        <div class="p-6 pt-2 pb-4 shrink-0 border-b border-slate-200/50 flex justify-between items-center bg-white/40">
+                                            <div>
+                                                <h3 class="text-xl font-bold text-slate-800 tracking-tight">
+                                                    Lịch trình sắp tới</h3>
+                                                <p class="text-[11px] font-semibold text-slate-500 mt-1 tracking-wider"
+                                                    id="upcoming-trips-info">Danh sách chuyến xe đặt trước</p>
+                                            </div>
+                                            <button onclick="toggleUpcomingTripsPanel()"
+                                                class="w-10 h-10 rounded-full bg-white/80 hover:bg-white border border-slate-200 flex items-center justify-center shadow-sm transition-all text-slate-500 hover:text-slate-800">
+                                                <span class="material-symbols-outlined">close</span>
+                                            </button>
+                                        </div>
+                                        <div id="upcoming-trips-list"
+                                            class="flex-1 min-h-0 overflow-y-auto overscroll-contain panel-scroll p-4 pb-28 md:pb-4 space-y-4 bg-slate-50/50">
+                                            <div id="upcoming-trips-empty" class="hidden flex flex-col items-center justify-center p-8 text-center">
+                                                <span class="material-symbols-outlined text-slate-300 text-6xl mb-4">event_busy</span>
+                                                <p class="text-slate-500 font-medium">Chưa có lịch trình nào sắp tới</p>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Driver Active Trip Popup (moved to body to avoid stacking context) -->
@@ -2911,6 +3195,7 @@
                                             <div class="flex items-center gap-2 mb-6">
                                                 <span class="material-symbols-outlined text-[#6200EE] bg-[#6200EE]/10 p-2 rounded-xl">navigation</span>
                                                 <h4 class="font-bold text-slate-800 text-xl">Chuyến đi đang diễn ra</h4>
+                                                <span id="popup-active-trip-type-badge" class="ml-2 px-2 py-1 text-xs font-bold rounded-lg bg-slate-100 text-slate-600">Đặt ngay</span>
                                             </div>
                                             
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-stretch">

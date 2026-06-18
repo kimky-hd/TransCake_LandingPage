@@ -2,6 +2,7 @@ package org.example.controller;
 
 import com.google.gson.Gson;
 import org.example.dao.TripDAO;
+import org.example.model.Trip;
 import org.example.model.User;
 
 import jakarta.servlet.ServletException;
@@ -14,8 +15,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/api/driver/start-trip")
-public class DriverStartTripServlet extends HttpServlet {
+@WebServlet("/api/driver/start-prebook-trip")
+public class StartPreBookTripServlet extends HttpServlet {
     private TripDAO tripDAO = new TripDAO();
     private Gson gson = new Gson();
 
@@ -33,10 +34,10 @@ public class DriverStartTripServlet extends HttpServlet {
             return;
         }
 
-        User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (!"driver".equals(loggedInUser.getRole())) {
+        User user = (User) session.getAttribute("loggedInUser");
+        if (!"driver".equals(user.getRole())) {
             result.put("success", false);
-            result.put("message", "Chỉ tài xế mới được thao tác.");
+            result.put("message", "Chỉ tài xế mới được bắt đầu chuyến đi.");
             response.getWriter().write(gson.toJson(result));
             return;
         }
@@ -52,28 +53,38 @@ public class DriverStartTripServlet extends HttpServlet {
 
             int tripId = ((Double) body.get("tripId")).intValue();
 
+            // Kiểm tra chuyến đi có phải PRE_BOOK không
+            Trip trip = tripDAO.getTripById(tripId);
+            if (trip == null || !"PRE_BOOK".equals(trip.getTripType())) {
+                result.put("success", false);
+                result.put("message", "Chuyến đi không hợp lệ.");
+                response.getWriter().write(gson.toJson(result));
+                return;
+            }
+
             // Kiểm tra tài xế có đang có chuyến IN_PROGRESS nào không
-            if (tripDAO.getInProgressTripForDriver(loggedInUser.getId()) != null) {
+            if (tripDAO.getInProgressTripForDriver(user.getId()) != null) {
                 result.put("success", false);
                 result.put("message", "Bạn đang có một chuyến đi chưa hoàn thành. Hãy hoàn thành chuyến hiện tại trước.");
                 response.getWriter().write(gson.toJson(result));
                 return;
             }
 
-            boolean success = tripDAO.startTripByDriver(tripId, loggedInUser.getId());
-            
+            // Bắt đầu chuyến: chuyển NOT_STARTED -> IN_PROGRESS
+            boolean success = tripDAO.startTripByDriver(tripId, user.getId());
+
             if (success) {
                 result.put("success", true);
-                result.put("message", "Bắt đầu chuyến đi thành công!");
+                result.put("message", "Đã bắt đầu chuyến đi!");
             } else {
                 result.put("success", false);
-                result.put("message", "Không thể bắt đầu chuyến đi này. Vui lòng kiểm tra lại trạng thái chuyến đi.");
+                result.put("message", "Không thể bắt đầu chuyến đi. Chuyến có thể đã bị hủy.");
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             result.put("success", false);
-            result.put("message", "Lỗi định dạng dữ liệu: " + e.getMessage());
+            result.put("message", "Lỗi server: " + e.getMessage());
         }
 
         response.getWriter().write(gson.toJson(result));
