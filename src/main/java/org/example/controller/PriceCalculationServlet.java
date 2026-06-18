@@ -76,12 +76,14 @@ public class PriceCalculationServlet extends HttpServlet {
                     double distanceKm = Math.round((distanceMeters / 1000.0) * 10.0) / 10.0;
                     long durationMins = (long) Math.ceil(timeMs / 60000.0);
                     
+                    String tripType = request.getParameter("tripType");
+                    
                     double baseFare = 10000.0;
-                    double perKmFare = 12000.0;
+                    double perKmFare = 6500.0;
                     
                     if ("MOTORBIKE".equalsIgnoreCase(vehicleType)) {
                         baseFare = 5000.0;
-                        perKmFare = 5000.0;
+                        perKmFare = 3500.0;
                     }
                     
                     double totalPrice = baseFare + (distanceKm * perKmFare);

@@ -2017,6 +2017,24 @@
                                                 window.userFullName = '${not empty fullName && fullName != "Người dùng" ? fullName : ""}';
 
                                                 document.addEventListener('DOMContentLoaded', function () {
+                                                    // Immediately request geolocation to update userLngLat without waiting for the map
+                                                    if (navigator.geolocation) {
+                                                        navigator.geolocation.getCurrentPosition(
+                                                            (position) => {
+                                                                userLngLat = [position.coords.longitude, position.coords.latitude];
+                                                                console.log("Vị trí đã được cập nhật qua Geolocation:", userLngLat);
+                                                                // If driver, fetch proposals immediately with the new location
+                                                                if (currentUserRole === 'driver') {
+                                                                    fetchTripProposals();
+                                                                }
+                                                            },
+                                                            (error) => {
+                                                                console.error("Lỗi lấy vị trí ban đầu: ", error.message);
+                                                            },
+                                                            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                                                        );
+                                                    }
+
                                                     if (initialUserRole === 'driver') {
                                                         currentUserRole = 'driver';
                                                         setRole('driver', true);
@@ -2762,7 +2780,8 @@
 
                                                         const contextPath = '${pageContext.request.contextPath}';
                                                         const vehicleType = document.querySelector('input[name="vehicleType"]:checked').value;
-                                                        const routeUrl = `\${contextPath}/api/price-estimate?pLat=\${pLat}&pLng=\${pLng}&dLat=\${dLat}&dLng=\${dLng}&vehicleType=\${vehicleType}`;
+                                                        const tripType = document.getElementById('tripType') ? document.getElementById('tripType').value : 'ON_DEMAND';
+                                                        const routeUrl = `\${contextPath}/api/price-estimate?pLat=\${pLat}&pLng=\${pLng}&dLat=\${dLat}&dLng=\${dLng}&vehicleType=\${vehicleType}&tripType=\${tripType}`;
 
                                                         fetch(routeUrl)
                                                             .then(res => res.json())
@@ -2782,7 +2801,7 @@
                                                                     document.getElementById('trip-distance').value = distanceKm;
 
                                                                     // Vẽ đường đi trên bản đồ
-                                                                    const isPrebook = document.getElementById('tripType') ? document.getElementById('tripType').value === 'PRE_BOOK' : false;
+                                                                    const isPrebook = tripType === 'PRE_BOOK';
                                                                     const routeId = isPrebook ? 'route-pre-book' : 'route-on-demand';
                                                                     const routeColor = isPrebook ? '#FF6D00' : '#6200EE';
 
