@@ -475,78 +475,40 @@
 
                                         <!-- Mini Search Popup (Top Right) -->
                                         <div id="mini-search-popup"
-                                            class="fixed top-20 md:top-24 right-4 md:left-auto md:right-8 z-40 bg-white/95 md:bg-white/90 backdrop-blur-md border border-[#6200EE]/30 rounded-full md:rounded-2xl p-1.5 pr-3 md:p-4 shadow-sm md:shadow-[0_8px_30px_rgba(98,0,238,0.15)] transition-all duration-500 transform md:translate-y-0 translate-x-[150%] opacity-0 flex items-center gap-2 md:gap-4 w-auto md:w-[320px] cursor-pointer hover:bg-white"
+                                            class="fixed bottom-36 md:bottom-auto md:top-24 right-4 md:left-auto md:right-8 z-40 bg-white/95 backdrop-blur-md border border-[#6200EE]/30 rounded-full p-1.5 pr-3 shadow-sm transition-all duration-500 transform md:translate-y-0 translate-x-[150%] opacity-0 flex items-center gap-2 w-auto cursor-pointer hover:bg-white"
                                             onclick="toggleBottomSearchBar(); if(window.setBookingType) window.setBookingType('ON_DEMAND');">
-                                            <div class="relative w-6 h-6 md:w-10 md:h-10 shrink-0">
+                                            <div class="relative w-6 h-6 shrink-0">
                                                 <div class="absolute inset-0 bg-[#6200EE]/20 rounded-full animate-ping">
                                                 </div>
                                                 <div
-                                                    class="absolute inset-0 bg-white border border-[#6200EE] md:border-2 rounded-full flex items-center justify-center shadow-inner">
-                                                    <div class="w-2.5 h-2.5 md:w-4 md:h-4 bg-[#6200EE] rounded-full"></div>
+                                                    class="absolute inset-0 bg-white border border-[#6200EE] rounded-full flex items-center justify-center shadow-inner">
+                                                    <div class="w-2.5 h-2.5 bg-[#6200EE] rounded-full"></div>
                                                 </div>
                                             </div>
                                             <div class="flex-1">
-                                                <h4 class="text-[11px] md:text-sm font-bold text-slate-800 leading-none md:leading-tight">Đang tìm chuyến
+                                                <h4 class="text-[13px] font-bold text-slate-800 leading-none whitespace-nowrap">Đang tìm chuyến
                                                 </h4>
-                                                <p class="hidden md:block text-xs text-slate-500 mt-0.5">Bấm để xem hoặc
-                                                    hủy</p>
                                             </div>
-                                            <span
-                                                class="hidden md:block material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
                                         </div>
 
                                         <!-- Mini Prebook Popup (Top Right, Below OnDemand) -->
                                         <div id="mini-prebook-popup"
-                                            class="fixed top-32 md:top-48 right-4 md:left-auto md:right-8 z-40 bg-white/95 md:bg-white/90 backdrop-blur-md border border-[#FF6D00]/30 rounded-full md:rounded-2xl p-1.5 pr-3 md:p-4 shadow-sm md:shadow-[0_8px_30px_rgba(255,109,0,0.15)] transition-all duration-500 transform md:translate-y-0 translate-x-[150%] opacity-0 flex items-center gap-2 md:gap-4 w-auto md:w-[320px] cursor-pointer hover:bg-white"
+                                            class="fixed bottom-24 md:bottom-auto md:top-36 right-4 md:left-auto md:right-8 z-40 bg-white/95 backdrop-blur-md border border-[#FF6D00]/30 rounded-full p-1.5 pr-4 shadow-sm transition-all duration-500 transform md:translate-y-0 translate-x-[150%] opacity-0 flex items-center gap-2 w-auto cursor-pointer hover:bg-white"
                                             onclick="toggleBottomSearchBar(); if(window.setBookingType) window.setBookingType('PRE_BOOK');">
-                                            <div class="relative w-6 h-6 md:w-10 md:h-10 shrink-0">
+                                            <div class="relative w-6 h-6 shrink-0">
                                                 <div
                                                     class="absolute inset-0 bg-[#FF6D00]/20 rounded-full animate-pulse">
                                                 </div>
                                                 <div
-                                                    class="absolute inset-0 bg-white border border-[#FF6D00] md:border-2 rounded-full flex items-center justify-center shadow-inner">
+                                                    class="absolute inset-0 bg-white border border-[#FF6D00] rounded-full flex items-center justify-center shadow-inner">
                                                     <span
-                                                        class="material-symbols-outlined text-[#FF6D00] text-[12px] md:text-[20px]">schedule</span>
+                                                        class="material-symbols-outlined text-[#FF6D00] text-[12px]">schedule</span>
                                                 </div>
                                             </div>
-                                            <div class="flex-1 min-w-0">
-                                                <h6 class="text-[11px] md:text-sm font-bold text-[#FF6D00] leading-none md:leading-tight mb-0 md:mb-1">Chuyến đặt trước
-                                                </h6>
-                                                <div class="hidden md:flex items-center gap-1 text-[10px] md:text-xs text-slate-600 truncate">
-                                                    <div
-                                                        class="w-1.5 h-1.5 rounded-full border-[2px] border-[#FF6D00] bg-white shrink-0">
-                                                    </div>
-                                                    <span id="mini-prebook-pickup" class="truncate"></span>
-                                                </div>
-                                                <div
-                                                    class="hidden md:flex items-center gap-1 text-[10px] md:text-xs text-slate-600 truncate mt-0.5">
-                                                    <span
-                                                        class="material-symbols-outlined text-[#FF6D00] text-[10px] md:text-[12px] shrink-0">location_on</span>
-                                                    <span id="mini-prebook-dropoff" class="truncate"></span>
-                                                </div>
+                                            <div class="flex-1">
+                                                <h4 class="text-[13px] font-bold text-[#FF6D00] leading-none whitespace-nowrap">Chuyến đặt trước
+                                                </h4>
                                             </div>
-                                            <span
-                                                class="hidden md:block material-symbols-outlined text-slate-400 text-[20px]">chevron_right</span>
-                                        </div>
-
-                                        <!-- Mini Upcoming Trips Popup (Top Right, Below Prebook) -->
-                                        <div id="mini-upcoming-trips-popup"
-                                            class="fixed top-44 md:top-72 right-4 md:left-auto md:right-8 z-40 bg-white/95 md:bg-white/90 backdrop-blur-md border border-[#4CAF50]/30 rounded-full md:rounded-2xl p-1.5 pr-3 md:p-4 shadow-sm md:shadow-[0_8px_30px_rgba(76,175,80,0.15)] transition-all duration-500 transform md:translate-y-0 translate-x-[150%] opacity-0 flex items-center gap-2 md:gap-4 w-auto md:w-[320px] cursor-pointer hover:bg-white"
-                                            onclick="toggleUpcomingTripsPanel()">
-                                            <div class="relative w-6 h-6 md:w-10 md:h-10 shrink-0">
-                                                <div class="absolute inset-0 bg-[#4CAF50]/20 rounded-full animate-pulse"></div>
-                                                <div class="absolute inset-0 bg-white border border-[#4CAF50] md:border-2 rounded-full flex items-center justify-center shadow-inner">
-                                                    <span class="material-symbols-outlined text-[#4CAF50] text-[12px] md:text-[20px]">event_available</span>
-                                                </div>
-                                            </div>
-                                            <div class="flex-1 min-w-0">
-                                                <h6 class="text-[11px] md:text-sm font-bold text-[#4CAF50] leading-none md:leading-tight mb-0 md:mb-1">Lịch trình sắp tới
-                                                </h6>
-                                                <div class="hidden md:flex items-center gap-1 text-[10px] md:text-xs text-slate-600 truncate">
-                                                    <span id="mini-upcoming-trips-count" class="truncate font-semibold">0 chuyến chờ đi</span>
-                                                </div>
-                                            </div>
-                                            <span class="hidden md:block material-symbols-outlined text-slate-400 text-[20px]">keyboard_arrow_up</span>
                                         </div>
 
 
