@@ -107,30 +107,7 @@
                     class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-colors">chevron_right</span>
             </div>
 
-            <!-- Desktop Extension: Vibe Filters -->
-            <div class="mt-6 pt-6 border-t border-slate-200/60">
-                <div class="flex items-center justify-between mb-3.5">
-                    <h4 class="font-bold text-slate-800 text-sm">Vibe Filters
-                    </h4>
-                    <span
-                        class="text-[9px] bg-slate-200/80 text-slate-600 px-2 py-0.5 rounded uppercase font-bold tracking-wider">Map
-                        Overlay</span>
-                </div>
-                <div class="flex flex-wrap gap-2.5">
-                    <button
-                        class="px-3 py-1.5 bg-purple-100 text-[#6200EE] text-xs font-bold rounded-full border border-purple-200 shadow-sm transition-transform hover:scale-105 flex items-center gap-1.5">
-                        &#127925; Music
-                    </button>
-                    <button
-                        class="px-3 py-1.5 bg-white text-slate-600 text-xs font-bold rounded-full border border-slate-200 shadow-sm hover:border-purple-300 hover:text-[#6200EE] transition-all hover:scale-105 flex items-center gap-1.5">
-                        &#128187; Tech
-                    </button>
-                    <button
-                        class="px-3 py-1.5 bg-white text-slate-600 text-xs font-bold rounded-full border border-slate-200 shadow-sm hover:border-purple-300 hover:text-[#6200EE] transition-all hover:scale-105 flex items-center gap-1.5">
-                        &#127936; Sports
-                    </button>
-                </div>
-            </div>
+
         </div>
     </div>
 
@@ -343,37 +320,7 @@
                         </div>
                     </div>
 
-                    <!-- Desktop Extension: Heatmap Overlay Toggle -->
-                    <div class="mt-6 pt-6 border-t border-slate-200/60">
-                        <div
-                            class="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-[#FF6D00]">
-                                    <span
-                                        class="material-symbols-outlined text-sm">map</span>
-                                </div>
-                                <div>
-                                    <h4
-                                        class="font-bold text-slate-800 text-sm">
-                                        Heatmap Overlay</h4>
-                                    <p
-                                        class="text-[10px] text-slate-500 font-medium">
-                                        Show high-demand areas
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- Toggle switch -->
-                            <label
-                                class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" value=""
-                                    class="sr-only peer">
-                                <div
-                                    class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#FF6D00]">
-                                </div>
-                            </label>
-                        </div>
-                    </div>
+
                 </div>
             </c:otherwise>
         </c:choose>

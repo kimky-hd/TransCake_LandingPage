@@ -31,12 +31,16 @@ public class TripMatchingService {
     public List<Trip> rankTripsForDriver(User driver, List<Trip> pendingTrips, Double driverLat, Double driverLng) {
         if (pendingTrips == null || pendingTrips.isEmpty()) return pendingTrips;
 
-        // Lọc các chuyến đi: Nếu là ON_DEMAND và khoảng cách > 2km thì loại bỏ
+        // Lọc các chuyến đi
         if (driverLat != null && driverLng != null) {
             pendingTrips.removeIf(trip -> {
-                if ("ON_DEMAND".equals(trip.getTripType()) && trip.getPickupLat() != null && trip.getPickupLng() != null) {
+                if (trip.getPickupLat() != null && trip.getPickupLng() != null) {
                     double dist = calculateDistance(driverLat, driverLng, trip.getPickupLat(), trip.getPickupLng());
-                    return dist > 2.0;
+                    if ("ON_DEMAND".equals(trip.getTripType())) {
+                        return dist > 2.0; // Lọc ON_DEMAND > 2km
+                    } else if ("PRE_BOOK".equals(trip.getTripType())) {
+                        return dist > 50.0; // Lọc PRE_BOOK > 50km theo yêu cầu
+                    }
                 }
                 return false;
             });
@@ -48,13 +52,13 @@ public class TripMatchingService {
             double score1 = 0.0;
             double score2 = 0.0;
 
-            // 1. Điểm Khoảng cách (Tối đa 100 điểm, trừ dần theo mỗi km cách xa)
+            // 1. Điểm Khoảng cách (Chỉ tính cho ON_DEMAND)
             if (driverLat != null && driverLng != null) {
-                if (t1.getPickupLat() != null && t1.getPickupLng() != null) {
+                if ("ON_DEMAND".equals(t1.getTripType()) && t1.getPickupLat() != null && t1.getPickupLng() != null) {
                     double dist1 = calculateDistance(driverLat, driverLng, t1.getPickupLat(), t1.getPickupLng());
                     score1 += Math.max(0, 100 - dist1);
                 }
-                if (t2.getPickupLat() != null && t2.getPickupLng() != null) {
+                if ("ON_DEMAND".equals(t2.getTripType()) && t2.getPickupLat() != null && t2.getPickupLng() != null) {
                     double dist2 = calculateDistance(driverLat, driverLng, t2.getPickupLat(), t2.getPickupLng());
                     score2 += Math.max(0, 100 - dist2);
                 }
@@ -65,11 +69,13 @@ public class TripMatchingService {
                 long diffHours = (t1.getScheduledTime().getTime() - System.currentTimeMillis()) / 3600000;
                 if (diffHours <= 0) score1 += 50; // Quá hạn hoặc ngay lập tức
                 else if (diffHours < 2) score1 += 30; // Khởi hành trong 2h tới
+                else if ("PRE_BOOK".equals(t1.getTripType())) score1 += Math.max(0, 20 - diffHours); // Xếp hạng theo thời gian
             }
             if (t2.getScheduledTime() != null) {
                 long diffHours = (t2.getScheduledTime().getTime() - System.currentTimeMillis()) / 3600000;
                 if (diffHours <= 0) score2 += 50;
                 else if (diffHours < 2) score2 += 30;
+                else if ("PRE_BOOK".equals(t2.getTripType())) score2 += Math.max(0, 20 - diffHours);
             }
 
             // Sắp xếp giảm dần (điểm cao nhất lên đầu)
