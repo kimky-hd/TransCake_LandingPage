@@ -119,9 +119,21 @@ public class TripSearchServlet extends HttpServlet {
         int tripId = tripDAO.insertTrip(trip);
         
         if (tripId > 0) {
+            // Gửi email xác nhận cho hành khách (Bất đồng bộ)
+            org.example.service.EmailService.sendTripBookingConfirmationAsync(loggedInUser, trip);
+
             // Broadcast via WebSocket
             if ("PRE_BOOK".equals(tripType)) {
                 org.example.websocket.TripWebSocketEndpoint.broadcastToAllDrivers("NEW_PRE_BOOK_TRIP", null);
+                
+                // Fetch matching drivers and send them an email
+                org.example.dao.UserDAO userDAO = new org.example.dao.UserDAO();
+                java.util.List<org.example.model.User> matchingDrivers = userDAO.getDriversByVehicleType(vehicleType);
+                if (matchingDrivers != null) {
+                    for (org.example.model.User d : matchingDrivers) {
+                        org.example.service.EmailService.sendNewTripAvailableAsync(d, trip);
+                    }
+                }
             } else {
                 org.example.websocket.TripWebSocketEndpoint.broadcastToAllDrivers("NEW_ON_DEMAND_TRIP", null);
             }

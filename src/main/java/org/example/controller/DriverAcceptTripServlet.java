@@ -100,7 +100,16 @@ public class DriverAcceptTripServlet extends HttpServlet {
                     result.put("message", "Không thể nhận chuyến đi này. Có thể chuyến đi đã bị hủy hoặc đã có người khác nhận.");
                 }
             }
-            
+            if (success) {
+                // Send email to passenger asynchronously
+                org.example.dao.UserDAO userDAO = new org.example.dao.UserDAO();
+                org.example.model.User passenger = userDAO.getUserById(tripInfo.getPassengerId());
+                org.example.dao.DriverVehicleDAO driverVehicleDAO = new org.example.dao.DriverVehicleDAO();
+                org.example.model.DriverVehicle vehicle = driverVehicleDAO.getVehicleByUserId(loggedInUser.getId());
+                if (passenger != null) {
+                    org.example.service.EmailService.sendTripAcceptedAsync(passenger, loggedInUser, vehicle, tripInfo);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
             result.put("success", false);

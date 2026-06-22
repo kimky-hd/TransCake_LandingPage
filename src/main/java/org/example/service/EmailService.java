@@ -13,6 +13,7 @@ import jakarta.mail.internet.MimeMultipart;
 import java.io.File;
 
 import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
 
 public class EmailService {
 
@@ -39,26 +40,17 @@ public class EmailService {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(SENDER_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject("TransCake - OTP Verification Code");
+            message.setSubject("TransCake - Mã xác thực OTP", "UTF-8");
             
-            String htmlContent = "<div style=\"font-family: Arial, sans-serif; background-color: #f8fafc; padding: 40px 20px; color: #334155;\">"
-                    + "    <div style=\"max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);\">"
-                    + "        <div style=\"text-align: center; padding: 30px 20px; background-color: #ffffff; border-bottom: 1px solid #f1f5f9;\">"
-                    + "            <h2 style=\"margin: 0; color: #0f172a; font-size: 24px;\">TransCake Account Verification</h2>"
-                    + "        </div>"
-                    + "        <div style=\"padding: 40px 30px;\">"
-                    + "            <p style=\"margin-top: 0; font-size: 16px; line-height: 1.6;\">Hello,</p>"
-                    + "            <p style=\"font-size: 16px; line-height: 1.6;\">Thank you for choosing <strong>TransCake</strong>! To complete your request, please use the 6-digit OTP code below:</p>"
-                    + "            <div style=\"text-align: center; margin: 30px 0;\">"
-                    + "                <span style=\"display: inline-block; font-size: 36px; font-weight: bold; color: #6200EE; letter-spacing: 10px; background-color: #f3e8ff; padding: 15px 30px; border-radius: 12px; border: 2px dashed #c084fc;\">" + otpCode + "</span>"
-                    + "            </div>"
-                    + "            <p style=\"font-size: 14px; color: #64748b; line-height: 1.6; text-align: center;\">This verification code is valid for <strong>5 minutes</strong>.<br>For security reasons, please do not share this code with anyone.</p>"
-                    + "        </div>"
-                    + "        <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9;\">"
-                    + "            <p style=\"margin: 0; font-size: 13px; color: #94a3b8;\">© 2026 TransCake. The #1 ride-sharing platform.</p>"
-                    + "            <p style=\"margin: 5px 0 0; font-size: 13px; color: #94a3b8;\">If you didn't request this code, please ignore this email.</p>"
-                    + "        </div>"
+            String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;\">"
+                    + "    <h2 style=\"color: #6200EE; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;\">Mã xác thực tài khoản</h2>"
+                    + "    <p>Xin chào,</p>"
+                    + "    <p>Cảm ơn bạn đã sử dụng <strong>TransCake</strong>! Dưới đây là mã OTP 6 số để hoàn tất yêu cầu của bạn:</p>"
+                    + "    <div style=\"text-align: center; margin: 20px 0;\">"
+                    + "        <span style=\"display: inline-block; font-size: 32px; font-weight: bold; color: #6200EE; letter-spacing: 5px; background-color: #f3e8ff; padding: 10px 20px; border-radius: 8px;\">" + otpCode + "</span>"
                     + "    </div>"
+                    + "    <p style=\"font-size: 14px;\">Mã xác thực này có hiệu lực trong vòng <strong>5 phút</strong>. Vui lòng không chia sẻ mã này cho bất kỳ ai.</p>"
+                    + "    <p style=\"font-size: 14px; color: #555; margin-top: 30px;\">Trân trọng,<br>Đội ngũ TransCake</p>"
                     + "</div>";
 
             message.setContent(htmlContent, "text/html; charset=utf-8");
@@ -88,25 +80,17 @@ public class EmailService {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(SENDER_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject("TransCake - Your New Temporary Password");
+            message.setSubject("TransCake - Mật khẩu tạm thời", "UTF-8");
             
-            String htmlContent = "<div style=\"font-family: Arial, sans-serif; background-color: #f8fafc; padding: 40px 20px; color: #334155;\">"
-                    + "    <div style=\"max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);\">"
-                    + "        <div style=\"text-align: center; padding: 30px 20px; background-color: #ffffff; border-bottom: 1px solid #f1f5f9;\">"
-                    + "            <h2 style=\"margin: 0; color: #0f172a; font-size: 24px;\">TransCake Password Recovery</h2>"
-                    + "        </div>"
-                    + "        <div style=\"padding: 40px 30px;\">"
-                    + "            <p style=\"margin-top: 0; font-size: 16px; line-height: 1.6;\">Hello,</p>"
-                    + "            <p style=\"font-size: 16px; line-height: 1.6;\">We received a request to reset your password for your <strong>TransCake</strong> account. Below is your temporary password:</p>"
-                    + "            <div style=\"text-align: center; margin: 30px 0;\">"
-                    + "                <span style=\"display: inline-block; font-size: 32px; font-weight: bold; color: #FF6B00; letter-spacing: 4px; background-color: #fff7ed; padding: 15px 30px; border-radius: 12px; border: 2px dashed #fdba74;\">" + newPassword + "</span>"
-                    + "            </div>"
-                    + "            <p style=\"font-size: 14px; color: #64748b; line-height: 1.6; text-align: center;\">Please use the password above to log in.<br>You will be required to <strong>set a new password</strong> immediately after a successful login.</p>"
-                    + "        </div>"
-                    + "        <div style=\"background-color: #f8fafc; padding: 20px; text-align: center; border-top: 1px solid #f1f5f9;\">"
-                    + "            <p style=\"margin: 0; font-size: 13px; color: #94a3b8;\">© 2026 TransCake. The #1 ride-sharing platform.</p>"
-                    + "        </div>"
+            String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;\">"
+                    + "    <h2 style=\"color: #6200EE; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;\">Khôi phục mật khẩu</h2>"
+                    + "    <p>Xin chào,</p>"
+                    + "    <p>Chúng tôi đã nhận được yêu cầu khôi phục mật khẩu cho tài khoản <strong>TransCake</strong> của bạn. Đây là mật khẩu tạm thời của bạn:</p>"
+                    + "    <div style=\"text-align: center; margin: 20px 0;\">"
+                    + "        <span style=\"display: inline-block; font-size: 24px; font-weight: bold; color: #FF6B00; background-color: #fff7ed; padding: 10px 20px; border-radius: 8px;\">" + newPassword + "</span>"
                     + "    </div>"
+                    + "    <p style=\"font-size: 14px;\">Vui lòng sử dụng mật khẩu trên để đăng nhập và <strong>đổi mật khẩu mới</strong> ngay lập tức.</p>"
+                    + "    <p style=\"font-size: 14px; color: #555; margin-top: 30px;\">Trân trọng,<br>Đội ngũ TransCake</p>"
                     + "</div>";
 
             message.setContent(htmlContent, "text/html; charset=utf-8");
@@ -135,22 +119,15 @@ public class EmailService {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(SENDER_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject("TransCake - Partner Application Update Required");
+            message.setSubject("TransCake - Cập nhật hồ sơ đối tác", "UTF-8");
             
-            String htmlContent = "<div style=\"font-family: Arial, sans-serif; background-color: #f8fafc; padding: 40px 20px; color: #334155;\">"
-                    + "    <div style=\"max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);\">"
-                    + "        <div style=\"text-align: center; padding: 30px 20px; background-color: #ffffff; border-bottom: 1px solid #f1f5f9;\">"
-                    + "            <h2 style=\"margin: 0; color: #dc2626; font-size: 24px;\">Action Required: Update Your Application</h2>"
-                    + "        </div>"
-                    + "        <div style=\"padding: 40px 30px;\">"
-                    + "            <p style=\"margin-top: 0; font-size: 16px; line-height: 1.6;\">Hello <strong>" + driverName + "</strong>,</p>"
-                    + "            <p style=\"font-size: 16px; line-height: 1.6;\">Thank you for applying to become a TransCake Partner.</p>"
-                    + "            <p style=\"font-size: 16px; line-height: 1.6;\">Unfortunately, your application and verification images did not meet our requirements or the information provided did not match. Your current application has been temporarily rejected.</p>"
-                    + "            <p style=\"font-size: 16px; line-height: 1.6; font-weight: bold;\">Please log in to the system, navigate to the Driver tab, and resubmit the Partner Registration form with clear and accurate images.</p>"
-                    + "            <p style=\"font-size: 14px; color: #64748b; margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 20px;\">If you need further assistance, please reply to this email.</p>"
-                    + "            <p style=\"margin-bottom: 0; font-size: 14px; font-weight: bold;\">Best regards,<br>The TransCake Team</p>"
-                    + "        </div>"
-                    + "    </div>"
+            String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;\">"
+                    + "    <h2 style=\"color: #dc2626; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;\">Yêu cầu cập nhật hồ sơ</h2>"
+                    + "    <p>Xin chào <strong>" + driverName + "</strong>,</p>"
+                    + "    <p>Cảm ơn bạn đã đăng ký trở thành Đối tác của TransCake.</p>"
+                    + "    <p>Rất tiếc, hồ sơ của bạn chưa đáp ứng đủ yêu cầu hoặc thông tin chưa trùng khớp. Hồ sơ hiện tại đã bị từ chối tạm thời.</p>"
+                    + "    <p>Vui lòng đăng nhập vào hệ thống, vào mục Tài xế và gửi lại biểu mẫu đăng ký với hình ảnh rõ nét và thông tin chính xác.</p>"
+                    + "    <p style=\"font-size: 14px; color: #555; margin-top: 30px;\">Trân trọng,<br>Đội ngũ TransCake</p>"
                     + "</div>";
 
             message.setContent(htmlContent, "text/html; charset=utf-8");
@@ -180,21 +157,14 @@ public class EmailService {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(SENDER_EMAIL));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject("TransCake - Congratulations! Partner Application Approved");
+            message.setSubject("TransCake - Chúc mừng! Hồ sơ đối tác đã được duyệt", "UTF-8");
             
-            String htmlContent = "<div style=\"font-family: Arial, sans-serif; background-color: #f8fafc; padding: 40px 20px; color: #334155;\">"
-                    + "    <div style=\"max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);\">"
-                    + "        <div style=\"text-align: center; padding: 30px 20px; background-color: #ffffff; border-bottom: 1px solid #f1f5f9;\">"
-                    + "            <h2 style=\"margin: 0; color: #16a34a; font-size: 24px;\">Application Approved</h2>"
-                    + "        </div>"
-                    + "        <div style=\"padding: 40px 30px;\">"
-                    + "            <p style=\"margin-top: 0; font-size: 16px; line-height: 1.6;\">Hello <strong>" + driverName + "</strong>,</p>"
-                    + "            <p style=\"font-size: 16px; line-height: 1.6;\">Congratulations! Your application to become a Partner (Driver) has been successfully verified.</p>"
-                    + "            <p style=\"font-size: 16px; line-height: 1.6;\">You can now access the features to post trips, accept rides, and begin your journey with TransCake.</p>"
-                    + "            <p style=\"font-size: 14px; color: #64748b; margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 20px;\">Thank you for trusting and joining our platform.</p>"
-                    + "            <p style=\"margin-bottom: 0; font-size: 14px; font-weight: bold;\">Best regards,<br>The TransCake Team</p>"
-                    + "        </div>"
-                    + "    </div>"
+            String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;\">"
+                    + "    <h2 style=\"color: #16a34a; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;\">Hồ sơ đã được phê duyệt</h2>"
+                    + "    <p>Xin chào <strong>" + driverName + "</strong>,</p>"
+                    + "    <p>Chúc mừng! Hồ sơ đăng ký trở thành Đối tác (Tài xế) của bạn đã được xác minh thành công.</p>"
+                    + "    <p>Bây giờ bạn đã có thể truy cập các tính năng nhận chuyến và bắt đầu hành trình cùng TransCake.</p>"
+                    + "    <p style=\"font-size: 14px; color: #555; margin-top: 30px;\">Trân trọng,<br>Đội ngũ TransCake</p>"
                     + "</div>";
 
             message.setContent(htmlContent, "text/html; charset=utf-8");
@@ -204,5 +174,169 @@ public class EmailService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    // --- ASYNC EMAIL METHODS FOR TRIP EVENTS ---
+
+    private static final java.util.concurrent.ExecutorService EMAIL_EXECUTOR = 
+        java.util.concurrent.Executors.newFixedThreadPool(2, r -> {
+            Thread t = new Thread(r, "TransCake-EmailSender");
+            t.setDaemon(false);
+            return t;
+        });
+
+    private static String safe(String value) {
+        return (value != null) ? value : "";
+    }
+
+    private static void sendEmailInBackground(String recipientEmail, String subject, String htmlContent) {
+        if (recipientEmail == null || recipientEmail.trim().isEmpty()) {
+            System.err.println("[EmailService] SKIPPED: recipientEmail is null or empty for subject: " + subject);
+            return;
+        }
+        System.out.println("[EmailService] Queuing email to: " + recipientEmail + " | Subject: " + subject);
+        EMAIL_EXECUTOR.submit(() -> {
+            try {
+                Properties properties = new Properties();
+                properties.put("mail.smtp.auth", "true");
+                properties.put("mail.smtp.starttls.enable", "true");
+                properties.put("mail.smtp.host", "smtp.gmail.com");
+                properties.put("mail.smtp.port", "587");
+                properties.put("mail.smtp.connectiontimeout", "10000");
+                properties.put("mail.smtp.timeout", "10000");
+                properties.put("mail.smtp.writetimeout", "10000");
+
+                Session session = Session.getInstance(properties, new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
+                    }
+                });
+
+                MimeMessage message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(SENDER_EMAIL));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+                message.setSubject(subject, "UTF-8");
+                message.setContent(htmlContent, "text/html; charset=utf-8");
+                Transport.send(message);
+                System.out.println("[EmailService] SUCCESS: Email sent to " + recipientEmail);
+            } catch (Exception e) {
+                System.err.println("[EmailService] FAILED: Could not send email to " + recipientEmail);
+                e.printStackTrace();
+            }
+        });
+    }
+
+    // --- 1. Hành khách đặt chuyến ---
+    public static void sendTripBookingConfirmationAsync(org.example.model.User passenger, org.example.model.Trip trip) {
+        if (passenger == null || trip == null) return;
+        String name = safe(passenger.getFullName());
+        String pickup = safe(trip.getPickupLocation());
+        String dropoff = safe(trip.getDropoffLocation());
+        String type = "PRE_BOOK".equals(trip.getTripType()) ? "Đặt trước (Pre-book)" : "Đặt ngay (On Demand)";
+
+        String subject = "TransCake - Xác nhận đặt chuyến thành công";
+        String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;\">"
+                + "    <h2 style=\"color: #6200EE; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;\">Xác nhận đặt chuyến</h2>"
+                + "    <p>Xin chào <strong>" + name + "</strong>,</p>"
+                + "    <p>Yêu cầu đặt chuyến của bạn đã được tạo thành công. Chúng tôi đang tìm tài xế phù hợp cho bạn.</p>"
+                + "    <div style=\"background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;\">"
+                + "        <p style=\"margin: 5px 0;\"><strong>📍 Điểm đón:</strong> " + pickup + "</p>"
+                + "        <p style=\"margin: 5px 0;\"><strong>📍 Điểm trả:</strong> " + dropoff + "</p>"
+                + "        <p style=\"margin: 5px 0;\"><strong>🚗 Loại chuyến:</strong> " + type + "</p>"
+                + "    </div>"
+                + "    <p style=\"font-size: 14px; color: #555; margin-top: 30px;\">Trân trọng,<br>Đội ngũ TransCake</p>"
+                + "</div>";
+        sendEmailInBackground(passenger.getEmail(), subject, htmlContent);
+    }
+
+    // --- 2. Gửi cho tài xế khi có chuyến PRE_BOOK mới ---
+    public static void sendNewTripAvailableAsync(org.example.model.User driver, org.example.model.Trip trip) {
+        if (driver == null || trip == null) return;
+        String name = safe(driver.getFullName());
+        String pickup = safe(trip.getPickupLocation());
+        String dropoff = safe(trip.getDropoffLocation());
+        String scheduledTime = (trip.getScheduledTime() != null) ? trip.getScheduledTime().toString() : "Chưa xác định";
+
+        String subject = "TransCake - Có chuyến đặt trước mới dành cho bạn!";
+        String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;\">"
+                + "    <h2 style=\"color: #FF6D00; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;\">Chuyến đặt trước mới</h2>"
+                + "    <p>Xin chào <strong>" + name + "</strong>,</p>"
+                + "    <p>Có một chuyến đặt trước mới phù hợp với loại xe của bạn. Hãy mở ứng dụng để nhận chuyến!</p>"
+                + "    <div style=\"background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;\">"
+                + "        <p style=\"margin: 5px 0;\"><strong>📍 Điểm đón:</strong> " + pickup + "</p>"
+                + "        <p style=\"margin: 5px 0;\"><strong>📍 Điểm trả:</strong> " + dropoff + "</p>"
+                + "        <p style=\"margin: 5px 0;\"><strong>🕐 Thời gian:</strong> " + scheduledTime + "</p>"
+                + "    </div>"
+                + "    <p style=\"font-size: 14px; color: #555; margin-top: 30px;\">Trân trọng,<br>Đội ngũ TransCake</p>"
+                + "</div>";
+        sendEmailInBackground(driver.getEmail(), subject, htmlContent);
+    }
+
+    // --- 3. Hành khách nhận được tài xế ---
+    public static void sendTripAcceptedAsync(org.example.model.User passenger, org.example.model.User driver, org.example.model.DriverVehicle vehicle, org.example.model.Trip trip) {
+        if (passenger == null || driver == null) return;
+        String vehicleInfo = (vehicle != null) ? safe(vehicle.getVehicleName()) + " - " + safe(vehicle.getLicensePlate()) : "N/A";
+        
+        String subject = "TransCake - Đã tìm thấy tài xế cho bạn!";
+        String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;\">"
+                + "    <h2 style=\"color: #10B981; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;\">Đã tìm thấy tài xế</h2>"
+                + "    <p>Xin chào <strong>" + safe(passenger.getFullName()) + "</strong>,</p>"
+                + "    <p>Tin vui! Một tài xế đã nhận chuyến đi của bạn và đang chuẩn bị đón bạn.</p>"
+                + "    <div style=\"background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;\">"
+                + "        <p style=\"margin: 5px 0;\"><strong>👤 Tài xế:</strong> " + safe(driver.getFullName()) + "</p>"
+                + "        <p style=\"margin: 5px 0;\"><strong>📞 Điện thoại:</strong> " + safe(driver.getPhoneNumber()) + "</p>"
+                + "        <p style=\"margin: 5px 0;\"><strong>🚗 Phương tiện:</strong> " + vehicleInfo + "</p>"
+                + "    </div>"
+                + "    <p style=\"font-size: 14px; color: #555; margin-top: 30px;\">Trân trọng,<br>Đội ngũ TransCake</p>"
+                + "</div>";
+        sendEmailInBackground(passenger.getEmail(), subject, htmlContent);
+    }
+
+    // --- 4. Chuyến đi bắt đầu ---
+    public static void sendTripStartedAsync(org.example.model.User passenger, org.example.model.Trip trip) {
+        if (passenger == null) return;
+        String subject = "TransCake - Chuyến đi của bạn đã bắt đầu!";
+        String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;\">"
+                + "    <h2 style=\"color: #3B82F6; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;\">Chuyến đi bắt đầu</h2>"
+                + "    <p>Xin chào <strong>" + safe(passenger.getFullName()) + "</strong>,</p>"
+                + "    <p>Chuyến đi của bạn đã chính thức bắt đầu. Chúc bạn có một hành trình an toàn và thoải mái!</p>"
+                + "    <p style=\"font-size: 14px; color: #555; margin-top: 30px;\">Trân trọng,<br>Đội ngũ TransCake</p>"
+                + "</div>";
+        sendEmailInBackground(passenger.getEmail(), subject, htmlContent);
+    }
+
+    // --- 5. Hoàn thành chuyến - Biên lai ---
+    public static void sendTripCompletedAsync(org.example.model.User passenger, org.example.model.Trip trip) {
+        if (passenger == null || trip == null) return;
+        String price = (trip.getPrice() != null) ? String.format("%,.0f VNĐ", trip.getPrice()) : "N/A";
+        String distance = (trip.getDistance() != null) ? String.format("%.1f km", trip.getDistance()) : "N/A";
+        
+        String subject = "TransCake - Biên lai chuyến đi";
+        String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;\">"
+                + "    <h2 style=\"color: #10B981; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;\">Biên lai chuyến đi</h2>"
+                + "    <p>Xin chào <strong>" + safe(passenger.getFullName()) + "</strong>,</p>"
+                + "    <p>Bạn đã đến nơi an toàn. Cảm ơn bạn đã sử dụng dịch vụ của TransCake!</p>"
+                + "    <div style=\"background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;\">"
+                + "        <p style=\"margin: 5px 0;\"><strong>📍 Điểm đón:</strong> " + safe(trip.getPickupLocation()) + "</p>"
+                + "        <p style=\"margin: 5px 0;\"><strong>📍 Điểm trả:</strong> " + safe(trip.getDropoffLocation()) + "</p>"
+                + "        <p style=\"margin: 5px 0;\"><strong>📏 Khoảng cách:</strong> " + distance + "</p>"
+                + "        <p style=\"margin: 10px 0 0;\"><strong>💰 Tổng cước:</strong> <span style=\"color:#EF4444; font-size:18px; font-weight:bold;\">" + price + "</span></p>"
+                + "    </div>"
+                + "    <p style=\"font-size: 14px; color: #555; margin-top: 30px;\">Trân trọng,<br>Đội ngũ TransCake</p>"
+                + "</div>";
+        sendEmailInBackground(passenger.getEmail(), subject, htmlContent);
+    }
+
+    // --- 6. Hủy chuyến ---
+    public static void sendTripCancelledAsync(String recipientEmail, String recipientName, String cancelledBy, org.example.model.Trip trip) {
+        String subject = "TransCake - Chuyến đi đã bị hủy";
+        String htmlContent = "<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;\">"
+                + "    <h2 style=\"color: #EF4444; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0;\">Chuyến đi đã bị hủy</h2>"
+                + "    <p>Xin chào <strong>" + safe(recipientName) + "</strong>,</p>"
+                + "    <p>Rất tiếc, chuyến đi của bạn đã bị hủy bởi <strong>" + safe(cancelledBy) + "</strong>. Vui lòng đặt lại chuyến mới nếu cần.</p>"
+                + "    <p style=\"font-size: 14px; color: #555; margin-top: 30px;\">Trân trọng,<br>Đội ngũ TransCake</p>"
+                + "</div>";
+        sendEmailInBackground(recipientEmail, subject, htmlContent);
     }
 }

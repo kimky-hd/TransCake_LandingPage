@@ -75,6 +75,14 @@ public class StartPreBookTripServlet extends HttpServlet {
 
             if (success) {
                 org.example.websocket.TripWebSocketEndpoint.sendMessageToUser("passenger", (long) trip.getPassengerId(), "TRIP_STARTED", null);
+                
+                // Gửi email cho hành khách (bất đồng bộ)
+                org.example.dao.UserDAO userDAO = new org.example.dao.UserDAO();
+                org.example.model.User passenger = userDAO.getUserById(trip.getPassengerId());
+                if (passenger != null) {
+                    org.example.service.EmailService.sendTripStartedAsync(passenger, trip);
+                }
+                
                 result.put("success", true);
                 result.put("message", "Đã bắt đầu chuyến đi!");
             } else {

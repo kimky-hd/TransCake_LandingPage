@@ -66,6 +66,13 @@ public class DriverStartTripServlet extends HttpServlet {
                 org.example.model.Trip tripInfo = tripDAO.getTripById(tripId);
                 if (tripInfo != null) {
                     org.example.websocket.TripWebSocketEndpoint.sendMessageToUser("passenger", (long) tripInfo.getPassengerId(), "TRIP_STARTED", null);
+                    
+                    // Gửi email cho hành khách (bất đồng bộ)
+                    org.example.dao.UserDAO userDAO = new org.example.dao.UserDAO();
+                    org.example.model.User passenger = userDAO.getUserById(tripInfo.getPassengerId());
+                    if (passenger != null) {
+                        org.example.service.EmailService.sendTripStartedAsync(passenger, tripInfo);
+                    }
                 }
                 result.put("success", true);
                 result.put("message", "Bắt đầu chuyến đi thành công!");

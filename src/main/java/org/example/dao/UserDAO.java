@@ -210,4 +210,26 @@ public class UserDAO {
         }
         return false;
     }
+
+    public java.util.List<User> getDriversByVehicleType(String vehicleType) {
+        java.util.List<User> drivers = new java.util.ArrayList<>();
+        String sql = "SELECT u.* FROM users u JOIN driver_vehicles dv ON u.id = dv.user_id WHERE u.role = 'DRIVER' AND dv.vehicle_type = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, vehicleType);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFullName(rs.getString("full_name"));
+                user.setPhoneNumber(rs.getString("phone_number"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                drivers.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return drivers;
+    }
 }

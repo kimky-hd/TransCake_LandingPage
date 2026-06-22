@@ -58,6 +58,13 @@ public class DriverCompleteTripServlet extends HttpServlet {
                 org.example.model.Trip tripInfo = tripDAO.getTripById(tripId);
                 if (tripInfo != null) {
                     org.example.websocket.TripWebSocketEndpoint.sendMessageToUser("passenger", (long) tripInfo.getPassengerId(), "TRIP_COMPLETED", null);
+                    
+                    // Gửi biên lai qua email cho hành khách
+                    org.example.dao.UserDAO userDAO = new org.example.dao.UserDAO();
+                    org.example.model.User passenger = userDAO.getUserById(tripInfo.getPassengerId());
+                    if (passenger != null) {
+                        org.example.service.EmailService.sendTripCompletedAsync(passenger, tripInfo);
+                    }
                 }
                 result.put("success", true);
                 result.put("message", "Hoàn thành chuyến đi thành công!");

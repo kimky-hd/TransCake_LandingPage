@@ -61,6 +61,13 @@ public class DriverCancelTripServlet extends HttpServlet {
                     org.example.websocket.TripWebSocketEndpoint.sendMessageToUser("passenger", (long) tripInfo.getPassengerId(), "TRIP_CANCELLED_BY_DRIVER", null);
                     // Có thể broadcast cho các tài xế khác nếu chuyến này chuyển về trạng thái tìm kiếm (tùy logic backend hiện tại, nhưng hiện tại ta có thể broadcast để refresh map)
                     org.example.websocket.TripWebSocketEndpoint.broadcastToAllDrivers("TRIP_CANCELLED", null);
+                    
+                    // Gửi email báo cho hành khách (bất đồng bộ)
+                    org.example.dao.UserDAO userDAO = new org.example.dao.UserDAO();
+                    org.example.model.User passenger = userDAO.getUserById(tripInfo.getPassengerId());
+                    if (passenger != null) {
+                        org.example.service.EmailService.sendTripCancelledAsync(passenger.getEmail(), passenger.getFullName(), loggedInUser.getFullName(), tripInfo);
+                    }
                 }
                 result.put("success", true);
                 result.put("message", "Hủy chuyến đi thành công!");
