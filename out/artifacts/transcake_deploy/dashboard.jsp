@@ -1938,7 +1938,7 @@
                                             }
 
                                             function startPreBookTrip(tripId) {
-                                                if (confirm('Bắt đầu chạy chuyến này? Khách hàng sẽ nhận được thông báo.')) {
+                                                const doStart = () => {
                                                     fetch('${pageContext.request.contextPath}/api/driver/start-prebook-trip', {
                                                         method: 'POST',
                                                         headers: { 'Content-Type': 'application/json' },
@@ -1960,12 +1960,21 @@
                                                         console.error(err);
                                                         showToast("Lỗi hệ thống khi bắt đầu chuyến đi.", "error");
                                                     });
+                                                };
+
+                                                if (window.showConfirmModal) {
+                                                    window.showConfirmModal('Bắt đầu chuyến đi', 'Bắt đầu chạy chuyến này? Khách hàng sẽ nhận được thông báo.', doStart);
+                                                } else {
+                                                    if (confirm('Bắt đầu chạy chuyến này? Khách hàng sẽ nhận được thông báo.')) {
+                                                        doStart();
+                                                    }
                                                 }
                                             }
 
                                             function cancelUpcomingTrip(tripId, role) {
                                                 let message = role === 'driver' ? 'Bạn có chắc chắn muốn hủy chuyến hẹn trước này? Khách hàng sẽ nhận được thông báo.' : 'Bạn có chắc chắn muốn hủy chuyến hẹn trước này?';
-                                                if (confirm(message)) {
+                                                
+                                                const doCancel = () => {
                                                     fetch('${pageContext.request.contextPath}/trip-cancel', {
                                                         method: 'POST',
                                                         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -1988,6 +1997,14 @@
                                                         console.error(err);
                                                         showToast("Lỗi hệ thống khi hủy chuyến đi.", "error");
                                                     });
+                                                };
+
+                                                if (window.showConfirmModal) {
+                                                    window.showConfirmModal('Hủy chuyến đi', message, doCancel);
+                                                } else {
+                                                    if (confirm(message)) {
+                                                        doCancel();
+                                                    }
                                                 }
                                             }
 
