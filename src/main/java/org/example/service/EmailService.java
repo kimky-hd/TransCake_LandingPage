@@ -185,6 +185,7 @@ public class EmailService {
             return t;
         });
 
+
     private static String safe(String value) {
         return (value != null) ? value : "";
     }
