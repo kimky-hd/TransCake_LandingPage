@@ -547,7 +547,7 @@ public class TripDAO {
 
     public java.util.List<Trip> getTripHistoryByPassenger(int passengerId) {
         java.util.List<Trip> list = new java.util.ArrayList<>();
-        String sql = "SELECT * FROM trips WHERE passenger_id = ? AND (completion_status = 'COMPLETED' OR match_status = 'CANCELLED') ORDER BY id DESC";
+        String sql = "SELECT t.*, u.full_name, u.phone_number FROM trips t LEFT JOIN users u ON t.driver_id = u.id WHERE t.passenger_id = ? AND (t.completion_status = 'COMPLETED' OR t.match_status = 'CANCELLED') ORDER BY t.id DESC";
         try (Connection conn = DBContext.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, passengerId);
@@ -565,6 +565,10 @@ public class TripDAO {
                     if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
                     if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
                     trip.setCreatedAt(rs.getTimestamp("created_at"));
+                    if (rs.getObject("driver_id") != null) trip.setDriverId(rs.getInt("driver_id"));
+                    // Use passengerName/Phone to hold driver info so it can be reused in JSP
+                    trip.setPassengerName(rs.getString("full_name"));
+                    trip.setPassengerPhone(rs.getString("phone_number"));
                     list.add(trip);
                 }
             }

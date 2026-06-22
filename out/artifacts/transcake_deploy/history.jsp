@@ -103,6 +103,14 @@
                                     <span>Khách hàng: <strong>${trip.passengerName}</strong> (${trip.passengerPhone})</span>
                                 </div>
                             </c:if>
+                            
+                            <!-- Passenger view specific driver info -->
+                            <c:if test="${loggedInUser.role == 'passenger' and not empty trip.passengerName}">
+                                <div class="flex items-center gap-2 text-sm text-slate-600 bg-emerald-50 text-emerald-700 px-4 py-3 rounded-xl font-medium">
+                                    <span class="material-symbols-outlined text-[18px]">drive_eta</span>
+                                    <span>Tài xế: <strong>${trip.passengerName}</strong> (${trip.passengerPhone})</span>
+                                </div>
+                            </c:if>
                         </div>
                     </c:forEach>
                 </div>
