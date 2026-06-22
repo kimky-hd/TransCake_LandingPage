@@ -1949,8 +1949,9 @@
                                                         if (data.success) {
                                                             showToast(data.message, "success");
                                                             closeUpcomingTripsPanel();
-                                                            // Refresh active trip status
+                                                            // Refresh active trip status and upcoming trips
                                                             checkDriverTripStatus();
+                                                            fetchUpcomingTrips();
                                                         } else {
                                                             showToast(data.message, "error");
                                                         }
