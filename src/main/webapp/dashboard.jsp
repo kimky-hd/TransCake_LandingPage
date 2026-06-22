@@ -1277,6 +1277,10 @@
                                                             }
                                                         } else if (data.success && data.status === 'IN_PROGRESS') {
                                                             tripData[tripType].matchStatus = 'IN_PROGRESS';
+                                                            if (data.driver) {
+                                                                tripData[tripType].driver = data.driver;
+                                                            }
+                                                            
                                                             if (isActiveTab) {
                                                                 const btn = document.getElementById('btn-submit-search');
                                                                 if (btn) {
@@ -1288,6 +1292,14 @@
                                                                 }
                                                                 
                                                                 // Đảm bảo UI hiển thị thông tin tài xế
+                                                                if (data.driver) {
+                                                                    document.getElementById('inline-driver-name').textContent = data.driver.fullName || '---';
+                                                                    document.getElementById('inline-driver-phone').textContent = data.driver.phoneNumber || '---';
+                                                                    document.getElementById('inline-driver-vehicle').textContent = (data.driver.vehicleName || '---') + " (" + (data.driver.vehicleType || '---') + ")";
+                                                                    document.getElementById('inline-driver-plate').textContent = data.driver.licensePlate || '---';
+                                                                    document.getElementById('inline-driver-hobbies').textContent = data.driver.hobbies || 'Không có';
+                                                                }
+                                                                
                                                                 const matchedState = document.getElementById('matched-driver-state');
                                                                 if (matchedState) {
                                                                     document.getElementById('empty-search-state').classList.add('hidden');
