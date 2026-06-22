@@ -777,6 +777,13 @@
                                                             if (typeof checkPassengerTripStatus === "function") checkPassengerTripStatus();
                                                             if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
                                                         }
+                                                    } else if (msg.action === "TRIP_DRIVER_RELEASED") {
+                                                        // Tài xế đã hủy chuyến chưa bắt đầu → chuyến quay về PENDING
+                                                        if (currentRole === "passenger") {
+                                                            if (window.showToast) showToast("Tài xế đã hủy nhận chuyến của bạn. Hệ thống đang tìm tài xế khác...", "warning");
+                                                            if (typeof checkPassengerTripStatus === "function") checkPassengerTripStatus();
+                                                            if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
+                                                        }
                                                     }
                                                 };
 
@@ -1203,7 +1210,37 @@
                                                     .then(data => {
                                                         const isActiveTab = (tripType === activeType);
                                                         
-                                                        if (data.success && data.status === 'MATCHED') {
+                                                        if (data.success && data.status === 'PENDING') {
+                                                            // Chuyến đi đã quay về PENDING (tài xế cũ đã hủy) → reset UI về trạng thái "Đang tìm tài xế"
+                                                            tripData[tripType].matchStatus = 'PENDING';
+                                                            tripData[tripType].driver = null;
+                                                            
+                                                            if (isActiveTab) {
+                                                                const btn = document.getElementById('btn-submit-search');
+                                                                if (btn) {
+                                                                    btn.type = 'button';
+                                                                    btn.innerHTML = 'Hủy tìm kiếm <span class="material-symbols-outlined text-[20px]">cancel</span>';
+                                                                    btn.className = 'w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3.5 rounded-full flex items-center justify-center gap-2 text-lg mt-auto transition-colors shadow-sm';
+                                                                    btn.disabled = false;
+                                                                    btn.onclick = cancelTripSearch;
+                                                                }
+                                                                
+                                                                // Ẩn thông tin tài xế cũ, hiện lại loading
+                                                                const matchedState = document.getElementById('matched-driver-state');
+                                                                const loadingState = document.getElementById('loading-search-state');
+                                                                if (matchedState) {
+                                                                    matchedState.classList.add('hidden');
+                                                                    matchedState.classList.remove('flex');
+                                                                }
+                                                                if (loadingState) {
+                                                                    loadingState.classList.remove('hidden');
+                                                                    loadingState.classList.add('flex');
+                                                                }
+                                                                if (document.getElementById('empty-search-state')) {
+                                                                    document.getElementById('empty-search-state').classList.add('hidden');
+                                                                }
+                                                            }
+                                                        } else if (data.success && data.status === 'MATCHED') {
                                                             tripData[tripType].matchStatus = 'MATCHED';
                                                             if (data.driver) {
                                                                 tripData[tripType].driver = data.driver;
@@ -1934,31 +1971,54 @@
                                             }
 
                                             function cancelUpcomingTrip(tripId, role) {
-                                                let message = role === 'driver' ? 'Bạn có chắc chắn muốn hủy chuyến hẹn trước này? Khách hàng sẽ nhận được thông báo.' : 'Bạn có chắc chắn muốn hủy chuyến hẹn trước này?';
+                                                let message = role === 'driver' ? 'Bạn có chắc chắn muốn hủy chuyến hẹn trước này? Chuyến đi sẽ được chuyển cho tài xế khác.' : 'Bạn có chắc chắn muốn hủy chuyến hẹn trước này?';
                                                 
                                                 const doCancel = () => {
-                                                    fetch('${pageContext.request.contextPath}/trip-cancel', {
-                                                        method: 'POST',
-                                                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                                        body: 'tripId=' + tripId
-                                                    })
-                                                    .then(res => res.json())
-                                                    .then(data => {
-                                                        if (data.success) {
-                                                            showToast('Đã hủy chuyến.', "success");
-                                                            fetchUpcomingTrips();
-                                                            // Force refresh passenger status to clear form if passenger
-                                                            if (typeof forceResetPassengerUI === 'function' && role === 'passenger') {
-                                                                checkPassengerTripStatus();
+                                                    if (role === 'driver') {
+                                                        // Tài xế: gọi API driver cancel (JSON body)
+                                                        fetch('${pageContext.request.contextPath}/api/driver/cancel-trip', {
+                                                            method: 'POST',
+                                                            headers: { 'Content-Type': 'application/json' },
+                                                            body: JSON.stringify({ tripId: tripId, cancelReason: 'Tài xế hủy chuyến hẹn trước' })
+                                                        })
+                                                        .then(res => res.json())
+                                                        .then(data => {
+                                                            if (data.success) {
+                                                                showToast('Đã hủy chuyến. Chuyến đi sẽ được chuyển cho tài xế khác.', "success");
+                                                                fetchUpcomingTrips();
+                                                                if (typeof checkDriverTripStatus === 'function') checkDriverTripStatus();
+                                                            } else {
+                                                                showToast(data.message || 'Có lỗi xảy ra, vui lòng thử lại.', "error");
                                                             }
-                                                        } else {
-                                                            showToast(data.error || 'Có lỗi xảy ra, vui lòng thử lại.', "error");
-                                                        }
-                                                    })
-                                                    .catch(err => {
-                                                        console.error(err);
-                                                        showToast("Lỗi hệ thống khi hủy chuyến đi.", "error");
-                                                    });
+                                                        })
+                                                        .catch(err => {
+                                                            console.error(err);
+                                                            showToast("Lỗi hệ thống khi hủy chuyến đi.", "error");
+                                                        });
+                                                    } else {
+                                                        // Hành khách: gọi API passenger cancel
+                                                        fetch('${pageContext.request.contextPath}/trip-cancel', {
+                                                            method: 'POST',
+                                                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                                            body: 'tripId=' + tripId
+                                                        })
+                                                        .then(res => res.json())
+                                                        .then(data => {
+                                                            if (data.success) {
+                                                                showToast('Đã hủy chuyến.', "success");
+                                                                fetchUpcomingTrips();
+                                                                if (typeof checkPassengerTripStatus === 'function') {
+                                                                    checkPassengerTripStatus();
+                                                                }
+                                                            } else {
+                                                                showToast(data.error || 'Có lỗi xảy ra, vui lòng thử lại.', "error");
+                                                            }
+                                                        })
+                                                        .catch(err => {
+                                                            console.error(err);
+                                                            showToast("Lỗi hệ thống khi hủy chuyến đi.", "error");
+                                                        });
+                                                    }
                                                 };
 
                                                 if (window.showConfirmModal) {

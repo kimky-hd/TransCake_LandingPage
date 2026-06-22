@@ -58,9 +58,10 @@ public class DriverCancelTripServlet extends HttpServlet {
             if (success) {
                 org.example.model.Trip tripInfo = tripDAO.getTripById(tripId);
                 if (tripInfo != null) {
-                    org.example.websocket.TripWebSocketEndpoint.sendMessageToUser("passenger", (long) tripInfo.getPassengerId(), "TRIP_CANCELLED_BY_DRIVER", null);
-                    // Có thể broadcast cho các tài xế khác nếu chuyến này chuyển về trạng thái tìm kiếm (tùy logic backend hiện tại, nhưng hiện tại ta có thể broadcast để refresh map)
-                    org.example.websocket.TripWebSocketEndpoint.broadcastToAllDrivers("TRIP_CANCELLED", null);
+                    // Chuyến đi đã quay về PENDING → thông báo hành khách để UI reset về "Đang tìm tài xế"
+                    org.example.websocket.TripWebSocketEndpoint.sendMessageToUser("passenger", (long) tripInfo.getPassengerId(), "TRIP_DRIVER_RELEASED", null);
+                    // Broadcast cho tất cả tài xế để cập nhật danh sách đề xuất (chuyến đi vừa trống)
+                    org.example.websocket.TripWebSocketEndpoint.broadcastToAllDrivers("NEW_TRIP_PROPOSAL", null);
                     
                     // Gửi email báo cho hành khách (bất đồng bộ)
                     org.example.dao.UserDAO userDAO = new org.example.dao.UserDAO();
@@ -70,10 +71,10 @@ public class DriverCancelTripServlet extends HttpServlet {
                     }
                 }
                 result.put("success", true);
-                result.put("message", "Hủy chuyến đi thành công!");
+                result.put("message", "Hủy chuyến đi thành công! Chuyến đi sẽ được chuyển cho tài xế khác.");
             } else {
                 result.put("success", false);
-                result.put("message", "Không thể hủy chuyến đi này. Chuyến đi không tồn tại hoặc bạn không phải là tài xế của chuyến đi.");
+                result.put("message", "Không thể hủy chuyến đi. Chuyến đi đã bắt đầu hoặc bạn không phải là tài xế của chuyến này.");
             }
             
         } catch (Exception e) {

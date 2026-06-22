@@ -649,7 +649,13 @@ public class TripDAO {
     }
 
     public boolean cancelTripByDriver(int tripId, int driverId, String cancelReason) {
-        String sql = "UPDATE trips SET match_status = 'CANCELLED', completion_status = 'FAILED', cancel_reason = ? WHERE id = ? AND driver_id = ?";
+        // Cho phép hủy khi:
+        //   - ON_DEMAND: luôn cho phép (vì completion_status = IN_PROGRESS ngay khi nhận)
+        //   - PRE_BOOK: chỉ khi chưa bắt đầu (completion_status = NOT_STARTED)
+        // Khi hủy: đưa chuyến đi về trạng thái PENDING, xóa driver_id, reset completion_status = NOT_STARTED
+        String sql = "UPDATE trips SET match_status = 'PENDING', driver_id = NULL, completion_status = 'NOT_STARTED', cancel_reason = ? " +
+                     "WHERE id = ? AND driver_id = ? AND completion_status != 'COMPLETED' " +
+                     "AND NOT (trip_type = 'PRE_BOOK' AND completion_status = 'IN_PROGRESS')";
         try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setString(1, cancelReason);
             ps.setInt(2, tripId);
