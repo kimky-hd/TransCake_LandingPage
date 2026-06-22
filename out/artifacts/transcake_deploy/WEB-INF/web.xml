@@ -8,4 +8,13 @@
         <welcome-file>dashboard.jsp</welcome-file>
     </welcome-file-list>
     
+    <!-- Cấu hình lưu trữ phiên đăng nhập (Session) trong 30 ngày -->
+    <session-config>
+        <!-- 43200 phút = 30 ngày -->
+        <session-timeout>43200</session-timeout>
+        <cookie-config>
+            <!-- 2592000 giây = 30 ngày (Cookie sẽ không bị xóa khi tắt trình duyệt) -->
+            <max-age>2592000</max-age>
+        </cookie-config>
+    </session-config>
 </web-app>
