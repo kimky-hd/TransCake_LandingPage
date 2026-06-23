@@ -69,12 +69,20 @@ public class DashboardServlet extends HttpServlet {
 
         boolean hasVehicle = false;
         String verificationStatus = "NOT_REGISTERED";
+        List<Trip> historyList = null;
+        
         if (isLoggedIn) {
             org.example.dao.DriverVehicleDAO vehicleDAO = new org.example.dao.DriverVehicleDAO();
             org.example.model.DriverVehicle vehicle = vehicleDAO.getVehicleByUserId(user.getId());
             if (vehicle != null) {
                 hasVehicle = true;
                 verificationStatus = vehicle.getVerificationStatus() != null ? vehicle.getVerificationStatus() : "PENDING";
+            }
+            
+            if ("driver".equals(user.getRole())) {
+                historyList = tripDAO.getTripHistoryByDriver(user.getId());
+            } else {
+                historyList = tripDAO.getTripHistoryByPassenger(user.getId());
             }
         }
 
@@ -90,6 +98,7 @@ public class DashboardServlet extends HttpServlet {
         request.setAttribute("driverActiveTrip", driverActiveTrip);
         request.setAttribute("preBookDateStr", preBookDateStr);
         request.setAttribute("preBookTimeStr", preBookTimeStr);
+        request.setAttribute("historyList", historyList);
         request.setAttribute("cacheVersion", System.currentTimeMillis());
 
         // Forward to dashboard.jsp

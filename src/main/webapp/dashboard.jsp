@@ -99,8 +99,8 @@
                                     
                                     <!-- Mobile Floating Back Button (Visible when island is hidden) -->
                                     <button onclick="closeMobileMap()" 
-                                        class="fixed top-4 left-4 z-10 w-10 h-10 bg-white rounded-full shadow-md flex md:hidden items-center justify-center text-slate-800 hover:bg-slate-100 transition-colors">
-                                        <span class="material-symbols-outlined">arrow_back</span>
+                                        class="fixed top-4 left-4 z-10 w-9 h-9 bg-white rounded-full shadow-md flex md:hidden items-center justify-center text-slate-800 hover:bg-slate-100 transition-colors">
+                                        <span class="material-symbols-outlined text-lg">arrow_back</span>
                                     </button>
 
                                     <!-- 2. Foreground (Left Dynamic Island) -->
@@ -528,8 +528,8 @@
                                             <div class="flex justify-between items-center mb-6 shrink-0">
                                                 <div class="flex items-center gap-2">
                                                     <button onclick="switchTab('nav-home')"
-                                                        class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors mr-1">
-                                                        <span class="material-symbols-outlined">arrow_back</span>
+                                                        class="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors mr-1">
+                                                        <span class="material-symbols-outlined text-lg">arrow_back</span>
                                                     </button>
                                                     <h3
                                                         class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
@@ -1709,6 +1709,24 @@
                                             window.closeEarningsView = function() {
                                                 console.log('[Earnings] Closing earnings view...');
                                                 const view = document.getElementById('sidebar-earnings-view');
+                                                if(view) {
+                                                    view.classList.add('opacity-0', 'translate-x-10', 'pointer-events-none');
+                                                    view.classList.remove('opacity-100', 'translate-x-0', 'pointer-events-auto');
+                                                }
+                                            };
+
+                                            window.openHistoryView = function() {
+                                                console.log('[History] Opening history view...');
+                                                const view = document.getElementById('sidebar-history-view');
+                                                if(view) {
+                                                    view.classList.remove('opacity-0', 'translate-x-10', 'pointer-events-none');
+                                                    view.classList.add('opacity-100', 'translate-x-0', 'pointer-events-auto');
+                                                }
+                                            };
+
+                                            window.closeHistoryView = function() {
+                                                console.log('[History] Closing history view...');
+                                                const view = document.getElementById('sidebar-history-view');
                                                 if(view) {
                                                     view.classList.add('opacity-0', 'translate-x-10', 'pointer-events-none');
                                                     view.classList.remove('opacity-100', 'translate-x-0', 'pointer-events-auto');
