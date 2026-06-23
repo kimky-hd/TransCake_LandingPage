@@ -1,6 +1,7 @@
 package org.example.dao;
 
 import org.example.model.Trip;
+import org.example.model.DriverEarnings;
 import org.example.utils.DBContext;
 
 import java.sql.Connection;
@@ -609,7 +610,7 @@ public class TripDAO {
         return list;
     }
     public boolean completeTripByDriver(int tripId, int driverId) {
-        String sql = "UPDATE trips SET completion_status = 'COMPLETED' WHERE id = ? AND driver_id = ? AND completion_status = 'IN_PROGRESS'";
+        String sql = "UPDATE trips SET completion_status = 'COMPLETED', completed_at = CURRENT_TIMESTAMP WHERE id = ? AND driver_id = ? AND completion_status = 'IN_PROGRESS'";
         try (Connection c = DBContext.getConnection(); PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setInt(1, tripId);
             ps.setInt(2, driverId);
@@ -666,4 +667,105 @@ public class TripDAO {
             return false;
         }
     }
+
+    public DriverEarnings getDriverEarnings(int driverId) {
+        DriverEarnings earnings = new DriverEarnings();
+        String sqlStats = "SELECT " +
+            "COALESCE(SUM(CASE WHEN DATE(COALESCE(completed_at, created_at)) = CURDATE() THEN price ELSE 0 END), 0) as today_earnings, " +
+            "COALESCE(SUM(CASE WHEN YEARWEEK(COALESCE(completed_at, created_at), 1) = YEARWEEK(CURDATE(), 1) THEN price ELSE 0 END), 0) as week_earnings, " +
+            "COALESCE(SUM(CASE WHEN MONTH(COALESCE(completed_at, created_at)) = MONTH(CURDATE()) AND YEAR(COALESCE(completed_at, created_at)) = YEAR(CURDATE()) THEN price ELSE 0 END), 0) as month_earnings, " +
+            "COALESCE(SUM(price), 0) as total_earnings, " +
+            "SUM(CASE WHEN DATE(COALESCE(completed_at, created_at)) = CURDATE() THEN 1 ELSE 0 END) as trips_today, " +
+            "SUM(CASE WHEN YEARWEEK(COALESCE(completed_at, created_at), 1) = YEARWEEK(CURDATE(), 1) THEN 1 ELSE 0 END) as trips_week, " +
+            "SUM(CASE WHEN MONTH(COALESCE(completed_at, created_at)) = MONTH(CURDATE()) AND YEAR(COALESCE(completed_at, created_at)) = YEAR(CURDATE()) THEN 1 ELSE 0 END) as trips_month, " +
+            "COUNT(*) as trips_total " +
+            "FROM trips WHERE driver_id = ? AND completion_status = 'COMPLETED'";
+
+        // Get daily breakdown for the last 7 days (for chart)
+        String sqlDaily = "SELECT DATE(d.dt) as trip_date, COALESCE(SUM(t.price), 0) as daily_amount " +
+            "FROM ( " +
+            "  SELECT CURDATE() as dt UNION ALL SELECT CURDATE() - INTERVAL 1 DAY UNION ALL " +
+            "  SELECT CURDATE() - INTERVAL 2 DAY UNION ALL SELECT CURDATE() - INTERVAL 3 DAY UNION ALL " +
+            "  SELECT CURDATE() - INTERVAL 4 DAY UNION ALL SELECT CURDATE() - INTERVAL 5 DAY UNION ALL " +
+            "  SELECT CURDATE() - INTERVAL 6 DAY " +
+            ") d LEFT JOIN trips t ON DATE(COALESCE(t.completed_at, t.created_at)) = DATE(d.dt) AND t.driver_id = ? AND t.completion_status = 'COMPLETED' " +
+            "GROUP BY DATE(d.dt) ORDER BY DATE(d.dt) ASC";
+
+        String sqlRecent = "SELECT t.*, u.full_name as passenger_name, u.phone_number as passenger_phone " +
+            "FROM trips t JOIN users u ON t.passenger_id = u.id " +
+            "WHERE t.driver_id = ? AND t.completion_status = 'COMPLETED' " +
+            "ORDER BY COALESCE(t.completed_at, t.created_at) DESC LIMIT 20";
+
+        try (Connection conn = DBContext.getConnection()) {
+            // Get stats
+            try (PreparedStatement psStats = conn.prepareStatement(sqlStats)) {
+                psStats.setInt(1, driverId);
+                try (ResultSet rs = psStats.executeQuery()) {
+                    if (rs.next()) {
+                        earnings.setToday(rs.getDouble("today_earnings"));
+                        earnings.setWeek(rs.getDouble("week_earnings"));
+                        earnings.setMonth(rs.getDouble("month_earnings"));
+                        earnings.setTotal(rs.getDouble("total_earnings"));
+                        earnings.setCompletedTripsToday(rs.getInt("trips_today"));
+                        earnings.setCompletedTripsWeek(rs.getInt("trips_week"));
+                        earnings.setCompletedTripsMonth(rs.getInt("trips_month"));
+                        earnings.setCompletedTripsTotal(rs.getInt("trips_total"));
+                    }
+                }
+            }
+
+            // Get daily breakdown
+            List<java.util.Map<String, Object>> dailyBreakdown = new ArrayList<>();
+            String[] dayLabels = {"CN", "T2", "T3", "T4", "T5", "T6", "T7"};
+            try (PreparedStatement psDaily = conn.prepareStatement(sqlDaily)) {
+                psDaily.setInt(1, driverId);
+                try (ResultSet rs = psDaily.executeQuery()) {
+                    while (rs.next()) {
+                        java.util.Map<String, Object> day = new java.util.HashMap<>();
+                        java.sql.Date tripDate = rs.getDate("trip_date");
+                        java.util.Calendar cal = java.util.Calendar.getInstance();
+                        cal.setTime(tripDate);
+                        int dow = cal.get(java.util.Calendar.DAY_OF_WEEK) - 1; // 0=CN, 1=T2...
+                        day.put("label", dayLabels[dow]);
+                        day.put("date", tripDate.toString());
+                        day.put("amount", rs.getDouble("daily_amount"));
+                        dailyBreakdown.add(day);
+                    }
+                }
+            }
+            earnings.setDailyBreakdown(dailyBreakdown);
+
+            // Get recent trips
+            List<Trip> recentTrips = new ArrayList<>();
+            try (PreparedStatement psRecent = conn.prepareStatement(sqlRecent)) {
+                psRecent.setInt(1, driverId);
+                try (ResultSet rs = psRecent.executeQuery()) {
+                    while (rs.next()) {
+                        Trip trip = new Trip();
+                        trip.setId(rs.getInt("id"));
+                        trip.setPassengerId(rs.getInt("passenger_id"));
+                        trip.setDriverId(rs.getInt("driver_id"));
+                        trip.setPickupLocation(rs.getString("pickup_location"));
+                        trip.setDropoffLocation(rs.getString("dropoff_location"));
+                        trip.setTripType(rs.getString("trip_type"));
+                        trip.setMatchStatus(rs.getString("match_status"));
+                        trip.setCompletionStatus(rs.getString("completion_status"));
+                        trip.setCreatedAt(rs.getTimestamp("created_at"));
+                        trip.setPrice(rs.getDouble("price"));
+                        trip.setDistance(rs.getDouble("distance"));
+                        trip.setVehicleType(rs.getString("vehicle_type"));
+                        trip.setPassengerName(rs.getString("passenger_name"));
+                        trip.setPassengerPhone(rs.getString("passenger_phone"));
+                        recentTrips.add(trip);
+                    }
+                }
+            }
+            earnings.setRecentTrips(recentTrips);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return earnings;
+    }
 }
+

@@ -1696,6 +1696,158 @@
                                                 if (proposalsInterval) clearInterval(proposalsInterval);
                                             }
 
+                                            window.openEarningsView = function() {
+                                                console.log('[Earnings] Opening earnings view...');
+                                                const view = document.getElementById('sidebar-earnings-view');
+                                                if(view) {
+                                                    view.classList.remove('opacity-0', 'translate-x-10', 'pointer-events-none');
+                                                    view.classList.add('opacity-100', 'translate-x-0', 'pointer-events-auto');
+                                                    window.fetchEarningsData();
+                                                }
+                                            };
+
+                                            window.closeEarningsView = function() {
+                                                console.log('[Earnings] Closing earnings view...');
+                                                const view = document.getElementById('sidebar-earnings-view');
+                                                if(view) {
+                                                    view.classList.add('opacity-0', 'translate-x-10', 'pointer-events-none');
+                                                    view.classList.remove('opacity-100', 'translate-x-0', 'pointer-events-auto');
+                                                }
+                                            };
+
+                                            window.fetchEarningsData = function() {
+                                                const basePath = window.CONTEXT_PATH || '${pageContext.request.contextPath}';
+                                                console.log('[Earnings] Fetching data from: ' + basePath + '/api/driver/earnings');
+                                                const listContainer = document.getElementById('earnings-recent-trips-list');
+                                                if(listContainer) {
+                                                    listContainer.innerHTML = '<div class="flex items-center justify-center py-10 text-slate-400"><span class="material-symbols-outlined animate-spin mr-2 text-lg">sync</span><span class="text-xs">Đang tải dữ liệu...</span></div>';
+                                                }
+                                                
+                                                fetch(basePath + '/api/driver/earnings')
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        if(data.success && data.data) {
+                                                            const e = data.data;
+                                                            const fmt = (v) => new Intl.NumberFormat('vi-VN').format(v || 0);
+
+                                                            // Hero card: Total balance
+                                                            const totalHero = document.getElementById('earnings-total-hero');
+                                                            if(totalHero) totalHero.innerText = fmt(e.total);
+                                                            const totalBadge = document.getElementById('earnings-total-trips-badge');
+                                                            if(totalBadge) totalBadge.innerText = (e.completedTripsTotal || 0) + ' chuyến hoàn thành';
+
+                                                            // Stats grid
+                                                            const elToday = document.getElementById('earnings-today');
+                                                            if(elToday) elToday.innerText = fmt(e.today) + 'đ';
+                                                            const elWeek = document.getElementById('earnings-week');
+                                                            if(elWeek) elWeek.innerText = fmt(e.week) + 'đ';
+                                                            const elMonth = document.getElementById('earnings-month');
+                                                            if(elMonth) elMonth.innerText = fmt(e.month) + 'đ';
+                                                            
+                                                            const elTodayTrips = document.getElementById('earnings-today-trips');
+                                                            if(elTodayTrips) elTodayTrips.innerText = (e.completedTripsToday || 0) + ' chuyến';
+                                                            const elWeekTrips = document.getElementById('earnings-week-trips');
+                                                            if(elWeekTrips) elWeekTrips.innerText = (e.completedTripsWeek || 0) + ' chuyến';
+                                                            const elMonthTrips = document.getElementById('earnings-month-trips');
+                                                            if(elMonthTrips) elMonthTrips.innerText = (e.completedTripsMonth || 0) + ' chuyến';
+
+                                                            // 7-day chart bars
+                                                            const chartBars = document.getElementById('earnings-chart-bars');
+                                                            const chartLabels = document.getElementById('earnings-chart-labels');
+                                                            if(chartBars && chartLabels && e.dailyBreakdown && e.dailyBreakdown.length > 0) {
+                                                                const maxAmount = Math.max(...e.dailyBreakdown.map(d => d.amount), 1);
+                                                                chartBars.innerHTML = '';
+                                                                chartLabels.innerHTML = '';
+                                                                
+                                                                const todayStr = new Date().toISOString().split('T')[0];
+                                                                e.dailyBreakdown.forEach((day, idx) => {
+                                                                    const pct = Math.max((day.amount / maxAmount) * 100, 4);
+                                                                    const isToday = day.date === todayStr;
+                                                                    const bar = document.createElement('div');
+                                                                    bar.className = 'flex-1 rounded-t-md transition-all duration-500 cursor-pointer relative group';
+                                                                    bar.style.height = pct + '%';
+                                                                    bar.style.animationDelay = (idx * 80) + 'ms';
+                                                                    
+                                                                    if(isToday) {
+                                                                        bar.className += ' bg-white shadow-[0_0_12px_rgba(255,255,255,0.5)]';
+                                                                    } else if(day.amount > 0) {
+                                                                        bar.className += ' bg-white/30 hover:bg-white/50';
+                                                                    } else {
+                                                                        bar.className += ' bg-white/10';
+                                                                    }
+                                                                    
+                                                                    // Tooltip on hover
+                                                                    if(day.amount > 0) {
+                                                                        bar.title = fmt(day.amount) + 'đ';
+                                                                    }
+                                                                    
+                                                                    chartBars.appendChild(bar);
+                                                                    
+                                                                    const label = document.createElement('span');
+                                                                    label.className = isToday ? 'text-white font-black' : '';
+                                                                    label.innerText = day.label;
+                                                                    chartLabels.appendChild(label);
+                                                                });
+                                                            }
+                                                            
+                                                            // Transaction history
+                                                            if(listContainer) {
+                                                                listContainer.innerHTML = '';
+                                                                const histCount = document.getElementById('earnings-history-count');
+                                                                
+                                                                if(e.recentTrips && e.recentTrips.length > 0) {
+                                                                    if(histCount) histCount.innerText = e.recentTrips.length + ' giao dịch';
+                                                                    
+                                                                    e.recentTrips.forEach(trip => {
+                                                                        const date = new Date(trip.createdAt);
+                                                                        const timeStr = date.toLocaleString('vi-VN', {hour:'2-digit', minute:'2-digit'});
+                                                                        const dateStr = date.toLocaleString('vi-VN', {day:'2-digit', month:'2-digit', year:'numeric'});
+                                                                        const price = fmt(trip.price);
+                                                                        const typeIcon = trip.vehicleType === 'MOTORBIKE' ? 'two_wheeler' : 'directions_car';
+                                                                        const typeBg = trip.vehicleType === 'MOTORBIKE' ? 'bg-orange-50 text-orange-500' : 'bg-blue-50 text-blue-500';
+                                                                        
+                                                                        const dropoff = (trip.dropoffLocation || '').length > 30 
+                                                                            ? trip.dropoffLocation.substring(0, 30) + '...' 
+                                                                            : (trip.dropoffLocation || 'Không rõ');
+                                                                        
+                                                                        const html = `
+                                                                            <div class="flex items-center justify-between py-3 border-b border-slate-50 last:border-0">
+                                                                                <div class="flex items-center gap-3">
+                                                                                    <div class="w-9 h-9 rounded-xl ${typeBg} flex items-center justify-center shrink-0">
+                                                                                        <span class="material-symbols-outlined text-base">${typeIcon}</span>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <h5 class="text-xs font-bold text-slate-700 leading-tight">${dropoff}</h5>
+                                                                                        <p class="text-[10px] text-slate-400 mt-0.5">${dateStr} · ${timeStr}</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="text-right shrink-0 ml-2">
+                                                                                    <p class="text-sm font-black text-emerald-500">+${price}đ</p>
+                                                                                    <p class="text-[9px] text-slate-400">${trip.distance ? (trip.distance + ' km') : ''}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        `;
+                                                                        listContainer.innerHTML += html;
+                                                                    });
+                                                                } else {
+                                                                    if(histCount) histCount.innerText = '0 giao dịch';
+                                                                    listContainer.innerHTML = `
+                                                                        <div class="text-center py-12">
+                                                                            <span class="material-symbols-outlined text-4xl text-slate-200 mb-2">account_balance_wallet</span>
+                                                                            <p class="text-xs text-slate-400 font-semibold">Chưa có giao dịch nào</p>
+                                                                            <p class="text-[10px] text-slate-300 mt-1">Hoàn thành chuyến đi để nhận thu nhập</p>
+                                                                        </div>
+                                                                    `;
+                                                                }
+                                                            }
+                                                        }
+                                                    })
+                                                    .catch(err => {
+                                                        console.error('Error fetching earnings:', err);
+                                                        if(listContainer) listContainer.innerHTML = '<div class="text-center text-red-400 py-8 text-xs">Lỗi tải dữ liệu</div>';
+                                                    });
+                                            };
+
                                             function toggleTripProposals() {
                                                 const panel = document.getElementById('trip-proposals-panel');
                                                 if (!panel) {
@@ -2169,6 +2321,7 @@
                                                         if (data.success) {
                                                             showToast('Hoàn thành chuyến đi!', 'success');
                                                             checkDriverTripStatus();
+                                                            if (window.fetchEarningsData) window.fetchEarningsData();
                                                             // Hiển thị modal cho tài xế
                                                             const distEl = document.getElementById('sidebar-active-trip-distance');
                                                             const priceEl = document.getElementById('sidebar-active-trip-price');

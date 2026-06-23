@@ -200,7 +200,7 @@
                             </div>
                         </div>
                         <!-- Card 2: Earnings -->
-                        <div
+                        <div onclick="window.openEarningsView && window.openEarningsView()"
                             class="bg-white/70 hover:bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm cursor-pointer transition-colors flex flex-col justify-between min-h-[100px] relative overflow-hidden group">
                             <!-- Mini line chart background -->
                             <svg class="absolute bottom-0 left-0 w-full h-12 opacity-20"
@@ -216,11 +216,11 @@
                             <span
                                 class="material-symbols-outlined text-slate-400 group-hover:text-emerald-500 transition-colors mb-2 relative z-10">account_balance_wallet</span>
                             <div class="relative z-10">
-                                <h4 class="font-bold text-slate-800 text-xs">Thu
-                                    nhập</h4>
+                                <h4 class="font-bold text-slate-800 text-xs">Ví
+                                    tài xế</h4>
                                 <p
                                     class="text-[13px] font-black text-emerald-600 mt-0.5">
-                                    800.000đ/wk</p>
+                                    Xem chi tiết →</p>
                             </div>
                         </div>
                     </div>
@@ -396,6 +396,109 @@
                 </script>
             </div>
         </c:if>
+    </div>
+
+    <!-- STATE 4: EARNINGS VIEW (Financial Management Style) -->
+    <div id="sidebar-earnings-view"
+        class="transition-all duration-300 opacity-0 translate-x-10 absolute inset-x-0 top-0 pointer-events-none flex flex-col items-center justify-start min-h-screen bg-gradient-to-b from-slate-50 to-white z-20 overflow-y-auto"
+        style="max-height: 100vh;">
+
+        <!-- Sticky Header -->
+        <div class="w-full flex items-center p-4 pb-2 sticky top-0 bg-slate-50/90 backdrop-blur-md z-30">
+            <button id="btn-back-from-earnings" onclick="window.closeEarningsView && window.closeEarningsView()"
+                class="w-9 h-9 rounded-full bg-white hover:bg-slate-100 border border-slate-200 flex items-center justify-center shadow-sm transition-all cursor-pointer relative z-50">
+                <span class="material-symbols-outlined text-slate-600 text-lg">arrow_back</span>
+            </button>
+            <h3 class="flex-1 text-center font-bold text-base text-slate-800 -ml-9">Ví tài xế</h3>
+        </div>
+
+        <div class="w-full px-4 pb-32">
+            <!-- Hero: Total Balance Card -->
+            <div class="w-full bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-700 rounded-3xl p-5 shadow-[0_8px_30px_rgba(16,185,129,0.35)] text-white mb-5 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-40 h-40 bg-white opacity-[0.07] rounded-full -mr-14 -mt-14"></div>
+                <div class="absolute bottom-0 left-0 w-28 h-28 bg-white opacity-[0.05] rounded-full -ml-10 -mb-10"></div>
+
+                <div class="relative z-10">
+                    <p class="text-emerald-100 text-[11px] font-semibold uppercase tracking-widest mb-1">Tổng số dư</p>
+                    <div class="flex items-baseline gap-1">
+                        <h2 id="earnings-total-hero" class="text-[32px] font-black tracking-tight leading-none">0</h2>
+                        <span class="text-lg font-bold text-emerald-200">đ</span>
+                    </div>
+                    <div class="mt-3 flex items-center gap-1.5">
+                        <span id="earnings-total-trips-badge"
+                            class="bg-white/20 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full">
+                            0 chuyến hoàn thành
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 7-Day Chart (real data from API) -->
+                <div class="relative z-10 mt-5">
+                    <div id="earnings-chart-bars" class="h-16 flex items-end gap-1.5 w-full">
+                        <!-- 7 bars injected via JS -->
+                    </div>
+                    <div id="earnings-chart-labels" class="flex justify-between mt-1.5 w-full text-[9px] text-emerald-200 font-bold">
+                        <!-- 7 day labels injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid: 3 columns -->
+            <div class="w-full grid grid-cols-3 gap-3 mb-5">
+                <!-- Hôm nay -->
+                <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-100 flex flex-col">
+                    <div class="flex items-center gap-1 mb-2">
+                        <div class="w-6 h-6 bg-amber-50 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-amber-500 text-sm">today</span>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wide">Hôm nay</p>
+                    <h4 id="earnings-today" class="text-sm font-black text-slate-800 mt-0.5">0đ</h4>
+                    <p id="earnings-today-trips" class="text-[9px] text-slate-400 mt-1">0 chuyến</p>
+                </div>
+                <!-- Tuần này -->
+                <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-100 flex flex-col">
+                    <div class="flex items-center gap-1 mb-2">
+                        <div class="w-6 h-6 bg-blue-50 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-blue-500 text-sm">date_range</span>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wide">Tuần này</p>
+                    <h4 id="earnings-week" class="text-sm font-black text-slate-800 mt-0.5">0đ</h4>
+                    <p id="earnings-week-trips" class="text-[9px] text-slate-400 mt-1">0 chuyến</p>
+                </div>
+                <!-- Tháng này -->
+                <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-100 flex flex-col">
+                    <div class="flex items-center gap-1 mb-2">
+                        <div class="w-6 h-6 bg-purple-50 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-purple-500 text-sm">calendar_month</span>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wide">Tháng này</p>
+                    <h4 id="earnings-month" class="text-sm font-black text-slate-800 mt-0.5">0đ</h4>
+                    <p id="earnings-month-trips" class="text-[9px] text-slate-400 mt-1">0 chuyến</p>
+                </div>
+            </div>
+
+            <!-- Transaction History -->
+            <div class="w-full">
+                <div class="flex items-center justify-between mb-3">
+                    <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                        <span class="material-symbols-outlined text-emerald-500 text-lg">receipt_long</span>
+                        Lịch sử giao dịch
+                    </h4>
+                    <span id="earnings-history-count" class="text-[10px] text-slate-400 font-semibold bg-slate-100 px-2 py-0.5 rounded-full">0 giao dịch</span>
+                </div>
+
+                <div id="earnings-recent-trips-list" class="flex flex-col gap-0">
+                    <!-- Loading state -->
+                    <div class="flex items-center justify-center py-10 text-slate-400">
+                        <span class="material-symbols-outlined animate-spin mr-2 text-lg">sync</span>
+                        <span class="text-xs">Đang tải dữ liệu...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
