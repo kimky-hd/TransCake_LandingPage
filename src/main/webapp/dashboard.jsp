@@ -1806,27 +1806,40 @@
                                                                         const typeIcon = trip.vehicleType === 'MOTORBIKE' ? 'two_wheeler' : 'directions_car';
                                                                         const typeBg = trip.vehicleType === 'MOTORBIKE' ? 'bg-orange-50 text-orange-500' : 'bg-blue-50 text-blue-500';
                                                                         
-                                                                        const dropoff = (trip.dropoffLocation || '').length > 30 
-                                                                            ? trip.dropoffLocation.substring(0, 30) + '...' 
-                                                                            : (trip.dropoffLocation || 'Không rõ');
+                                                                        const pickup = (trip.pickupLocation || 'Không rõ');
+                                                                        const dropoff = (trip.dropoffLocation || 'Không rõ');
+                                                                        const passenger = trip.passengerName || 'Khách hàng';
+                                                                        const tripTypeBadge = trip.tripType === 'PRE_BOOK' 
+                                                                            ? '<span class="bg-blue-100 text-blue-600 text-[9px] px-1.5 py-0.5 rounded font-bold ml-1">ĐẶT TRƯỚC</span>'
+                                                                            : '<span class="bg-emerald-100 text-emerald-600 text-[9px] px-1.5 py-0.5 rounded font-bold ml-1">ĐẶT NGAY</span>';
                                                                         
-                                                                        const html = `
-                                                                            <div class="flex items-center justify-between py-3 border-b border-slate-50 last:border-0">
-                                                                                <div class="flex items-center gap-3">
-                                                                                    <div class="w-9 h-9 rounded-xl ${typeBg} flex items-center justify-center shrink-0">
-                                                                                        <span class="material-symbols-outlined text-base">${typeIcon}</span>
-                                                                                    </div>
-                                                                                    <div>
-                                                                                        <h5 class="text-xs font-bold text-slate-700 leading-tight">${dropoff}</h5>
-                                                                                        <p class="text-[10px] text-slate-400 mt-0.5">${dateStr} · ${timeStr}</p>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="text-right shrink-0 ml-2">
-                                                                                    <p class="text-sm font-black text-emerald-500">+${price}đ</p>
-                                                                                    <p class="text-[9px] text-slate-400">${trip.distance ? (trip.distance + ' km') : ''}</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        `;
+                                                                        const html = '<div class="flex flex-col py-3 border-b border-slate-100 last:border-0">' +
+                                                                            '<div class="flex items-center justify-between mb-2">' +
+                                                                                '<div class="flex items-center gap-2">' +
+                                                                                    '<div class="w-8 h-8 rounded-full ' + typeBg + ' flex items-center justify-center shrink-0">' +
+                                                                                        '<span class="material-symbols-outlined text-sm">' + typeIcon + '</span>' +
+                                                                                    '</div>' +
+                                                                                    '<div>' +
+                                                                                        '<h5 class="text-xs font-bold text-slate-800">' + passenger + tripTypeBadge + '</h5>' +
+                                                                                        '<p class="text-[10px] text-slate-500">' + dateStr + ' · ' + timeStr + '</p>' +
+                                                                                    '</div>' +
+                                                                                '</div>' +
+                                                                                '<div class="text-right">' +
+                                                                                    '<p class="text-sm font-black text-emerald-600">+' + price + 'đ</p>' +
+                                                                                    '<p class="text-[9px] text-slate-400 font-medium">' + (trip.distance ? trip.distance + ' km' : '') + '</p>' +
+                                                                                '</div>' +
+                                                                            '</div>' +
+                                                                            '<div class="pl-10 space-y-1.5">' +
+                                                                                '<div class="flex items-start gap-1.5">' +
+                                                                                    '<div class="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1 shrink-0"></div>' +
+                                                                                    '<p class="text-[11px] text-slate-600 leading-tight"><span class="font-semibold text-slate-700">Từ:</span> ' + pickup + '</p>' +
+                                                                                '</div>' +
+                                                                                '<div class="flex items-start gap-1.5">' +
+                                                                                    '<div class="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1 shrink-0"></div>' +
+                                                                                    '<p class="text-[11px] text-slate-600 leading-tight"><span class="font-semibold text-slate-700">Đến:</span> ' + dropoff + '</p>' +
+                                                                                '</div>' +
+                                                                            '</div>' +
+                                                                        '</div>';
                                                                         listContainer.innerHTML += html;
                                                                     });
                                                                 } else {
