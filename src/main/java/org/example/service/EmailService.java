@@ -329,6 +329,7 @@ public class EmailService {
         sendEmailInBackground(passenger.getEmail(), subject, htmlContent);
     }
 
+
     // --- 6. Hủy chuyến ---
     public static void sendTripCancelledAsync(String recipientEmail, String recipientName, String cancelledBy, org.example.model.Trip trip) {
         String subject = "TransCake - Chuyến đi đã bị hủy";
