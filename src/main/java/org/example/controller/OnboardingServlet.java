@@ -49,6 +49,7 @@ public class OnboardingServlet extends HttpServlet {
             return;
         }
 
+
         try {
             // Đọc dữ liệu JSON
             Map<String, Object> body = gson.fromJson(request.getReader(), Map.class);
