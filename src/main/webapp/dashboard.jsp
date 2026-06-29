@@ -2636,27 +2636,113 @@
                                                 let currentUserRole = 'passenger'; // default UI state is passenger
                                                 window.userFullName = '${not empty fullName && fullName != "Người dùng" ? fullName : ""}';
 
-                                                document.addEventListener('DOMContentLoaded', function () {
-                                                    // Immediately request geolocation to update userLngLat without waiting for the map
-                                                    if (navigator.geolocation) {
-                                                        navigator.geolocation.getCurrentPosition(
-                                                            (position) => {
-                                                                userLngLat = [position.coords.longitude, position.coords.latitude];
-                                                                console.log("Vị trí đã được cập nhật qua Geolocation:", userLngLat);
-                                                                // If driver, fetch proposals immediately with the new location
-                                                                if (currentUserRole === 'driver') {
-                                                                    fetchTripProposals();
-                                                                    fetchUpcomingTrips();
-                                                                } else if (currentUserRole === 'passenger') {
-                                                                    fetchUpcomingTrips();
-                                                                }
-                                                            },
-                                                            (error) => {
-                                                                console.error("Lỗi lấy vị trí ban đầu: ", error.message);
-                                                            },
-                                                            { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-                                                        );
+                                                let userLngLat = [105.8542, 21.0285]; // Default: Hanoi
+                                                let geoWatchId = null;
+                                                let lastGeoUpdateTime = 0;
+
+                                                /**
+                                                 * Hàm trung tâm cập nhật vị trí người dùng.
+                                                 * Cập nhật biến toàn cục, marker trên bản đồ và các dữ liệu phụ thuộc.
+                                                 */
+                                                function updateUserPosition(lng, lat, source) {
+                                                    userLngLat = [lng, lat];
+                                                    lastGeoUpdateTime = Date.now();
+                                                    console.log('[Geo] Vị trí cập nhật (' + source + '):', lat.toFixed(5), lng.toFixed(5));
+
+                                                    // Cập nhật marker trên bản đồ nếu đã có
+                                                    if (window._userMarkerInstance) {
+                                                        window._userMarkerInstance.setLngLat([lng, lat]);
                                                     }
+                                                }
+
+                                                /**
+                                                 * Bắt đầu theo dõi vị trí liên tục (watchPosition).
+                                                 * Nếu high accuracy thất bại → tự động fallback sang low accuracy.
+                                                 */
+                                                function startGeoWatch() {
+                                                    if (!navigator.geolocation) {
+                                                        console.warn('[Geo] Trình duyệt không hỗ trợ Geolocation.');
+                                                        return;
+                                                    }
+                                                    // Xóa watch cũ nếu có
+                                                    if (geoWatchId !== null) {
+                                                        navigator.geolocation.clearWatch(geoWatchId);
+                                                        geoWatchId = null;
+                                                    }
+
+                                                    geoWatchId = navigator.geolocation.watchPosition(
+                                                        (position) => {
+                                                            updateUserPosition(
+                                                                position.coords.longitude,
+                                                                position.coords.latitude,
+                                                                'watchPosition'
+                                                            );
+                                                        },
+                                                        (error) => {
+                                                            console.warn('[Geo] watchPosition lỗi:', error.message, '(code=' + error.code + ')');
+                                                            // Nếu timeout hoặc lỗi vị trí → thử lại với low accuracy
+                                                            if (error.code === error.TIMEOUT || error.code === error.POSITION_UNAVAILABLE) {
+                                                                console.log('[Geo] Thử lại với enableHighAccuracy=false...');
+                                                                navigator.geolocation.getCurrentPosition(
+                                                                    (pos) => updateUserPosition(pos.coords.longitude, pos.coords.latitude, 'fallback-low-accuracy'),
+                                                                    (err2) => console.error('[Geo] Fallback cũng thất bại:', err2.message),
+                                                                    { enableHighAccuracy: false, timeout: 15000, maximumAge: 30000 }
+                                                                );
+                                                            }
+                                                        },
+                                                        { enableHighAccuracy: true, timeout: 15000, maximumAge: 5000 }
+                                                    );
+                                                    console.log('[Geo] watchPosition đã bắt đầu, watchId=' + geoWatchId);
+                                                }
+
+                                                /**
+                                                 * Yêu cầu lấy vị trí tươi mới 1 lần (dùng khi quay lại tab).
+                                                 */
+                                                function requestFreshPosition(callback) {
+                                                    if (!navigator.geolocation) return;
+                                                    navigator.geolocation.getCurrentPosition(
+                                                        (position) => {
+                                                            updateUserPosition(
+                                                                position.coords.longitude,
+                                                                position.coords.latitude,
+                                                                'fresh-request'
+                                                            );
+                                                            if (typeof callback === 'function') callback(true);
+                                                        },
+                                                        (error) => {
+                                                            console.warn('[Geo] Không lấy được vị trí tươi:', error.message);
+                                                            // Fallback low accuracy
+                                                            navigator.geolocation.getCurrentPosition(
+                                                                (pos) => {
+                                                                    updateUserPosition(pos.coords.longitude, pos.coords.latitude, 'fresh-fallback');
+                                                                    if (typeof callback === 'function') callback(true);
+                                                                },
+                                                                (err2) => {
+                                                                    console.error('[Geo] Fallback cũng thất bại:', err2.message);
+                                                                    if (typeof callback === 'function') callback(false);
+                                                                },
+                                                                { enableHighAccuracy: false, timeout: 15000, maximumAge: 60000 }
+                                                            );
+                                                        },
+                                                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                                                    );
+                                                }
+
+                                                document.addEventListener('DOMContentLoaded', function () {
+                                                    // Bắt đầu theo dõi vị trí liên tục ngay khi trang load
+                                                    startGeoWatch();
+
+                                                    // Lấy vị trí tươi 1 lần ngay lập tức (bổ sung cho watchPosition)
+                                                    requestFreshPosition(function(success) {
+                                                        if (success) {
+                                                            if (currentUserRole === 'driver') {
+                                                                fetchTripProposals();
+                                                                fetchUpcomingTrips();
+                                                            } else if (currentUserRole === 'passenger') {
+                                                                fetchUpcomingTrips();
+                                                            }
+                                                        }
+                                                    });
 
                                                     if (initialUserRole === 'driver') {
                                                         currentUserRole = 'driver';
@@ -2667,16 +2753,44 @@
                                                     }
                                                 });
 
-                                                let userLngLat = [105.8542, 21.0285]; // Default: Hanoi
+                                                /**
+                                                 * Khi người dùng quay lại tab (sau khi rời đi lâu) → lấy lại vị trí tươi mới.
+                                                 * Đồng thời khởi động lại watchPosition phòng trường hợp bị dừng.
+                                                 */
+                                                document.addEventListener('visibilitychange', function () {
+                                                    if (!document.hidden) {
+                                                        const timeSinceLastUpdate = Date.now() - lastGeoUpdateTime;
+                                                        console.log('[Geo] Tab quay lại, thời gian rời đi:', Math.round(timeSinceLastUpdate / 1000) + 's');
+
+                                                        // Nếu đã rời đi > 30 giây → cập nhật vị trí mới
+                                                        if (timeSinceLastUpdate > 30000) {
+                                                            requestFreshPosition(function(success) {
+                                                                if (success && window.mapInstance) {
+                                                                    window.mapInstance.flyTo({
+                                                                        center: userLngLat,
+                                                                        zoom: 15,
+                                                                        speed: 1.5
+                                                                    });
+                                                                }
+                                                            });
+                                                        }
+
+                                                        // Khởi động lại watchPosition (phòng bị dừng khi tab background)
+                                                        startGeoWatch();
+                                                    }
+                                                });
 
                                                 function recenterMap() {
-                                                    if (window.mapInstance) {
-                                                        window.mapInstance.flyTo({
-                                                            center: userLngLat,
-                                                            zoom: 15,
-                                                            speed: 1.2
-                                                        });
-                                                    }
+                                                    // Lấy vị trí tươi mới trước khi bay đến
+                                                    requestFreshPosition(function(success) {
+                                                        if (window.mapInstance) {
+                                                            window.mapInstance.flyTo({
+                                                                center: userLngLat,
+                                                                zoom: 15,
+                                                                speed: 1.2
+                                                            });
+                                                        }
+                                                    });
                                                 }
 
                                                 function setRole(role, bypassConfirm = false) {
@@ -2889,39 +3003,34 @@
                                                     // Khởi tạo đối tượng Marker của Vietmap (nhưng chưa add vào map)
                                                     const userMarker = new vietmapgl.Marker({ element: markerEl, offset: [0, 0] });
 
-                                                    // Khi bản đồ load xong, ta sẽ lấy vị trí thực của user
-                                                    map.on('load', () => {
-                                                        if (navigator.geolocation) {
-                                                            // Yêu cầu quyền truy cập vị trí và lấy tọa độ
-                                                            navigator.geolocation.getCurrentPosition(
-                                                                (position) => {
-                                                                    const lng = position.coords.longitude;
-                                                                    const lat = position.coords.latitude;
-                                                                    userLngLat = [lng, lat]; // Cập nhật vị trí toàn cục
+                                                    // Lưu marker instance toàn cục để updateUserPosition có thể cập nhật
+                                                    window._userMarkerInstance = userMarker;
 
-                                                                    // Di chuyển bản đồ (FlyTo) tới vị trí của user với hiệu ứng mượt
+                                                    // Khi bản đồ load xong → dùng vị trí đã có (từ watchPosition/requestFreshPosition)
+                                                    map.on('load', () => {
+                                                        // Đặt marker tại vị trí hiện tại (đã được watchPosition cập nhật)
+                                                        userMarker.setLngLat(userLngLat).addTo(map);
+
+                                                        // Bay đến vị trí hiện tại (nếu không phải default Hà Nội thì bay tới)
+                                                        const isDefaultLocation = (userLngLat[0] === 105.8542 && userLngLat[1] === 21.0285);
+                                                        if (!isDefaultLocation) {
+                                                            map.flyTo({
+                                                                center: userLngLat,
+                                                                zoom: 15,
+                                                                speed: 1.2
+                                                            });
+                                                        } else {
+                                                            // Nếu vẫn là vị trí mặc định → yêu cầu lại 1 lần nữa
+                                                            requestFreshPosition(function(success) {
+                                                                if (success) {
                                                                     map.flyTo({
-                                                                        center: [lng, lat],
+                                                                        center: userLngLat,
                                                                         zoom: 15,
                                                                         speed: 1.2
                                                                     });
-
-                                                                    // Đặt custom marker lên vị trí của user
-                                                                    userMarker.setLngLat([lng, lat]).addTo(map);
-                                                                },
-                                                                (error) => {
-                                                                    console.error("Lỗi khi lấy vị trí: ", error.message);
-                                                                    // Nếu user từ chối, marker có thể được đặt ở tọa độ mặc định
-                                                                    userMarker.setLngLat([105.8542, 21.0285]).addTo(map);
-                                                                },
-                                                                {
-                                                                    enableHighAccuracy: true,
-                                                                    timeout: 5000,
-                                                                    maximumAge: 0
+                                                                    userMarker.setLngLat(userLngLat);
                                                                 }
-                                                            );
-                                                        } else {
-                                                            console.log("Trình duyệt không hỗ trợ Geolocation.");
+                                                            });
                                                         }
                                                     });
                                                 }
