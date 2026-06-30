@@ -2781,8 +2781,9 @@
                                                                 navigator.geolocation.getCurrentPosition(
                                                                     (pos) => updateUserPosition(pos.coords.longitude, pos.coords.latitude, 'fallback-low-accuracy'),
                                                                     (err2) => {
-                                                                        console.warn('[Geo] Fallback GPS cũng thất bại, dùng IP.');
-                                                                        getLocationByIP();
+                                                                        console.warn('[Geo] Fallback GPS cũng thất bại. Giữ nguyên vị trí mặc định (không dùng IP để tránh bị nhảy sai).');
+                                                                        // Tắt tự động gọi IP Fallback để tránh việc map tự động nhảy đi nơi khác sau 20s
+                                                                        // getLocationByIP();
                                                                     },
                                                                     { enableHighAccuracy: false, timeout: 20000, maximumAge: 30000 }
                                                                 );
@@ -2820,8 +2821,10 @@
                                                                     if (typeof callback === 'function') callback(true);
                                                                 },
                                                                 (err2) => {
-                                                                    console.error('[Geo] Fallback tươi cũng thất bại:', err2.message);
-                                                                    getLocationByIP(callback);
+                                                                    console.error('[Geo] Fallback tươi cũng thất bại. Giữ nguyên vị trí hiện tại.');
+                                                                    // Không gọi getLocationByIP để tránh nhảy map
+                                                                    // getLocationByIP(callback);
+                                                                    if (typeof callback === 'function') callback(false);
                                                                 },
                                                                 { enableHighAccuracy: false, timeout: 20000, maximumAge: 60000 }
                                                             );
@@ -2886,16 +2889,17 @@
                                                 });
 
                                                 function recenterMap() {
-                                                    // Lấy vị trí tươi mới trước khi bay đến
-                                                    requestFreshPosition(function(success) {
-                                                        if (window.mapInstance) {
-                                                            window.mapInstance.flyTo({
-                                                                center: userLngLat,
-                                                                zoom: 15,
-                                                                speed: 1.2
-                                                            });
-                                                        }
-                                                    });
+                                                    // Ngay lập tức bay về vị trí đã lưu trong cache (giúp UI phản hồi nhanh chóng)
+                                                    if (window.mapInstance) {
+                                                        window.mapInstance.flyTo({
+                                                            center: userLngLat,
+                                                            zoom: 15,
+                                                            speed: 1.2
+                                                        });
+                                                    }
+                                                    
+                                                    // Sau đó yêu cầu làm mới vị trí ngầm dưới background (không block UI)
+                                                    requestFreshPosition();
                                                 }
 
                                                 function setRole(role, bypassConfirm = false) {
