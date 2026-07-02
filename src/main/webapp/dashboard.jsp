@@ -757,6 +757,7 @@
                                                             if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
                                                         }
                                                     } else if (msg.action === "TRIP_CANCELLED") {
+                                                        if (typeof fetchTripHistory === "function") fetchTripHistory();
                                                         if (currentRole === "driver") {
                                                             if (typeof fetchTripProposals === "function") fetchTripProposals();
                                                             if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
@@ -773,6 +774,9 @@
                                                             if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
                                                         }
                                                     } else if (msg.action === "TRIP_STARTED" || msg.action === "TRIP_COMPLETED" || msg.action === "TRIP_CANCELLED_BY_DRIVER") {
+                                                        if (msg.action === "TRIP_COMPLETED" || msg.action === "TRIP_CANCELLED_BY_DRIVER") {
+                                                            if (typeof fetchTripHistory === "function") fetchTripHistory();
+                                                        }
                                                         if (currentRole === "passenger") {
                                                             if (typeof checkPassengerTripStatus === "function") checkPassengerTripStatus();
                                                             if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
@@ -1715,8 +1719,89 @@
                                                 }
                                             };
 
+                                            window.fetchTripHistory = function() {
+                                                const listContainer = document.getElementById('sidebar-history-list');
+                                                const loadingContainer = document.getElementById('sidebar-history-loading');
+                                                const emptyContainer = document.getElementById('sidebar-history-empty');
+                                                
+                                                if(listContainer) { listContainer.classList.add('hidden'); listContainer.innerHTML = ''; }
+                                                if(emptyContainer) emptyContainer.classList.add('hidden');
+                                                if(loadingContainer) loadingContainer.classList.remove('hidden');
+
+                                                fetch(CONTEXT_PATH + '/api/history?role=' + currentUserRole)
+                                                    .then(res => res.json())
+                                                    .then(data => {
+                                                        if(loadingContainer) loadingContainer.classList.add('hidden');
+                                                        if(data.success && data.data && data.data.length > 0) {
+                                                            let html = '';
+                                                            data.data.forEach(trip => {
+                                                                const isMotorbike = trip.vehicleType === 'MOTORBIKE';
+                                                                const typeIcon = isMotorbike ? 'two_wheeler' : 'directions_car';
+                                                                const typeBg = isMotorbike ? 'bg-orange-50 text-orange-500' : 'bg-blue-50 text-blue-500';
+                                                                const isPreBook = trip.tripType === 'PRE_BOOK';
+                                                                const tripTypeBadge = isPreBook ? '<span class="bg-blue-100 text-blue-600 text-[9px] px-1.5 py-0.5 rounded font-bold ml-1">ĐẶT TRƯỚC</span>' : '<span class="bg-emerald-100 text-emerald-600 text-[9px] px-1.5 py-0.5 rounded font-bold ml-1">ĐẶT NGAY</span>';
+                                                                
+                                                                let displayName = trip.passengerName ? trip.passengerName : (currentUserRole === 'driver' ? 'Khách hàng' : 'Tài xế');
+                                                                
+                                                                let priceOrStatus = '';
+                                                                if(trip.matchStatus === 'CANCELLED') {
+                                                                    priceOrStatus = '<p class="text-sm font-black text-red-500 bg-red-50 px-2 py-0.5 rounded-md inline-block">Đã hủy</p>';
+                                                                } else {
+                                                                    const priceFormatted = new Intl.NumberFormat('vi-VN').format(trip.price || 0) + 'đ';
+                                                                    priceOrStatus = '<p class="text-base font-black text-[#6200EE]">' + priceFormatted + '</p>' +
+                                                                                    '<p class="text-[10px] text-slate-400 font-semibold">' + (trip.distance || 0) + ' km</p>';
+                                                                }
+
+                                                                const dt = new Date(trip.createdAt);
+                                                                const dateStr = ("0" + dt.getDate()).slice(-2) + "/" + ("0" + (dt.getMonth()+1)).slice(-2) + "/" + dt.getFullYear() + " · " + ("0" + dt.getHours()).slice(-2) + ":" + ("0" + dt.getMinutes()).slice(-2);
+
+                                                                html += `
+                                                                    <div class="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 p-3.5 mb-3 last:mb-0 hover:shadow-md transition-shadow flex flex-col">
+                                                                        <div class="flex items-center justify-between mb-3">
+                                                                            <div class="flex items-center gap-2">
+                                                                                <div class="w-9 h-9 rounded-full \${typeBg} flex items-center justify-center shrink-0">
+                                                                                    <span class="material-symbols-outlined text-[18px]">\${typeIcon}</span>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <h5 class="text-sm font-bold text-slate-800">\${displayName} \${tripTypeBadge}</h5>
+                                                                                    <p class="text-[10px] text-slate-500 font-medium mt-0.5">\${dateStr}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="text-right">
+                                                                                \${priceOrStatus}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="pl-11 space-y-2">
+                                                                            <div class="flex items-start gap-2">
+                                                                                <div class="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 shrink-0"></div>
+                                                                                <p class="text-xs text-slate-600 leading-snug"><span class="font-bold text-slate-700">Từ:</span> \${trip.pickupLocation}</p>
+                                                                            </div>
+                                                                            <div class="flex items-start gap-2">
+                                                                                <div class="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 shrink-0"></div>
+                                                                                <p class="text-xs text-slate-600 leading-snug"><span class="font-bold text-slate-700">Đến:</span> \${trip.dropoffLocation}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                `;
+                                                            });
+                                                            if(listContainer) {
+                                                                listContainer.innerHTML = html;
+                                                                listContainer.classList.remove('hidden');
+                                                            }
+                                                        } else {
+                                                            if(emptyContainer) emptyContainer.classList.remove('hidden');
+                                                        }
+                                                    })
+                                                    .catch(err => {
+                                                        console.error('[History] Fetch error', err);
+                                                        if(loadingContainer) loadingContainer.classList.add('hidden');
+                                                        if(emptyContainer) emptyContainer.classList.remove('hidden');
+                                                    });
+                                            };
+
                                             window.openHistoryView = function() {
                                                 console.log('[History] Opening history view...');
+                                                fetchTripHistory();
                                                 const view = document.getElementById('sidebar-history-view');
                                                 if(view) {
                                                     view.classList.remove('opacity-0', 'translate-x-10', 'pointer-events-none');

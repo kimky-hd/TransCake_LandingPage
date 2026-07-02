@@ -514,67 +514,23 @@
         </div>
 
         <div class="flex-1 overflow-y-auto panel-scroll w-full p-4 pt-2 flex flex-col gap-4 pb-24">
-            <c:if test="${empty historyList}">
-                <div class="text-center py-12">
-                    <span class="material-symbols-outlined text-4xl text-slate-200 mb-2">history</span>
-                    <p class="text-xs text-slate-400 font-semibold">Chưa có chuyến đi nào</p>
-                    <p class="text-[10px] text-slate-300 mt-1">Hoàn thành chuyến đi đầu tiên để xem lịch sử</p>
-                </div>
-            </c:if>
+            <!-- Loading state -->
+            <div id="sidebar-history-loading" class="flex flex-col items-center justify-center py-12 text-slate-400">
+                <span class="material-symbols-outlined animate-spin text-3xl mb-2">sync</span>
+                <p class="text-xs font-semibold">Đang tải lịch sử...</p>
+            </div>
 
-            <c:if test="${not empty historyList}">
-                <div class="w-full flex flex-col">
-                    <c:forEach var="trip" items="${historyList}">
-                        <c:set var="isMotorbike" value="${trip.vehicleType == 'MOTORBIKE'}" />
-                        <c:set var="typeIcon" value="${isMotorbike ? 'two_wheeler' : 'directions_car'}" />
-                        <c:set var="typeBg" value="${isMotorbike ? 'bg-orange-50 text-orange-500' : 'bg-blue-50 text-blue-500'}" />
-                        <c:set var="isPreBook" value="${trip.tripType == 'PRE_BOOK'}" />
-                        <c:set var="tripTypeBadge" value="${isPreBook ? '<span class=\"bg-blue-100 text-blue-600 text-[9px] px-1.5 py-0.5 rounded font-bold ml-1\">ĐẶT TRƯỚC</span>' : '<span class=\"bg-emerald-100 text-emerald-600 text-[9px] px-1.5 py-0.5 rounded font-bold ml-1\">ĐẶT NGAY</span>'}" />
-                        
-                        <c:set var="passengerName" value="${empty trip.passengerName ? 'Khách hàng' : trip.passengerName}" />
-                        <c:if test="${loggedInUser.role == 'passenger'}">
-                            <c:set var="passengerName" value="${empty trip.passengerName ? 'Tài xế' : trip.passengerName}" />
-                        </c:if>
+            <!-- Empty state -->
+            <div id="sidebar-history-empty" class="hidden text-center py-12">
+                <span class="material-symbols-outlined text-4xl text-slate-200 mb-2">history</span>
+                <p class="text-xs text-slate-400 font-semibold">Chưa có chuyến đi nào</p>
+                <p class="text-[10px] text-slate-300 mt-1">Hoàn thành chuyến đi đầu tiên để xem lịch sử</p>
+            </div>
 
-                        <div class="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.03)] border border-slate-100 p-3.5 mb-3 last:mb-0 hover:shadow-md transition-shadow flex flex-col">
-                            <div class="flex items-center justify-between mb-3">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-9 h-9 rounded-full ${typeBg} flex items-center justify-center shrink-0">
-                                        <span class="material-symbols-outlined text-[18px]">${typeIcon}</span>
-                                    </div>
-                                    <div>
-                                        <h5 class="text-sm font-bold text-slate-800">${passengerName} ${tripTypeBadge}</h5>
-                                        <p class="text-[10px] text-slate-500 font-medium mt-0.5"><fmt:formatDate value="${trip.createdAt}" pattern="dd/MM/yyyy · HH:mm" /></p>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <c:choose>
-                                        <c:when test="${trip.matchStatus == 'CANCELLED'}">
-                                            <p class="text-sm font-black text-red-500 bg-red-50 px-2 py-0.5 rounded-md inline-block">Đã hủy</p>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <p class="text-base font-black text-[#6200EE]">
-                                                <fmt:formatNumber value="${trip.price}" type="number" maxFractionDigits="0" />đ
-                                            </p>
-                                            <p class="text-[10px] text-slate-400 font-semibold">${trip.distance} km</p>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
-                            <div class="pl-11 space-y-2">
-                                <div class="flex items-start gap-2">
-                                    <div class="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 shrink-0"></div>
-                                    <p class="text-xs text-slate-600 leading-snug"><span class="font-bold text-slate-700">Từ:</span> ${trip.pickupLocation}</p>
-                                </div>
-                                <div class="flex items-start gap-2">
-                                    <div class="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 shrink-0"></div>
-                                    <p class="text-xs text-slate-600 leading-snug"><span class="font-bold text-slate-700">Đến:</span> ${trip.dropoffLocation}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </c:if>
+            <!-- Data List -->
+            <div id="sidebar-history-list" class="w-full flex flex-col hidden">
+                <!-- JS will inject trips here -->
+            </div>
         </div>
     </div>
 
