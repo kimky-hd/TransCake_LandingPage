@@ -2620,7 +2620,7 @@
 
                                             <!-- Locate Me Button (Hidden on Mobile Home Screen) -->
                                             <button onclick="recenterMap()" id="btn-locate-me"
-                                                class="hidden md:flex absolute bottom-[55vh] md:bottom-8 right-4 md:right-8 z-20 w-10 h-10 md:w-14 md:h-14 bg-white text-slate-700 hover:text-[#6200EE] rounded-full shadow-lg md:shadow-[0_8px_20px_rgba(0,0,0,0.15)] items-center justify-center transition-all hover:scale-105 border border-slate-200"
+                                                class="hidden md:flex absolute bottom-[calc(52vh+100px)] md:bottom-8 right-4 md:right-8 z-40 w-10 h-10 md:w-14 md:h-14 bg-white text-slate-700 hover:text-[#6200EE] rounded-full shadow-lg md:shadow-[0_8px_20px_rgba(0,0,0,0.15)] items-center justify-center transition-all hover:scale-105 border border-slate-200"
                                                 title="Vị trí của tôi">
                                                 <span class="material-symbols-outlined text-[20px] md:text-[28px]">my_location</span>
                                             </button>
