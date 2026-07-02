@@ -8,14 +8,6 @@
                 alt="Transcake Logo"
                 class="absolute left-0 top-1/2 -translate-y-1/2 h-10 w-auto object-contain">
         </div>
-        <!-- Notification Bell -->
-        <button
-            class="w-10 h-10 rounded-full bg-white/80 hover:bg-white border border-slate-200 flex items-center justify-center shadow-sm transition-all relative group">
-            <span
-                class="material-symbols-outlined text-slate-600 group-hover:text-slate-900 transition-colors">notifications</span>
-            <span
-                class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-white shadow-sm"></span>
-        </button>
     </div>
 
     <!-- Role Toggle -->

@@ -132,28 +132,28 @@
                             <div class="flex flex-wrap gap-2.5">
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Music</button>
+                                    data-selected="false" data-value="Music">Âm nhạc</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Movies & TV</button>
+                                    data-selected="false" data-value="Movies & TV">Phim ảnh</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Gaming</button>
+                                    data-selected="false" data-value="Gaming">Chơi Game</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Photography</button>
+                                    data-selected="false" data-value="Photography">Nhiếp ảnh</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Anime & Manga</button>
+                                    data-selected="false" data-value="Anime & Manga">Anime & Manga</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Art & Design</button>
+                                    data-selected="false" data-value="Art & Design">Nghệ thuật & Thiết kế</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Podcasts</button>
+                                    data-selected="false" data-value="Podcasts">Podcast</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Pop Culture</button>
+                                    data-selected="false" data-value="Pop Culture">Văn hóa đại chúng</button>
                             </div>
                         </div>
 
@@ -166,25 +166,25 @@
                             <div class="flex flex-wrap gap-2.5">
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Travel</button>
+                                    data-selected="false" data-value="Travel">Du lịch</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Food & Drink</button>
+                                    data-selected="false" data-value="Food & Drink">Ẩm thực</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Fashion</button>
+                                    data-selected="false" data-value="Fashion">Thời trang</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Pets</button>
+                                    data-selected="false" data-value="Pets">Thú cưng</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Coffee Hopping</button>
+                                    data-selected="false" data-value="Coffee Hopping">Đi cà phê</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Astrology</button>
+                                    data-selected="false" data-value="Astrology">Chiêm tinh học</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Nightlife</button>
+                                    data-selected="false" data-value="Nightlife">Cuộc sống về đêm</button>
                             </div>
                         </div>
 
@@ -197,19 +197,19 @@
                             <div class="flex flex-wrap gap-2.5">
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Sports</button>
+                                    data-selected="false" data-value="Sports">Thể thao</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Fitness & Gym</button>
+                                    data-selected="false" data-value="Fitness & Gym">Thể hình & Gym</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Running/Cycling</button>
+                                    data-selected="false" data-value="Running/Cycling">Chạy bộ/Đạp xe</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Yoga & Mindfulness</button>
+                                    data-selected="false" data-value="Yoga & Mindfulness">Yoga & Chánh niệm</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Outdoor</button>
+                                    data-selected="false" data-value="Outdoor">Ngoài trời</button>
                             </div>
                         </div>
 
@@ -222,19 +222,19 @@
                             <div class="flex flex-wrap gap-2.5">
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Tech</button>
+                                    data-selected="false" data-value="Tech">Công nghệ</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Business</button>
+                                    data-selected="false" data-value="Business">Kinh doanh</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Finance & Investing</button>
+                                    data-selected="false" data-value="Finance & Investing">Tài chính & Đầu tư</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Books</button>
+                                    data-selected="false" data-value="Books">Đọc sách</button>
                                 <button type="button"
                                     class="vibe-tag px-4 py-2 rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300 flex items-center gap-1.5"
-                                    data-selected="false">Cars & Vehicles</button>
+                                    data-selected="false" data-value="Cars & Vehicles">Xe cộ</button>
                             </div>
                         </div>
                     </div>
@@ -489,7 +489,7 @@
             tags.forEach(tag => {
                 tag.addEventListener('click', function () {
                     const isSelected = this.getAttribute('data-selected') === 'true';
-                    const tagText = this.innerText.trim();
+                    const tagText = this.getAttribute('data-value') || this.innerText.trim();
 
                     if (isSelected) {
                         // Bỏ chọn
