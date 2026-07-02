@@ -527,6 +527,25 @@
                 <p class="text-[10px] text-slate-300 mt-1">Hoàn thành chuyến đi đầu tiên để xem lịch sử</p>
             </div>
 
+            <!-- Stats Dashboard -->
+            <div id="sidebar-history-stats" class="w-full hidden mb-1 flex-col gap-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-[#6200EE]/5 rounded-2xl p-3 flex flex-col justify-center items-center border border-[#6200EE]/10 shadow-sm">
+                        <span class="text-[10px] font-bold text-[#6200EE] uppercase tracking-wider">Hoàn thành</span>
+                        <span id="history-stat-completed" class="text-2xl font-black text-[#6200EE] mt-1">0</span>
+                    </div>
+                    <div class="bg-red-500/5 rounded-2xl p-3 flex flex-col justify-center items-center border border-red-500/10 shadow-sm">
+                        <span class="text-[10px] font-bold text-red-600 uppercase tracking-wider">Đã hủy</span>
+                        <span id="history-stat-cancelled" class="text-2xl font-black text-red-600 mt-1">0</span>
+                    </div>
+                </div>
+                <!-- Spent for passenger only -->
+                <div id="history-stat-spent-container" class="hidden bg-emerald-500/5 rounded-2xl p-3 flex flex-col justify-center items-center border border-emerald-500/10 shadow-sm">
+                    <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Tổng chi phí</span>
+                    <span id="history-stat-spent" class="text-2xl font-black text-emerald-600 mt-1">0đ</span>
+                </div>
+            </div>
+
             <!-- Data List -->
             <div id="sidebar-history-list" class="w-full flex flex-col hidden">
                 <!-- JS will inject trips here -->

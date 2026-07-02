@@ -1734,7 +1734,18 @@
                                                         if(loadingContainer) loadingContainer.classList.add('hidden');
                                                         if(data.success && data.data && data.data.length > 0) {
                                                             let html = '';
+                                                            let completedCount = 0;
+                                                            let cancelledCount = 0;
+                                                            let totalSpent = 0;
+
                                                             data.data.forEach(trip => {
+                                                                if(trip.matchStatus === 'CANCELLED') {
+                                                                    cancelledCount++;
+                                                                } else if(trip.completionStatus === 'COMPLETED' || trip.matchStatus === 'MATCHED') {
+                                                                    completedCount++;
+                                                                    totalSpent += (trip.price || 0);
+                                                                }
+
                                                                 const isMotorbike = trip.vehicleType === 'MOTORBIKE';
                                                                 const typeIcon = isMotorbike ? 'two_wheeler' : 'directions_car';
                                                                 const typeBg = isMotorbike ? 'bg-orange-50 text-orange-500' : 'bg-blue-50 text-blue-500';
@@ -1784,6 +1795,26 @@
                                                                     </div>
                                                                 `;
                                                             });
+                                                            
+                                                            const statsContainer = document.getElementById('sidebar-history-stats');
+                                                            if(statsContainer) {
+                                                                document.getElementById('history-stat-completed').innerText = completedCount;
+                                                                document.getElementById('history-stat-cancelled').innerText = cancelledCount;
+                                                                
+                                                                const spentContainer = document.getElementById('history-stat-spent-container');
+                                                                if (currentUserRole === 'passenger') {
+                                                                    document.getElementById('history-stat-spent').innerText = new Intl.NumberFormat('vi-VN').format(totalSpent) + 'đ';
+                                                                    spentContainer.classList.remove('hidden');
+                                                                    spentContainer.classList.add('flex');
+                                                                } else {
+                                                                    spentContainer.classList.add('hidden');
+                                                                    spentContainer.classList.remove('flex');
+                                                                }
+                                                                
+                                                                statsContainer.classList.remove('hidden');
+                                                                statsContainer.classList.add('flex');
+                                                            }
+
                                                             if(listContainer) {
                                                                 listContainer.innerHTML = html;
                                                                 listContainer.classList.remove('hidden');
