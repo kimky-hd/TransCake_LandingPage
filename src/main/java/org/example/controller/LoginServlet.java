@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
             String displayUser = (user.getFullName() != null && !user.getFullName().trim().isEmpty()) ? user.getFullName() : "Người dùng mới";
             result.put("userName", displayUser);
             
-            // Check if user must reset password.
+            // Check if user must reset password..
             if ("REQUIRE_RESET".equals(user.getStatus())) {
                 result.put("needsPasswordReset", true);
                 result.put("message", "Đăng nhập thành công! Yêu cầu đổi mật khẩu.");
