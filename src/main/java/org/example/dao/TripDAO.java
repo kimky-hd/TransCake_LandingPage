@@ -812,6 +812,9 @@ public class TripDAO {
      * Lấy các chuyến đi đang PENDING do tài xế đăng, để hiển thị cho hành khách
      */
     public List<Trip> getPendingDriverPostedTrips() {
+        // Tự động hủy chuyến đã quá thời gian khởi hành trước khi trả về danh sách
+        cancelExpiredDriverTrips();
+        
         List<Trip> list = new ArrayList<>();
         // Query to get pending driver trips, join with users and driver_vehicles
         String sql = "SELECT t.*, u.full_name AS driver_name, u.phone_number AS driver_phone, dv.avatar_url AS driver_avatar " +
@@ -926,6 +929,37 @@ public class TripDAO {
             System.err.println("Lỗi cancelDriverPostedTrip: " + e.getMessage());
         }
         return false;
+    }
+
+    /**
+     * Kiểm tra xem tài xế có chuyến đi nào đang PENDING do mình đăng không
+     */
+    public boolean hasPendingDriverPostedTrip(int driverId) {
+        String sql = "SELECT 1 FROM trips WHERE driver_id = ? AND created_by_role = 'driver' AND match_status = 'PENDING' LIMIT 1";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, driverId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi hasPendingDriverPostedTrip: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Tự động hủy các chuyến đi do tài xế đăng đã quá thời gian khởi hành mà vẫn PENDING
+     */
+    public int cancelExpiredDriverTrips() {
+        String sql = "UPDATE trips SET match_status = 'CANCELLED', cancel_reason = 'Hết hạn' WHERE created_by_role = 'driver' AND match_status = 'PENDING' AND scheduled_time < NOW()";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Lỗi cancelExpiredDriverTrips: " + e.getMessage());
+        }
+        return 0;
     }
 }
 

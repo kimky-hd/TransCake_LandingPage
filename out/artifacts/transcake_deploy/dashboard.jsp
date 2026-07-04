@@ -1906,7 +1906,12 @@
                                                 if(view) {
                                                     view.classList.remove('opacity-0', 'translate-x-10', 'pointer-events-none');
                                                     view.classList.add('opacity-100', 'translate-x-0', 'pointer-events-auto');
-                                                    if (typeof loadDriverPostedTrips === 'function') loadDriverPostedTrips();
+                                                    const role = '${loggedInUser.role}';
+                                                    if (role === 'passenger') {
+                                                        if (typeof loadAvailableDriverTrips === 'function') loadAvailableDriverTrips();
+                                                    } else {
+                                                        if (typeof loadDriverPostedTrips === 'function') loadDriverPostedTrips();
+                                                    }
                                                 }
                                             };
 
@@ -4426,6 +4431,11 @@
                                     function loadAvailableDriverTrips() {
                                         const listContainer = document.getElementById('driver-trips-list');
                                         if (!listContainer) return;
+                                        
+                                        const titleEl = document.querySelector('#sidebar-driver-trips-view h3');
+                                        if (titleEl) {
+                                            titleEl.innerHTML = '<span class="hidden md:inline-block material-symbols-outlined text-[#FF6D00] align-middle mr-1">directions_car</span>Chuyến đi từ tài xế';
+                                        }
 
                                         fetch('${pageContext.request.contextPath}/api/driver/posted-trips?action=available')
                                             .then(response => response.json())
@@ -4445,13 +4455,16 @@
                                                         const div = document.createElement('div');
                                                         div.className = "bg-white border border-slate-200/60 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow relative group mb-4";
                                                         div.innerHTML = `
-                                                            <div class="flex items-center gap-3 mb-4">
-                                                                <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center shrink-0 text-[#FF6D00]">
-                                                                    <span class="material-symbols-outlined text-[20px]">person</span>
+                                                            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                                                                <div class="flex items-center gap-2">
+                                                                    <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-[#FF6D00]">
+                                                                        <span class="material-symbols-outlined text-[16px]">person</span>
+                                                                    </div>
+                                                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">\${trip.driverName || 'Tài xế'}</span>
                                                                 </div>
-                                                                <div>
-                                                                    <h5 class="font-bold text-slate-800 text-sm">\${trip.driverName || 'Tài xế'}</h5>
-                                                                    <p class="text-xs text-slate-500">Đã đăng chuyến</p>
+                                                                <div class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                                                                    <span class="material-symbols-outlined text-[14px] text-slate-400">schedule</span>
+                                                                    <span class="text-[11px] font-medium text-slate-500">Khởi hành: \${trip.scheduledTime ? new Date(trip.scheduledTime).toLocaleString('vi-VN') : '--'}</span>
                                                                 </div>
                                                             </div>
                                                             <div class="space-y-3 mb-5">
@@ -4488,7 +4501,7 @@
                                     }
 
                                     function bookDriverTrip(tripId) {
-                                        if (confirm("Bạn có chắc chắn muốn đặt chuyến xe này?")) {
+                                        const doBook = () => {
                                             fetch('${pageContext.request.contextPath}/api/passenger/book-driver-trip', {
                                                 method: 'POST',
                                                 headers: { 'Content-Type': 'application/json' },
@@ -4497,7 +4510,7 @@
                                             .then(response => response.json())
                                             .then(data => {
                                                 if (data.success) {
-                                                    if (window.showToast) showToast("Đặt chuyến thành công! V vui lòng chờ tài xế bắt đầu chuyến đi.", "success");
+                                                    if (window.showToast) showToast("Đặt chuyến thành công! Vui lòng chờ tài xế bắt đầu chuyến đi.", "success");
                                                     if (window.openDriverTripsView) window.openDriverTripsView(); // Đóng thanh hiện tại và mở view
                                                     if (typeof checkPassengerTripStatus === 'function') checkPassengerTripStatus();
                                                 } else {
@@ -4508,6 +4521,11 @@
                                                 console.error("Lỗi đặt chuyến xe tài xế:", err);
                                                 if (window.showToast) showToast("Có lỗi xảy ra khi đặt chuyến.", "error");
                                             });
+                                        };
+                                        if (window.showConfirmModal) {
+                                            window.showConfirmModal("Xác nhận đặt chuyến", "Bạn có chắc chắn muốn đặt chuyến xe này?", doBook);
+                                        } else {
+                                            if (confirm("Bạn có chắc chắn muốn đặt chuyến xe này?")) doBook();
                                         }
                                     }
                                     
@@ -4536,21 +4554,50 @@
                                                         return;
                                                     }
                                                     data.trips.forEach(trip => {
+                                                        const isMatched = trip.matchStatus === 'MATCHED';
+                                                        const isCancelled = trip.matchStatus === 'CANCELLED';
+                                                        const isPending = trip.matchStatus === 'PENDING';
+                                                        
+                                                        let badgeBg = 'bg-orange-100';
+                                                        let badgeText = 'text-[#FF6D00]';
+                                                        let badgeLabel = 'Đang chờ khách';
+                                                        let icon = 'directions_car';
+                                                        
+                                                        if (isMatched) {
+                                                            badgeBg = 'bg-green-100';
+                                                            badgeText = 'text-green-600';
+                                                            badgeLabel = 'Đã có khách đặt';
+                                                            icon = 'check_circle';
+                                                        } else if (isCancelled) {
+                                                            badgeBg = 'bg-slate-100';
+                                                            badgeText = 'text-slate-500';
+                                                            badgeLabel = 'Đã hủy';
+                                                            icon = 'cancel';
+                                                        }
+
                                                         const div = document.createElement('div');
                                                         div.className = "bg-white border border-slate-200/60 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow relative group mb-4";
                                                         div.innerHTML = `
                                                             <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                                                                 <div class="flex items-center gap-2">
-                                                                    <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-[#FF6D00]">
-                                                                        <span class="material-symbols-outlined text-[16px]">directions_car</span>
+                                                                    <div class="w-8 h-8 rounded-full ${badgeBg} flex items-center justify-center ${badgeText}">
+                                                                        <span class="material-symbols-outlined text-[16px]">${icon}</span>
                                                                     </div>
-                                                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Đang chờ khách</span>
+                                                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">${badgeLabel}</span>
                                                                 </div>
                                                                 <div class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded border border-slate-100">
-                                                                    <span class="material-symbols-outlined text-[14px] text-slate-400">event</span>
-                                                                    <span class="text-[11px] font-medium text-slate-500">\${new Date(trip.createdAt).toLocaleString('vi-VN')}</span>
+                                                                    <span class="material-symbols-outlined text-[14px] text-slate-400">schedule</span>
+                                                                    <span class="text-[11px] font-medium text-slate-500">Khởi hành: \${trip.scheduledTime ? new Date(trip.scheduledTime).toLocaleString('vi-VN') : '--'}</span>
                                                                 </div>
                                                             </div>
+                                                            
+                                                            \${isMatched && trip.passengerName ? `
+                                                            <div class="mb-3 px-3 py-2 bg-blue-50/50 border border-blue-100 rounded-lg flex items-center gap-2">
+                                                                <span class="material-symbols-outlined text-blue-500 text-lg">person</span>
+                                                                <span class="text-sm font-semibold text-blue-900">Khách: \${trip.passengerName}</span>
+                                                            </div>
+                                                            ` : ''}
+
                                                             <div class="space-y-3 mb-5">
                                                                 <div class="flex items-start gap-3">
                                                                     <div class="mt-0.5"><span class="material-symbols-outlined text-[18px] text-blue-500">my_location</span></div>
@@ -4562,12 +4609,21 @@
                                                                 </div>
                                                                 <div class="flex items-start gap-3">
                                                                     <div class="mt-0.5"><span class="material-symbols-outlined text-[18px] text-green-500">payments</span></div>
-                                                                    <div class="flex-1"><p class="text-xs text-slate-500 mb-0.5">Giá cước</p><p class="text-sm font-bold text-[#FF6D00]">\${new Intl.NumberFormat('vi-VN').format(trip.price)}đ</p></div>
+                                                                    <div class="flex-1"><p class="text-xs text-slate-500 mb-0.5">Giá cước</p><p class="text-sm font-bold text-[#FF6D00]">\${trip.price ? new Intl.NumberFormat('vi-VN').format(trip.price) + 'đ' : 'Thỏa thuận'}</p></div>
                                                                 </div>
                                                             </div>
+                                                            
+                                                            \${isPending ? `
                                                             <button onclick="cancelDriverPostedTrip(\${trip.id})" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl transition-colors shadow-sm border border-slate-200">
                                                                 Hủy đăng chuyến
                                                             </button>
+                                                            ` : ''}
+                                                            
+                                                            \${isMatched && trip.completionStatus === 'NOT_STARTED' ? `
+                                                            <button onclick="startDriverTrip(\${trip.id})" class="w-full bg-[#6200EE] hover:bg-[#5000C0] text-white font-bold py-3 rounded-xl transition-colors shadow-sm mb-2">
+                                                                Bắt đầu chuyến đi
+                                                            </button>
+                                                            ` : ''}
                                                         `;
                                                         listContainer.appendChild(div);
                                                     });
@@ -4579,7 +4635,7 @@
                                     }
 
                                     function cancelDriverPostedTrip(tripId) {
-                                        if (confirm("Bạn có chắc chắn muốn hủy chuyến đi đã đăng này? Hành động này không thể hoàn tác.")) {
+                                        const doCancel = () => {
                                             fetch('${pageContext.request.contextPath}/api/driver/cancel-posted-trip', {
                                                 method: 'POST',
                                                 headers: { 'Content-Type': 'application/json' },
@@ -4598,7 +4654,35 @@
                                                 console.error("Lỗi hủy chuyến đã đăng:", err);
                                                 if (window.showToast) showToast("Có lỗi xảy ra khi hủy chuyến.", "error");
                                             });
+                                        };
+                                        if (window.showConfirmModal) {
+                                            window.showConfirmModal("Xác nhận hủy chuyến", "Bạn có chắc chắn muốn hủy chuyến đi đã đăng này? Hành động này không thể hoàn tác.", doCancel);
+                                        } else {
+                                            if (confirm("Bạn có chắc chắn muốn hủy chuyến đi đã đăng này? Hành động này không thể hoàn tác.")) doCancel();
                                         }
+                                    }
+                                    
+                                    function startDriverTrip(tripId) {
+                                        fetch('${pageContext.request.contextPath}/api/driver/start-trip', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ tripId: tripId })
+                                        })
+                                        .then(res => res.json())
+                                        .then(data => {
+                                            if (data.success) {
+                                                showToast("Đã bắt đầu chuyến đi!", "success");
+                                                loadDriverPostedTrips();
+                                                if (typeof checkDriverTripStatus === 'function') checkDriverTripStatus();
+                                                if (window.closeDriverTripsView) window.closeDriverTripsView();
+                                            } else {
+                                                showToast(data.message || "Không thể bắt đầu chuyến đi.", "error");
+                                            }
+                                        })
+                                        .catch(err => {
+                                            console.error("Lỗi khi bắt đầu chuyến đi:", err);
+                                            showToast("Lỗi hệ thống", "error");
+                                        });
                                     }
                                     </script>
                                 </body>

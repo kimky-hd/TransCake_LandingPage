@@ -71,8 +71,7 @@ public class DriverPostTripServlet extends HttpServlet {
             }
 
             // Kiểm tra xem tài xế có chuyến nào đang PENDING không (chỉ cho phép 1 chuyến chờ khách)
-            List<Trip> currentPosted = tripDAO.getDriverPostedTrips(loggedInUser.getId());
-            boolean hasPending = currentPosted.stream().anyMatch(t -> "PENDING".equals(t.getMatchStatus()));
+            boolean hasPending = tripDAO.hasPendingDriverPostedTrip(loggedInUser.getId());
             if (hasPending) {
                 result.put("success", false);
                 result.put("message", "Bạn đang có một chuyến đi chưa có khách. Vui lòng chờ hoặc hủy chuyến cũ trước khi đăng chuyến mới.");
@@ -92,7 +91,16 @@ public class DriverPostTripServlet extends HttpServlet {
             trip.setTripType("PRE_BOOK"); // Các chuyến tài xế tự đăng mặc định là PRE_BOOK
             trip.setMatchStatus("PENDING");
             trip.setCompletionStatus("NOT_STARTED");
-            trip.setNoteForDriver((String) body.get("note"));
+            
+            String note = (String) body.get("note");
+            if (note != null && note.length() > 500) {
+                result.put("success", false);
+                result.put("message", "Ghi chú không được vượt quá 500 ký tự.");
+                response.getWriter().write(gson.toJson(result));
+                return;
+            }
+            trip.setNoteForDriver(note);
+            
             trip.setDistance(body.containsKey("distance") && body.get("distance") != null ? Double.valueOf(body.get("distance").toString()) : 0.0);
             
             // Xử lý giá tiền (nếu có)
@@ -113,6 +121,12 @@ public class DriverPostTripServlet extends HttpServlet {
                 try {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
                     LocalDateTime ldt = LocalDateTime.parse(scheduledTimeStr, formatter);
+                    if (ldt.isBefore(LocalDateTime.now())) {
+                        result.put("success", false);
+                        result.put("message", "Thời gian khởi hành phải ở tương lai.");
+                        response.getWriter().write(gson.toJson(result));
+                        return;
+                    }
                     trip.setScheduledTime(Timestamp.valueOf(ldt));
                 } catch (DateTimeParseException e) {
                     result.put("success", false);
