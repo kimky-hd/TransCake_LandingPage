@@ -647,37 +647,6 @@
                                         </div>
 
                                         <!-- Bottom Driver Trips Bar (For Passengers) -->
-                                        <div id="bottom-driver-trips-bar"
-                                            class="fixed inset-0 md:inset-auto md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white/95 md:bg-white/75 backdrop-blur-xl border-none md:border md:border-white/60 rounded-none md:rounded-3xl p-4 pt-10 md:p-6 pb-[100px] md:pb-safe transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto md:max-h-[80vh] md:min-h-[360px] shadow-none">
-
-                                            <!-- Handle for dragging/closing -->
-                                            <div class="hidden md:flex w-full justify-center mb-4 cursor-pointer shrink-0"
-                                                onclick="toggleBottomDriverTripsBar()">
-                                                <div class="w-16 h-1.5 bg-slate-300 rounded-full hover:bg-slate-400 transition-colors"></div>
-                                            </div>
-
-                                            <!-- Header & Close -->
-                                            <div class="flex justify-between items-center mb-6 shrink-0">
-                                                <div class="flex items-center gap-2">
-                                                    <button onclick="switchTab('nav-home')"
-                                                        class="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors mr-1">
-                                                        <span class="material-symbols-outlined text-lg">arrow_back</span>
-                                                    </button>
-                                                    <h3 class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
-                                                        <span class="hidden md:block material-symbols-outlined text-[#FF6D00]">directions_car</span>
-                                                        Chuyến đi từ tài xế
-                                                    </h3>
-                                                </div>
-                                            </div>
-
-                                            <div id="driver-trips-list" class="flex flex-col gap-4 overflow-y-auto panel-scroll pb-20 md:pb-0">
-                                                <div class="flex flex-col items-center justify-center py-12 text-slate-400">
-                                                    <span class="material-symbols-outlined animate-spin text-3xl mb-2">sync</span>
-                                                    <p class="text-xs font-semibold">Đang tìm chuyến xe...</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
                                         <!-- Bottom Blog Bar (Right of Dynamic Island) -->
                                         <div id="bottom-blog-bar"
                                             class="fixed inset-0 md:inset-auto md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white/95 md:bg-white/75 backdrop-blur-xl border-none md:border md:border-white/60 rounded-none md:rounded-3xl p-4 pt-10 md:p-6 pb-[100px] md:pb-safe transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto md:max-h-[80vh] md:min-h-[360px] shadow-none">
@@ -1732,6 +1701,14 @@
                                                     if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
                                                         toggleBottomBlogBar();
                                                     }
+                                                    const postTripBar = document.getElementById('bottom-post-trip-bar');
+                                                    if (postTripBar && !postTripBar.classList.contains('translate-y-[150%]')) {
+                                                        toggleBottomPostTripBar();
+                                                    }
+                                                    const driverTripsBar = document.getElementById('sidebar-driver-trips-view');
+                                                    if (driverTripsBar && !driverTripsBar.classList.contains('translate-x-10')) {
+                                                        if (window.closeDriverTripsView) window.closeDriverTripsView();
+                                                    }
                                                     resetProfileToHome();
                                                     setActiveTab('nav-home');
                                                 }
@@ -1740,14 +1717,31 @@
                                                     if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
                                                         toggleBottomBlogBar();
                                                     }
-                                                    if (searchBar && searchBar.classList.contains('translate-y-[150%]')) {
-                                                        toggleBottomSearchBar();
+                                                    if (typeof currentUserRole !== 'undefined' && currentUserRole === 'driver') {
+                                                        const postTripBar = document.getElementById('bottom-post-trip-bar');
+                                                        if (postTripBar && postTripBar.classList.contains('translate-y-[150%]')) {
+                                                            toggleBottomPostTripBar();
+                                                        } else {
+                                                            setActiveTab('nav-search');
+                                                        }
                                                     } else {
-                                                        setActiveTab('nav-search');
+                                                        if (searchBar && searchBar.classList.contains('translate-y-[150%]')) {
+                                                            toggleBottomSearchBar();
+                                                        } else {
+                                                            setActiveTab('nav-search');
+                                                        }
                                                     }
                                                 }
                                                 else if (tabId === 'nav-blog') {
                                                     resetProfileToHome();
+                                                    const postTripBar = document.getElementById('bottom-post-trip-bar');
+                                                    if (postTripBar && !postTripBar.classList.contains('translate-y-[150%]')) {
+                                                        toggleBottomPostTripBar();
+                                                    }
+                                                    const driverTripsBar = document.getElementById('sidebar-driver-trips-view');
+                                                    if (driverTripsBar && !driverTripsBar.classList.contains('translate-x-10')) {
+                                                        if (window.closeDriverTripsView) window.closeDriverTripsView();
+                                                    }
                                                     if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
                                                         toggleBottomSearchBar();
                                                     }
@@ -1758,6 +1752,14 @@
                                                     }
                                                 }
                                                 else if (tabId === 'nav-profile') {
+                                                    const postTripBar = document.getElementById('bottom-post-trip-bar');
+                                                    if (postTripBar && !postTripBar.classList.contains('translate-y-[150%]')) {
+                                                        toggleBottomPostTripBar();
+                                                    }
+                                                    const driverTripsBar = document.getElementById('sidebar-driver-trips-view');
+                                                    if (driverTripsBar && !driverTripsBar.classList.contains('translate-x-10')) {
+                                                        if (window.closeDriverTripsView) window.closeDriverTripsView();
+                                                    }
                                                     if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
                                                         toggleBottomSearchBar();
                                                     }
@@ -1796,10 +1798,9 @@
                                                             postTripBar.classList.add('translate-y-[150%]', 'opacity-0');
                                                             postTripBar.classList.remove('translate-y-0', 'opacity-100');
                                                         }
-                                                        const driverTripsBar = document.getElementById('bottom-driver-trips-bar');
-                                                        if (driverTripsBar && !driverTripsBar.classList.contains('translate-y-[150%]')) {
-                                                            driverTripsBar.classList.add('translate-y-[150%]', 'opacity-0');
-                                                            driverTripsBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        const driverTripsBar = document.getElementById('sidebar-driver-trips-view');
+                                                        if (driverTripsBar && !driverTripsBar.classList.contains('translate-x-10')) {
+                                                            if (window.closeDriverTripsView) window.closeDriverTripsView();
                                                         }
 
                                                         searchBar.classList.remove('translate-y-[150%]');
@@ -1874,10 +1875,9 @@
                                                             blogBar.classList.add('translate-y-[150%]', 'opacity-0');
                                                             blogBar.classList.remove('translate-y-0', 'opacity-100');
                                                         }
-                                                        const driverTripsBar = document.getElementById('bottom-driver-trips-bar');
-                                                        if (driverTripsBar && !driverTripsBar.classList.contains('translate-y-[150%]')) {
-                                                            driverTripsBar.classList.add('translate-y-[150%]', 'opacity-0');
-                                                            driverTripsBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        const driverTripsBar = document.getElementById('sidebar-driver-trips-view');
+                                                        if (driverTripsBar && !driverTripsBar.classList.contains('translate-x-10')) {
+                                                            if (window.closeDriverTripsView) window.closeDriverTripsView();
                                                         }
 
                                                         postTripBar.classList.remove('translate-y-[150%]', 'opacity-0');
@@ -1901,45 +1901,22 @@
                                                 }
                                             }
 
-                                            function toggleBottomDriverTripsBar() {
-                                                const searchBar = document.getElementById('bottom-search-bar');
-                                                const blogBar = document.getElementById('bottom-blog-bar');
-                                                const postTripBar = document.getElementById('bottom-post-trip-bar');
-                                                const driverTripsBar = document.getElementById('bottom-driver-trips-bar');
-
-                                                if (driverTripsBar) {
-                                                    if (driverTripsBar.classList.contains('translate-y-[150%]')) {
-                                                        // Close others
-                                                        if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
-                                                            searchBar.classList.add('translate-y-[150%]', 'opacity-0');
-                                                            searchBar.classList.remove('translate-y-0', 'opacity-100');
-                                                        }
-                                                        if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
-                                                            blogBar.classList.add('translate-y-[150%]', 'opacity-0');
-                                                            blogBar.classList.remove('translate-y-0', 'opacity-100');
-                                                        }
-                                                        if (postTripBar && !postTripBar.classList.contains('translate-y-[150%]')) {
-                                                            postTripBar.classList.add('translate-y-[150%]', 'opacity-0');
-                                                            postTripBar.classList.remove('translate-y-0', 'opacity-100');
-                                                        }
-
-                                                        driverTripsBar.classList.remove('translate-y-[150%]', 'opacity-0');
-                                                        driverTripsBar.classList.add('translate-y-0', 'opacity-100');
-                                                        document.getElementById('dynamic-island')?.classList.add('mobile-hidden');
-                                                        
-                                                        // Load the trips when opening
-                                                        if ("${loggedInUser.role}" === "driver") {
-                                                            if (typeof loadDriverPostedTrips === 'function') loadDriverPostedTrips();
-                                                        } else {
-                                                            if (typeof loadAvailableDriverTrips === 'function') loadAvailableDriverTrips();
-                                                        }
-                                                    } else {
-                                                        driverTripsBar.classList.add('translate-y-[150%]', 'opacity-0');
-                                                        driverTripsBar.classList.remove('translate-y-0', 'opacity-100');
-                                                        document.getElementById('dynamic-island')?.classList.remove('mobile-hidden');
-                                                    }
+                                            window.openDriverTripsView = function() {
+                                                const view = document.getElementById('sidebar-driver-trips-view');
+                                                if(view) {
+                                                    view.classList.remove('opacity-0', 'translate-x-10', 'pointer-events-none');
+                                                    view.classList.add('opacity-100', 'translate-x-0', 'pointer-events-auto');
+                                                    if (typeof loadDriverPostedTrips === 'function') loadDriverPostedTrips();
                                                 }
-                                            }
+                                            };
+
+                                            window.closeDriverTripsView = function() {
+                                                const view = document.getElementById('sidebar-driver-trips-view');
+                                                if(view) {
+                                                    view.classList.add('opacity-0', 'translate-x-10', 'pointer-events-none');
+                                                    view.classList.remove('opacity-100', 'translate-x-0', 'pointer-events-auto');
+                                                }
+                                            };
 
                                             // OLD proposalsInterval removed
                                             let tripPanelOpen = false; // Reliable state flag
@@ -2973,10 +2950,9 @@
                                                             postTripBar.classList.add('translate-y-[150%]', 'opacity-0');
                                                             postTripBar.classList.remove('translate-y-0', 'opacity-100');
                                                         }
-                                                        const driverTripsBar = document.getElementById('bottom-driver-trips-bar');
-                                                        if (driverTripsBar && !driverTripsBar.classList.contains('translate-y-[150%]')) {
-                                                            driverTripsBar.classList.add('translate-y-[150%]', 'opacity-0');
-                                                            driverTripsBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        const driverTripsBar = document.getElementById('sidebar-driver-trips-view');
+                                                        if (driverTripsBar && !driverTripsBar.classList.contains('translate-x-10')) {
+                                                            if (window.closeDriverTripsView) window.closeDriverTripsView();
                                                         }
 
                                                         blogBar.classList.remove('translate-y-[150%]', 'opacity-0');
@@ -3436,6 +3412,9 @@
                                                         // Update nav active color
                                                         navHome.classList.replace('text-[#FF6D00]', 'text-[#6200EE]');
                                                         navHome.classList.replace('bg-orange-50', 'bg-purple-50');
+                                                        
+                                                        const navSearchIcon = document.querySelector('#nav-search span');
+                                                        if (navSearchIcon) navSearchIcon.textContent = 'search';
 
                                                     } else {
                                                         startDriverStatusPolling();
@@ -3469,6 +3448,9 @@
                                                         // Update nav active color
                                                         navHome.classList.replace('text-[#6200EE]', 'text-[#FF6D00]');
                                                         navHome.classList.replace('bg-purple-50', 'bg-orange-50');
+                                                        
+                                                        const navSearchIcon = document.querySelector('#nav-search span');
+                                                        if (navSearchIcon) navSearchIcon.textContent = 'add_circle';
                                                     }
                                                 }
 
@@ -4516,7 +4498,7 @@
                                             .then(data => {
                                                 if (data.success) {
                                                     if (window.showToast) showToast("Đặt chuyến thành công! V vui lòng chờ tài xế bắt đầu chuyến đi.", "success");
-                                                    toggleBottomDriverTripsBar(); // Đóng thanh hiển thị
+                                                    if (window.openDriverTripsView) window.openDriverTripsView(); // Đóng thanh hiện tại và mở view
                                                     if (typeof checkPassengerTripStatus === 'function') checkPassengerTripStatus();
                                                 } else {
                                                     if (window.showToast) showToast(data.message || "Lỗi đặt chuyến.", "error");
@@ -4534,9 +4516,9 @@
                                         if (!listContainer) return;
                                         
                                         // Update header title
-                                        const titleEl = document.querySelector('#bottom-driver-trips-bar h3');
+                                        const titleEl = document.querySelector('#sidebar-driver-trips-view h3');
                                         if (titleEl) {
-                                            titleEl.innerHTML = '<span class="hidden md:block material-symbols-outlined text-[#FF6D00]">list_alt</span>Chuyến đi đã đăng';
+                                            titleEl.innerHTML = '<span class="hidden md:inline-block material-symbols-outlined text-[#FF6D00] align-middle mr-1">list_alt</span>Chuyến đi đã đăng';
                                         }
 
                                         fetch('${pageContext.request.contextPath}/api/driver/posted-trips')

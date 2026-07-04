@@ -109,7 +109,7 @@
             </div>
 
             <!-- Driver Posted Trips -->
-            <div onclick="toggleBottomDriverTripsBar()"
+            <div onclick="window.openDriverTripsView && window.openDriverTripsView()"
                 class="bg-white/70 hover:bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm cursor-pointer transition-colors flex items-center gap-4 group">
                 <div
                     class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-[#FF6D00] relative group-hover:scale-110 transition-transform">
@@ -241,7 +241,7 @@
                     </div>
 
                     <!-- Driver Posted Trips Management -->
-                    <div onclick="toggleBottomDriverTripsBar()"
+                    <div onclick="window.openDriverTripsView && window.openDriverTripsView()"
                         class="bg-white/70 hover:bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm cursor-pointer transition-colors flex flex-col justify-between min-h-[100px] group mb-3">
                         <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500 transition-colors mb-2">list_alt</span>
                         <div>
@@ -573,6 +573,29 @@
             <!-- Data List -->
             <div id="sidebar-history-list" class="w-full flex flex-col hidden">
                 <!-- JS will inject trips here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- STATE 6: DRIVER TRIPS VIEW -->
+    <div id="sidebar-driver-trips-view"
+        class="transition-all duration-300 opacity-0 translate-x-10 absolute inset-0 pointer-events-none flex flex-col bg-gradient-to-b from-slate-50 to-white z-40">
+        
+        <!-- Fixed Header -->
+        <div class="flex-none w-full flex items-center p-4 pb-2 bg-slate-50/90 backdrop-blur-md z-30 border-b border-transparent">
+            <button id="btn-back-from-driver-trips" onclick="window.closeDriverTripsView && window.closeDriverTripsView()"
+                class="w-9 h-9 rounded-full bg-white hover:bg-slate-100 border border-slate-200 flex items-center justify-center shadow-sm transition-all cursor-pointer relative z-50">
+                <span class="material-symbols-outlined text-slate-600 text-lg">arrow_back</span>
+            </button>
+            <h3 class="flex-1 text-center font-bold text-base text-slate-800 -ml-9">Chuyến đi đã đăng</h3>
+        </div>
+
+        <div class="flex-1 overflow-y-auto panel-scroll w-full p-4 pt-2 flex flex-col gap-4 pb-24">
+            <div id="driver-trips-list" class="flex flex-col gap-4">
+                <div class="flex flex-col items-center justify-center py-12 text-slate-400">
+                    <span class="material-symbols-outlined animate-spin text-3xl mb-2">sync</span>
+                    <p class="text-xs font-semibold">Đang tìm chuyến xe...</p>
+                </div>
             </div>
         </div>
     </div>
