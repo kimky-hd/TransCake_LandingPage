@@ -8,6 +8,15 @@
         <title>Transcake - Next Gen Social Ride Hailing</title>
         <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/img/transcake-04.png" />
 
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8RKH2S4PC"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-P8RKH2S4PC');
+        </script>
+
         <!-- Tailwind CSS -->
         <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
         <script src="${pageContext.request.contextPath}/assets/js/tailwind-config.js"></script>
