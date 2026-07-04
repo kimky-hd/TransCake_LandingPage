@@ -22,6 +22,8 @@ public class Trip {
     private Timestamp createdAt;
     private String vehicleType; // 'MOTORBIKE', 'CAR'
     private String cancelReason;
+    private String createdByRole; // 'passenger', 'driver'
+    private Timestamp completedAt;
 
     // Passenger details (joined from users table)
     private String passengerName;
@@ -212,6 +214,22 @@ public class Trip {
 
     public void setCancelReason(String cancelReason) {
         this.cancelReason = cancelReason;
+    }
+
+    public String getCreatedByRole() {
+        return createdByRole;
+    }
+
+    public void setCreatedByRole(String createdByRole) {
+        this.createdByRole = createdByRole;
+    }
+
+    public Timestamp getCompletedAt() {
+        return completedAt;
+    }
+
+    public void setCompletedAt(Timestamp completedAt) {
+        this.completedAt = completedAt;
     }
 }
 

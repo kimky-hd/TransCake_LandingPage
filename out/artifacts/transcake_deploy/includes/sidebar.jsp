@@ -108,6 +108,20 @@
                     class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-colors">chevron_right</span>
             </div>
 
+            <!-- Driver Posted Trips -->
+            <div onclick="toggleBottomDriverTripsBar()"
+                class="bg-white/70 hover:bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm cursor-pointer transition-colors flex items-center gap-4 group">
+                <div
+                    class="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-[#FF6D00] relative group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined">directions_car</span>
+                </div>
+                <div class="flex-1">
+                    <h4 class="font-bold text-slate-800 text-sm">Chuyến đi ghép từ tài xế</h4>
+                    <p class="text-xs text-slate-500 font-medium">Tìm chuyến xe tiện chuyến, giá rẻ</p>
+                </div>
+                <span
+                    class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 transition-colors">chevron_right</span>
+            </div>
 
         </div>
     </div>
@@ -177,7 +191,7 @@
             </c:when>
             <c:otherwise>
                 <!-- Primary CTA -->
-                <button
+                <button onclick="toggleBottomPostTripBar()"
                     class="w-full bg-gradient-to-r from-[#FF6D00] to-[#FF9100] hover:from-[#E66200] hover:to-[#E68200] text-white font-bold text-lg py-4 rounded-2xl shadow-[0_10px_25px_rgba(255,109,0,0.35)] transition-all transform hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(255,109,0,0.4)] mb-8 flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined">add_circle</span>
                     Đăng chuyến đi
@@ -223,6 +237,16 @@
                                     class="text-[13px] font-black text-emerald-600 mt-0.5">
                                     Xem chi tiết →</p>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Driver Posted Trips Management -->
+                    <div onclick="toggleBottomDriverTripsBar()"
+                        class="bg-white/70 hover:bg-white p-4 rounded-xl border border-slate-200/60 shadow-sm cursor-pointer transition-colors flex flex-col justify-between min-h-[100px] group mb-3">
+                        <span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500 transition-colors mb-2">list_alt</span>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-xs">Quản lý chuyến đi đã đăng</h4>
+                            <p class="text-[13px] font-medium text-slate-500 mt-0.5">Xem các chuyến đang chờ khách</p>
                         </div>
                     </div>
 

@@ -767,5 +767,165 @@ public class TripDAO {
         }
         return earnings;
     }
+    
+    /**
+     * Thêm chuyến đi do tài xế chủ động đăng
+     */
+    public int insertDriverTrip(Trip trip) {
+        String sql = "INSERT INTO trips (driver_id, pickup_location, pickup_lat, pickup_lng, dropoff_location, dropoff_lat, dropoff_lng, trip_type, scheduled_time, match_status, completion_status, note_for_driver, price, distance, vehicle_type, created_by_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'driver')";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            
+            ps.setInt(1, trip.getDriverId());
+            ps.setString(2, trip.getPickupLocation());
+            if (trip.getPickupLat() != null) ps.setDouble(3, trip.getPickupLat()); else ps.setNull(3, java.sql.Types.DECIMAL);
+            if (trip.getPickupLng() != null) ps.setDouble(4, trip.getPickupLng()); else ps.setNull(4, java.sql.Types.DECIMAL);
+            ps.setString(5, trip.getDropoffLocation());
+            if (trip.getDropoffLat() != null) ps.setDouble(6, trip.getDropoffLat()); else ps.setNull(6, java.sql.Types.DECIMAL);
+            if (trip.getDropoffLng() != null) ps.setDouble(7, trip.getDropoffLng()); else ps.setNull(7, java.sql.Types.DECIMAL);
+            ps.setString(8, trip.getTripType());
+            ps.setTimestamp(9, trip.getScheduledTime());
+            ps.setString(10, trip.getMatchStatus());
+            ps.setString(11, trip.getCompletionStatus());
+            ps.setString(12, trip.getNoteForDriver()); // Act as note for passenger in this context
+            if (trip.getPrice() != null) ps.setDouble(13, trip.getPrice()); else ps.setNull(13, java.sql.Types.DECIMAL);
+            if (trip.getDistance() != null) ps.setDouble(14, trip.getDistance()); else ps.setNull(14, java.sql.Types.DECIMAL);
+            ps.setString(15, trip.getVehicleType());
+            
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int generatedId = rs.getInt(1);
+                        trip.setId(generatedId);
+                        return generatedId;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi insertDriverTrip: " + e.getMessage());
+        }
+        return -1;
+    }
+
+    /**
+     * Lấy các chuyến đi đang PENDING do tài xế đăng, để hiển thị cho hành khách
+     */
+    public List<Trip> getPendingDriverPostedTrips() {
+        List<Trip> list = new ArrayList<>();
+        // Query to get pending driver trips, join with users and driver_vehicles
+        String sql = "SELECT t.*, u.full_name AS driver_name, u.phone_number AS driver_phone, dv.avatar_url AS driver_avatar " +
+                     "FROM trips t " +
+                     "JOIN users u ON t.driver_id = u.id " +
+                     "JOIN driver_vehicles dv ON t.driver_id = dv.user_id " +
+                     "WHERE t.created_by_role = 'driver' AND t.match_status = 'PENDING' AND t.passenger_id IS NULL " +
+                     "ORDER BY t.scheduled_time ASC";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                Trip trip = new Trip();
+                trip.setId(rs.getInt("id"));
+                trip.setDriverId(rs.getInt("driver_id"));
+                trip.setPickupLocation(rs.getString("pickup_location"));
+                if (rs.getObject("pickup_lat") != null) trip.setPickupLat(rs.getDouble("pickup_lat"));
+                if (rs.getObject("pickup_lng") != null) trip.setPickupLng(rs.getDouble("pickup_lng"));
+                trip.setDropoffLocation(rs.getString("dropoff_location"));
+                if (rs.getObject("dropoff_lat") != null) trip.setDropoffLat(rs.getDouble("dropoff_lat"));
+                if (rs.getObject("dropoff_lng") != null) trip.setDropoffLng(rs.getDouble("dropoff_lng"));
+                trip.setTripType(rs.getString("trip_type"));
+                trip.setScheduledTime(rs.getTimestamp("scheduled_time"));
+                trip.setMatchStatus(rs.getString("match_status"));
+                trip.setCompletionStatus(rs.getString("completion_status"));
+                trip.setNoteForDriver(rs.getString("note_for_driver"));
+                if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
+                if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
+                trip.setVehicleType(rs.getString("vehicle_type"));
+                trip.setCreatedAt(rs.getTimestamp("created_at"));
+                trip.setCreatedByRole(rs.getString("created_by_role"));
+                
+                // Use existing fields to map driver info
+                trip.setPassengerName(rs.getString("driver_name"));
+                trip.setPassengerPhone(rs.getString("driver_phone"));
+                trip.setPassengerAvatar(rs.getString("driver_avatar"));
+                
+                list.add(trip);
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi getPendingDriverPostedTrips: " + e.getMessage());
+        }
+        return list;
+    }
+
+    /**
+     * Lấy các chuyến đi do tài xế đăng (cho màn hình quản lý của tài xế)
+     */
+    public List<Trip> getDriverPostedTrips(int driverId) {
+        List<Trip> list = new ArrayList<>();
+        String sql = "SELECT t.*, u.full_name AS passenger_name " +
+                     "FROM trips t " +
+                     "LEFT JOIN users u ON t.passenger_id = u.id " +
+                     "WHERE t.driver_id = ? AND t.created_by_role = 'driver' " +
+                     "ORDER BY t.id DESC";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, driverId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Trip trip = new Trip();
+                    trip.setId(rs.getInt("id"));
+                    trip.setDriverId(rs.getInt("driver_id"));
+                    if (rs.getObject("passenger_id") != null) trip.setPassengerId(rs.getInt("passenger_id"));
+                    trip.setPickupLocation(rs.getString("pickup_location"));
+                    trip.setDropoffLocation(rs.getString("dropoff_location"));
+                    trip.setTripType(rs.getString("trip_type"));
+                    trip.setScheduledTime(rs.getTimestamp("scheduled_time"));
+                    trip.setMatchStatus(rs.getString("match_status"));
+                    trip.setCompletionStatus(rs.getString("completion_status"));
+                    if (rs.getObject("price") != null) trip.setPrice(rs.getDouble("price"));
+                    if (rs.getObject("distance") != null) trip.setDistance(rs.getDouble("distance"));
+                    trip.setCreatedAt(rs.getTimestamp("created_at"));
+                    trip.setPassengerName(rs.getString("passenger_name"));
+                    list.add(trip);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi getDriverPostedTrips: " + e.getMessage());
+        }
+        return list;
+    }
+
+    /**
+     * Hành khách đặt chuyến xe do tài xế đăng
+     */
+    public boolean bookDriverTrip(int tripId, int passengerId) {
+        String sql = "UPDATE trips SET passenger_id = ?, match_status = 'MATCHED' WHERE id = ? AND passenger_id IS NULL AND created_by_role = 'driver' AND match_status = 'PENDING'";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, passengerId);
+            ps.setInt(2, tripId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi bookDriverTrip: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Hủy chuyến đi do tài xế đăng
+     */
+    public boolean cancelDriverPostedTrip(int tripId, int driverId) {
+        String sql = "UPDATE trips SET match_status = 'CANCELLED' WHERE id = ? AND driver_id = ? AND created_by_role = 'driver' AND match_status = 'PENDING'";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, tripId);
+            ps.setInt(2, driverId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi cancelDriverPostedTrip: " + e.getMessage());
+        }
+        return false;
+    }
 }
 

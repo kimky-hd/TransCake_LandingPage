@@ -108,4 +108,25 @@ public class TripWebSocketEndpoint {
             }
         }
     }
+    public static void broadcastToAllPassengers(String action, JsonObject payload) {
+        JsonObject message = new JsonObject();
+        message.addProperty("action", action);
+        if (payload != null) {
+            message.add("payload", payload);
+        }
+        String messageStr = gson.toJson(message);
+
+        for (Map.Entry<String, Session> entry : activeSessions.entrySet()) {
+            if (entry.getKey().startsWith("passenger:")) {
+                Session session = entry.getValue();
+                if (session.isOpen()) {
+                    try {
+                        session.getBasicRemote().sendText(messageStr);
+                    } catch (IOException e) {
+                        LOGGER.log(Level.SEVERE, "Failed to broadcast to " + entry.getKey(), e);
+                    }
+                }
+            }
+        }
+    }
 }

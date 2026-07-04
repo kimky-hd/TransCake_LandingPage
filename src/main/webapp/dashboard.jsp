@@ -512,6 +512,172 @@
                                         </div>
 
 
+                                        <!-- Bottom Post Trip Bar (Driver) -->
+                                        <div id="bottom-post-trip-bar"
+                                            class="fixed bottom-[88px] left-0 right-0 md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white md:bg-white/75 backdrop-blur-xl border-t border-slate-200 md:border-white/60 md:rounded-3xl p-3 md:p-6 transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto max-h-[52vh] md:min-h-[360px] shadow-[0_-8px_30px_rgba(0,0,0,0.12)] md:shadow-none pb-safe">
+
+                                            <!-- Handle for dragging/closing -->
+                                            <div class="w-full flex justify-center mb-2 md:mb-4 cursor-pointer shrink-0"
+                                                onclick="toggleBottomPostTripBar()">
+                                                <div
+                                                    class="w-10 h-1 md:w-16 md:h-1.5 bg-slate-300 rounded-full hover:bg-slate-400 transition-colors">
+                                                </div>
+                                            </div>
+
+                                            <!-- Header & Close -->
+                                            <div class="flex justify-between items-center mb-3 md:mb-6 shrink-0">
+                                                <h3 class="text-base md:text-2xl font-bold text-slate-800 tracking-tight">Đăng chuyến đi mới</h3>
+                                                <button onclick="toggleBottomPostTripBar()"
+                                                    class="w-7 h-7 md:w-10 md:h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
+                                                    <span class="material-symbols-outlined text-[16px] md:text-[20px]">close</span>
+                                                </button>
+                                            </div>
+
+                                            <!-- Split Layout: Left (Form) | Right (Results) -->
+                                            <div class="flex flex-col lg:flex-row gap-3 md:gap-8 flex-1 min-h-0 overflow-y-auto panel-scroll pr-1 pb-4">
+
+                                                <!-- LEFT: Form -->
+                                                <form id="driver-post-trip-form"
+                                                    action="${pageContext.request.contextPath}/api/driver/post-trip"
+                                                    method="POST" onsubmit="handleDriverPostTrip(event)"
+                                                    class="w-full lg:w-[45%] flex flex-col gap-2 md:gap-5 md:border-r border-slate-200/60 md:pr-4">
+
+                                                    <!-- Inputs for Pickup & Dropoff -->
+                                                    <div class="relative bg-slate-50/50 p-2 md:p-4 rounded-xl md:rounded-2xl border border-slate-200/60 shadow-sm flex flex-col gap-2 md:gap-4 shrink-0">
+                                                        
+                                                        <div class="absolute left-[20px] md:left-[28px] top-[30px] md:top-[40px] bottom-[30px] md:bottom-[40px] w-0.5 border-l-2 border-dashed border-slate-300 z-0"></div>
+
+                                                        <!-- Pickup -->
+                                                        <div class="relative flex items-center z-20 gap-2 md:gap-3">
+                                                            <div class="w-3 h-3 md:w-4 md:h-4 rounded-full bg-[#FF6D00] border-2 border-white shadow-sm shrink-0"></div>
+                                                            <div class="flex-1 min-w-0 relative">
+                                                                <input type="text" id="driver-pickup-input" name="pickupLocation"
+                                                                    placeholder="Điểm đón khách"
+                                                                    class="w-full bg-transparent border-b border-slate-200 py-1.5 md:py-2 text-sm md:text-base text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#FF6D00] transition-colors truncate"
+                                                                    required autocomplete="off">
+                                                                <input type="hidden" id="driver-pickup-lat" name="pickupLat">
+                                                                <input type="hidden" id="driver-pickup-lng" name="pickupLng">
+                                                                <div id="driver-pickup-suggestions" class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto"></div>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Dropoff -->
+                                                        <div class="relative flex items-center z-10 gap-2 md:gap-3">
+                                                            <div class="w-3 h-3 md:w-4 md:h-4 bg-[#6200EE] border-2 border-white shadow-sm shrink-0"></div>
+                                                            <div class="flex-1 min-w-0 relative">
+                                                                <input type="text" id="driver-dropoff-input" name="dropoffLocation"
+                                                                    placeholder="Điểm trả khách"
+                                                                    class="w-full bg-transparent border-b border-slate-200 py-1.5 md:py-2 text-sm md:text-base text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#FF6D00] transition-colors truncate"
+                                                                    required autocomplete="off">
+                                                                <input type="hidden" id="driver-dropoff-lat" name="dropoffLat">
+                                                                <input type="hidden" id="driver-dropoff-lng" name="dropoffLng">
+                                                                <div id="driver-dropoff-suggestions" class="absolute left-0 right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- Time and Date Selector -->
+                                                    <div class="bg-slate-50/50 p-2 md:p-4 rounded-xl md:rounded-2xl border border-slate-200/60 shadow-sm flex flex-col gap-2 md:gap-3 shrink-0">
+                                                        <div class="flex items-center gap-2 mb-1">
+                                                            <span class="material-symbols-outlined text-[#FF6D00] text-lg md:text-xl">schedule</span>
+                                                            <span class="text-xs md:text-sm font-semibold text-slate-700">Thời gian khởi hành</span>
+                                                        </div>
+                                                        <input type="datetime-local" id="driver-scheduled-time" name="scheduledTime"
+                                                            class="w-full bg-white border border-slate-200 rounded-lg py-2 px-3 text-sm text-slate-800 focus:outline-none focus:border-[#FF6D00] focus:ring-1 focus:ring-[#FF6D00] transition-colors shadow-sm" required>
+                                                    </div>
+                                                    
+                                                    <!-- Price and Notes Input -->
+                                                    <div class="bg-slate-50/50 p-2 md:p-4 rounded-xl md:rounded-2xl border border-slate-200/60 shadow-sm flex flex-col gap-2 md:gap-3 shrink-0">
+                                                        <div class="flex items-center gap-2 mb-1">
+                                                            <span class="material-symbols-outlined text-[#FF6D00] text-lg md:text-xl">payments</span>
+                                                            <span class="text-xs md:text-sm font-semibold text-slate-700">Giá cước mong muốn</span>
+                                                        </div>
+                                                        <input type="number" id="driver-price-input" name="price"
+                                                            placeholder="VD: 50000 (để trống nếu tự thỏa thuận)"
+                                                            class="w-full bg-white border border-slate-200 rounded-lg py-2 px-3 text-sm text-slate-800 focus:outline-none focus:border-[#FF6D00] focus:ring-1 focus:ring-[#FF6D00] transition-colors shadow-sm mb-2">
+                                                            
+                                                        <div class="flex items-center gap-2 mb-1">
+                                                            <span class="material-symbols-outlined text-[#FF6D00] text-lg md:text-xl">edit_note</span>
+                                                            <span class="text-xs md:text-sm font-semibold text-slate-700">Ghi chú cho hành khách</span>
+                                                        </div>
+                                                        <textarea id="driver-note-input" name="note" rows="2"
+                                                            placeholder="VD: Xe trống 3 chỗ..."
+                                                            class="w-full bg-white border border-slate-200 rounded-lg py-2 px-3 text-sm text-slate-800 focus:outline-none focus:border-[#FF6D00] focus:ring-1 focus:ring-[#FF6D00] transition-colors shadow-sm resize-none"></textarea>
+                                                    </div>
+
+                                                </form>
+
+                                                <!-- RIGHT: Preview & Actions -->
+                                                <div class="flex-1 flex flex-col justify-between shrink-0 h-full mt-2 lg:mt-0 lg:pl-4">
+
+                                                    <!-- Route preview box -->
+                                                    <div id="driver-route-preview-box" class="hidden">
+                                                        <div class="bg-[#FFF5ED] border border-orange-200 rounded-xl p-3 md:p-4 mb-4 relative overflow-hidden group">
+                                                            <div class="absolute -right-4 -top-4 w-16 h-16 bg-[#FF6D00] opacity-10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+                                                            <div class="absolute -right-2 -bottom-2 w-10 h-10 bg-[#FF9100] opacity-10 rounded-full group-hover:scale-150 transition-transform duration-500 delay-100"></div>
+                                                            
+                                                            <div class="flex items-center gap-3 relative z-10">
+                                                                <div class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full shadow-sm flex items-center justify-center text-[#FF6D00] shrink-0">
+                                                                    <span class="material-symbols-outlined text-xl md:text-2xl">route</span>
+                                                                </div>
+                                                                <div>
+                                                                    <div class="flex items-center gap-1.5">
+                                                                        <span class="material-symbols-outlined text-orange-600 text-[14px]">straighten</span>
+                                                                        <span class="text-xs md:text-sm font-medium text-orange-800" id="driver-distance-value">-- km</span>
+                                                                    </div>
+                                                                    <div class="flex items-center gap-1.5 mt-0.5">
+                                                                        <span class="material-symbols-outlined text-orange-600 text-[14px]">schedule</span>
+                                                                        <span class="text-xs md:text-sm font-medium text-orange-800" id="driver-duration-value">-- phút</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" id="driver-trip-distance" name="distance" form="driver-post-trip-form">
+                                                    </div>
+
+                                                    <div class="mt-auto pt-2">
+                                                        <button type="submit" form="driver-post-trip-form" id="btn-submit-post-trip"
+                                                            class="w-full bg-gradient-to-r from-[#FF6D00] to-[#FF9100] hover:from-[#E66200] hover:to-[#E68200] text-white font-bold text-base md:text-lg py-3 md:py-4 rounded-xl md:rounded-2xl shadow-[0_8px_20px_rgba(255,109,0,0.3)] transition-all transform hover:-translate-y-0.5 hover:shadow-[0_12px_25px_rgba(255,109,0,0.4)] flex items-center justify-center gap-2">
+                                                            Đăng chuyến đi
+                                                            <span class="material-symbols-outlined">send</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Bottom Driver Trips Bar (For Passengers) -->
+                                        <div id="bottom-driver-trips-bar"
+                                            class="fixed inset-0 md:inset-auto md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white/95 md:bg-white/75 backdrop-blur-xl border-none md:border md:border-white/60 rounded-none md:rounded-3xl p-4 pt-10 md:p-6 pb-[100px] md:pb-safe transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto md:max-h-[80vh] md:min-h-[360px] shadow-none">
+
+                                            <!-- Handle for dragging/closing -->
+                                            <div class="hidden md:flex w-full justify-center mb-4 cursor-pointer shrink-0"
+                                                onclick="toggleBottomDriverTripsBar()">
+                                                <div class="w-16 h-1.5 bg-slate-300 rounded-full hover:bg-slate-400 transition-colors"></div>
+                                            </div>
+
+                                            <!-- Header & Close -->
+                                            <div class="flex justify-between items-center mb-6 shrink-0">
+                                                <div class="flex items-center gap-2">
+                                                    <button onclick="switchTab('nav-home')"
+                                                        class="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors mr-1">
+                                                        <span class="material-symbols-outlined text-lg">arrow_back</span>
+                                                    </button>
+                                                    <h3 class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-2">
+                                                        <span class="hidden md:block material-symbols-outlined text-[#FF6D00]">directions_car</span>
+                                                        Chuyến đi từ tài xế
+                                                    </h3>
+                                                </div>
+                                            </div>
+
+                                            <div id="driver-trips-list" class="flex flex-col gap-4 overflow-y-auto panel-scroll pb-20 md:pb-0">
+                                                <div class="flex flex-col items-center justify-center py-12 text-slate-400">
+                                                    <span class="material-symbols-outlined animate-spin text-3xl mb-2">sync</span>
+                                                    <p class="text-xs font-semibold">Đang tìm chuyến xe...</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <!-- Bottom Blog Bar (Right of Dynamic Island) -->
                                         <div id="bottom-blog-bar"
                                             class="fixed inset-0 md:inset-auto md:bottom-8 md:left-[420px] md:right-8 z-30 bg-white/95 md:bg-white/75 backdrop-blur-xl border-none md:border md:border-white/60 rounded-none md:rounded-3xl p-4 pt-10 md:p-6 pb-[100px] md:pb-safe transition-all duration-500 transform translate-y-[150%] opacity-0 flex flex-col w-auto md:max-h-[80vh] md:min-h-[360px] shadow-none">
@@ -787,6 +953,20 @@
                                                             if (window.showToast) showToast("Tài xế đã hủy nhận chuyến của bạn. Hệ thống đang tìm tài xế khác...", "warning");
                                                             if (typeof checkPassengerTripStatus === "function") checkPassengerTripStatus();
                                                             if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
+                                                        }
+                                                        } else if (msg.action === "NEW_DRIVER_TRIP" || msg.action === "DRIVER_TRIP_CANCELLED") {
+                                                        if (currentRole === "passenger") {
+                                                            if (typeof loadAvailableDriverTrips === "function") loadAvailableDriverTrips();
+                                                            if (msg.action === "NEW_DRIVER_TRIP" && window.showToast) {
+                                                                showToast("Có chuyến đi mới từ tài xế!", "success");
+                                                            }
+                                                        }
+                                                    } else if (msg.action === "PASSENGER_BOOKED") {
+                                                        if (currentRole === "driver") {
+                                                            if (window.showToast) showToast("Khách hàng " + (msg.payload?.passengerName || '') + " đã đặt chuyến xe của bạn!", "success");
+                                                            if (typeof checkDriverTripStatus === "function") checkDriverTripStatus();
+                                                            if (typeof fetchUpcomingTrips === "function") fetchUpcomingTrips();
+                                                            if (typeof loadDriverPostedTrips === "function") loadDriverPostedTrips();
                                                         }
                                                     }
                                                 };
@@ -1601,6 +1781,7 @@
                                             function toggleBottomSearchBar() {
                                                 const searchBar = document.getElementById('bottom-search-bar');
                                                 const blogBar = document.getElementById('bottom-blog-bar');
+                                                const postTripBar = document.getElementById('bottom-post-trip-bar');
 
                                                 if (searchBar) {
                                                     if (searchBar.classList.contains('translate-y-[150%]')) {
@@ -1609,6 +1790,16 @@
                                                         if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
                                                             blogBar.classList.add('translate-y-[150%]', 'opacity-0');
                                                             blogBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        }
+                                                        // Close post trip bar if open
+                                                        if (postTripBar && !postTripBar.classList.contains('translate-y-[150%]')) {
+                                                            postTripBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                            postTripBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        }
+                                                        const driverTripsBar = document.getElementById('bottom-driver-trips-bar');
+                                                        if (driverTripsBar && !driverTripsBar.classList.contains('translate-y-[150%]')) {
+                                                            driverTripsBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                            driverTripsBar.classList.remove('translate-y-0', 'opacity-100');
                                                         }
 
                                                         searchBar.classList.remove('translate-y-[150%]');
@@ -1663,6 +1854,89 @@
                                                             prebookPopup.classList.remove('translate-x-[150%]', 'opacity-0');
                                                             prebookPopup.classList.add('translate-x-0', 'opacity-100');
                                                         }
+                                                    }
+                                                }
+                                            }
+
+                                            function toggleBottomPostTripBar() {
+                                                const searchBar = document.getElementById('bottom-search-bar');
+                                                const blogBar = document.getElementById('bottom-blog-bar');
+                                                const postTripBar = document.getElementById('bottom-post-trip-bar');
+
+                                                if (postTripBar) {
+                                                    if (postTripBar.classList.contains('translate-y-[150%]')) {
+                                                        // Close others
+                                                        if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
+                                                            searchBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                            searchBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        }
+                                                        if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
+                                                            blogBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                            blogBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        }
+                                                        const driverTripsBar = document.getElementById('bottom-driver-trips-bar');
+                                                        if (driverTripsBar && !driverTripsBar.classList.contains('translate-y-[150%]')) {
+                                                            driverTripsBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                            driverTripsBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        }
+
+                                                        postTripBar.classList.remove('translate-y-[150%]', 'opacity-0');
+                                                        postTripBar.classList.add('translate-y-0', 'opacity-100');
+                                                        document.getElementById('dynamic-island')?.classList.add('mobile-hidden');
+                                                        
+                                                        if (typeof initVietMapIfNeeded === 'function') {
+                                                            initVietMapIfNeeded();
+                                                        }
+                                                        document.getElementById('map')?.classList.remove('map-fullscreen');
+                                                        document.getElementById('btn-locate-me')?.classList.remove('hidden');
+                                                        document.getElementById('btn-locate-me')?.classList.add('flex');
+                                                    } else {
+                                                        postTripBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                        postTripBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        document.getElementById('dynamic-island')?.classList.remove('mobile-hidden');
+                                                        document.getElementById('map')?.classList.add('map-fullscreen');
+                                                        document.getElementById('btn-locate-me')?.classList.add('hidden');
+                                                        document.getElementById('btn-locate-me')?.classList.remove('flex');
+                                                    }
+                                                }
+                                            }
+
+                                            function toggleBottomDriverTripsBar() {
+                                                const searchBar = document.getElementById('bottom-search-bar');
+                                                const blogBar = document.getElementById('bottom-blog-bar');
+                                                const postTripBar = document.getElementById('bottom-post-trip-bar');
+                                                const driverTripsBar = document.getElementById('bottom-driver-trips-bar');
+
+                                                if (driverTripsBar) {
+                                                    if (driverTripsBar.classList.contains('translate-y-[150%]')) {
+                                                        // Close others
+                                                        if (searchBar && !searchBar.classList.contains('translate-y-[150%]')) {
+                                                            searchBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                            searchBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        }
+                                                        if (blogBar && !blogBar.classList.contains('translate-y-[150%]')) {
+                                                            blogBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                            blogBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        }
+                                                        if (postTripBar && !postTripBar.classList.contains('translate-y-[150%]')) {
+                                                            postTripBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                            postTripBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        }
+
+                                                        driverTripsBar.classList.remove('translate-y-[150%]', 'opacity-0');
+                                                        driverTripsBar.classList.add('translate-y-0', 'opacity-100');
+                                                        document.getElementById('dynamic-island')?.classList.add('mobile-hidden');
+                                                        
+                                                        // Load the trips when opening
+                                                        if ("${loggedInUser.role}" === "driver") {
+                                                            if (typeof loadDriverPostedTrips === 'function') loadDriverPostedTrips();
+                                                        } else {
+                                                            if (typeof loadAvailableDriverTrips === 'function') loadAvailableDriverTrips();
+                                                        }
+                                                    } else {
+                                                        driverTripsBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                        driverTripsBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        document.getElementById('dynamic-island')?.classList.remove('mobile-hidden');
                                                     }
                                                 }
                                             }
@@ -2694,6 +2968,16 @@
                                                             searchBar.classList.add('translate-y-[150%]', 'opacity-0');
                                                             searchBar.classList.remove('translate-y-0', 'opacity-100');
                                                         }
+                                                        const postTripBar = document.getElementById('bottom-post-trip-bar');
+                                                        if (postTripBar && !postTripBar.classList.contains('translate-y-[150%]')) {
+                                                            postTripBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                            postTripBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        }
+                                                        const driverTripsBar = document.getElementById('bottom-driver-trips-bar');
+                                                        if (driverTripsBar && !driverTripsBar.classList.contains('translate-y-[150%]')) {
+                                                            driverTripsBar.classList.add('translate-y-[150%]', 'opacity-0');
+                                                            driverTripsBar.classList.remove('translate-y-0', 'opacity-100');
+                                                        }
 
                                                         blogBar.classList.remove('translate-y-[150%]', 'opacity-0');
                                                         blogBar.classList.add('translate-y-0', 'opacity-100');
@@ -3610,6 +3894,12 @@
                                                         } else if (inputId === 'dropoff-input') {
                                                             document.getElementById('dropoff-lat').value = '';
                                                             document.getElementById('dropoff-lng').value = '';
+                                                        } else if (inputId === 'driver-pickup-input') {
+                                                            document.getElementById('driver-pickup-lat').value = '';
+                                                            document.getElementById('driver-pickup-lng').value = '';
+                                                        } else if (inputId === 'driver-dropoff-input') {
+                                                            document.getElementById('driver-dropoff-lat').value = '';
+                                                            document.getElementById('driver-dropoff-lng').value = '';
                                                         }
 
                                                         if (!query || query.length < 2) {
@@ -3665,6 +3955,12 @@
                                                                                                 } else if (inputId === 'dropoff-input') {
                                                                                                     document.getElementById('dropoff-lat').value = lat;
                                                                                                     document.getElementById('dropoff-lng').value = lng;
+                                                                                                } else if (inputId === 'driver-pickup-input') {
+                                                                                                    document.getElementById('driver-pickup-lat').value = lat;
+                                                                                                    document.getElementById('driver-pickup-lng').value = lng;
+                                                                                                } else if (inputId === 'driver-dropoff-input') {
+                                                                                                    document.getElementById('driver-dropoff-lat').value = lat;
+                                                                                                    document.getElementById('driver-dropoff-lng').value = lng;
                                                                                                 }
 
                                                                                                 // Bay đến vị trí
@@ -3710,8 +4006,12 @@
                                                                                                 if (isPrebook) window.markerPreBook = marker;
                                                                                                 else window.markerOnDemand = marker;
 
-                                                                                                // Nếu cả 2 điểm đã được chọn, gọi hàm tính giá
-                                                                                                calculateRouteAndPrice();
+                                                                                                // Nếu cả 2 điểm đã được chọn, gọi hàm tính giá/tuyến đường
+                                                                                                if (inputId.startsWith('driver-')) {
+                                                                                                    if (typeof calculateDriverRoute === 'function') calculateDriverRoute();
+                                                                                                } else {
+                                                                                                    calculateRouteAndPrice();
+                                                                                                }
                                                                                             }
                                                                                         })
                                                                                         .catch(err => console.error("Place API error:", err));
@@ -3826,7 +4126,155 @@
                                                 document.addEventListener('DOMContentLoaded', function () {
                                                     setupAutocomplete('pickup-input', 'pickup-suggestions');
                                                     setupAutocomplete('dropoff-input', 'dropoff-suggestions');
+                                                    setupAutocomplete('driver-pickup-input', 'driver-pickup-suggestions');
+                                                    setupAutocomplete('driver-dropoff-input', 'driver-dropoff-suggestions');
                                                 });
+                                                
+                                                function calculateDriverRoute() {
+                                                    const pLat = document.getElementById('driver-pickup-lat').value;
+                                                    const pLng = document.getElementById('driver-pickup-lng').value;
+                                                    const dLat = document.getElementById('driver-dropoff-lat').value;
+                                                    const dLng = document.getElementById('driver-dropoff-lng').value;
+
+                                                    if (pLat && pLng && dLat && dLng) {
+                                                        const routeBox = document.getElementById('driver-route-preview-box');
+                                                        routeBox.classList.remove('hidden');
+                                                        document.getElementById('driver-distance-value').textContent = "Đang quét tuyến đường...";
+                                                        document.getElementById('driver-duration-value').textContent = "";
+
+                                                        const contextPath = '${pageContext.request.contextPath}';
+                                                        const vehicleType = document.querySelector('input[name="vehicleType"]:checked') ? document.querySelector('input[name="vehicleType"]:checked').value : 'MOTORBIKE';
+                                                        const tripType = 'PRE_BOOK'; // Always PRE_BOOK for driver posts
+                                                        const routeUrl = `\${contextPath}/api/price-estimate?pLat=\${pLat}&pLng=\${pLng}&dLat=\${dLat}&dLng=\${dLng}&vehicleType=\${vehicleType}&tripType=\${tripType}`;
+
+                                                        fetch(routeUrl)
+                                                            .then(res => res.json())
+                                                            .then(data => {
+                                                                if (data.success) {
+                                                                    const distanceKm = data.distanceKm;
+                                                                    const durationMins = data.durationMins;
+
+                                                                    // Hiển thị
+                                                                    document.getElementById('driver-distance-value').textContent = `\${distanceKm} km`;
+                                                                    document.getElementById('driver-duration-value').textContent = `~\${durationMins} phút`;
+
+                                                                    // Lưu vào hidden input
+                                                                    document.getElementById('driver-trip-distance').value = distanceKm;
+
+                                                                    // Vẽ đường đi trên bản đồ
+                                                                    const routeId = 'route-driver-post';
+                                                                    
+                                                                    if (data.points) {
+                                                                        if (map.getSource(routeId)) {
+                                                                            map.getSource(routeId).setData(data.points);
+                                                                        } else {
+                                                                            map.addSource(routeId, {
+                                                                                'type': 'geojson',
+                                                                                'data': data.points
+                                                                            });
+                                                                            map.addLayer({
+                                                                                'id': routeId,
+                                                                                'type': 'line',
+                                                                                'source': routeId,
+                                                                                'layout': {
+                                                                                    'line-join': 'round',
+                                                                                    'line-cap': 'round'
+                                                                                },
+                                                                                'paint': {
+                                                                                    'line-color': '#FF6D00', // Prebook color
+                                                                                    'line-width': 6,
+                                                                                    'line-opacity': 0.8
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                        
+                                                                        // Fit bounds
+                                                                        if (data.bbox) {
+                                                                            map.fitBounds([
+                                                                                [data.bbox[0], data.bbox[1]],
+                                                                                [data.bbox[2], data.bbox[3]]
+                                                                            ], {
+                                                                                padding: 50,
+                                                                                duration: 1000
+                                                                            });
+                                                                        }
+                                                                    }
+                                                                } else {
+                                                                    document.getElementById('driver-distance-value').textContent = "Không tìm thấy đường";
+                                                                }
+                                                            })
+                                                            .catch(err => {
+                                                                console.error("Routing error:", err);
+                                                                document.getElementById('driver-distance-value').textContent = "Lỗi tính toán";
+                                                                document.getElementById('driver-duration-value').textContent = "";
+                                                            });
+                                                    }
+                                                }
+
+                                                function handleDriverPostTrip(event) {
+                                                    event.preventDefault();
+                                                    const form = document.getElementById('driver-post-trip-form');
+                                                    const btnSubmit = document.getElementById('btn-submit-post-trip');
+                                                    
+                                                    const pLat = document.getElementById('driver-pickup-lat').value;
+                                                    const pLng = document.getElementById('driver-pickup-lng').value;
+                                                    const dLat = document.getElementById('driver-dropoff-lat').value;
+                                                    const dLng = document.getElementById('driver-dropoff-lng').value;
+                                                    
+                                                    if (!pLat || !pLng || !dLat || !dLng) {
+                                                        showToast("Vui lòng chọn Điểm đón và Điểm trả từ danh sách gợi ý.", "error");
+                                                        return;
+                                                    }
+                                                    
+                                                    // Collect data
+                                                    const formData = new FormData(form);
+                                                    const data = Object.fromEntries(formData.entries());
+                                                    
+                                                    // Validate time
+                                                    if (!data.scheduledTime) {
+                                                        showToast("Vui lòng chọn thời gian khởi hành.", "error");
+                                                        return;
+                                                    }
+                                                    const scheduledDate = new Date(data.scheduledTime);
+                                                    if (scheduledDate <= new Date()) {
+                                                        showToast("Thời gian khởi hành phải ở tương lai.", "error");
+                                                        return;
+                                                    }
+
+                                                    btnSubmit.disabled = true;
+                                                    btnSubmit.innerHTML = `<span class="material-symbols-outlined animate-spin">refresh</span> Đang đăng...`;
+                                                    
+                                                    fetch(form.action, {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify(data)
+                                                    })
+                                                    .then(res => res.json())
+                                                    .then(resData => {
+                                                        if (resData.success) {
+                                                            showToast(resData.message, "success");
+                                                            toggleBottomPostTripBar();
+                                                            form.reset();
+                                                            document.getElementById('driver-route-preview-box').classList.add('hidden');
+                                                            
+                                                            // Refresh available trips list or driver's posted trips list
+                                                            if (typeof loadDriverPostedTrips === 'function') {
+                                                                loadDriverPostedTrips();
+                                                            }
+                                                        } else {
+                                                            showToast(resData.message, "error");
+                                                        }
+                                                    })
+                                                    .catch(err => {
+                                                        console.error(err);
+                                                        showToast("Lỗi hệ thống", "error");
+                                                    })
+                                                    .finally(() => {
+                                                        btnSubmit.disabled = false;
+                                                        btnSubmit.innerHTML = `Đăng chuyến đi <span class="material-symbols-outlined">send</span>`;
+                                                    });
+                                                }
+                                                
                                             </script>
                                             <!-- Toast Notification Utility -->
                                             <script
@@ -3992,6 +4440,183 @@
                                             modal.classList.remove('flex');
                                             modal.classList.add('hidden');
                                         }, 300);
+                                    }
+                                    function loadAvailableDriverTrips() {
+                                        const listContainer = document.getElementById('driver-trips-list');
+                                        if (!listContainer) return;
+
+                                        fetch('${pageContext.request.contextPath}/api/driver/posted-trips?action=available')
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success && data.trips) {
+                                                    listContainer.innerHTML = '';
+                                                    if (data.trips.length === 0) {
+                                                        listContainer.innerHTML = `
+                                                            <div class="flex flex-col items-center justify-center py-12 text-slate-400">
+                                                                <span class="material-symbols-outlined text-4xl mb-3 opacity-50">directions_car</span>
+                                                                <p class="text-sm font-medium">Hiện chưa có chuyến đi nào từ tài xế.</p>
+                                                            </div>
+                                                        `;
+                                                        return;
+                                                    }
+                                                    data.trips.forEach(trip => {
+                                                        const div = document.createElement('div');
+                                                        div.className = "bg-white border border-slate-200/60 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow relative group mb-4";
+                                                        div.innerHTML = `
+                                                            <div class="flex items-center gap-3 mb-4">
+                                                                <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center shrink-0 text-[#FF6D00]">
+                                                                    <span class="material-symbols-outlined text-[20px]">person</span>
+                                                                </div>
+                                                                <div>
+                                                                    <h5 class="font-bold text-slate-800 text-sm">\${trip.driverName || 'Tài xế'}</h5>
+                                                                    <p class="text-xs text-slate-500">Đã đăng chuyến</p>
+                                                                </div>
+                                                            </div>
+                                                            <div class="space-y-3 mb-5">
+                                                                <div class="flex items-start gap-3">
+                                                                    <div class="mt-0.5"><span class="material-symbols-outlined text-[18px] text-blue-500">my_location</span></div>
+                                                                    <div class="flex-1"><p class="text-xs text-slate-500 mb-0.5">Điểm đón</p><p class="text-sm font-semibold text-slate-800">\${trip.pickupLocation}</p></div>
+                                                                </div>
+                                                                <div class="flex items-start gap-3">
+                                                                    <div class="mt-0.5"><span class="material-symbols-outlined text-[18px] text-red-500">location_on</span></div>
+                                                                    <div class="flex-1"><p class="text-xs text-slate-500 mb-0.5">Điểm đến</p><p class="text-sm font-semibold text-slate-800">\${trip.dropoffLocation}</p></div>
+                                                                </div>
+                                                                <div class="flex items-start gap-3">
+                                                                    <div class="mt-0.5"><span class="material-symbols-outlined text-[18px] text-green-500">payments</span></div>
+                                                                    <div class="flex-1"><p class="text-xs text-slate-500 mb-0.5">Giá cước</p><p class="text-sm font-bold text-[#FF6D00]">\${trip.price ? new Intl.NumberFormat('vi-VN').format(trip.price) + 'đ' : 'Thỏa thuận'}</p></div>
+                                                                </div>
+                                                            </div>
+                                                            <button onclick="bookDriverTrip(\${trip.id})" class="w-full bg-[#FF6D00] hover:bg-[#E66200] text-white font-bold py-3 rounded-xl transition-colors shadow-sm">
+                                                                Đặt xe ngay
+                                                            </button>
+                                                        `;
+                                                        listContainer.appendChild(div);
+                                                    });
+                                                }
+                                            })
+                                            .catch(err => {
+                                                console.error("Lỗi lấy danh sách chuyến xe tài xế:", err);
+                                                listContainer.innerHTML = `
+                                                    <div class="flex flex-col items-center justify-center py-12 text-slate-400">
+                                                        <span class="material-symbols-outlined text-3xl mb-2 text-red-400">error</span>
+                                                        <p class="text-sm font-medium text-red-500">Lỗi kết nối. Vui lòng thử lại.</p>
+                                                    </div>
+                                                `;
+                                            });
+                                    }
+
+                                    function bookDriverTrip(tripId) {
+                                        if (confirm("Bạn có chắc chắn muốn đặt chuyến xe này?")) {
+                                            fetch('${pageContext.request.contextPath}/api/passenger/book-driver-trip', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ tripId: tripId })
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    if (window.showToast) showToast("Đặt chuyến thành công! V vui lòng chờ tài xế bắt đầu chuyến đi.", "success");
+                                                    toggleBottomDriverTripsBar(); // Đóng thanh hiển thị
+                                                    if (typeof checkPassengerTripStatus === 'function') checkPassengerTripStatus();
+                                                } else {
+                                                    if (window.showToast) showToast(data.message || "Lỗi đặt chuyến.", "error");
+                                                }
+                                            })
+                                            .catch(err => {
+                                                console.error("Lỗi đặt chuyến xe tài xế:", err);
+                                                if (window.showToast) showToast("Có lỗi xảy ra khi đặt chuyến.", "error");
+                                            });
+                                        }
+                                    }
+                                    
+                                    function loadDriverPostedTrips() {
+                                        const listContainer = document.getElementById('driver-trips-list');
+                                        if (!listContainer) return;
+                                        
+                                        // Update header title
+                                        const titleEl = document.querySelector('#bottom-driver-trips-bar h3');
+                                        if (titleEl) {
+                                            titleEl.innerHTML = '<span class="hidden md:block material-symbols-outlined text-[#FF6D00]">list_alt</span>Chuyến đi đã đăng';
+                                        }
+
+                                        fetch('${pageContext.request.contextPath}/api/driver/posted-trips')
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success && data.trips) {
+                                                    listContainer.innerHTML = '';
+                                                    if (data.trips.length === 0) {
+                                                        listContainer.innerHTML = `
+                                                            <div class="flex flex-col items-center justify-center py-12 text-slate-400">
+                                                                <span class="material-symbols-outlined text-4xl mb-3 opacity-50">list_alt</span>
+                                                                <p class="text-sm font-medium">Bạn chưa đăng chuyến đi nào đang chờ khách.</p>
+                                                            </div>
+                                                        `;
+                                                        return;
+                                                    }
+                                                    data.trips.forEach(trip => {
+                                                        const div = document.createElement('div');
+                                                        div.className = "bg-white border border-slate-200/60 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow relative group mb-4";
+                                                        div.innerHTML = `
+                                                            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                                                                <div class="flex items-center gap-2">
+                                                                    <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-[#FF6D00]">
+                                                                        <span class="material-symbols-outlined text-[16px]">directions_car</span>
+                                                                    </div>
+                                                                    <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Đang chờ khách</span>
+                                                                </div>
+                                                                <div class="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded border border-slate-100">
+                                                                    <span class="material-symbols-outlined text-[14px] text-slate-400">event</span>
+                                                                    <span class="text-[11px] font-medium text-slate-500">\${new Date(trip.createdAt).toLocaleString('vi-VN')}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="space-y-3 mb-5">
+                                                                <div class="flex items-start gap-3">
+                                                                    <div class="mt-0.5"><span class="material-symbols-outlined text-[18px] text-blue-500">my_location</span></div>
+                                                                    <div class="flex-1"><p class="text-xs text-slate-500 mb-0.5">Điểm đón</p><p class="text-sm font-semibold text-slate-800">\${trip.pickupLocation}</p></div>
+                                                                </div>
+                                                                <div class="flex items-start gap-3">
+                                                                    <div class="mt-0.5"><span class="material-symbols-outlined text-[18px] text-red-500">location_on</span></div>
+                                                                    <div class="flex-1"><p class="text-xs text-slate-500 mb-0.5">Điểm đến</p><p class="text-sm font-semibold text-slate-800">\${trip.dropoffLocation}</p></div>
+                                                                </div>
+                                                                <div class="flex items-start gap-3">
+                                                                    <div class="mt-0.5"><span class="material-symbols-outlined text-[18px] text-green-500">payments</span></div>
+                                                                    <div class="flex-1"><p class="text-xs text-slate-500 mb-0.5">Giá cước</p><p class="text-sm font-bold text-[#FF6D00]">\${new Intl.NumberFormat('vi-VN').format(trip.price)}đ</p></div>
+                                                                </div>
+                                                            </div>
+                                                            <button onclick="cancelDriverPostedTrip(\${trip.id})" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl transition-colors shadow-sm border border-slate-200">
+                                                                Hủy đăng chuyến
+                                                            </button>
+                                                        `;
+                                                        listContainer.appendChild(div);
+                                                    });
+                                                }
+                                            })
+                                            .catch(err => {
+                                                console.error("Lỗi lấy danh sách chuyến đã đăng:", err);
+                                            });
+                                    }
+
+                                    function cancelDriverPostedTrip(tripId) {
+                                        if (confirm("Bạn có chắc chắn muốn hủy chuyến đi đã đăng này? Hành động này không thể hoàn tác.")) {
+                                            fetch('${pageContext.request.contextPath}/api/driver/cancel-posted-trip', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ tripId: tripId })
+                                            })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    if (window.showToast) showToast(data.message, "success");
+                                                    loadDriverPostedTrips(); // Reload list
+                                                } else {
+                                                    if (window.showToast) showToast(data.message || "Lỗi hủy chuyến.", "error");
+                                                }
+                                            })
+                                            .catch(err => {
+                                                console.error("Lỗi hủy chuyến đã đăng:", err);
+                                                if (window.showToast) showToast("Có lỗi xảy ra khi hủy chuyến.", "error");
+                                            });
+                                        }
                                     }
                                     </script>
                                 </body>
