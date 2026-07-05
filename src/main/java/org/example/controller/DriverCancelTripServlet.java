@@ -33,6 +33,7 @@ public class DriverCancelTripServlet extends HttpServlet {
             return;
         }
 
+
         User loggedInUser = (User) session.getAttribute("loggedInUser");
         if (!"driver".equals(loggedInUser.getRole())) {
             result.put("success", false);
