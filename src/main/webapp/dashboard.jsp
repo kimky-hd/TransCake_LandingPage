@@ -15,12 +15,12 @@
                                         href="${pageContext.request.contextPath}/img/transcake-04.png" />
 
                                     <!-- Google tag (gtag.js) -->
-                                    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P8RKH2S4PC"></script>
+                                    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P0RKHZ54PC"></script>
                                     <script>
                                         window.dataLayer = window.dataLayer || [];
                                         function gtag(){dataLayer.push(arguments);}
                                         gtag('js', new Date());
-                                        gtag('config', 'G-P8RKH2S4PC');
+                                        gtag('config', 'G-P0RKHZ54PC');
                                     </script>
 
                                     <!-- Tailwind CSS -->
