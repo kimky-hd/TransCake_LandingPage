@@ -10,9 +10,9 @@ public class RunSQL {
             Connection c = DBContext.getConnection();
             Statement s = c.createStatement();
             
-            ResultSet rs = s.executeQuery("SELECT id, trip_type FROM trips ORDER BY id DESC LIMIT 5");
+            ResultSet rs = s.executeQuery("DESCRIBE users");
             while (rs.next()) {
-                System.out.println("Trip #" + rs.getInt("id") + " | trip_type=" + rs.getString("trip_type"));
+                System.out.println(rs.getString("Field") + " | " + rs.getString("Type") + " | Null: " + rs.getString("Null") + " | Key: " + rs.getString("Key") + " | Default: " + rs.getString("Default") + " | Extra: " + rs.getString("Extra"));
             }
             rs.close();
             

@@ -341,4 +341,34 @@ public class EmailService {
                 + "</div>";
         sendEmailInBackground(recipientEmail, subject, htmlContent);
     }
+
+    // --- 7. Mời đi chơi (Timeline bí mật) ---
+    public static void sendTimelineEmail(String recipientEmail) {
+        String subject = "Điều bí mật dành riêng cho Khánh ✨💌";
+        String htmlContent = "<div style=\"font-family: 'Arial', sans-serif; background-color: #FFF5F7; padding: 30px; text-align: center;\">"
+                + "    <div style=\"max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(210, 94, 120, 0.15); border: 1px solid #FFC2D1;\">"
+                + "        <div style=\"background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); padding: 30px; color: #D25E78;\">"
+                + "            <h1 style=\"margin: 0; font-size: 28px;\">Hẹn hò sinh nhật nha! 🎂</h1>"
+                + "        </div>"
+                + "        <div style=\"padding: 30px; color: #5A4A4A; line-height: 1.8; text-align: left;\">"
+                + "            <p style=\"font-size: 16px;\">Chào em,</p>"
+                + "            <p style=\"font-size: 16px;\">Anh rất vui vì em đã đồng ý tham gia hành trình nhỏ này. Đây là timeline bí mật của chúng mình nhé:</p>"
+                + "            "
+                + "            <div style=\"background: #FFF0F3; border-radius: 12px; padding: 20px; margin: 25px 0; border-left: 5px solid #FF9A9E;\">"
+                + "                <h3 style=\"color: #D25E78; margin-top: 0;\">🗓 Ngày 09/07/2026</h3>"
+                + "                <ul style=\"list-style-type: none; padding-left: 0; margin-bottom: 0;\">"
+                + "                    <li style=\"margin-bottom: 10px;\"><strong>07:30</strong> - Anh qua đón em nha 🛵</li>"
+                + "                    <li style=\"margin-bottom: 10px;\"><strong>08:00</strong> - Bí mật 1: Thưởng thức một chút buổi sáng thanh bình ☕️</li>"
+                + "                    <li style=\"margin-bottom: 10px;\"><strong>09:30</strong> - Bí mật 2: Trải nghiệm nho nhỏ cùng nhau 🎨</li>"
+                + "                    <li style=\"margin-bottom: 0;\"><strong>11:30</strong> - Bí mật 3: Món quà bất ngờ nhất 🎁</li>"
+                + "                </ul>"
+                + "            </div>"
+                + "            "
+                + "            <p style=\"font-size: 16px;\"><strong>👗 Dresscode nhỏ xinh:</strong> Em hãy chọn một bộ váy/áo màu <strong>trắng</strong> hoặc <strong>hồng nhạt</strong> thật xinh xắn nha (bất cứ bộ nào em thấy thoải mái nhất).</p>"
+                + "            <p style=\"font-size: 16px;\">Hẹn gặp em vào ngày hôm đó! ❤️</p>"
+                + "        </div>"
+                + "    </div>"
+                + "</div>";
+        sendEmailInBackground(recipientEmail, subject, htmlContent);
+    }
 }

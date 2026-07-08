@@ -232,4 +232,35 @@ public class UserDAO {
         }
         return drivers;
     }
+
+    public boolean saveTimelineEmail(String email) {
+        String checkSql = "SELECT id FROM users WHERE email = ?";
+        try (Connection conn = DBContext.getConnection();
+             PreparedStatement checkPs = conn.prepareStatement(checkSql)) {
+            
+            checkPs.setString(1, email);
+            ResultSet rs = checkPs.executeQuery();
+            
+            if (rs.next()) {
+                // Email đã tồn tại -> Chỉ update trạng thái
+                String updateSql = "UPDATE users SET status = 'WAITING_TIMELINE' WHERE email = ?";
+                try (PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
+                    updatePs.setString(1, email);
+                    return updatePs.executeUpdate() > 0;
+                }
+            } else {
+                // Email chưa tồn tại -> Insert mới
+                String dummyPhone = "TL_" + System.currentTimeMillis();
+                String insertSql = "INSERT INTO users (email, phone_number, full_name, status, password_hash) VALUES (?, ?, 'Timeline Guest', 'WAITING_TIMELINE', 'NO_PASSWORD')";
+                try (PreparedStatement insertPs = conn.prepareStatement(insertSql)) {
+                    insertPs.setString(1, email);
+                    insertPs.setString(2, dummyPhone);
+                    return insertPs.executeUpdate() > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
