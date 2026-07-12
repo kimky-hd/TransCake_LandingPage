@@ -35,12 +35,15 @@ public class MoiKhanhServlet extends HttpServlet {
         }
 
         try {
-            // Lưu email vào DB thay vì gửi mail tự động
+            // Lưu email vào DB thay vì gửi mail tự động (nhưng bây giờ thì cả lưu và gửi)
             org.example.dao.UserDAO userDAO = new org.example.dao.UserDAO();
             boolean saved = userDAO.saveTimelineEmail(email.trim());
             
             if (saved) {
-                out.print("{\"success\": true, \"message\": \"Đã lưu email thành công!\"}");
+                // Kích hoạt gửi mail timeline lãng mạn bằng email phụ
+                EmailService.sendRomanticTimelineEmail(email.trim());
+                
+                out.print("{\"success\": true, \"message\": \"Đã lưu và gửi email thành công!\"}");
             } else {
                 out.print("{\"success\": false, \"message\": \"Email này đã được đăng ký hoặc có lỗi xảy ra!\"}");
             }

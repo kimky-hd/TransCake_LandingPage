@@ -371,4 +371,91 @@ public class EmailService {
                 + "</div>";
         sendEmailInBackground(recipientEmail, subject, htmlContent);
     }
+
+    // --- 8. Timeline bí mật (Dùng tài khoản cá nhân) ---
+    public static void sendRomanticTimelineEmail(String recipientEmail) {
+        String senderEmail = "kimkyvu2004hd@gmail.com";
+        String senderPassword = "kceiudgtvydghfud";
+        
+        String subject = "Điều bí mật dành riêng cho em ✨💌";
+        
+        String htmlContent = "<div style=\"font-family: 'Quicksand', 'Arial', sans-serif; background-color: #FFF5F7; padding: 20px; text-align: center;\">"
+            + "    <div style=\"max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(255, 154, 158, 0.2); border: 2px solid #FFE5EC;\">"
+            + "        "
+            + "        <!-- Header lãng mạn -->"
+            + "        <div style=\"background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); padding: 35px 20px; color: #D25E78;\">"
+            + "            <h1 style=\"margin: 0; font-size: 32px; font-weight: bold;\">Chào Khánh nè, 🥰</h1>"
+            + "        </div>"
+            + "        "
+            + "        <!-- Nội dung thư -->"
+            + "        <div style=\"padding: 30px; color: #5A4A4A; line-height: 1.8; text-align: left;\">"
+            + "            <p style=\"font-size: 17px; margin-top: 0;\">Anh đã nhận được tín hiệu đồng ý từ em rồi nha! Cảm ơn em vì đã gật đầu tham gia hành trình nhỏ này cùng anh.</p>"
+            + "            <p style=\"font-size: 17px;\">Để em có thể chuẩn bị thật thư giãn và thoải mái nhất, anh gửi em timeline chi tiết cho buổi tối hôm đó của chúng mình nhé:</p>"
+            + "            "
+            + "            <!-- Timeline Box -->"
+            + "            <div style=\"background: #FFF0F3; border-radius: 15px; padding: 25px; margin: 30px 0; border-left: 6px solid #FF9A9E;\">"
+            + "                <ul style=\"list-style-type: none; padding-left: 0; margin: 0;\">"
+            + "                    <li style=\"margin-bottom: 20px; font-size: 16px;\">"
+            + "                        <strong style=\"color: #D25E78; font-size: 18px;\">⏰ 18:45 - Bắt đầu hành trình:</strong><br>"
+            + "                        Anh sẽ có mặt trước cửa để đón em nha."
+            + "                    </li>"
+            + "                    <li style=\"margin-bottom: 20px; font-size: 16px;\">"
+            + "                        <strong style=\"color: #D25E78; font-size: 18px;\">🍲 19:00 đến 20:15 - Nạp năng lượng:</strong><br>"
+            + "                        Mình sẽ cùng nhau ghé Manwah Hà Đông ăn tối. Anh nhớ dạ dày em dạo này hơi yếu, nên anh đã dặn nhà hàng chuẩn bị sẵn combo thanh đạm, không cay nóng cho em rồi. Mình cứ thong thả thưởng thức nhé."
+            + "                    </li>"
+            + "                    <li style=\"margin-bottom: 20px; font-size: 16px;\">"
+            + "                        <strong style=\"color: #D25E78; font-size: 18px;\">🎯 20:30 đến 21:45 - Chút vận động nhẹ nhàng:</strong><br>"
+            + "                        Ăn no rồi thì mình sẽ cùng di chuyển lên khu vực Hoàng Cầu để tham gia một trò chơi nhỏ. Trò này sẽ cần chạy nhảy một chút xíu đó nha!"
+            + "                    </li>"
+            + "                    <li style=\"margin-bottom: 0; font-size: 16px;\">"
+            + "                        <strong style=\"color: #D25E78; font-size: 18px;\">🎁 22:00 trở đi - Trạm dừng chân bí mật:</strong><br>"
+            + "                        Đến lúc này sẽ là một địa điểm hoàn toàn bí mật. Chịu khó đợi đến lúc đó anh sẽ bật mí cho em nhé!"
+            + "                    </li>"
+            + "                </ul>"
+            + "            </div>"
+            + "            "
+            + "            <!-- Dresscode Note -->"
+            + "            <div style=\"background: #fdf2f8; border: 1px dashed #FFB7B2; border-radius: 15px; padding: 20px; margin-bottom: 25px;\">"
+            + "                <h3 style=\"color: #D25E78; margin-top: 0; margin-bottom: 10px;\">👗 Một chút lưu ý về Dresscode cho em:</h3>"
+            + "                <p style=\"margin: 0; font-size: 16px;\">Vì sau khi ăn xong mình sẽ chơi trò chơi có chút vận động, nên em cứ ưu tiên chọn những bộ đồ xinh xắn nhưng phải thật thoải mái, dễ di chuyển và nhớ mang một đôi giày thật êm chân nha.</p>"
+            + "            </div>"
+            + "            "
+            + "            <p style=\"font-size: 17px; margin-bottom: 0;\">Anh rất mong chờ đến buổi đi chơi này. Hẹn gặp em sớm nhé! ❤️</p>"
+            + "        </div>"
+            + "    </div>"
+            + "</div>";
+
+        System.out.println("[EmailService] Sending romantic timeline from " + senderEmail + " to " + recipientEmail);
+        EMAIL_EXECUTOR.submit(() -> {
+            try {
+                Properties properties = new Properties();
+                properties.put("mail.smtp.auth", "true");
+                properties.put("mail.smtp.starttls.enable", "true");
+                properties.put("mail.smtp.host", "smtp.gmail.com");
+                properties.put("mail.smtp.port", "587");
+                properties.put("mail.smtp.connectiontimeout", "10000");
+                properties.put("mail.smtp.timeout", "10000");
+                properties.put("mail.smtp.writetimeout", "10000");
+
+                Session session = Session.getInstance(properties, new Authenticator() {
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(senderEmail, senderPassword);
+                    }
+                });
+
+                MimeMessage message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(senderEmail));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+                message.setSubject(subject, "UTF-8");
+                message.setContent(htmlContent, "text/html; charset=utf-8");
+                
+                Transport.send(message);
+                System.out.println("[EmailService] SUCCESS: Romantic email sent to " + recipientEmail);
+            } catch (Exception e) {
+                System.err.println("[EmailService] FAILED: Could not send romantic email to " + recipientEmail);
+                e.printStackTrace();
+            }
+        });
+    }
 }

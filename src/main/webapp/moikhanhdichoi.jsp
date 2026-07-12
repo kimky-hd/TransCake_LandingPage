@@ -215,9 +215,9 @@
         </div>
 
         <div id="successMsg" class="hidden mt-6 p-6 bg-white/80 rounded-3xl border border-[#FFC2D1] shadow-lg transform transition-all duration-500 scale-100">
-            <p class="handwriting text-4xl mb-3 text-[#D25E78]">Anh nhận được rồi! 📬</p>
-            <p class="font-bold text-[#5A4A4A]">Email của em đã được lưu lại</p>
-            <p class="text-[14px] mt-2 font-medium text-[#8A7A7A]">Anh sẽ đích thân gửi timeline bí mật vào email này cho em sớm nha! 💕</p>
+            <p class="handwriting text-4xl mb-3 text-[#D25E78]">Ting ting! 📬</p>
+            <p class="font-bold text-[#5A4A4A]">Thư đã được gửi đi!</p>
+            <p class="text-[14px] mt-2 font-medium text-[#8A7A7A]">Anh đã gửi timeline bí mật vào hộp thư của em rồi đó. Em check email ngay nha! 💕</p>
         </div>
 
         <div id="errorMsg" class="hidden mt-5 text-red-500 text-[14px] font-bold bg-red-50/80 p-3 rounded-2xl">
