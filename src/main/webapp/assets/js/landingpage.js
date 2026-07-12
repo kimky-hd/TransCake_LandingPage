@@ -359,7 +359,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             window.openOnboardingModal();
                         } else {
                             closeModal();
-                            window.location.href = window.CONTEXT_PATH + '/dashboard';
+                            if (data.role === 'admin') {
+                                window.location.href = window.CONTEXT_PATH + '/admintranscake';
+                            } else {
+                                window.location.href = window.CONTEXT_PATH + '/dashboard';
+                            }
                         }
                     } else {
                         showToast(data.message, 'error');
