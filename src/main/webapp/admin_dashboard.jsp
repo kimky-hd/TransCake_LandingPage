@@ -283,8 +283,8 @@
 
     <!-- Scripts -->
     <script>
-        // ============ DataTables ============
         $(document).ready(function() {
+            // ============ DataTables ============
             var vnLang = {
                 "sProcessing":   "Đang xử lý...",
                 "sLengthMenu":   "Xem _MENU_ mục",
@@ -314,88 +314,88 @@
                 pageLength: 10,
                 lengthMenu: [10, 25, 50, 100]
             });
-        });
 
-        // ============ Chart.js ============
-        document.addEventListener('DOMContentLoaded', function() {
-            // Revenue Bar Chart
+            // ============ Revenue Bar Chart ============
             var revLabels = [];
             var revData = [];
             <c:forEach items="${stats.dailyRevenue}" var="day">
-                revLabels.push('<c:out value="${day.label}" escapeXml="false" />');
-                revData.push(<c:out value="${day.amount}" />);
+            revLabels.push("${day.label}");
+            revData.push(${day.amount});
             </c:forEach>
 
-            new Chart(document.getElementById('revenueChart').getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: revLabels,
-                    datasets: [{
-                        label: 'Doanh thu (VNĐ)',
-                        data: revData,
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 4,
-                        barThickness: 'flex',
-                        maxBarThickness: 40
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(ctx) { return ctx.raw.toLocaleString('vi-VN') + ' đ'; }
-                            }
-                        }
+            if (document.getElementById('revenueChart')) {
+                new Chart(document.getElementById('revenueChart').getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: revLabels,
+                        datasets: [{
+                            label: 'Doanh thu (VNĐ)',
+                            data: revData,
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 4,
+                            barThickness: 'flex',
+                            maxBarThickness: 40
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { borderDash: [4, 4], color: '#f1f5f9' },
-                            ticks: {
-                                callback: function(v) {
-                                    if(v >= 1000000) return (v / 1000000) + 'M';
-                                    if(v >= 1000) return (v / 1000) + 'k';
-                                    return v;
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(ctx) { return ctx.raw.toLocaleString('vi-VN') + ' đ'; }
                                 }
                             }
                         },
-                        x: { grid: { display: false }, ticks: { maxRotation: 45, minRotation: 0 } }
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { borderDash: [4, 4], color: '#f1f5f9' },
+                                ticks: {
+                                    callback: function(v) {
+                                        if(v >= 1000000) return (v / 1000000) + 'M';
+                                        if(v >= 1000) return (v / 1000) + 'k';
+                                        return v;
+                                    }
+                                }
+                            },
+                            x: { grid: { display: false }, ticks: { maxRotation: 45, minRotation: 0 } }
+                        }
                     }
-                }
-            });
+                });
+            }
 
-            // Hobbies Pie Chart
+            // ============ Hobbies Pie Chart ============
             var hobLabels = [];
             var hobData = [];
-            <%-- Build hobbies data safely using scriptlet to avoid EL/JSTL escape issues --%>
             <c:forEach items="${stats.hobbiesStats}" var="entry">
-                hobLabels.push("<c:out value='${entry.key}' escapeXml='true' />");
-                hobData.push(<c:out value="${entry.value}" />);
+            hobLabels.push("${entry.key}");
+            hobData.push(${entry.value});
             </c:forEach>
 
             var hobColors = ['#f43f5e','#ec4899','#d946ef','#a855f7','#8b5cf6','#6366f1','#3b82f6','#0ea5e9','#06b6d4','#14b8a6','#10b981','#22c55e','#84cc16','#eab308','#f59e0b','#f97316'];
 
-            new Chart(document.getElementById('hobbiesChart').getContext('2d'), {
-                type: 'pie',
-                data: {
-                    labels: hobLabels.length > 0 ? hobLabels : ['Chưa có dữ liệu'],
-                    datasets: [{
-                        data: hobData.length > 0 ? hobData : [1],
-                        backgroundColor: hobData.length > 0 ? hobColors.slice(0, hobData.length) : ['#cbd5e1'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'right', labels: { boxWidth: 12, font: {size: 10} } }
+            if (document.getElementById('hobbiesChart')) {
+                new Chart(document.getElementById('hobbiesChart').getContext('2d'), {
+                    type: 'pie',
+                    data: {
+                        labels: hobLabels.length > 0 ? hobLabels : ['Chưa có dữ liệu'],
+                        datasets: [{
+                            data: hobData.length > 0 ? hobData : [1],
+                            backgroundColor: hobData.length > 0 ? hobColors.slice(0, hobData.length) : ['#cbd5e1'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'right', labels: { boxWidth: 12, font: {size: 10} } }
+                        }
                     }
-                }
-            });
+                });
+            }
         });
     </script>
 </body>
