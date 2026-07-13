@@ -87,6 +87,14 @@
                     Lọc dữ liệu
                 </button>
                 <a href="${pageContext.request.contextPath}/admin/dashboard" class="text-blue-600 text-sm font-medium hover:underline py-2">Xóa bộ lọc (Toàn thời gian)</a>
+                
+                <div class="flex-grow"></div> <!-- Spacer to push export button to the right -->
+                
+                <a href="${pageContext.request.contextPath}/admin/export?startDate=${startDate}&endDate=${endDate}" 
+                   class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-6 rounded text-sm transition-colors flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">download</span>
+                    Xuất Excel
+                </a>
             </form>
         </div>
 
