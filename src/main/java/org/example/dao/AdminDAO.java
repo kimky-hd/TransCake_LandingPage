@@ -162,18 +162,12 @@ public class AdminDAO {
                            "AND DATE(COALESCE(completed_at, created_at)) >= ? AND DATE(COALESCE(completed_at, created_at)) <= ? " +
                            "GROUP BY DATE(COALESCE(completed_at, created_at)) ORDER BY trip_date ASC";
             } else {
-                sqlChart = "SELECT DATE(d.dt) as trip_date, COALESCE(SUM(t.price), 0) as daily_amount " +
-                        "FROM ( " +
-                        "  SELECT CURDATE() as dt UNION ALL SELECT CURDATE() - INTERVAL 1 DAY UNION ALL " +
-                        "  SELECT CURDATE() - INTERVAL 2 DAY UNION ALL SELECT CURDATE() - INTERVAL 3 DAY UNION ALL " +
-                        "  SELECT CURDATE() - INTERVAL 4 DAY UNION ALL SELECT CURDATE() - INTERVAL 5 DAY UNION ALL " +
-                        "  SELECT CURDATE() - INTERVAL 6 DAY " +
-                        ") d LEFT JOIN trips t ON DATE(COALESCE(t.completed_at, t.created_at)) = DATE(d.dt) AND t.completion_status = 'COMPLETED' " +
-                        "GROUP BY DATE(d.dt) ORDER BY DATE(d.dt) ASC";
+                sqlChart = "SELECT DATE(COALESCE(completed_at, created_at)) as trip_date, COALESCE(SUM(price), 0) as daily_amount " +
+                           "FROM trips WHERE completion_status = 'COMPLETED' " +
+                           "GROUP BY DATE(COALESCE(completed_at, created_at)) ORDER BY trip_date ASC";
             }
 
             List<Map<String, Object>> dailyRevenue = new ArrayList<>();
-            String[] dayLabels = {"CN", "T2", "T3", "T4", "T5", "T6", "T7"};
             try (PreparedStatement ps = conn.prepareStatement(sqlChart)) {
                 if (hasDate) setDateParams(ps, 1, startDate, endDate);
                 try (ResultSet rs = ps.executeQuery()) {
@@ -181,14 +175,12 @@ public class AdminDAO {
                         Map<String, Object> day = new HashMap<>();
                         java.sql.Date tripDate = rs.getDate("trip_date");
                         if (tripDate != null) {
-                            if (!hasDate) {
-                                java.util.Calendar cal = java.util.Calendar.getInstance();
-                                cal.setTime(tripDate);
-                                int dow = cal.get(java.util.Calendar.DAY_OF_WEEK) - 1;
-                                day.put("label", dayLabels[dow]);
-                            } else {
-                                day.put("label", tripDate.toString());
-                            }
+                            // Format: DD/MM
+                            java.util.Calendar cal = java.util.Calendar.getInstance();
+                            cal.setTime(tripDate);
+                            String formattedDate = String.format("%02d/%02d", cal.get(java.util.Calendar.DAY_OF_MONTH), cal.get(java.util.Calendar.MONTH) + 1);
+                            
+                            day.put("label", formattedDate);
                             day.put("date", tripDate.toString());
                         } else {
                             day.put("label", "N/A");
