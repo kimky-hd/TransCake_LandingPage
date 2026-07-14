@@ -138,7 +138,7 @@
             <div class="fiori-card p-5 border-t-4 border-emerald-500">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h3 class="kpi-title">Tổng Doanh Thu</h3>
+                        <h3 class="kpi-title">Tổng Số Tiền GD</h3>
                         <p class="kpi-value text-emerald-600"><fmt:formatNumber value="${stats.totalRevenue}" pattern="#,###" /> ₫</p>
                     </div>
                     <div class="p-2 bg-emerald-50 rounded-lg text-emerald-500">
